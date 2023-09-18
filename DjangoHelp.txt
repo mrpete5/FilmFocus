@@ -18,7 +18,6 @@
         - Handle incoming variables from services and render them to template HTML
     * webapp/templates/
         - HTML files that will be rendered by views.py
-        - (in progress) base.html will be the foundation of all other HTML files. It will contain the header, footer, and navigation bar.
 
 
 ### Django Commands ###
