@@ -1,5 +1,7 @@
 # FilmFocus
 
+For help with Django or navigating the repo, view DjangoHelp.txt
+
 ## Getting Started
 
 1) Clone the GitHub repo
