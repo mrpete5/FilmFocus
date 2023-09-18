@@ -15,4 +15,4 @@ $ pip install -r requirements.txt
 $ python manage.py migrate
 $ python manage.py runserver
 ```
-3) Finally, in a web browser go to http://127.0.0.1:8000/ to visit the FilmFocus.
+3) Finally, in a web browser go to http://127.0.0.1:8000/ to visit FilmFocus.
