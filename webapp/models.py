@@ -10,6 +10,7 @@ class Movie(models.Model):
     runtime = models.IntegerField(null=True, blank=True)
     tagline = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField('Genre', blank=True)
+    trailer_key = models.CharField(max_length=255, null=True, blank=True)
     # imdb_rating = models.IntegerField()
     # mpa_rating = models.CharField(max_length=200)
     # where_to_watch = models.CharField(max_length=200)

@@ -56,6 +56,7 @@ def process_movie_search(tmdb_id, title):
         if not Movie.objects.filter(tmdb_id=tmdb_id).exists():
             # Make an API call to fetch more details about the movie
             movie_details = fetch_movie_details_from_api(tmdb_id)
+            trailer_key = fetch_movie_trailer_key(tmdb_id)  # Fetch the trailer key
             
             # Check if the movie is not for adults
             if not movie_details.get('adult'):
@@ -74,7 +75,8 @@ def process_movie_search(tmdb_id, title):
                     poster_path=movie_details.get('poster_path'),
                     release_year=release_year,
                     runtime=movie_details.get('runtime'),
-                    tagline=movie_details.get('tagline')
+                    tagline=movie_details.get('tagline'),
+                    trailer_key=trailer_key,
                 )
                 
                 # Associate the movie with its genres
@@ -91,6 +93,21 @@ def process_movie_search(tmdb_id, title):
         print(f"Movie '{title}' not found in the master list.")
 
 
+def fetch_movie_trailer_key(tmdb_id):
+    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}/videos"
+    headers = {
+        "accept": "application/json",
+        "Authorization": TMDB_API_KEY,
+    }
+    response = requests.get(url, headers=headers)
+    json_response = response.json()
+    results = json_response.get('results', [])
+
+    # Filter the results to get the trailer key
+    for result in results:
+        if result['type'].lower() == 'trailer':
+            return result['key']
+    return None
 
 def fetch_popular_movies(page_num):
     url = f"https://api.themoviedb.org/3/movie/popular?language=en-US&page={page_num}"

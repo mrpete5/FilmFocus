@@ -44,7 +44,7 @@ def movies(request):
     
     database_initialized = True
     if database_initialized == False:
-        initialize_movie_database(page_count=10) # 20 movies per page
+        initialize_movie_database(page_count=3) # 20 movies per page
     
     items = Movie.objects.all()
     return render(request, "movies.html", {"movies": items})

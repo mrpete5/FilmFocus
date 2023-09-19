@@ -6,13 +6,14 @@
 <table border="1">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Release Year</th>
-            <th>Overview</th>
-            <th>Poster</th>
-            <th>Runtime (mins)</th>
-            <th>Tagline</th>
-            <th>Genres</th>
+            <th width="100px">Title</th>
+            <th width="100px">Release Year</th>
+            <th width="300px">Overview</th>
+            <th width="150px">Poster</th>
+            <th width="100px">Runtime (mins)</th>
+            <th width="100px">Tagline</th>
+            <th width="100px">Genres</th>
+            <th width="400px">Trailer</th>
         </tr>
     </thead>
     <tbody>
@@ -20,10 +21,10 @@
         <tr>
             <td>{{ movie.title }}</td>
             <td>{{ movie.release_year }}</td>
-            <td>{{ movie.overview }}</td>
+            <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">{{ movie.overview }}</td>
             <td>
                 {% if movie.poster_path %}
-                <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster" width="100">
+                <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster" width="150">
                 {% else %}
                 No poster available
                 {% endif %}
@@ -34,6 +35,14 @@
                 {% for genre in movie.genres.all %}
                 {{ genre.name }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
+            </td>
+            <td>
+                {% if movie.trailer_key %}
+                <!-- Embed the YouTube trailer using iframe -->
+                <iframe width="400" height="224" src="https://www.youtube.com/embed/{{ movie.trailer_key }}" frameborder="0" allowfullscreen></iframe>
+                {% else %}
+                No trailer available
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
