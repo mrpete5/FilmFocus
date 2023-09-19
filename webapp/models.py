@@ -1,17 +1,26 @@
 from django.db import models
 
 # Create your models here.
-
 class Movie(models.Model):
-    title = models.CharField(max_length=200, default='NULL')
-    release_year = models.IntegerField()
-    # runtime = models.IntegerField()
+    tmdb_id = models.IntegerField(unique=True, null=True)
+    title = models.CharField(max_length=255)
+    overview = models.TextField(null=True, blank=True)
+    poster_path = models.CharField(max_length=255, null=True, blank=True)
+    release_year = models.IntegerField(null=True, blank=True)
+    runtime = models.IntegerField(null=True, blank=True)
+    tagline = models.CharField(max_length=255, null=True, blank=True)
+    genres = models.ManyToManyField('Genre', blank=True)
     # imdb_rating = models.IntegerField()
     # mpa_rating = models.CharField(max_length=200)
-    # description = models.TextField()
-    # tagline = models.TextField()
     # where_to_watch = models.CharField(max_length=200)
-    
+
     def __str__(self):
-        underscore_title = self.title.replace(" ", "_")
-        return f"{underscore_title}_{self.release_year}"
+        return f"{self.title.replace(' ', '_')}_{self.release_year}"
+
+
+class Genre(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+  

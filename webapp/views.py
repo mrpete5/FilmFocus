@@ -1,5 +1,7 @@
 from django.shortcuts import render, HttpResponse
 from .models import Movie
+from .services import *
+
 
 # Create your views here.
 def index(request):
@@ -7,7 +9,6 @@ def index(request):
 
 def index2(request):
     return render(request, "index2.html")
-
 
 def details1(request):
     return render(request, "details1.html")
@@ -37,5 +38,13 @@ def faq(request):
     return render(request, "faq.html")
 
 def movies(request):
+    delete_all_entries = False # USE WITH CAUTION
+    if delete_all_entries == True:
+        clear_movie_database() # deletes all entries in the movie database, USE WITH CAUTION
+    
+    database_initialized = True
+    if database_initialized == False:
+        initialize_movie_database(page_count=10) # 20 movies per page
+    
     items = Movie.objects.all()
     return render(request, "movies.html", {"movies": items})

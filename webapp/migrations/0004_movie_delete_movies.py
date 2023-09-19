@@ -15,7 +15,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=200)),
-                ('releaseYear', models.IntegerField()),
                 ('runtime', models.IntegerField()),
                 ('imdbRating', models.IntegerField()),
                 ('mpaRating', models.CharField(max_length=200)),
