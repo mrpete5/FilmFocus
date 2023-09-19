@@ -10,6 +10,11 @@
             <th width="100px">Runtime (mins)</th>
             <th width="100px">Tagline</th>
             <th width="100px">Genres</th>
+            <th width="100px">IMDb Rating</th>
+            <th width="100px">Rotten Tomatoes</th>
+            <th width="100px">Metacritic</th>
+            <th width="100px">Director</th>
+            <th width="100px">Box Office</th>
             <th width="400px">Trailer</th>
         </tr>
     </thead>
@@ -33,6 +38,11 @@
                 {{ genre.name }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
             </td>
+            <td>{{ movie.imdb_rating }}</td>
+            <td>{{ movie.rotten_tomatoes_rating }}</td>
+            <td>{{ movie.metacritic_rating }}</td>
+            <td>{{ movie.director }}</td>
+            <td>{{ movie.box_office }}</td>
             <td>
                 {% if movie.trailer_key %}
                 <!-- Embed the YouTube trailer using iframe -->

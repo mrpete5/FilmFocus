@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-OMDB_API_KEY = os.environ["OMDB_API_KEY"]   # limited to 1000 calls/day
+OMDB_API_KEY = os.environ["OMDB_API_KEY"]   # limited to 100,000 calls/day
 TMDB_API_KEY = os.environ["TMDB_API_KEY"]
 MASTER_LIST = "webapp/data/tmdb_master_movie_list.json"
 
