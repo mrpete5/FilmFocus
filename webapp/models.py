@@ -11,9 +11,14 @@ class Movie(models.Model):
     tagline = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField('Genre', blank=True)
     trailer_key = models.CharField(max_length=255, null=True, blank=True)
-    # imdb_rating = models.IntegerField()
+    imdb_rating = models.CharField(max_length=10, null=True, blank=True)
+    rotten_tomatoes_rating = models.CharField(max_length=10, null=True, blank=True)
+    metacritic_rating = models.CharField(max_length=10, null=True, blank=True)
+    director = models.CharField(max_length=255, null=True, blank=True)
+    box_office = models.CharField(max_length=100, null=True, blank=True)
     # mpa_rating = models.CharField(max_length=200)
     # where_to_watch = models.CharField(max_length=200)
+
 
     def __str__(self):
         return f"{self.title.replace(' ', '_')}_{self.release_year}"
