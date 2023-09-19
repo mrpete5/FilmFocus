@@ -38,11 +38,11 @@ def faq(request):
     return render(request, "faq.html")
 
 def movies(request):
-    delete_all_entries = True   # USE WITH CAUTION, always make False before committing changes
+    delete_all_entries = False   # USE WITH CAUTION, always make False before committing changes
     if delete_all_entries == True:
         clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
     
-    database_initialized = False    # always make True before committing changes
+    database_initialized = True    # always make True before committing changes
     if database_initialized == False:
         initialize_movie_database(page_count=2)     # 20 movies per page
     
