@@ -12,6 +12,11 @@ OMDB_API_KEY = os.environ["OMDB_API_KEY"]   # limited to 100,000 calls/day
 TMDB_API_KEY = os.environ["TMDB_API_KEY"]
 MASTER_LIST = "webapp/data/tmdb_master_movie_list.json"
 
+def load_ban_list():
+    with open('webapp/data/ban_movie_list.txt', 'r') as file:
+        # Only consider lines that don't start with a '#' comment
+        return set(line.strip() for line in file if not line.startswith('#'))
+BAN_LIST = load_ban_list()
 
 # Load the master list from the JSON file into a Python list
 with open(MASTER_LIST, 'r', encoding='utf-8') as file:
@@ -57,6 +62,10 @@ def search_and_fetch_movie_by_id(tmdb_id):
 
 def process_movie_search(tmdb_id, title):
     if tmdb_id:
+        # Check if the movie is in the ban list
+        if str(tmdb_id) in BAN_LIST:
+            print(f"Movie '{title}' (ID: {tmdb_id}) is in the ban list and was not added.")
+            return
         # Check if the movie exists in the database
         if not Movie.objects.filter(tmdb_id=tmdb_id).exists():
             # Make an API call to fetch more details about the movie from TMDB

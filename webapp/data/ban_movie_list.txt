@@ -1,0 +1,7 @@
+# Banned movies due to inappropriate content.
+# If you encounter a movie you think should be banned:
+# (1) Search the title in the movie database to get it's tmdb_id.
+# (2) Add the tmdb_id below.
+# (3) Delete the entry from the database.
+
+1118256
