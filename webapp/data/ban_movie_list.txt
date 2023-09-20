@@ -1,7 +1,14 @@
 # Banned movies due to inappropriate content.
+
 # If you encounter a movie you think should be banned:
-# (1) Search the title in the movie database to get it's tmdb_id.
-# (2) Add the tmdb_id below.
-# (3) Delete the entry from the database.
+# python banMovie.py
+# Then give the movie title.
+
+# To verify a movie has been removed from the database:
+# python manage.py shell
+# from webapp.models import Movie
+# exists = Movie.objects.filter(title="enter the movie title here").exists()
+# print(exists)
+
 
 1118256
