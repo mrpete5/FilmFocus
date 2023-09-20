@@ -52,7 +52,7 @@ def movies(request):
     
     database_initialized = True    # always make True before committing changes
     if database_initialized == False:
-        initialize_movie_database(page_count=10)     # 20 movies per page
+        initialize_movie_database(page_count=5)     # 20 movies per page
     
     items = Movie.objects.all().order_by('?')[:20]  # Fetch only the first 20 movies
     return render(request, "movies.html", {"movies": items})
