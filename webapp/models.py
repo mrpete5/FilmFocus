@@ -15,7 +15,8 @@ class Movie(models.Model):
     rotten_tomatoes_rating = models.CharField(max_length=10, null=True, blank=True)
     metacritic_rating = models.CharField(max_length=10, null=True, blank=True)
     director = models.CharField(max_length=255, null=True, blank=True)
-    box_office = models.CharField(max_length=100, null=True, blank=True)
+    domestic_box_office = models.CharField(max_length=100, null=True, blank=True)
+    now_playing = models.BooleanField(default=False)
     # mpa_rating = models.CharField(max_length=200)
     # where_to_watch = models.CharField(max_length=200)
 
