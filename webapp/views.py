@@ -11,18 +11,30 @@ def index(request):
     # Fetch 12 random movies from the now_playing movies for "New Movies"
     new_movies = random.sample(list(now_playing_movies), min(12, len(now_playing_movies)))
     
-    # Fetch 6 random movies for "Popular Movies", excluding the ones already selected as new_movies
-    popular_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies]).order_by('?')[:6]
+    # Fetch all movies that are marked as popular
+    all_popular_movies = Movie.objects.filter(is_popular=True).exclude(id__in=[movie.id for movie in new_movies])
     
-    # Fetch 12 random movies for "More Movies", excluding the ones already selected in new_movies and popular_movies
-    more_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('?')[:12]
+    # Randomly select 6 movies from those marked as popular
+    popular_movies = random.sample(list(all_popular_movies), min(6, len(all_popular_movies)))
+    
+    # Fetch the top 40 movies based on imdb_rating
+    top_40_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('-imdb_rating')[:40]
+    
+    # Randomly select 6 movies from the top 40
+    top_rated_movies = random.sample(list(top_40_movies), min(6, len(top_40_movies)))
+    
+    # Fetch 12 random movies for "More Movies", excluding the ones already selected in new_movies, popular_movies, and top_rated_movies
+    more_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies] + [movie.id for movie in top_rated_movies]).order_by('?')[:12]
     
     context = {
         'new_movies': new_movies,
         'popular_movies': popular_movies,
+        'top_rated_movies': top_rated_movies,
         'more_movies': more_movies,
     }
     return render(request, 'index.html', context)
+
+
 
 
 def details(request):
@@ -55,7 +67,7 @@ def movies(request):
         clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
 
     if initialize_database == True:
-        initialize_movie_database(page_count=1)     # 20 movies per page
+        initialize_movie_database(page_count=5)     # 20 movies per page
     
     if get_now_playing_movies == True:
         fetch_now_playing_movies()

@@ -120,7 +120,6 @@ def fetch_movie_data_from_omdb(title):
     url = f"http://www.omdbapi.com/?t={title}&apikey={OMDB_API_KEY}"
     response = requests.get(url)
     data = response.json()
-
     movie_data = {}
     for rating in data.get('Ratings', []):
         if rating['Source'] == 'Internet Movie Database':
@@ -132,7 +131,6 @@ def fetch_movie_data_from_omdb(title):
 
     movie_data['director'] = data.get('Director')
     movie_data['domestic_box_office'] = data.get('BoxOffice')
-
     return movie_data
 
 
@@ -153,37 +151,36 @@ def fetch_movie_trailer_key(tmdb_id):
     return None
 
 
-def fetch_popular_movies(page_num):
-    url = f"https://api.themoviedb.org/3/movie/popular?language=en-US&page={page_num}"
-    headers = {
-        "accept": "application/json",
-        "Authorization": TMDB_API_KEY_STRING,
-    }
-    response = requests.get(url, headers=headers)
-    json_response = response.json()
-    results = json_response['results']
-
-    for movie in results:
-        movie_id = movie["id"]
-        search_and_fetch_movie_by_id(movie_id)
-    return json_response
-
-
-def fetch_multiple_pages(start_page, end_page):
+def fetch_popular_movies(start_page=1, end_page=5):
     for page_num in range(start_page, end_page + 1):
-        print(f"Fetching page {page_num}...")
-        fetch_popular_movies(page_num)
+        print(f"Fetching popular movies page number {page_num}")
+        url = f"https://api.themoviedb.org/3/movie/popular?language=en-US&page={page_num}"
+        headers = {
+            "accept": "application/json",
+            "Authorization": TMDB_API_KEY_STRING,
+        }
+        response = requests.get(url, headers=headers)
+        json_response = response.json()
+        results = json_response['results']
+
+        for movie in results:
+            movie_id = movie["id"]
+            search_and_fetch_movie_by_id(movie_id)
+            
+            # Set is_popular to True for the movie
+            Movie.objects.filter(tmdb_id=movie_id).update(is_popular=True)
+        
         if page_num != end_page:  # No need to sleep after fetching the last page
             time.sleep(1)
+    return json_response
 
 
 def fetch_now_playing_movies():
     print("Fetching now playing movies...")
-
     # Set now_playing to False for all movies
     Movie.objects.update(now_playing=False)
 
-    for page_num in range(1, 11):  # Fetch the first 10 pages
+    for page_num in range(1, 6):  # Fetch the first 6 pages
         print(f"Fetching now playing movies page number {page_num}")
         url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page_num}"
         headers = {
@@ -199,12 +196,12 @@ def fetch_now_playing_movies():
             # Process each movie using the process_movie_search function
             process_movie_search(tmdb_id, title, now_playing=True)
             
-        if page_num != 10:  # No need to sleep after fetching the last page
+        if page_num != 6:  # No need to sleep after fetching the last page
             time.sleep(1)
 
 
 def initialize_movie_database(page_count):
-    fetch_multiple_pages(1, page_count)
+    fetch_popular_movies(1, end_page=page_count)
 
 
 def clear_movie_database():
