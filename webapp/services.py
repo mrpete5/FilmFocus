@@ -6,10 +6,12 @@ import json
 import time
 from dotenv import load_dotenv
 import os
+import random
+
 
 load_dotenv()
-OMDB_API_KEY = os.environ["OMDB_API_KEY"]   # limited to 100,000 calls/day
-TMDB_API_KEY_STRING = os.environ["TMDB_API_KEY_STRING"]
+OMDB_API_KEY = os.environ["OMDB_API_KEY"]               # limited to 100,000 calls/day
+TMDB_API_KEY_STRING = os.environ["TMDB_API_KEY_STRING"] # limited to around 50 calls/second
 MASTER_LIST = "webapp/data/tmdb_master_movie_list.json"
 
 def load_ban_list():
@@ -152,6 +154,9 @@ def fetch_movie_trailer_key(tmdb_id):
 
 
 def fetch_popular_movies(start_page=1, end_page=5):
+    # Set now_playing to False for all movies
+    Movie.objects.update(is_popular=False)
+    
     for page_num in range(start_page, end_page + 1):
         print(f"Fetching popular movies page number {page_num}")
         url = f"https://api.themoviedb.org/3/movie/popular?language=en-US&page={page_num}"
@@ -167,8 +172,9 @@ def fetch_popular_movies(start_page=1, end_page=5):
             movie_id = movie["id"]
             search_and_fetch_movie_by_id(movie_id)
             
-            # Set is_popular to True for the movie
-            Movie.objects.filter(tmdb_id=movie_id).update(is_popular=True)
+            if page_num <= 5:
+                # Set is_popular to True for the movie
+                Movie.objects.filter(tmdb_id=movie_id).update(is_popular=True)
         
         if page_num != end_page:  # No need to sleep after fetching the last page
             time.sleep(1)
@@ -176,11 +182,10 @@ def fetch_popular_movies(start_page=1, end_page=5):
 
 
 def fetch_now_playing_movies():
-    print("Fetching now playing movies...")
     # Set now_playing to False for all movies
     Movie.objects.update(now_playing=False)
 
-    for page_num in range(1, 6):  # Fetch the first 6 pages
+    for page_num in range(1, 6):  # Fetch the first 5 pages
         print(f"Fetching now playing movies page number {page_num}")
         url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page_num}"
         headers = {
@@ -196,14 +201,51 @@ def fetch_now_playing_movies():
             # Process each movie using the process_movie_search function
             process_movie_search(tmdb_id, title, now_playing=True)
             
-        if page_num != 6:  # No need to sleep after fetching the last page
+        if page_num != 5:  # No need to sleep after fetching the last page
             time.sleep(1)
 
 
-def initialize_movie_database(page_count):
-    fetch_popular_movies(1, end_page=page_count)
+def get_movies_for_index():
+    # Fetch movies that are marked as now_playing
+    now_playing_movies = Movie.objects.filter(now_playing=True)
+    # Fetch 12 random movies from the now_playing movies for "New Movies"
+    new_movies = random.sample(list(now_playing_movies), min(12, len(now_playing_movies)))
+    
+    # Fetch all movies that are marked as popular
+    all_popular_movies = Movie.objects.filter(is_popular=True).exclude(id__in=[movie.id for movie in new_movies])
+    # Randomly select 6 movies from those marked as popular
+    popular_movies = random.sample(list(all_popular_movies), min(6, len(all_popular_movies)))
+    
+    # Fetch the top 40 movies based on imdb_rating
+    top_40_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('-imdb_rating')[:40]
+    # Randomly select 6 movies from the top 40
+    top_rated_movies = random.sample(list(top_40_movies), min(6, len(top_40_movies)))
+    
+    # Fetch 12 random movies for "More Movies", excluding the ones already selected in new_movies, popular_movies, and top_rated_movies
+    more_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies] + [movie.id for movie in top_rated_movies]).order_by('?')[:12]
+    
+    return {
+        'new_movies': new_movies,
+        'popular_movies': popular_movies,
+        'top_rated_movies': top_rated_movies,
+        'more_movies': more_movies,
+    }
 
 
 def clear_movie_database():
     deleted_count, _ = Movie.objects.all().delete()
     print(f"{deleted_count} movies deleted from the database.")
+
+
+def handle_movies_page(delete_all_entries=False, initialize_database=False, get_now_playing_movies=False):
+    page_count = 5
+    
+    if delete_all_entries:
+        clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
+    if initialize_database:
+        fetch_popular_movies(1, end_page=page_count)  # 20 movies per page
+    if get_now_playing_movies:
+        fetch_now_playing_movies()
+    
+    items = Movie.objects.all().order_by('?')[:10]  # Fetch only 10 movies to display
+    return items
