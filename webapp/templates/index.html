@@ -79,7 +79,7 @@
 									<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 									<span class="card__category">
 										{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
-											<a href="#">{{ genre.name }}</a>
+											<a>{{ genre.name }}</a>
 										{% endfor %}
 									</span>
 									<span class="card__rate">
@@ -127,7 +127,7 @@
 											<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
 												{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
-													<a href="#">{{ genre.name }}</a>
+													<a>{{ genre.name }}</a>
 												{% endfor %}
 											</span>
 											<span class="card__rate">
@@ -165,7 +165,7 @@
 											<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
 												{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
-													<a href="#">{{ genre.name }}</a>
+													<a>{{ genre.name }}</a>
 												{% endfor %}
 											</span>
 											<span class="card__rate">
@@ -206,7 +206,7 @@
 											<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
 												{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
-													<a href="#">{{ genre.name }}</a>
+													<a>{{ genre.name }}</a>
 												{% endfor %}
 											</span>
 											<span class="card__rate">
