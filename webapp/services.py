@@ -99,7 +99,7 @@ def process_movie_search(tmdb_id, title, now_playing=False):
             else:
                 # If the movie already exists, update its now_playing status
                 Movie.objects.filter(tmdb_id=tmdb_id).update(now_playing=now_playing)
-                print(f"Movie '{title}' (ID: {tmdb_id}) already exists in the database and its now_playing status has been updated.")
+                print(f"Movie '{title}' (ID: {tmdb_id}) already exists in the database.")
         else:
             print(f"Movie '{title}' (ID: {tmdb_id}) is for adults and was not added.")
     else:
