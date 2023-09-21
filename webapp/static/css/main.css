@@ -310,6 +310,73 @@ ul {
 .header__nav-item.show .header__nav-link {
   color: #ff55a5;
 }
+
+
+/* my three functions */
+
+
+.header__nav-item--search .header__search-inline {
+  display: flex;
+  align-items: center;
+  width: 350px; /* Adjust this value to your desired width */
+}
+.header__nav-item--search .header__search-btn {
+  margin-right: 5px; /* Adjust as needed */
+}
+.header__nav-item--search {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 60px;
+  position: relative;
+}
+.header__nav-item--search input[type="text"] {
+  position: relative;
+  height: 60px;
+  width: 100%;
+  background-color: #28282d;
+  border: none;
+  padding: 0 60px 0 15px; /* Reduced right padding */
+  font-size: 15px;
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+}
+.header__nav-item--search button {
+  position: absolute;
+  height: 40px;
+  width: 90px;
+  top: 10px;
+  right: 15px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+  font-size: 12px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+}
+.header__nav-item--search button:hover {
+  color: #fff;
+  opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+
 .header__dropdown {
   position: relative;
   display: block;

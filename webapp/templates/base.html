@@ -28,6 +28,7 @@
     <!-- header -->
 	<header class="header">
         {% block header %}
+
 		<div class="header__wrap">
 			<div class="container">
 				<div class="row">
@@ -41,47 +42,32 @@
 
 							<!-- header nav -->
 							<ul class="header__nav">
-
 								<li class="header__nav-item">
 									<a href="/" class="header__nav-link">Home</a>
 								</li>
-
-								<!-- dropdown -->
+								<!-- If user signed in goes to users Watchlists page, else goes to Sign In page -->
 								<li class="header__nav-item">
-									<a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdownMenuCatalog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catalog</a>
-
-									<ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuCatalog">
-										<li><a href="/catalog/">Catalog Grid</a></li>
-										<li><a href="/details/">Details Movie</a></li>
-									</ul>
+									<a href="/catalog/" class="header__nav-link">Watchlists</a>
 								</li>
-								<!-- end dropdown -->
-
 								<li class="header__nav-item">
-									<a href="/faq/" class="header__nav-link">Help</a>
+									<a href="/faq/" class="header__nav-link">FAQ</a>
 								</li>
-
-								<!-- dropdown -->
-								<li class="dropdown header__nav-item">
-									<a class="dropdown-toggle header__nav-link header__nav-link--more" href="#" role="button" id="dropdownMenuMore" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon ion-ios-more"></i></a>
-
-									<ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuMore">
-										<li><a href="/about/">About</a></li>
-										<li><a href="/signin/">Sign In</a></li>
-										<li><a href="/signup/">Sign Up</a></li>
-										<li><a href="/404/">404 Page</a></li>
-									</ul>
+								<li>
+									<button class="header__search-btn" type="button">
+										<i class="icon ion-ios-search"></i>
+									</button>
 								</li>
-								<!-- end dropdown -->
+								<li class="header__nav-item header__nav-item--search">
+									<div class="header__search-inline">
+										<input type="text" placeholder="Search for a movie or friend">
+									</div>
+								</li>
 							</ul>
 							<!-- end header nav -->
 
+
 							<!-- header auth -->
 							<div class="header__auth">
-								<button class="header__search-btn" type="button">
-									<i class="icon ion-ios-search"></i>
-								</button>
-
 								<a href="/signin/" class="header__sign-in">
 									<i class="icon ion-ios-log-in"></i>
 									<span>sign in</span>
@@ -102,21 +88,6 @@
 			</div>
 		</div>
 
-		<!-- header search -->
-		<form action="#" class="header__search">
-			<div class="container">
-				<div class="row">
-					<div class="col-12">
-						<div class="header__search-content">
-							<input type="text" placeholder="Search for a movie, TV Series that you are looking for">
-
-							<button type="button">search</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</form>
-		<!-- end header search -->
         {% endblock %}
 	</header>
 	<!-- end header -->
@@ -144,7 +115,7 @@
                     <h6 class="footer__title">Resources</h6>
                     <ul class="footer__list">
                         <li><a href="/about/">About Us</a></li>
-                        <li><a href="/faq/">Help</a></li>
+                        <li><a href="/faq/">FAQ</a></li>
                     </ul>
                 </div>
                 <!-- end footer list -->
