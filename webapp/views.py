@@ -33,9 +33,9 @@ def faq(request):
 # Test page that handles data fetch calls
 def movies(request):
     # Always set these flags as False before committing changes
-    delete_all_entries = False  # USE WITH CAUTION, erases movie database contents
-    initialize_database = False
-    get_now_playing_movies = False
+    delete_all_entries = False      # USE WITH CAUTION, erases movie database contents
+    initialize_database = False     # Performs Popular fetch from TMDB 
+    get_now_playing_movies = False  # Performs Now Playing fetch from TMDB
 
     movies_to_display = handle_movies_page(delete_all_entries, initialize_database, get_now_playing_movies)
     return render(request, "movies.html", {"movies": movies_to_display})

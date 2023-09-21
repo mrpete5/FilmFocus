@@ -76,9 +76,9 @@
 									</a>
 								</div>
 								<div class="card__content">
-									<h3 class="card__title"><a href="#">{{ movie.title }}</a></h3>
+									<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 									<span class="card__category">
-										{% for genre in movie.genres.all|slice:":6" %}	<!-- Limit of 6 genres posted -->
+										{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
 											<a href="#">{{ genre.name }}</a>
 										{% endfor %}
 									</span>
@@ -124,9 +124,9 @@
 											</a>
 										</div>
 										<div class="card__content">
-											<h3 class="card__title"><a href="#">{{ movie.title }}</a></h3>
+											<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
-												{% for genre in movie.genres.all|slice:":6" %}	<!-- Limit of 6 genres posted -->	<!-- Limit of 4 genres posted -->
+												{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
 													<a href="#">{{ genre.name }}</a>
 												{% endfor %}
 											</span>
@@ -162,9 +162,9 @@
 											</a>
 										</div>
 										<div class="card__content">
-											<h3 class="card__title"><a href="#">{{ movie.title }}</a></h3>
+											<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
-												{% for genre in movie.genres.all|slice:":6" %}
+												{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
 													<a href="#">{{ genre.name }}</a>
 												{% endfor %}
 											</span>
@@ -203,9 +203,9 @@
 											</a>
 										</div>
 										<div class="card__content">
-											<h3 class="card__title"><a href="#">{{ movie.title }}</a></h3>
+											<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
-												{% for genre in movie.genres.all|slice:":6" %}	<!-- Limit of 6 genres posted -->
+												{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
 													<a href="#">{{ genre.name }}</a>
 												{% endfor %}
 											</span>

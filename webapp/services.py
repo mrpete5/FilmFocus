@@ -88,6 +88,7 @@ def process_movie_search(tmdb_id, title, now_playing=False):
                 movie.metacritic_rating = omdb_data.get('metacritic_rating')
                 movie.director = omdb_data.get('director')
                 movie.domestic_box_office = omdb_data.get('domestic_box_office')
+                movie.mpa_rating = omdb_data.get('mpa_rating')
                 movie.save()
                 
                 # Associate the movie with its genres from TMDB
@@ -133,6 +134,7 @@ def fetch_movie_data_from_omdb(title):
 
     movie_data['director'] = data.get('Director')
     movie_data['domestic_box_office'] = data.get('BoxOffice')
+    movie_data['mpa_rating'] = data.get('Rated')
     return movie_data
 
 
