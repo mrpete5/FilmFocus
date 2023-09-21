@@ -1314,10 +1314,10 @@ ul {
   font-weight: 400;
   color: #fff;
   margin: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
+  overflow: visible;
+  white-space: normal;
+  -o-text-overflow: clip;
+  text-overflow: clip;
   word-wrap: break-word;
 }
 .card__title a {
