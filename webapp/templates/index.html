@@ -82,7 +82,10 @@
 											<a href="#">{{ genre.name }}</a>
 										{% endfor %}
 									</span>
-									<span class="card__rate"><i class="icon ion-ios-star"></i> IMDb: {{ movie.imdb_rating }}</span>
+									<span class="card__rate">
+										<img src="{% static 'img/logos/imdb-logo.png' %}" alt="IMDb" style="width: 25px; vertical-align: middle; margin-right: 5px;">
+										{{ movie.imdb_rating }}
+									</span>
 								</div>
 							</div>
 							<!-- end card -->
@@ -127,9 +130,10 @@
 													<a href="#">{{ genre.name }}</a>
 												{% endfor %}
 											</span>
-											<div class="card__ratings">
-												<span class="card__rate"><i class="icon ion-ios-star"></i> IMDb: {{ movie.imdb_rating }}</span>
-											</div>
+											<span class="card__rate">
+												<img src="{% static 'img/logos/imdb-logo.png' %}" alt="IMDb" style="width: 25px; vertical-align: middle; margin-right: 5px;">
+												{{ movie.imdb_rating }}
+											</span>
 										</div>
 									</div>
 								</div>
@@ -164,9 +168,10 @@
 													<a href="#">{{ genre.name }}</a>
 												{% endfor %}
 											</span>
-											<div class="card__ratings">
-												<span class="card__rate"><i class="icon ion-ios-star"></i> IMDb: {{ movie.imdb_rating }}</span>
-											</div>
+											<span class="card__rate">
+												<img src="{% static 'img/logos/imdb-logo.png' %}" alt="IMDb" style="width: 25px; vertical-align: middle; margin-right: 5px;">
+												{{ movie.imdb_rating }}
+											</span>
 										</div>
 									</div>
 								</div>
@@ -204,9 +209,10 @@
 													<a href="#">{{ genre.name }}</a>
 												{% endfor %}
 											</span>
-											<div class="card__ratings">
-												<span class="card__rate"><i class="icon ion-ios-star"></i> IMDb: {{ movie.imdb_rating }}</span>
-											</div>
+											<span class="card__rate">
+												<img src="{% static 'img/logos/imdb-logo.png' %}" alt="IMDb" style="width: 25px; vertical-align: middle; margin-right: 5px;">
+												{{ movie.imdb_rating }}
+											</span>
 										</div>
 									</div>
 								</div>
