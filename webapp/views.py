@@ -1,3 +1,6 @@
+# The functions and html pages render based on the url provided (urls.py)
+# More function processing in services.py
+
 from django.shortcuts import render
 from .services import *
 

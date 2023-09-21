@@ -1,3 +1,5 @@
+# The views.py function associated with urls
+
 from django.urls import path
 from . import views
 
