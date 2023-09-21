@@ -59,9 +59,32 @@
 								</li>
 								<li class="header__nav-item header__nav-item--search">
 									<div class="header__search-inline">
-										<input type="text" placeholder="Search for a movie or friend">
+										<input type="text" id="searchInput" placeholder="Search for a movie or friend">
+										<span id="clearInput" class="clear-button">x</span>
 									</div>
 								</li>
+								<script>
+									// Get the input field and clear button by their IDs
+									const searchInput = document.getElementById('searchInput');
+									const clearInput = document.getElementById('clearInput');
+							
+									// Add a click event listener to the clear button
+									clearInput.addEventListener('click', () => {
+										// Clear the input field's value
+										searchInput.value = '';
+									});
+							
+									// Add an input event listener to show/hide the clear button
+									searchInput.addEventListener('input', () => {
+										if (searchInput.value.trim() !== '') {
+											// If there is text in the input field, show the clear button
+											clearInput.style.display = 'block';
+										} else {
+											// If the input is empty, hide the clear button
+											clearInput.style.display = 'none';
+										}
+									});
+								</script>
 							</ul>
 							<!-- end header nav -->
 
