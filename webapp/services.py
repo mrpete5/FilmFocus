@@ -57,6 +57,20 @@ def process_movie_search(tmdb_id, title, now_playing=False):
         print(f"Movie '{title}' (ID: {tmdb_id}) is in the ban list and was not added.")
         return
 
+    # Check if the movie exists in the database
+    if Movie.objects.filter(tmdb_id=tmdb_id).exists():
+        existing_movie = Movie.objects.get(tmdb_id=tmdb_id)
+        existing_release_year = existing_movie.release_year
+        
+        # Verify now_playing is either 2023 or 2024
+        if now_playing and existing_release_year not in [2023, 2024]:
+            now_playing = False
+
+        # Update its now_playing status
+        Movie.objects.filter(tmdb_id=tmdb_id).update(now_playing=now_playing)
+        print(f"Movie '{title}' (ID: {tmdb_id}) already exists in the database.")
+        return
+
     # Make an API call to fetch more details about the movie from TMDB
     movie_details = fetch_movie_details_from_tmdb(tmdb_id)
     
@@ -64,16 +78,7 @@ def process_movie_search(tmdb_id, title, now_playing=False):
     if movie_details.get('adult'):
         print(f"Movie '{title}' (ID: {tmdb_id}) is for adults and was not added.")
         return
-            
-    # Check if the movie exists in the database
-    if Movie.objects.filter(tmdb_id=tmdb_id).exists():
-        # If the movie already exists, update its now_playing status
-        Movie.objects.filter(tmdb_id=tmdb_id).update(now_playing=now_playing)
-        print(f"Movie '{title}' (ID: {tmdb_id}) already exists in the database.")
-        return
 
-    # Fetch the trailer key from TMDB
-    trailer_key = fetch_movie_trailer_key(tmdb_id)
     # Extract release year from release_date
     release_date = movie_details.get('release_date')
     release_year = int(release_date.split('-')[0]) if release_date else None
@@ -81,6 +86,10 @@ def process_movie_search(tmdb_id, title, now_playing=False):
     # Verify now_playing is either 2023 or 2024
     if now_playing and release_year not in [2023, 2024]:
         now_playing = False
+          
+    # Extract the video results and fetch the trailer key
+    videos = movie_details.get('videos', {}).get('results', [])
+    trailer_key = fetch_movie_trailer_key(videos)
     
     # Create the movie object with TMDB data
     movie = Movie.objects.create(
@@ -117,12 +126,12 @@ def process_movie_search(tmdb_id, title, now_playing=False):
 
 def fetch_movie_details_from_tmdb(tmdb_id):
     # Define the TMDB API endpoint and parameters
-    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?language=en-US"
+    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?language=en-US&append_to_response=videos"
     headers = {
         "accept": "application/json",
         'Authorization': TMDB_API_KEY_STRING,
     }
-    # Fetch movie details from TMDB
+    # Fetch movie details and videos from TMDB
     response = requests.get(url, headers=headers)
     return response.json()
 
@@ -146,18 +155,9 @@ def fetch_movie_data_from_omdb(title):
     return movie_data
 
 
-def fetch_movie_trailer_key(tmdb_id):
-    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}/videos"
-    headers = {
-        "accept": "application/json",
-        "Authorization": TMDB_API_KEY_STRING,
-    }
-    response = requests.get(url, headers=headers)
-    json_response = response.json()
-    results = json_response.get('results', [])
-
+def fetch_movie_trailer_key(video_results):
     # Filter the results to get the trailer key
-    for result in results:
+    for result in video_results:
         if result['type'].lower() == 'trailer':
             return result['key']
     return None
@@ -186,16 +186,15 @@ def fetch_popular_movies(start_page=1, end_page=5):
                 # Set is_popular to True for the movie
                 Movie.objects.filter(tmdb_id=movie_id).update(is_popular=True)
         
-        if page_num != end_page:  # No need to sleep after fetching the last page
-            time.sleep(1)
     return json_response
 
 
 def fetch_now_playing_movies():
     # Set now_playing to False for all movies
     Movie.objects.update(now_playing=False)
-
-    for page_num in range(1, 6):  # Fetch the first 5 pages
+    
+    page_count = 5
+    for page_num in range(1, page_count+1):  # Fetch the first 5 pages
         print(f"Fetching now playing movies page number {page_num}")
         url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page_num}"
         headers = {
@@ -256,5 +255,5 @@ def handle_movies_page(delete_all_entries=False, initialize_database=False, get_
     elif get_now_playing_movies:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
         fetch_now_playing_movies()
     
-    items = Movie.objects.all().order_by('?')[:10]  # Fetch only 10 movies to display
+    items = Movie.objects.all().order_by('?')[:10]  # Fetch only 10 movies to display on movies/
     return items
