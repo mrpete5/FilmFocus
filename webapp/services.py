@@ -1,19 +1,35 @@
-# All business logic here, initiated from functions in views.py
+"""
+Name of code artifact: services.py
+Brief description: Contains business logic for the FilmFocus web application, including functions to fetch movie details from TMDB and OMDB, and to manage the movie database.
+Programmer’s name: Mark
+Date the code was created: 09/18/2023
+Dates the code was revised: 09/21/2023
+Brief description of each revision & author: Initialized code and basic functions (Mark)
+Preconditions: Django environment must be set up correctly, and necessary environment variables (API keys) must be available.
+Acceptable and unacceptable input values or types: Functions expect specific types as documented in their respective comments.
+Postconditions: Functions return values or modify the database as per their documentation.
+Return values or types: Varies based on the function.
+Error and exception condition values or types that can occur: Errors can occur if API limits are reached or if there are issues with the database.
+Side effects: Some functions modify the database.
+Invariants: None.
+Any known faults: None.
+"""
 
 from webapp.models import *
 import requests
 import json
-import time
 from dotenv import load_dotenv
 import os
 import random
 
 
+# Load environment variables
 load_dotenv()
 OMDB_API_KEY = os.environ["OMDB_API_KEY"]               # limited to 100,000 calls/day
 TMDB_API_KEY_STRING = os.environ["TMDB_API_KEY_STRING"] # limited to around 50 calls/second
 MASTER_LIST = "webapp/data/tmdb_master_movie_list.json"
 
+# Load the ban list from the file
 def load_ban_list():
     with open('webapp/data/ban_movie_list.txt', 'r') as file:
         # Only consider lines that don't start with a '#' comment
@@ -28,24 +44,29 @@ with open(MASTER_LIST, 'r', encoding='utf-8') as file:
 title_to_id_dict = {movie['original_title'].lower(): movie['id'] for movie in master_list}
 id_to_title_dict = {movie['id']: movie['original_title'] for movie in master_list}
 
+# Search for a movie by its title
 def search_movie_by_title(title):
     return title_to_id_dict.get(title.lower())
 
 
+# Search for a movie by its TMDB ID
 def search_movie_by_id(tmdb_id):
     return id_to_title_dict.get(tmdb_id)
 
 
+# Search for a movie by its title and fetch its details
 def search_and_fetch_movie_by_title(title):
     tmdb_id = search_movie_by_title(title)
     process_movie_search(tmdb_id, title)
 
 
+# Search for a movie by its TMDB ID and fetch its details
 def search_and_fetch_movie_by_id(tmdb_id):
     title = search_movie_by_id(tmdb_id)
     process_movie_search(tmdb_id, title)
 
 
+# Process the search results for a movie and fetch its details
 def process_movie_search(tmdb_id, title, now_playing=False):
     # Check if the movie is in the TMDB master list
     if not tmdb_id:
@@ -124,6 +145,7 @@ def process_movie_search(tmdb_id, title, now_playing=False):
     print(f"Movie '{title}' (ID: {tmdb_id}) fetched and saved to the database.")
 
 
+# Fetch detailed information about a movie from TMDB
 def fetch_movie_details_from_tmdb(tmdb_id):
     # Define the TMDB API endpoint and parameters
     url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?language=en-US&append_to_response=videos"
@@ -136,6 +158,7 @@ def fetch_movie_details_from_tmdb(tmdb_id):
     return response.json()
 
 
+# Fetch additional data about a movie from OMDB
 def fetch_movie_data_from_omdb(title):
     url = f"http://www.omdbapi.com/?t={title}&apikey={OMDB_API_KEY}"
     response = requests.get(url)
@@ -155,6 +178,7 @@ def fetch_movie_data_from_omdb(title):
     return movie_data
 
 
+# Fetch the trailer key for a movie from its video results
 def fetch_movie_trailer_key(video_results):
     # Filter the results to get the trailer key
     for result in video_results:
@@ -163,6 +187,7 @@ def fetch_movie_trailer_key(video_results):
     return None
 
 
+# Fetch popular movies from TMDB
 def fetch_popular_movies(start_page=1, end_page=5):
     # Set now_playing to False for all movies
     Movie.objects.update(is_popular=False)
@@ -189,6 +214,7 @@ def fetch_popular_movies(start_page=1, end_page=5):
     return json_response
 
 
+# Fetch movies that are currently playing from TMDB
 def fetch_now_playing_movies():
     # Set now_playing to False for all movies
     Movie.objects.update(now_playing=False)
@@ -211,6 +237,7 @@ def fetch_now_playing_movies():
             process_movie_search(tmdb_id, title, now_playing=True)
 
 
+# Fetch movies for the index page
 def get_movies_for_index():
     # Fetch movies that are marked as now_playing
     now_playing_movies = Movie.objects.filter(now_playing=True)
@@ -238,11 +265,13 @@ def get_movies_for_index():
     }
 
 
+# Clear all movies from the database
 def clear_movie_database():
     deleted_count, _ = Movie.objects.all().delete()
     print(f"{deleted_count} movies deleted from the database.")
 
 
+# Handle the movies page and manage the movie database
 def handle_movies_page(delete_all_entries=False, initialize_database=False, get_now_playing_movies=False):
     page_count = 5
     

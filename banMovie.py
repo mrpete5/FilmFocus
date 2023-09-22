@@ -1,3 +1,20 @@
+"""
+Name of code artifact: banMovie.py
+Brief description: Script to ban a movie by its title, preventing it from being displayed in the FilmFocus web application.
+Programmer’s name: Mark
+Date the code was created: 09/20/2023
+Dates the code was revised: None.
+Brief description of each revision & author: Initial creation of script to ban movies by title (Mark)
+Preconditions: Django environment must be set up correctly. The Django ORM must be available and correctly configured.
+Acceptable and unacceptable input values or types: The script expects a valid movie title as input.
+Postconditions: The movie is added to the ban list and removed from the database if it exists.
+Return values or types: None. The script provides output messages to the console.
+Error and exception condition values or types that can occur: Errors can occur if there are issues with database operations or if the movie title is not found.
+Side effects: The script modifies the ban list and can remove movies from the database.
+Invariants: None.
+Any known faults: None.
+"""
+
 import os
 import django
 
