@@ -21,6 +21,7 @@ import json
 from dotenv import load_dotenv
 import os
 import random
+from django.db.models import F
 
 
 # Load environment variables
@@ -107,7 +108,7 @@ def process_movie_search(tmdb_id, title, now_playing=False):
     # Verify now_playing is either 2023 or 2024
     if now_playing and release_year not in [2023, 2024]:
         now_playing = False
-          
+
     # Extract the video results and fetch the trailer key
     videos = movie_details.get('videos', {}).get('results', [])
     trailer_key = fetch_movie_trailer_key(videos)
@@ -115,6 +116,8 @@ def process_movie_search(tmdb_id, title, now_playing=False):
     # Create the movie object with TMDB data
     movie = Movie.objects.create(
         tmdb_id=movie_details.get('id'),
+        imdb_id=movie_details.get('imdb_id'),
+        tmdb_popularity=movie_details.get('popularity'),
         title=movie_details.get('title'),
         overview=movie_details.get('overview'),
         poster_path=movie_details.get('poster_path'),
@@ -189,8 +192,6 @@ def fetch_movie_trailer_key(video_results):
 
 # Fetch popular movies from TMDB
 def fetch_popular_movies(start_page=1, end_page=5):
-    # Set now_playing to False for all movies
-    Movie.objects.update(is_popular=False)
     
     for page_num in range(start_page, end_page + 1):
         print(f"Fetching popular movies page number {page_num}")
@@ -206,11 +207,7 @@ def fetch_popular_movies(start_page=1, end_page=5):
         for movie in results:
             movie_id = movie["id"]
             search_and_fetch_movie_by_id(movie_id)
-            
-            if page_num <= 5:
-                # Set is_popular to True for the movie
-                Movie.objects.filter(tmdb_id=movie_id).update(is_popular=True)
-        
+                    
     return json_response
 
 
@@ -244,11 +241,11 @@ def get_movies_for_index():
     # Fetch 16 random movies from the now_playing movies for "New Movies"
     new_movies = random.sample(list(now_playing_movies), min(16, len(now_playing_movies)))
     
-    # Fetch all movies that are marked as popular
-    all_popular_movies = Movie.objects.filter(is_popular=True).exclude(id__in=[movie.id for movie in new_movies])
-    # Randomly select 6 movies from those marked as popular
-    popular_movies = random.sample(list(all_popular_movies), min(6, len(all_popular_movies)))
-    
+    # Order movies by tmdb_popularity in descending order, exclude the new movies, and take the top 100
+    top_100_popular_movies = Movie.objects.exclude(id__in=[movie.id for movie in new_movies]).order_by(F('tmdb_popularity').desc(nulls_last=True))[:100]
+    # Randomly select 6 movies from the top 100
+    popular_movies = random.sample(list(top_100_popular_movies), min(6, len(top_100_popular_movies)))
+
     # Fetch the top 60 movies based on imdb_rating
     top_60_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('-imdb_rating')[:60]
     # Randomly select 6 movies from the top 60

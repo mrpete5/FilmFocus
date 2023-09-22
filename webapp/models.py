@@ -20,8 +20,9 @@ from django.db import models
 # Movie model representing individual movies in the database
 class Movie(models.Model):
     # Fields for the Movie model with their respective constraints
-    tmdb_id = models.IntegerField(unique=True, null=True)
     title = models.CharField(max_length=255)
+    tmdb_id = models.IntegerField(unique=True, null=True)
+    imdb_id = models.CharField(max_length=20, unique=False, null=True, blank=True)
     overview = models.TextField(null=True, blank=True)
     poster_path = models.CharField(max_length=255, null=True, blank=True)
     release_year = models.IntegerField(null=True, blank=True)
@@ -30,12 +31,12 @@ class Movie(models.Model):
     genres = models.ManyToManyField('Genre', blank=True)
     trailer_key = models.CharField(max_length=255, null=True, blank=True)
     imdb_rating = models.CharField(max_length=10, null=True, blank=True)
+    tmdb_popularity = models.CharField(max_length=10, null=True, blank=True)
     rotten_tomatoes_rating = models.CharField(max_length=10, null=True, blank=True)
     metacritic_rating = models.CharField(max_length=10, null=True, blank=True)
     director = models.CharField(max_length=255, null=True, blank=True)
     domestic_box_office = models.CharField(max_length=100, null=True, blank=True)
     now_playing = models.BooleanField(default=False)
-    is_popular = models.BooleanField(default=False)
     mpa_rating = models.CharField(max_length=20, null=True, blank=True)
     # where_to_watch = models.CharField(max_length=200)
 
