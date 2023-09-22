@@ -310,18 +310,13 @@ ul {
 .header__nav-item.show .header__nav-link {
   color: #ff55a5;
 }
-
-
-/* my three functions */
-
-
 .header__nav-item--search .header__search-inline {
   display: flex;
   align-items: center;
-  width: 350px; /* Adjust this value to your desired width */
+  width: 350px;
 }
 .header__nav-item--search .header__search-btn {
-  margin-right: 5px; /* Adjust as needed */
+  margin-right: 5px;
 }
 .header__nav-item--search {
   display: flex;
@@ -337,7 +332,7 @@ ul {
   width: 100%;
   background-color: #28282d;
   border: none;
-  padding: 0 60px 0 15px; /* Reduced right padding */
+  padding: 0 60px 0 15px;
   font-size: 15px;
   color: #fff;
   font-family: 'Open Sans', sans-serif;
@@ -367,16 +362,6 @@ ul {
   color: #fff;
   opacity: 1;
 }
-
-
-
-
-
-
-
-
-
-
 .header__dropdown {
   position: relative;
   display: block;
@@ -3777,4 +3762,14 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   background-image: -webkit-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
   background-image: -ms-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
   background-image: linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
+}
+
+.clear-button {
+  display: none;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: none;
+  padding: 5px;
+  border-radius: 50%;
+  font-size: 16px;
 }
