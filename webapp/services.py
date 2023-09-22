@@ -214,8 +214,8 @@ def fetch_now_playing_movies():
 def get_movies_for_index():
     # Fetch movies that are marked as now_playing
     now_playing_movies = Movie.objects.filter(now_playing=True)
-    # Fetch 12 random movies from the now_playing movies for "New Movies"
-    new_movies = random.sample(list(now_playing_movies), min(12, len(now_playing_movies)))
+    # Fetch 16 random movies from the now_playing movies for "New Movies"
+    new_movies = random.sample(list(now_playing_movies), min(16, len(now_playing_movies)))
     
     # Fetch all movies that are marked as popular
     all_popular_movies = Movie.objects.filter(is_popular=True).exclude(id__in=[movie.id for movie in new_movies])
