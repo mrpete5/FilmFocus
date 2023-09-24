@@ -76,10 +76,10 @@
 									</a>
 								</div>
 								<div class="card__content">
-									<h3 class="card__title"><a href="#">{{ movie.title }}</a></h3>
+									<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 									<span class="card__category">
-										{% for genre in movie.genres.all|slice:":6" %}	<!-- Limit of 6 genres posted -->
-											<a href="#">{{ genre.name }}</a>
+										{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
+											<a>{{ genre.name }}</a>
 										{% endfor %}
 									</span>
 									<span class="card__rate">
@@ -124,10 +124,10 @@
 											</a>
 										</div>
 										<div class="card__content">
-											<h3 class="card__title"><a href="#">{{ movie.title }}</a></h3>
+											<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
-												{% for genre in movie.genres.all|slice:":6" %}	<!-- Limit of 6 genres posted -->	<!-- Limit of 4 genres posted -->
-													<a href="#">{{ genre.name }}</a>
+												{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
+													<a>{{ genre.name }}</a>
 												{% endfor %}
 											</span>
 											<span class="card__rate">
@@ -145,10 +145,10 @@
 				</div>
 				<!-- end Popular Movies section -->
 
-				<!-- Top Rated Movies section -->
+				<!-- Top-Rated Movies section -->
 				<div class="row">
 					<div class="col-12">
-						<h2 class="content__title"><b>Top Rated Movies</b></h2>
+						<h2 class="content__title"><b>Top-Rated Movies</b></h2>
 						<div class="container">
 							<div class="row">
 								{% for movie in top_rated_movies %}
@@ -162,10 +162,10 @@
 											</a>
 										</div>
 										<div class="card__content">
-											<h3 class="card__title"><a href="#">{{ movie.title }}</a></h3>
+											<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
-												{% for genre in movie.genres.all|slice:":6" %}
-													<a href="#">{{ genre.name }}</a>
+												{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
+													<a>{{ genre.name }}</a>
 												{% endfor %}
 											</span>
 											<span class="card__rate">
@@ -181,7 +181,7 @@
 						</div>
 					</div>
 				</div>	
-				<!-- end Top Rated Movies section -->
+				<!-- end Top-Rated Movies section -->
 				
 				<!-- More Movies section -->
 				<div class="row">
@@ -203,10 +203,10 @@
 											</a>
 										</div>
 										<div class="card__content">
-											<h3 class="card__title"><a href="#">{{ movie.title }}</a></h3>
+											<h3 class="card__title"><a href="#">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
-												{% for genre in movie.genres.all|slice:":6" %}	<!-- Limit of 6 genres posted -->
-													<a href="#">{{ genre.name }}</a>
+												{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
+													<a>{{ genre.name }}</a>
 												{% endfor %}
 											</span>
 											<span class="card__rate">

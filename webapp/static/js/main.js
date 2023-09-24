@@ -480,4 +480,37 @@ $(document).ready(function () {
 		return false;
 	}
 	$(window).on('load', initializeThirdSlider());
+
+	/*==============================
+	Clear Button
+	==============================*/
+	// Get the input field and clear button by their IDs
+	const $searchInput = $('#searchInput');
+	const $clearButton = $('#clearButton');
+
+	// Add an input event listener to show/hide the clear button
+	$searchInput.on('input', function() {
+		if ($searchInput.val().trim() !== '') {
+			// If there is text in the input field, show the clear button
+			$clearButton.show();
+		} else {
+			// If the input is empty, hide the clear button
+			$clearButton.hide();
+		}
+	});
+
+	// Add a click event listener to the clear button
+	$clearButton.on('click', function() {
+		// Clear the input field's value
+		$searchInput.val('');
+		// Hide the clear button
+		$clearButton.hide();  // Hide the clear button immediately after clearing the input
+	});
+
+
+
+
+
+	
+
 });
