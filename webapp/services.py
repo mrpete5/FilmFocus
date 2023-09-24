@@ -100,6 +100,12 @@ def process_movie_search(tmdb_id, title, now_playing=False):
     if movie_details.get('adult'):
         print(f"Movie '{title}' (ID: {tmdb_id}) is for adults and was not added.")
         return
+    
+    overview = movie_details.get('overview')
+    poster_path=movie_details.get('poster_path')
+    # Check if the movie has an overview and a poster
+    if not overview or not poster_path:
+        return
 
     # Extract release year from release_date
     release_date = movie_details.get('release_date')
@@ -113,14 +119,15 @@ def process_movie_search(tmdb_id, title, now_playing=False):
     videos = movie_details.get('videos', {}).get('results', [])
     trailer_key = fetch_movie_trailer_key(videos)
     
+    imdb_id = movie_details.get('imdb_id')
     # Create the movie object with TMDB data
     movie = Movie.objects.create(
         tmdb_id=movie_details.get('id'),
-        imdb_id=movie_details.get('imdb_id'),
+        imdb_id=imdb_id,
         tmdb_popularity=movie_details.get('popularity'),
         title=movie_details.get('title'),
-        overview=movie_details.get('overview'),
-        poster_path=movie_details.get('poster_path'),
+        overview=overview,
+        poster_path=poster_path,
         release_year=release_year,
         runtime=movie_details.get('runtime'),
         tagline=movie_details.get('tagline'),
@@ -129,7 +136,7 @@ def process_movie_search(tmdb_id, title, now_playing=False):
     )
     
     # Fetch additional data from OMDB
-    omdb_data = fetch_movie_data_from_omdb(title)
+    omdb_data = fetch_movie_data_from_omdb(imdb_id)
     movie.imdb_rating = omdb_data.get('imdb_rating')
     movie.rotten_tomatoes_rating = omdb_data.get('rotten_tomatoes_rating')
     movie.metacritic_rating = omdb_data.get('metacritic_rating')
@@ -162,8 +169,8 @@ def fetch_movie_details_from_tmdb(tmdb_id):
 
 
 # Fetch additional data about a movie from OMDB
-def fetch_movie_data_from_omdb(title):
-    url = f"http://www.omdbapi.com/?t={title}&apikey={OMDB_API_KEY}"
+def fetch_movie_data_from_omdb(imdb_id):
+    url = f"http://www.omdbapi.com/?i={imdb_id}&apikey={OMDB_API_KEY}"
     response = requests.get(url)
     data = response.json()
     movie_data = {}
@@ -216,8 +223,8 @@ def fetch_now_playing_movies():
     # Set now_playing to False for all movies
     Movie.objects.update(now_playing=False)
     
-    page_count = 5
-    for page_num in range(1, page_count+1):  # Fetch the first 5 pages
+    page_count = 10
+    for page_num in range(1, page_count+1):  # Fetch the first 10 pages
         print(f"Fetching now playing movies page number {page_num}")
         url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page_num}"
         headers = {
