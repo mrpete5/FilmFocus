@@ -28,27 +28,52 @@ from webapp.models import Movie
 
 def ban_movie(title):
     # Search for the movie title in the actual movie database
-    movie = Movie.objects.filter(title__iexact=title).first()
+    matching_movies = Movie.objects.filter(title__iexact=title)
 
-    if movie:
-        tmdb_id = movie.tmdb_id
+    if matching_movies.count() > 1:
+        print(f"Found {matching_movies.count()} movies with the title '{title}':")
+        for i, movie in enumerate(matching_movies, 1):
+            print(f"{i}. {movie.title} - {movie.overview[:200]}")
+        print(f"{matching_movies.count() + 1}. None")
 
-        # Add the TMDB ID to the ban list if not already present
-        if str(tmdb_id) not in BAN_LIST:
-            with open('webapp/data/ban_movie_list.txt', 'a') as file:
-                file.write(f"\n{tmdb_id}")
+        while True:
+            try:
+                choice = int(input("Enter the number of the movie you want to ban, or choose 'None': "))
+                if 1 <= choice <= matching_movies.count():
+                    movie_to_ban = matching_movies[choice - 1]
+                    ban_movie_by_id(movie_to_ban)
+                    break
+                elif choice == matching_movies.count() + 1:
+                    print("No movie will be banned.")
+                    break
+                else:
+                    print("Invalid choice. Try again.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
 
-            # Reload the ban list
-            load_ban_list()
-
-            # Remove the movie from the database
-            movie.delete()
-
-            print(f"Movie '{title}' (ID: {tmdb_id}) has been banned and removed from the database.")
-        else:
-            print(f"Movie '{title}' (ID: {tmdb_id}) is already in the ban list.")
+    elif matching_movies.exists():
+        movie_to_ban = matching_movies.first()
+        ban_movie_by_id(movie_to_ban)
     else:
         print(f"Movie '{title}' not found in the database.")
+
+def ban_movie_by_id(movie):
+    tmdb_id = movie.tmdb_id
+
+    # Add the TMDB ID to the ban list if not already present
+    if str(tmdb_id) not in BAN_LIST:
+        with open('webapp/data/ban_movie_list.txt', 'a') as file:
+            file.write(f"\n{tmdb_id}")
+
+        # Reload the ban list
+        load_ban_list()
+
+        # Remove the movie from the database
+        movie.delete()
+
+        print(f"Movie '{movie.title}' (ID: {tmdb_id}) has been banned and removed from the database.")
+    else:
+        print(f"Movie '{movie.title}' (ID: {tmdb_id}) is already in the ban list.")
 
 if __name__ == "__main__":
     # Prompt the user for a movie title

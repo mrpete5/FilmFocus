@@ -20,6 +20,7 @@ from django.db import models
 # Movie model representing individual movies in the database
 class Movie(models.Model):
     # Fields for the Movie model with their respective constraints
+    entry_id = models.AutoField(primary_key=True) # number of entry as saved into database
     title = models.CharField(max_length=255)
     tmdb_id = models.IntegerField(unique=True, null=True)
     imdb_id = models.CharField(max_length=20, unique=False, null=True, blank=True)

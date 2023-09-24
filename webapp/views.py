@@ -51,12 +51,24 @@ def signup(request):
 def faq(request):
     return render(request, "faq.html")
 
+
+# Test page that displays posters for potential movie banning
+def testforban(request):
+    start = 1       # Manually set start value
+    end = 10000     # Manually set end value
+
+    movies_to_display = handle_test_for_ban(start, end)
+    return render(request, "testforban.html", {"movies": movies_to_display})
+
+
 # Test page that handles data fetch calls and displays movies
-def movies(request):
+def testdisplay(request):
     # Always set these flags as False before committing changes
     delete_all_entries = False      # USE WITH CAUTION, erases movie database contents
     initialize_database = False     # Performs Popular fetch from TMDB 
     get_now_playing_movies = False  # Performs Now Playing fetch from TMDB
 
-    movies_to_display = handle_movies_page(delete_all_entries, initialize_database, get_now_playing_movies)
-    return render(request, "movies.html", {"movies": movies_to_display})
+    movies_to_display = handle_test_display_page(delete_all_entries, initialize_database, get_now_playing_movies)
+    return render(request, "testdisplay.html", {"movies": movies_to_display})
+
+    

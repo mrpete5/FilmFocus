@@ -275,9 +275,16 @@ def clear_movie_database():
     print(f"{deleted_count} movies deleted from the database.")
 
 
-# Handle the movies page and manage the movie database
-def handle_movies_page(delete_all_entries=False, initialize_database=False, get_now_playing_movies=False):
+# Handle the test for ban page to easily find bannable movies
+def handle_test_for_ban(start, end):
+    movies_to_display = Movie.objects.filter(entry_id__gte=start, entry_id__lte=end)
+    return movies_to_display
+
+
+# Handle the test display page and manage the movie database
+def handle_test_display_page(delete_all_entries=False, initialize_database=False, get_now_playing_movies=False):
     page_count = 5
+    fetch_count = 10
     
     if delete_all_entries:
         clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
@@ -288,5 +295,5 @@ def handle_movies_page(delete_all_entries=False, initialize_database=False, get_
     elif get_now_playing_movies:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
         fetch_now_playing_movies()
     
-    items = Movie.objects.all().order_by('?')[:10]  # Fetch only 10 movies to display on movies/
+    items = Movie.objects.all().order_by('?')[:fetch_count]  # Fetch only 10 movies to display on movies/
     return items

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies List</title>
+    <style>
+        .movies-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px; /* Adjust gap between items */
+            margin-bottom: 6px;
+            margin-left: 10%; /* Adjust left margin */
+            margin-right: 10%; /* Adjust right margin */
+        }
+        .movie-card {
+            flex: 1 1 calc(12% - 8px); /* 5 items per row, adjust for gap */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        .movie-card img {
+            width: 100%;
+            display: block;
+        }
+        .movie-card-content {
+            padding: 4px;
+        }
+        .movie-card-title {
+            font-size: 1.2em;
+            margin-bottom: 6px;
+        }
+        .movie-card-overview {
+            font-size: 1em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Movies List</h1>
+
+<div class="movies-container">
+    {% for movie in movies %}
+    <div class="movie-card">
+        {% if movie.poster_path %}
+        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster">
+        {% else %}
+        <div class="no-poster">No poster available</div>
+        {% endif %}
+        <div class="movie-card-content">
+            <div class="movie-card-title">{{ movie.title }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>
