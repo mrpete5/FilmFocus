@@ -15,11 +15,11 @@ Invariants: None.
 Any known faults: None.
 """
 
+from django.contrib.auth.models import User
 from django.db import models
 
-# Movie model representing individual movies in the database
 class Movie(models.Model):
-    # Fields for the Movie model with their respective constraints
+    """Model representing individual movies in the database."""
     id = models.AutoField(primary_key=True) # number of entry as saved into database
     title = models.CharField(max_length=255)
     tmdb_id = models.IntegerField(unique=True, null=True)
@@ -45,11 +45,40 @@ class Movie(models.Model):
     def __str__(self):
         return f"{self.title.replace(' ', '_')}_{self.release_year}"
 
-# Genre model representing movie genres in the database
+
 class Genre(models.Model):
-    # Field for the Genre model
+    """Model representing movie genres in the database."""
     name = models.CharField(max_length=100)
 
     # String representation of the Genre model
     def __str__(self):
         return self.name
+
+
+class UserProfile(models.Model):
+    """Model representing user profiles with additional information and friend relationships."""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  # links to built-in Django User model
+    friends = models.ManyToManyField('self', blank=True)
+    
+
+class Watchlist(models.Model):
+    """Model representing a user's watchlist."""
+    watchlist_name = models.CharField(max_length=255)
+    user = models.ForeignKey(User, related_name='watchlists', on_delete=models.CASCADE)
+    is_private = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username}'s {self.watchlist_name} Watchlist"
+    
+
+class WatchlistEntry(models.Model):
+    """Model representing an entry in a user's watchlist."""
+    watchlist = models.ForeignKey(Watchlist, related_name='entries', on_delete=models.CASCADE)
+    movie = models.ForeignKey('Movie', on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('watchlist', 'movie')  # Each movie can only appear once in each watchlist
+
+    def __str__(self):
+        return f"{self.movie.title} in {self.watchlist.watchlist_name}"
