@@ -50,7 +50,7 @@
 			<div class="row">
 				<!-- title -->
 				<div class="col-12">
-					<h1 class="details__title">I Dream in Another Language</h1>
+					<h1 class="details__title">{{ movie.title }}</h1>
 				</div>
 				<!-- end title -->
 
@@ -61,7 +61,7 @@
 							<!-- card cover -->
 							<div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-5">
 								<div class="card__cover">
-									<img src={% static "img/covers/cover.jpg" %} alt="">
+									<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 								</div>
 							</div>
 							<!-- end card cover -->
@@ -69,25 +69,48 @@
 							<!-- card content -->
 							<div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-7">
 								<div class="card__content">
-									<div class="card__wrap">
-										<span class="card__rate"><i class={% static "icon ion-ios-star" %}></i>8.4</span>
-
+									<!-- mpa ratings to not display -->
+									{% if movie.mpa_rating != 'Passed' and movie.mpa_rating != 'Approved' and movie.mpa_rating != 'None' and movie.mpa_rating != 'N/A' %}
 										<ul class="card__list">
-											<li>HD</li>
-											<li>16+</li>
+											<li>{{ movie.mpa_rating }}</li>
 										</ul>
-									</div>
+									{% endif %}
 
 									<ul class="card__meta">
-										<li><span>Genre:</span> <a href="#">Action</a>
-										<a href="#">Triller</a></li>
-										<li><span>Release year:</span> 2017</li>
-										<li><span>Running time:</span> 120 min</li>
-										<li><span>Country:</span> <a href="#">USA</a> </li>
+										<li>{% if movie.director %}
+											<span>Directed by:</span>
+												{{ movie.director }}
+											{% endif %}
+										</li>
+										<li><span>Genre:</span>
+											{% for genre in movie.genres.all %}
+												<a>{{ genre.name }}</a>
+											{% endfor %}
+										</li>
+										<li><span>Release year:</span> {{ movie.release_year }}</li>
+										<li><span>Running time:</span> {{ movie.runtime }} min</li>
+										<li><span>Country:</span> <a>USA</a> </li>
+										{% if movie.imdb_rating %}
+											<li>
+											<span class="card__rate">
+												<img src="{% static 'img/logos/imdb-logo.svg' %}" alt="IMDb" style="width: 30px; vertical-align: middle; margin-right: 5px;">
+												{{ movie.imdb_rating }}
+											</span>
+											</li>
+										{% endif %}
+
+										{% if movie.rt_icon %}
+											<li>
+												<span class="card__rate">
+													<img src="{% static movie.rt_icon %}" alt="Rotten Tomatoes" style="width: 30px; vertical-align: middle; margin-right: 5px;">
+													{{ movie.rotten_tomatoes_rating }}
+												</span>
+											</li>
+										{% endif %}
 									</ul>
 
-									<div class="card__description card__description--details">
-										It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy.
+									<div class="card__description">
+										{{ movie.overview }}
 									</div>
 								</div>
 							</div>
@@ -99,21 +122,10 @@
 
 				<!-- player -->
 				<div class="col-12 col-xl-6">
-					<video controls crossorigin playsinline poster="../../../cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg" id="player">
-						<!-- Video files -->
-						<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" size="576">
-						<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4" size="720">
-						<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4" size="1080">
-						<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1440p.mp4" type="video/mp4" size="1440">
-
-						<!-- Caption files -->
-						<track kind="captions" label="English" srclang="en" src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt"
-						    default>
-						<track kind="captions" label="Français" srclang="fr" src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
-
-						<!-- Fallback for browsers that don't support the <video> element -->
-						<a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" download>Download</a>
-					</video>
+					{% if movie.trailer_key %}
+					<!-- Embed the YouTube trailer using iframe -->
+					<iframe width="550" height="308" src="https://www.youtube.com/embed/{{ movie.trailer_key }}" frameborder="0" allowfullscreen></iframe>
+					{% endif %}
 				</div>
 				<!-- end player -->
 

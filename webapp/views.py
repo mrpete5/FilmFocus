@@ -26,6 +26,24 @@ def index(request):
 # View function for the movie details page
 def movie_detail(request, movie_slug):
     movie = get_object_or_404(Movie, slug=movie_slug)
+    
+    # Parse the Rotten Tomatoes rating to an integer
+    try:
+        rt_rating = int(movie.rotten_tomatoes_rating.split('%')[0])
+    except (ValueError, AttributeError):
+        rt_rating = None
+    
+    # Determine which icon to use based on the Rotten Tomatoes rating
+    if rt_rating is not None:
+        if rt_rating >= 75:
+            movie.rt_icon = 'img/logos/Rotten_Tomatoes_certified_fresh.png'
+        elif rt_rating >= 60:
+            movie.rt_icon = 'img/logos/Rotten_Tomatoes_fresh.png'
+        else:
+            movie.rt_icon = 'img/logos/Rotten_Tomatoes_rotten.png'
+    else:
+        movie.rt_icon = None
+    
     return render(request, 'details.html', {'movie': movie})
 
 # View function for the movie catalog page
@@ -71,5 +89,3 @@ def testdisplay(request):
 
     movies_to_display = handle_test_display_page(delete_all_entries, initialize_database, get_now_playing_movies)
     return render(request, "testdisplay.html", {"movies": movies_to_display})
-
-    
