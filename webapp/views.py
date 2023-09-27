@@ -46,9 +46,9 @@ def movie_detail(request, movie_slug):
     
     return render(request, 'details.html', {'movie': movie})
 
-# View function for the movie catalog page
-def catalog(request):
-    return render(request, "catalog.html")
+# View function for the movie watchlists page
+def watchlist(request):
+    return render(request, "watchlist.html")
 
 # View function for the about page
 def about(request):
@@ -74,7 +74,7 @@ def faq(request):
 # Test page that displays posters for potential movie banning
 def testforban(request):
     start = 1       # Manually set start value
-    end = 10000     # Manually set end value
+    end = 1000     # Manually set end value
 
     movies_to_display = handle_test_for_ban(start, end)
     return render(request, "testforban.html", {"movies": movies_to_display})

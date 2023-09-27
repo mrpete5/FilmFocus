@@ -277,7 +277,7 @@ def clear_movie_database():
 
 # Handle the test for ban page to easily find bannable movies
 def handle_test_for_ban(start, end):
-    movies_to_display = Movie.objects.filter(entry_id__gte=start, entry_id__lte=end)
+    movies_to_display = Movie.objects.filter(id__gte=start, id__lte=end)
     return movies_to_display
 
 

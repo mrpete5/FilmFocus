@@ -21,7 +21,7 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     path('movie/<slug:movie_slug>/', views.movie_detail, name='movie_detail'),
-    path("catalog/", views.catalog, name="catalog"),
+    path("watchlist/", views.watchlist, name="watchlist"),
     path("about/", views.about, name="about"),
     path("404/", views.four04, name="404"),
     path("signin/", views.signin, name="signin"),
