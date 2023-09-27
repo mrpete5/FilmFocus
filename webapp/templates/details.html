@@ -69,6 +69,7 @@
 							<!-- card content -->
 							<div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-7">
 								<div class="card__content">
+									<ul class="card__meta"><h2> {{ movie.tagline }} </h2></ul>
 									<!-- mpa ratings to not display -->
 									{% if movie.mpa_rating != 'Passed' and movie.mpa_rating != 'Approved' and movie.mpa_rating != 'None' and movie.mpa_rating != 'N/A' %}
 										<ul class="card__list">
@@ -89,7 +90,7 @@
 										</li>
 										<li><span>Release year:</span> {{ movie.release_year }}</li>
 										<li><span>Running time:</span> {{ movie.runtime }} min</li>
-										<li><span>Country:</span> <a>USA</a> </li>
+										
 										{% if movie.imdb_rating %}
 											<li>
 											<span class="card__rate">
@@ -105,6 +106,14 @@
 													<img src="{% static movie.rt_icon %}" alt="Rotten Tomatoes" style="width: 30px; vertical-align: middle; margin-right: 5px;">
 													{{ movie.rotten_tomatoes_rating }}
 												</span>
+											</li>
+										{% endif %}
+										{% if movie.metacritic_rating %}
+											<li>
+											<span class="card__rate">
+												<img src="{% static 'img/logos/Metacritic.png' %}" alt="Metacritic" style="width: 30px; vertical-align: middle; margin-right: 5px;">
+												{{ movie.metacritic_rating }}
+											</span>
 											</li>
 										{% endif %}
 									</ul>

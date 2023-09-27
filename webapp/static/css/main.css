@@ -1485,7 +1485,7 @@ ul {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 15px;
+  margin-left: 0px;
 }
 .card--details .card__list li {
   border: 1px solid rgba(255,255,255,0.26);
