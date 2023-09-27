@@ -1363,7 +1363,7 @@ ul {
 }
 .card__add:hover img {
   opacity: 1;  /* Opacity during hover (100%) */
-  border: 1px solid #fff;
+  border: 2px solid #5EF209;
   -webkit-border-radius: 50%;
   border-radius: 50%;
 }
