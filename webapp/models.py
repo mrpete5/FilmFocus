@@ -17,6 +17,8 @@ Any known faults: None.
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.text import slugify
+
 
 class Movie(models.Model):
     """Model representing individual movies in the database."""
@@ -40,6 +42,15 @@ class Movie(models.Model):
     now_playing = models.BooleanField(default=False)
     mpa_rating = models.CharField(max_length=20, null=True, blank=True)
     # where_to_watch = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = self.get_slug()
+        super().save(*args, **kwargs)
+
+    # Converts a normal string into a URL slug
+    def get_slug(self):
+            return f"{slugify(self.title)}-{self.release_year}"
 
     # String representation of the Movie model
     def __str__(self):

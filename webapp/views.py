@@ -15,7 +15,7 @@ Invariants: None.
 Any known faults: None.
 """
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .services import *
 
 # View function for the index page
@@ -24,8 +24,9 @@ def index(request):
     return render(request, 'index.html', context)
 
 # View function for the movie details page
-def details(request):
-    return render(request, "details.html")
+def movie_detail(request, movie_slug):
+    movie = get_object_or_404(Movie, slug=movie_slug)
+    return render(request, 'details.html', {'movie': movie})
 
 # View function for the movie catalog page
 def catalog(request):
