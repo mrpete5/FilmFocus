@@ -823,7 +823,7 @@ ul {
 }
 @media (min-width: 1200px) {
   .home {
-    padding: 70px 0;
+    padding: 30px 0;
   }
   .home__title {
     font-size: 36px;
@@ -1852,7 +1852,7 @@ ul {
 }
 @media (min-width: 1200px) {
   .details {
-    padding: 70px 0;
+    padding: 30px 0;
   }
   .details__title {
     font-size: 36px;
