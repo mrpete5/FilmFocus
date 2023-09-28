@@ -29,6 +29,7 @@ load_dotenv()
 OMDB_API_KEY = os.environ["OMDB_API_KEY"]               # limited to 100,000 calls/day
 TMDB_API_KEY_STRING = os.environ["TMDB_API_KEY_STRING"] # limited to around 50 calls/second
 MASTER_LIST = "webapp/data/tmdb_master_movie_list.json"
+ALLOWED_PROVIDERS_LIST = "webapp/data/allowed_providers_list.txt"
 
 # Load the ban list from the file
 def load_ban_list():
@@ -44,6 +45,14 @@ with open(MASTER_LIST, 'r', encoding='utf-8') as file:
 # Convert the master list into dictionaries for faster lookups
 title_to_id_dict = {movie['original_title'].lower(): movie['id'] for movie in master_list}
 id_to_title_dict = {movie['id']: movie['original_title'] for movie in master_list}
+
+# Read allowed providers and store them in the filtered_providers list
+filtered_providers = []
+with open(ALLOWED_PROVIDERS_LIST, 'r') as input_file:
+    for line in input_file:
+        provider_name = line.strip()
+        filtered_providers.append(provider_name)
+
 
 # Search for a movie by its title
 def search_movie_by_title(title):
@@ -68,7 +77,7 @@ def search_and_fetch_movie_by_id(tmdb_id):
 
 
 # Process the search results for a movie and fetch its details
-def process_movie_search(tmdb_id, title, now_playing=False):
+def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=filtered_providers):
     # Check if the movie is in the TMDB master list
     if not tmdb_id:
         print(f"Movie '{title}' not found in the master list.")
@@ -152,13 +161,33 @@ def process_movie_search(tmdb_id, title, now_playing=False):
         genre, created = Genre.objects.get_or_create(name=genre_data['name'])
         movie.genres.add(genre)
     
+    # Extract the streaming data
+    streaming_data = movie_details.get('watch/providers', {}).get('results', {}).get('US', {}).get('flatrate', [])
+
+    # If allowed_providers is None or empty, allow all providers
+    if not allowed_providers:
+        allowed_providers = [provider_data['provider_name'] for provider_data in streaming_data]
+
+    # Loop through the streaming data and update the movie's streaming providers
+    for provider_data in streaming_data:
+        # Check if the provider is in the allowed list
+        if provider_data['provider_name'] in allowed_providers:
+            provider, created = StreamingProvider.objects.get_or_create(
+                provider_id=provider_data['provider_id'],
+                defaults={
+                    'name': provider_data['provider_name'],
+                    'logo_path': provider_data['logo_path'],
+                }
+            )
+            movie.streaming_providers.add(provider)
+
     print(f"Movie '{title}' (ID: {tmdb_id}) fetched and saved to the database.")
 
 
 # Fetch detailed information about a movie from TMDB
 def fetch_movie_details_from_tmdb(tmdb_id):
     # Define the TMDB API endpoint and parameters
-    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?language=en-US&append_to_response=videos"
+    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?language=en-US&append_to_response=videos,watch/providers"
     headers = {
         "accept": "application/json",
         'Authorization': TMDB_API_KEY_STRING,
@@ -219,12 +248,11 @@ def fetch_popular_movies(start_page=1, end_page=5):
 
 
 # Fetch movies that are currently playing from TMDB
-def fetch_now_playing_movies():
+def fetch_now_playing_movies(start_page=1, end_page=5):
     # Set now_playing to False for all movies
     Movie.objects.update(now_playing=False)
     
-    page_count = 10
-    for page_num in range(1, page_count+1):  # Fetch the first 10 pages
+    for page_num in range(start_page, end_page + 1):  # Fetch the first 10 pages
         print(f"Fetching now playing movies page number {page_num}")
         url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page_num}"
         headers = {
@@ -269,6 +297,47 @@ def get_movies_for_index():
     }
 
 
+# Update the streaming providers for all movies in the Movie database
+def update_streaming_providers():
+    # Fetch all movies from your database
+    movies = Movie.objects.all()
+
+    # Print the number of movies in the database
+    print(f'Total movies in database: {movies.count()}')
+
+    for index, movie in enumerate(movies, start=1):
+        # Define the TMDB API endpoint and parameters
+        url = f"https://api.themoviedb.org/3/movie/{movie.tmdb_id}?language=en-US&append_to_response=watch/providers"
+        headers = {
+            "accept": "application/json",
+            'Authorization': TMDB_API_KEY_STRING,
+        }
+        # Fetch movie details and streaming providers from TMDB
+        response = requests.get(url, headers=headers)
+        response_data = response.json()
+        streaming_data = response_data.get('watch/providers', {}).get('results', {}).get('US', {}).get('flatrate', [])
+
+        # Clear existing streaming providers for the movie
+        movie.streaming_providers.clear()
+
+        # Update streaming providers based on the fetched data
+        for provider_data in streaming_data:
+            # Check if the provider is in the filtered_providers list
+            if provider_data['provider_name'] in filtered_providers:
+                provider, created = StreamingProvider.objects.get_or_create(
+                    provider_id=provider_data['provider_id'],
+                    defaults={
+                        'name': provider_data['provider_name'],
+                        'logo_path': provider_data['logo_path'],
+                    }
+                )
+                movie.streaming_providers.add(provider)
+
+        # Print a message every 100 movies updated
+        if index % 100 == 0:
+            print(f'Updated streaming providers for {index}/{movies.count()} movies')
+
+
 # Clear all movies from the database
 def clear_movie_database():
     deleted_count, _ = Movie.objects.all().delete()
@@ -282,18 +351,23 @@ def handle_test_for_ban(start, end):
 
 
 # Handle the test display page and manage the movie database
-def handle_test_display_page(delete_all_entries=False, initialize_database=False, get_now_playing_movies=False):
-    page_count = 5
-    fetch_count = 10
+def handle_test_display_page(delete_all_entries=False, initialize_database=False, get_now_playing_movies=False, update_streaming=False):
+    # 20 movies per page
+    popular_pages = 5
+    now_playing_pages = 10
+    fetch_movies_count = 10
     
     if delete_all_entries:
         clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
 
     if initialize_database:
-        fetch_popular_movies(1, end_page=page_count)  # 20 movies per page
-        fetch_now_playing_movies()  # Fetch now playing movies after initializing the database
+        fetch_popular_movies(1, end_page=popular_pages)
+        fetch_now_playing_movies(1, end_page=now_playing_pages)  # Fetch now playing movies after initializing the database
     elif get_now_playing_movies:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
-        fetch_now_playing_movies()
+        fetch_now_playing_movies(1, end_page=now_playing_pages)
     
-    items = Movie.objects.all().order_by('?')[:fetch_count]  # Fetch only 10 movies to display on movies/
+    if update_streaming:
+        update_streaming_providers()
+    
+    items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/
     return items

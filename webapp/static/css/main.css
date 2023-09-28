@@ -1754,12 +1754,16 @@ ul {
   justify-content: flex-start;
   align-items: center;
 }
+.details__devices-list img {
+  max-width: 50px;
+  max-height: 50px;
+}
 .details__devices-list li {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  margin-right: 20px;
+  margin-right: 10px;
   color: rgba(255,255,255,0.75);
 }
 .details__devices-list li:last-child {

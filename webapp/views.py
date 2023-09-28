@@ -74,7 +74,7 @@ def faq(request):
 # Test page that displays posters for potential movie banning
 def testforban(request):
     start = 1       # Manually set start value
-    end = 1000     # Manually set end value
+    end = 1000      # Manually set end value
 
     movies_to_display = handle_test_for_ban(start, end)
     return render(request, "testforban.html", {"movies": movies_to_display})
@@ -86,6 +86,7 @@ def testdisplay(request):
     delete_all_entries = False      # USE WITH CAUTION, erases movie database contents
     initialize_database = False     # Performs Popular fetch from TMDB 
     get_now_playing_movies = False  # Performs Now Playing fetch from TMDB
+    update_streaming = False        # Updates all movie streaming providers from TMDB, takes a while
 
-    movies_to_display = handle_test_display_page(delete_all_entries, initialize_database, get_now_playing_movies)
+    movies_to_display = handle_test_display_page(delete_all_entries, initialize_database, get_now_playing_movies, update_streaming)
     return render(request, "testdisplay.html", {"movies": movies_to_display})

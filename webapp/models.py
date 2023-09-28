@@ -41,7 +41,7 @@ class Movie(models.Model):
     domestic_box_office = models.CharField(max_length=100, null=True, blank=True)
     now_playing = models.BooleanField(default=False)
     mpa_rating = models.CharField(max_length=20, null=True, blank=True)
-    # where_to_watch = models.CharField(max_length=200)
+    streaming_providers = models.ManyToManyField('StreamingProvider', blank=True, related_name='movies')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -65,6 +65,16 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
 
+
+class StreamingProvider(models.Model):
+    """Model representing streaming providers in the database."""
+    name = models.CharField(max_length=255)
+    logo_path = models.CharField(max_length=255, null=True, blank=True)
+    provider_id = models.IntegerField(unique=True)
+
+    def __str__(self):
+        return self.name
+    
 
 class UserProfile(models.Model):
     """Model representing user profiles with additional information and friend relationships."""
