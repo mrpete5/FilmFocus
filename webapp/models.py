@@ -15,16 +15,19 @@ Invariants: None.
 Any known faults: None.
 """
 
+import random
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
+from django.db.models import Q
+from django.utils.module_loading import import_string
 
 
 class Movie(models.Model):
     """Model representing individual movies in the database."""
-    id = models.AutoField(primary_key=True) # number of entry as saved into database
+    created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255)
-    tmdb_id = models.IntegerField(unique=True, null=True)
+    tmdb_id = models.IntegerField(unique=True, null=True, db_index=True)
     imdb_id = models.CharField(max_length=20, unique=False, null=True, blank=True)
     overview = models.TextField(null=True, blank=True)
     poster_path = models.CharField(max_length=255, null=True, blank=True)
@@ -43,14 +46,60 @@ class Movie(models.Model):
     mpa_rating = models.CharField(max_length=20, null=True, blank=True)
     streaming_providers = models.ManyToManyField('StreamingProvider', blank=True, related_name='movies')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
+    recommended_movie_data = models.JSONField(default=list, blank=True)
 
+    # This method can be used to fetch the recommended movies for a particular movie
+    def get_recommended_movies(self, num_movies=6):
+        # Dynamically import the process_movie_search function
+        process_movie_search = import_string('webapp.services.process_movie_search')
+        
+        recommended_movies = []
+        processed_movies = set()  # Keep track of processed movies to avoid duplicates
+        
+        for movie_data in self.recommended_movie_data:
+            if len(recommended_movies) >= num_movies:
+                break  # Stop processing when the desired number of movies is reached
+            
+            tmdb_id = movie_data.get('tmdb_id')
+            if tmdb_id in processed_movies:
+                continue  # Skip processing if the movie has already been processed
+            
+            title = movie_data.get('title')
+            recommended_movie = Movie.objects.filter(tmdb_id=tmdb_id).first()
+            
+            if recommended_movie:
+                recommended_movies.append(recommended_movie)
+                processed_movies.add(tmdb_id)
+            else:
+                # Fetch and save the recommended movie details if it doesn't exist in your database
+                process_movie_search(tmdb_id, title)
+                recommended_movie = Movie.objects.filter(tmdb_id=tmdb_id).first()
+                
+                if recommended_movie:
+                    recommended_movies.append(recommended_movie)
+                    processed_movies.add(tmdb_id)
+        
+        # Return the specified number of recommended movies
+        return recommended_movies[:num_movies]
+
+    
     def save(self, *args, **kwargs):
         self.slug = self.get_slug()
         super().save(*args, **kwargs)
 
     # Converts a normal string into a URL slug
     def get_slug(self):
-            return f"{slugify(self.title)}-{self.release_year}"
+        base_slug = f"{slugify(self.title)}-{self.release_year}"
+        slug = base_slug
+        # Exclude the current Movie object from the exists check
+        existing_movies = Movie.objects.filter(slug=slug).exclude(pk=self.pk)
+        # Use a loop to handle the rare case where multiple existing movies have the same base slug
+        counter = 2  # Start counter at 2
+        while existing_movies.exists():
+            slug = f"{base_slug}-{counter}"
+            existing_movies = Movie.objects.filter(slug=slug).exclude(pk=self.pk)
+            counter += 1
+        return slug
 
     # String representation of the Movie model
     def __str__(self):

@@ -27,6 +27,9 @@ def index(request):
 def movie_detail(request, movie_slug):
     movie = get_object_or_404(Movie, slug=movie_slug)
     
+    # Fetch recommended movies
+    recommended_movies = movie.get_recommended_movies(8)
+    
     # Parse the Rotten Tomatoes rating to an integer
     try:
         rt_rating = int(movie.rotten_tomatoes_rating.split('%')[0])
@@ -44,7 +47,13 @@ def movie_detail(request, movie_slug):
     else:
         movie.rt_icon = None
     
-    return render(request, 'details.html', {'movie': movie})
+    context = {
+        'movie': movie,
+        'recommended_movies': recommended_movies
+    }
+    
+    return render(request, 'details.html', context)
+
 
 # View function for the movie watchlists page
 def watchlist(request):
@@ -73,20 +82,21 @@ def faq(request):
 
 # Test page that displays posters for potential movie banning
 def testforban(request):
-    start = 1       # Manually set start value
-    end = 1000      # Manually set end value
+    start_date = "2023-01-01"  # Adjusted start date
+    end_date = "2023-10-31"    # Adjusted end date
 
-    movies_to_display = handle_test_for_ban(start, end)
+    movies_to_display = handle_test_for_ban(start_date, end_date)
     return render(request, "testforban.html", {"movies": movies_to_display})
 
 
 # Test page that handles data fetch calls and displays movies
 def testdisplay(request):
     # Always set these flags as False before committing changes
-    delete_all_entries = False      # USE WITH CAUTION, erases movie database contents
-    initialize_database = False     # Performs Popular fetch from TMDB 
-    get_now_playing_movies = False  # Performs Now Playing fetch from TMDB
+    erase_movie_db = False          # USE WITH CAUTION, erases all movie database contents
+    init_movie_db = False           # Performs Popular fetch from TMDB 
+    get_now_playing = False         # Performs Now Playing fetch from TMDB
     update_streaming = False        # Updates all movie streaming providers from TMDB, takes a while
+    update_recs = False             # Updates all movie recommendations from TMDB, takes a while
 
-    movies_to_display = handle_test_display_page(delete_all_entries, initialize_database, get_now_playing_movies, update_streaming)
+    movies_to_display = handle_test_display_page(erase_movie_db, init_movie_db, get_now_playing, update_streaming, update_recs)
     return render(request, "testdisplay.html", {"movies": movies_to_display})

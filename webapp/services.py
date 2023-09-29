@@ -144,6 +144,21 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
         now_playing=now_playing,
     )
     
+    # Extract recommendations
+    recommendations = movie_details.get('recommendations', {}).get('results', [])
+    recommended_movie_data = []
+    for rec in recommendations:
+        rec_popularity = rec.get('popularity', 0)  # Default to 0 if popularity is not present
+        if rec_popularity > 1:
+            recommended_movie_data.append({
+                'tmdb_id': rec.get('id'),
+                'title': rec.get('title'),
+                'tmdb_popularity': rec_popularity  # Store the tmdb_popularity here
+            })
+
+    movie.recommended_movie_data = recommended_movie_data
+
+    
     # Fetch additional data from OMDB
     omdb_data = fetch_movie_data_from_omdb(imdb_id)
     movie.imdb_rating = omdb_data.get('imdb_rating')
@@ -187,12 +202,12 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
 # Fetch detailed information about a movie from TMDB
 def fetch_movie_details_from_tmdb(tmdb_id):
     # Define the TMDB API endpoint and parameters
-    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?language=en-US&append_to_response=videos,watch/providers"
+    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?language=en-US&append_to_response=videos,watch/providers,recommendations"
     headers = {
         "accept": "application/json",
         'Authorization': TMDB_API_KEY_STRING,
     }
-    # Fetch movie details and videos from TMDB
+    # Fetch movie details, videos, and recommendations from TMDB
     response = requests.get(url, headers=headers)
     return response.json()
 
@@ -338,6 +353,53 @@ def update_streaming_providers():
             print(f'Updated streaming providers for {index}/{movies.count()} movies')
 
 
+# Updates the movie recommendations for all movies in the Movie database
+def update_movie_recommendations():
+    # Get all movies from your database
+    movies = Movie.objects.all()
+    
+    # Print the number of movies in the database
+    print(f'Total movies in database: {movies.count()}')
+
+    for index, movie in enumerate(movies, start=1):
+        # Define the TMDB API endpoint and parameters for fetching recommendations
+        url = f"https://api.themoviedb.org/3/movie/{movie.tmdb_id}/recommendations?language=en-US"
+        headers = {
+            "accept": "application/json",
+            'Authorization': TMDB_API_KEY_STRING,
+        }
+
+        # Fetch movie recommendations from TMDB
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()  # This will raise an HTTPError for bad responses (4xx and 5xx)
+        except requests.RequestException as e:
+            print(f"Failed to fetch recommendations for movie '{movie.title}' (ID: {movie.tmdb_id}): {e}")
+            continue  # Skip to the next movie
+        
+        recommendations = response.json().get('results', [])
+        
+        for recommendation in recommendations:
+            recommended_tmdb_id = recommendation.get('id')
+            recommended_title = recommendation.get('title')
+            recommended_popularity = recommendation.get('popularity', 0)  # Default to 0 if popularity is not present
+
+            # Only append the recommendation if its popularity is greater than 1
+            if recommended_popularity > 1:
+                movie.recommended_movie_data.append({
+                    'tmdb_id': recommended_tmdb_id,
+                    'title': recommended_title,
+                    'tmdb_popularity': recommended_popularity  # Store the tmdb_popularity here
+                })
+        
+        # Save the updated recommended_movie_data field to the database
+        movie.save()
+                    
+        # Print a message every 100 movies processed
+        if index % 100 == 0:
+            print(f'Processed recommendations for {index}/{movies.count()} movies')
+
+
 # Clear all movies from the database
 def clear_movie_database():
     deleted_count, _ = Movie.objects.all().delete()
@@ -345,29 +407,33 @@ def clear_movie_database():
 
 
 # Handle the test for ban page to easily find bannable movies
-def handle_test_for_ban(start, end):
-    movies_to_display = Movie.objects.filter(id__gte=start, id__lte=end)
+def handle_test_for_ban(start_date, end_date):
+    movies_to_display = Movie.objects.filter(created_at__gte=start_date, created_at__lte=end_date)
     return movies_to_display
 
 
 # Handle the test display page and manage the movie database
-def handle_test_display_page(delete_all_entries=False, initialize_database=False, get_now_playing_movies=False, update_streaming=False):
+def handle_test_display_page(erase_movie_db=False, init_movie_db=False, get_now_playing=False, update_streaming=False, update_recs=False):
     # 20 movies per page
     popular_pages = 5
     now_playing_pages = 10
     fetch_movies_count = 10
     
-    if delete_all_entries:
+    if erase_movie_db:
         clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
 
-    if initialize_database:
+    if init_movie_db:
         fetch_popular_movies(1, end_page=popular_pages)
         fetch_now_playing_movies(1, end_page=now_playing_pages)  # Fetch now playing movies after initializing the database
-    elif get_now_playing_movies:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
+    elif get_now_playing:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
         fetch_now_playing_movies(1, end_page=now_playing_pages)
     
     if update_streaming:
         update_streaming_providers()
     
+    if update_recs:
+        update_movie_recommendations()
+    
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/
     return items
+
