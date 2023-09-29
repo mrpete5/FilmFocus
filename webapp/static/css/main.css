@@ -3271,7 +3271,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  padding: 40px 0;
+  padding: 100px 0;
 }
 .sign__form {
   background-color: #28282d;
