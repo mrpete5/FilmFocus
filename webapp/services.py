@@ -379,6 +379,9 @@ def update_movie_recommendations():
         
         recommendations = response.json().get('results', [])
         
+        # Clear the existing recommendations
+        movie.recommended_movie_data.clear()
+        
         for recommendation in recommendations:
             recommended_tmdb_id = recommendation.get('id')
             recommended_title = recommendation.get('title')

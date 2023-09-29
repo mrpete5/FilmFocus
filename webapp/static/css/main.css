@@ -3307,7 +3307,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   width: auto;
 }
 .sign__logo img {
-  max-width: 172px;
+  max-width: 250px;
 }
 .sign__input {
   background-color: #2b2b31;
@@ -3457,10 +3457,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 @media (min-width: 768px) {
   .sign__form {
-    padding: 50px 60px;
+    padding: 25px 60px;
   }
   .sign__logo {
-    margin-bottom: 50px;
+    margin-bottom: 20px;
   }
 }
 /*==============================
