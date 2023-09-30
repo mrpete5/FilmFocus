@@ -149,7 +149,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
     recommended_movie_data = []
     for rec in recommendations:
         rec_popularity = rec.get('popularity', 0)  # Default to 0 if popularity is not present
-        if rec_popularity > 1:
+        if rec_popularity > 3:
             recommended_movie_data.append({
                 'tmdb_id': rec.get('id'),
                 'title': rec.get('title'),
@@ -388,7 +388,7 @@ def update_movie_recommendations():
             recommended_popularity = recommendation.get('popularity', 0)  # Default to 0 if popularity is not present
 
             # Only append the recommendation if its popularity is greater than 1
-            if recommended_popularity > 1:
+            if recommended_popularity > 3:
                 movie.recommended_movie_data.append({
                     'tmdb_id': recommended_tmdb_id,
                     'title': recommended_title,
