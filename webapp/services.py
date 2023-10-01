@@ -416,25 +416,36 @@ def handle_test_for_ban(start_date, end_date):
 
 
 # Handle the test display page and manage the movie database
-def handle_test_display_page(erase_movie_db=False, init_movie_db=False, get_now_playing=False, update_streaming=False, update_recs=False):
+def handle_test_display_page(settings):
     # 20 movies per page
     popular_pages = 5
     now_playing_pages = 10
     fetch_movies_count = 10
     
-    if erase_movie_db:
+    # settings_array = settings.split(',')
+    print(f'[erase_movie_db, init_movie_db, get_now_playing, update_streaming, update_recs]')
+    print(f"{settings}")
+    
+    # erase_movie_db=False
+    # init_movie_db=False
+    # get_now_playing=False
+    # update_streaming=False
+    # update_recs=False
+    
+    
+    if settings[0]:
         clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
 
-    if init_movie_db:
+    if settings[1]:
         fetch_popular_movies(1, end_page=popular_pages)
         fetch_now_playing_movies(1, end_page=now_playing_pages)  # Fetch now playing movies after initializing the database
-    elif get_now_playing:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
+    elif settings[2]:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
         fetch_now_playing_movies(1, end_page=now_playing_pages)
     
-    if update_streaming:
+    if settings[3]:
         update_streaming_providers()
     
-    if update_recs:
+    if settings[4]:
         update_movie_recommendations()
     
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/

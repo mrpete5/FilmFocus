@@ -77,7 +77,7 @@ def ban_movie_by_id(movie):
 
 if __name__ == "__main__":
     # Prompt the user for a movie title
-    title = input("Enter the movie title you want to ban: ").strip()
+    title = input(" > Enter the movie title you want to ban: ").strip()
 
     if title:
         ban_movie(title)
