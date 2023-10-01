@@ -422,16 +422,15 @@ def handle_test_display_page(settings):
     now_playing_pages = 10
     fetch_movies_count = 10
     
-    # settings_array = settings.split(',')
-    print(f'[erase_movie_db, init_movie_db, get_now_playing, update_streaming, update_recs]')
-    print(f"{settings}")
-    
-    # erase_movie_db=False
-    # init_movie_db=False
-    # get_now_playing=False
-    # update_streaming=False
-    # update_recs=False
-    
+    print(f"==========================")
+    flags = ['erase_movie_db', 
+             'init_movie_db', 
+             'get_now_playing', 
+             'update_streaming', 
+             'update_recs',]
+    for index, flag in enumerate(flags):
+        print(f"{flag} = {settings[index]}")
+    print(f"==========================\n")  
     
     if settings[0]:
         clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
@@ -450,4 +449,3 @@ def handle_test_display_page(settings):
     
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/
     return items
-

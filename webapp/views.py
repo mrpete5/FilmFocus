@@ -28,7 +28,8 @@ def movie_detail(request, movie_slug):
     movie = get_object_or_404(Movie, slug=movie_slug)
     
     # Fetch recommended movies
-    recommended_movies = movie.get_recommended_movies(8)
+    # TODO: Implement this function to fetch Similar & Recommended from
+    recommended_movies = movie.get_recommended_movies(movie, 8)
     
     # Parse the Rotten Tomatoes rating to an integer
     try:
