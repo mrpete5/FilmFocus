@@ -55,7 +55,8 @@
 							</div>
 
 							<div class="sign__group">
-								<input type="password" class="sign__input" placeholder="Password">
+								<input type="password" id="id_password" class="sign__input" placeholder="Password">
+								<div class="password-toggle" onclick="togglePasswordVisibility()"></div>
 							</div>
 
 							<div class="sign__group sign__group--checkbox">
@@ -77,6 +78,7 @@
 	</div>
 
 	<!-- JS -->
+	<script src={% static "js/passwordVisibility.js" %}></script>
 	<script src={% static "js/jquery-3.3.1.min.js" %}></script>
 	<script src={% static "js/bootstrap.bundle.min.js" %}></script>
 	<script src={% static "js/owl.carousel.min.js" %}></script>

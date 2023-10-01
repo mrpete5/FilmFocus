@@ -3260,6 +3260,37 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 /*==============================
 	Sign
 ==============================*/
+/*password toggle is used to add in the visibility eye*/
+.password-toggle {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: url('https://media.geeksforgeeks.org/wp-content/uploads/20210917145551/eye.png') no-repeat center center;
+  background-size: cover;
+  cursor: pointer;
+}
+.password-toggle.active {
+  background: url('https://media.geeksforgeeks.org/wp-content/uploads/20210917150049/eyeslash.png') no-repeat center center;
+  background-size: cover;
+}
+.password-toggle2 {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: url('https://media.geeksforgeeks.org/wp-content/uploads/20210917145551/eye.png') no-repeat center center;
+  background-size: cover;
+  cursor: pointer;
+}
+.password-toggle2.active {
+  background: url('https://media.geeksforgeeks.org/wp-content/uploads/20210917150049/eyeslash.png') no-repeat center center;
+  background-size: cover;
+}
 .sign {
   display: block;
   position: relative;

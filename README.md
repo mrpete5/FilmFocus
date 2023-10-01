@@ -1,21 +1,27 @@
 # FilmFocus
 
-For help with Django or navigating the repo, view DjangoHelp.txt
+## Description
+FilmFocus is a web application designed to help movie enthusiasts manage their watchlists and discover new movies.
 
-## Getting Started
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [License](#license)
+- [Contact](#contact)
+- [Acknowledgements](#acknowledgements)
 
-1) Clone the GitHub repo
-
+## Installation
+Clone the repository and navigate to the project directory. Install the required dependencies and start the local server.
 ```bash
 git clone https://github.com/mrpete5/FilmFocus.git
-```
-2) Navigate to the app directory, install the requirements, perform any necessary migrations, and then run the local server.
-
-```bash
 cd FilmFocus
 pip install -r requirements.txt
-python manage.py makemigrations
-python manage.py migrate
 python manage.py runserver
 ```
-3) In a web browser, go to http://127.0.0.1:8000/ to visit FilmFocus.
+
+## Usage
+Visit http://127.0.0.1:8000/ to access FilmFocus. Create an account to start managing your watchlists and discovering new movies.
+
+## License
+## Contact
+## Acknowledgements
