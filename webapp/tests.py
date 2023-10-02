@@ -80,16 +80,15 @@ class Test():
         ''' Write the test file. '''
         # TODO: Implement the write_to_file function within the Test class.
         
-        data = self.file_data
         self.generate_output_file_name()
-        
-        test = os.path.join(OUTPUT_DIR, self.file_name)
-        output_file = os.path.join(OUTPUT_DIR, self.file_name)
+        self.output_file_name = os.path.join(OUTPUT_DIR, self.file_name)
         
         # Write the output file.
-        with open(output_file, 'w', newline='\n') as file:
+        with open(self.output_file_name, 'w', newline='\n') as file:
             # TODO: Finish implementation of the write_to_file function.
-            file.write(self.file_data)
+            
+            # file.write(self.file_data)            # Test version
+            file.writelines(self.file_data)
 
     def verify_input_file(self) -> None:
         ''' Verify the input file name and type. '''
@@ -97,11 +96,33 @@ class Test():
         
         if not os.path.isfile(self.input_file_name):
             print(f"The input file name '{self.input_file_name}' does not exist in the directory.")
-            self.is_input_valid = False
+            print(f"Creating: the input file name '{self.input_file_name}' in the directory.")
+            self.is_input_valid = False     # False, because the newly created input file needs to be verified.
+            self.create_file(file_function="input_file")
             return
         else:
             self.is_input_valid = True
-            # print(f"The input file name '{self.input_file_name}' is valid.")
+            # print(f"The input file name '{self.input_file_name}' is valid.") # Test version, remove later.
+
+    def create_file(self, file_function="input_file") -> None:
+        """ Create a new file name. """
+        # TODO: Implement the create_file function within the Test class.
+        
+        self.input_file_name = f'{OUTPUT_DIR}/test_input_file_v1.txt'
+        print(f'Test remove: {self.input_file_name}')
+        file1 = open(self.input_file_name,"a")
+        
+        print(file1.read())                     # Test version, remove later.
+        
+        if file_function == "input_file":
+            file1.write(self.file_data)
+        elif file_function == "output_file":
+            new_outFile = f"test_output_file_v1_{datetime.datetime.now}.txt"
+            self.output_file_name = new_outFile
+        else:
+            print(f"The file function '{file_function}' is invalid.")
+            return
+        file1.close()
 
     def generate_output_file_name(self) -> None:
         ''' Generate the output file name. '''
