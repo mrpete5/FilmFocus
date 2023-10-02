@@ -32,8 +32,13 @@ Any known faults: None.
             
 """
 
-
+import os
 from django.test import TestCase
+
+
+# Constant variables and other starter variables/functions.
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__), 'outputs/')
+
 
 # Create your tests here.
 class Test():
@@ -42,14 +47,68 @@ class Test():
         ''' Constructor for the Test class. '''
         # TODO: Implement the constructor for the Test class.
         
-        
-        pass        # 'pass' is a reserved word in Python to skip the function.
+        self.input_file_name = 'test_file_v1.txt'   # Initialize the file name.
+        self.file_data = []                         # Initialize the file data list. Optionally, change the data structre.
+        self.output_file_name = None                # Initialize the output file name.
+        self.is_input_valid = False                 # Initialize the input file name validity flag.
     
     def run(self) -> None:
         ''' Runs the test. '''
         # TODO: Implement the run function for the Test class.
-       
-        pass
+        
+        print(f"Test started.")
+        self.test_display()    # Run the test display function.
+        print(f"Test completed successfully.")
+    
+    def read_from_file(self) -> None:
+        ''' Read the test file. '''
+        # TODO: Implement the read_file function within the Test class.
+        
+        with open(self.file_name, 'r') as f:
+            for line in f.readlines():
+                print(line)
+
+    def write_to_file(self) -> None:
+        ''' Write the test file. '''
+        # TODO: Implement the write_to_file function within the Test class.
+        
+        data = self.file_data
+        self.generate_output_file_name()
+        
+        test = os.path.join(OUTPUT_DIR, self.file_name)
+        output_file = os.path.join(OUTPUT_DIR, self.file_name)
+        # 
+        with open(output_file, 'w', newline='\n') as f:
+            # f.write("Hello World!")
+            # data.write(f"Hello World!")
+            self.file_data.write()
+
+    def verify_input_file(self) -> None:
+        ''' Verify the input file name and type. '''
+        # TODO: Implement the verify_input_file_name and type function within the Test class.
+        if not os.path.isfile(self.input_file_name):
+            print(f"The input file name '{self.input_file_name}' does not exist in the directory.")
+            print(f"Processing: '{self.input_file_name}' is being created.")
+            
+            
+            print(f"Created: '{self.input_file_name}' has been created.")
+        else:
+            self.is_input_valid = True
+            print(f"The input file name '{self.input_file_name}' is valid.")
+
+
+    def generate_output_file_name(self) -> None:
+        ''' Generate the output file name. '''
+        # TODO: Implement the generate_output_file function within the Test class.
+        
+        date_time_format = "%MM/%DD/%YYYY_%HH_%mm:%ss"
+        date_time_value = date_time_format  # TODO: Temporary fix. Remove later.
+        
+        # TODO: finish implementation of the date_time_value.
+        # date_time_value = None
+                
+        self.output_file_name = f"output_{date_time_value}.txt"
+        pass    # 'pass' is a reserved word in Python to skip the function.
 
     def test_display(self) -> None:
         ''' Display the test page. '''
