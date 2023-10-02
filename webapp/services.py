@@ -419,15 +419,18 @@ def handle_test_for_ban(start_date, end_date):
 def handle_test_display_page(settings):
     # 20 movies per page
     popular_pages = 5
-    now_playing_pages = 10
-    fetch_movies_count = 10
+    now_playing_pages = 5
+    fetch_movies_count = 15
+    fetch_discover_count = 5
     
     print(f"==========================")
     flags = ['erase_movie_db', 
              'init_movie_db', 
              'get_now_playing', 
              'update_streaming', 
-             'update_recs',]
+             'update_recs',
+             'get_discover_movies', 
+             ]
     for index, flag in enumerate(flags):
         print(f"{flag} = {settings[index]}")
     print(f"==========================\n")  
@@ -447,5 +450,26 @@ def handle_test_display_page(settings):
     if settings[4]:
         update_movie_recommendations()
     
+    if settings[5]:
+        fetch_tmdb_discover_movies(1, end_page=fetch_discover_count)
+    
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/
     return items
+
+
+def fetch_tmdb_discover_movies(start_page=1, end_page=5):
+    for page in range(start_page, end_page + 1):
+        url = f"https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&language=en-US&page={page}"
+        headers = {
+            "accept": "application/json",
+            'Authorization': TMDB_API_KEY_STRING,
+        }
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()  # This will raise an HTTPError for bad responses (4xx and 5xx)
+        response_data = response.json()
+        movies = response_data.get('results', [])
+        
+        for movie in movies:
+            tmdb_id = movie.get('id')
+            title = movie.get('title')
+            process_movie_search(tmdb_id, title)

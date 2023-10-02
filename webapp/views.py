@@ -29,7 +29,7 @@ def movie_detail(request, movie_slug):
     
     # Fetch recommended movies
     # TODO: Implement this function to fetch Similar & Recommended from
-    recommended_movies = movie.get_recommended_movies(movie, 8)
+    recommended_movies = movie.get_recommended_movies(10)
     
     # Parse the Rotten Tomatoes rating to an integer
     try:
@@ -98,6 +98,7 @@ def testdisplay(request):
     get_now_playing=False               # Performs Now Playing fetch from TMDB
     update_streaming=False              # Updates all movie streaming providers from TMDB, takes a while
     update_recs=False                   # Updates all movie recommendations from TMDB, takes a while
+    get_discover_movies=False           # Fetches all discover movies from TMDB, takes a while
     
     # Add all tests into settings list
     settings = [erase_movie_db,         # USE WITH CAUTION
@@ -105,6 +106,7 @@ def testdisplay(request):
                 get_now_playing,        
                 update_streaming,       # Takes a while
                 update_recs,            # Takes a while
+                get_discover_movies,    # Takes a while
                 ]
 
              
