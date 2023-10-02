@@ -93,12 +93,12 @@ def testforban(request):
 # Test page that handles data fetch calls and displays movies
 def testdisplay(request):
     # Always set these flags as False before committing changes
-    erase_movie_db=False                # USE WITH CAUTION, erases all movie database contents
-    init_movie_db=False                 # Performs Popular fetch from TMDB 
-    get_now_playing=False               # Performs Now Playing fetch from TMDB
-    update_streaming=False              # Updates all movie streaming providers from TMDB, takes a while
-    update_recs=False                   # Updates all movie recommendations from TMDB, takes a while
-    get_discover_movies=False           # Fetches all discover movies from TMDB, takes a while
+    erase_movie_db = False                # USE WITH CAUTION, erases all movie database contents
+    init_movie_db = False                 # Performs Popular fetch from TMDB 
+    get_now_playing = False               # Performs Now Playing fetch from TMDB
+    update_streaming = False              # Updates all movie streaming providers from TMDB, takes a while
+    update_recs = False                   # Updates all movie recommendations from TMDB, takes a while
+    get_discover_movies = False           # Fetches all discover movies from TMDB, takes a while
     
     # Add all tests into settings list
     settings = [erase_movie_db,         # USE WITH CAUTION
