@@ -34,10 +34,11 @@ Any known faults: None.
 
 import os
 from django.test import TestCase
-
+import time
+import datetime
 
 # Constant variables and other starter variables/functions.
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), 'outputs/')
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '/webapp/outputs/')
 
 
 # Create your tests here.
@@ -47,26 +48,33 @@ class Test():
         ''' Constructor for the Test class. '''
         # TODO: Implement the constructor for the Test class.
         
-        self.input_file_name = 'test_file_v1.txt'   # Initialize the file name.
-        self.file_data = []                         # Initialize the file data list. Optionally, change the data structre.
-        self.output_file_name = None                # Initialize the output file name.
-        self.is_input_valid = False                 # Initialize the input file name validity flag.
+        self.input_file_name = 'test_input_file_v1.txt' # Initialize the input file name.
+        self.output_file_name = 'test_output_v1.txt'    # Initialize the output file name.
+        self.is_input_valid = False                     # Initialize the input file name validity flag.
+        self.file_data = []                             # Initialize the file data list. Optionally, change the data structre.
     
     def run(self) -> None:
         ''' Runs the test. '''
         # TODO: Implement the run function for the Test class.
         
         print(f"Test started.")
-        self.test_display()    # Run the test display function.
+        
+        # self.test_display()               # Run the test display function.
+        self.verify_input_file()            # Run the test verify_input_file function.
+        
+        print(f"Test output file name: /webapp/outputs/{self.output_file_name}")
         print(f"Test completed successfully.")
     
     def read_from_file(self) -> None:
         ''' Read the test file. '''
         # TODO: Implement the read_file function within the Test class.
         
-        with open(self.file_name, 'r') as f:
-            for line in f.readlines():
-                print(line)
+        # Read the file.
+        if self.is_input_valid: 
+            with open(self.input_file_name, 'r') as file:
+                for line in file.readlines():
+                    # print(line)
+                    self.file_data = line.strip() # Strip the newline character from the file data.
 
     def write_to_file(self) -> None:
         ''' Write the test file. '''
@@ -77,25 +85,23 @@ class Test():
         
         test = os.path.join(OUTPUT_DIR, self.file_name)
         output_file = os.path.join(OUTPUT_DIR, self.file_name)
-        # 
-        with open(output_file, 'w', newline='\n') as f:
-            # f.write("Hello World!")
-            # data.write(f"Hello World!")
-            self.file_data.write()
+        
+        # Write the output file.
+        with open(output_file, 'w', newline='\n') as file:
+            # TODO: Finish implementation of the write_to_file function.
+            file.write(self.file_data)
 
     def verify_input_file(self) -> None:
         ''' Verify the input file name and type. '''
         # TODO: Implement the verify_input_file_name and type function within the Test class.
+        
         if not os.path.isfile(self.input_file_name):
             print(f"The input file name '{self.input_file_name}' does not exist in the directory.")
-            print(f"Processing: '{self.input_file_name}' is being created.")
-            
-            
-            print(f"Created: '{self.input_file_name}' has been created.")
+            self.is_input_valid = False
+            return
         else:
             self.is_input_valid = True
-            print(f"The input file name '{self.input_file_name}' is valid.")
-
+            # print(f"The input file name '{self.input_file_name}' is valid.")
 
     def generate_output_file_name(self) -> None:
         ''' Generate the output file name. '''
