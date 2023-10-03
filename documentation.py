@@ -1,10 +1,13 @@
-""" documentation.py
-    Summary: This script helps developers document their code and provide a better 
-                understanding of how to use it with other developers.       
-    Developed By: Mark, Bill, Traizen, John, and Aaron
-    Date Created: 10/03/2023
-    Last Modified: 10/03/2023
-    Version: 1.0
+""" 
+
+documentation.py
+Summary: This script helps developers document their code and provide a better 
+            understanding of how to use it with other developers.       
+Developed By: Mark, Bill, Traizen, John, and Aaron
+Date Created: 10/03/2023
+Last Modified: 10/03/2023
+Version: 1.0
+
 """
 
 class Documentation():
@@ -15,6 +18,7 @@ class Documentation():
         
         self.topic = None               # Topic of documentation.
         self.output_filename = None     # File name of the output.
+        self.doc_build = None           # Build of the documentation skeleton.
 
     def run(self) -> None:
         ''' Runs the documentation. '''
@@ -22,7 +26,8 @@ class Documentation():
         
         print(f"Documentation started.")
                 
-        self.get_output_filename()                    # Get the documentation topic from user.
+        self.get_output_filename()                  # Get the documentation topic from user.
+        self.build_documentation()                  # Build the documentation.
         
         print(f"Documentation(s) completed successfully.")
 
@@ -65,7 +70,12 @@ class Documentation():
         fixed_name = self.fix_output_filename(self)
         self.output_filename = f'{fixed_name}_Help.md'
         print(f'   Output file name: {self.output_filename}')
-    
+
+    def build_documentation(self) -> None:
+        ''' Build the documentation skeleton. '''
+        # TODO: Implement the build_documentation function for the Documentation class.
+        
+        pass
 
 def main():
     my_documention = Documentation()
