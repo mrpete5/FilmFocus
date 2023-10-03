@@ -38,7 +38,7 @@ import time
 import datetime
 
 # Constant variables and other starter variables/functions.
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '/webapp/outputs/')
+OUTPUT_DIR = '/webapp/outputs/'
 
 
 # Create your tests here.
@@ -81,7 +81,9 @@ class Test():
         # TODO: Implement the write_to_file function within the Test class.
         
         self.generate_output_file_name()
-        self.output_file_name = os.path.join(OUTPUT_DIR, self.file_name)
+        
+        # Include the output directory in the output file name.
+        self.output_file_name = str(OUTPUT_DIR + self.output_file_name)
         
         # Write the output file.
         with open(self.output_file_name, 'w', newline='\n') as file:
