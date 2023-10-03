@@ -22,6 +22,7 @@ from dotenv import load_dotenv
 import os
 import random
 from django.db.models import F
+import webapp.letterboxd_scraper as lbd_scrape
 
 
 # Load environment variables
@@ -403,6 +404,58 @@ def update_movie_recommendations():
             print(f'Processed recommendations for {index}/{movies.count()} movies')
 
 
+def update_letterboxd_ratings():
+    # Get all movies from your database
+    movies = Movie.objects.all()
+    
+    # Print the number of movies in the database
+    print(f'Total movies in database: {movies.count()}')
+
+    # Track successful requests vs failed requests
+    test_success = 0
+    test_fail = 0
+    test_fail_cases = []
+
+    # List of tokens that need to be removed to work well with letterboxd
+    blacklist_tokens = ["- ", "&", ":", ",", "\'", ".", "!", "?", "+"]
+
+    # Iterate through movie data base to get letterboxd rating details
+    for index, movie in enumerate(movies, start=1):
+        try:
+            # Convert the title to something letterboxd can use
+            title_name = lbd_scrape.convert_to_hyphenated_name(movie.title)
+            
+            # Try to get rating information from url with and without the year appended to movie title
+            rating_dict = lbd_scrape.getRating(title_name+"-"+str(movie.release_year))
+            if not rating_dict:
+                rating_dict = lbd_scrape.getRating(title_name)
+
+            # If rating dict exists, append information to movie model, otherwise fail
+            if rating_dict:
+                movie.letterboxd_rating = rating_dict["Weighted Average"]
+                # movie.letterboxd_histogram_weights = rating_dict["Histogram Weights"]
+                test_success += 1
+            else:
+                test_fail += 1
+                test_fail_cases.append(title_name)
+
+
+        except Exception as e:
+            print("Failure to Scrape:", e)
+
+        # Save the updated recommended_movie_data field to the database
+        movie.save()
+
+        # Print a message every 100 movies processed
+        if index % 100 == 0:
+            print(f'Processed letterboxd ratings for {index}/{movies.count()} movies')
+
+    # For test purposes, gives how many succeeded, failed, and prints out the failed cases
+    print("letterboxd scraper successes:", test_success)
+    print("letterboxd scraper failures:", test_fail)
+    print("letterboxd scraper failed cases:", test_fail_cases)
+
+
 def fetch_tmdb_discover_movies(start_page=1, end_page=50):
     for page in range(start_page, end_page + 1):
         url = f"https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&language=en-US&page={page}"
@@ -451,6 +504,7 @@ def handle_test_display_page(settings):
              'update_streaming', 
              'update_recs',
              'get_discover_movies', 
+             'update_letterboxd_ratings',
              ]
     for index, flag in enumerate(flags):
         print(f"{flag} = {settings[index]}")
@@ -473,6 +527,9 @@ def handle_test_display_page(settings):
     
     if settings[5]:
         fetch_tmdb_discover_movies(1, end_page=fetch_discover_count)
+
+    if settings[6]:
+        update_letterboxd_ratings()
     
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/
     return items
