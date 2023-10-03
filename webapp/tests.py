@@ -149,3 +149,37 @@ def main():
     
 if __name__ == "__main__":
     main()
+
+
+
+
+# # tests.py
+
+# import unittest 
+# from services import MovieService
+
+# class TestMovieService(unittest.TestCase):
+
+#     def test_search_success(self):
+#         service = MovieService()
+#         results = service.search_movies('The Matrix')
+        
+#         self.assertGreater(len(results), 0)
+#         self.assertEqual(results[0].title, 'The Matrix')
+        
+#     def test_search_no_results(self):
+#         service = MovieService()
+#         results = service.search_movies('asdfasdfasdf')
+        
+#         self.assertEqual(len(results), 0)
+        
+#     def test_get_popular(self):
+#         service = MovieService()
+#         results = service.get_popular_movies(page=1)
+        
+#         self.assertGreater(len(results), 0)
+#         self.assertIsInstance(results[0], Movie)
+        
+
+# if __name__ == '__main__':
+#     unittest.main()
