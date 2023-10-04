@@ -416,19 +416,11 @@ def update_letterboxd_ratings():
     test_fail = 0
     test_fail_cases = []
 
-    # List of tokens that need to be removed to work well with letterboxd
-    blacklist_tokens = ["- ", "&", ":", ",", "\'", ".", "!", "?", "+"]
-
     # Iterate through movie data base to get letterboxd rating details
     for index, movie in enumerate(movies, start=1):
         try:
-            # Convert the title to something letterboxd can use
-            title_name = lbd_scrape.convert_to_hyphenated_name(movie.title)
-            
-            # Try to get rating information from url with and without the year appended to movie title
-            rating_dict = lbd_scrape.getRating(title_name+"-"+str(movie.release_year))
-            if not rating_dict:
-                rating_dict = lbd_scrape.getRating(title_name)
+            # Try to get rating information using letterboxd web scraper
+            rating_dict = lbd_scrape.get_rating(movie.title, movie.release_year)
 
             # If rating dict exists, append information to movie model, otherwise fail
             if rating_dict:
@@ -437,7 +429,7 @@ def update_letterboxd_ratings():
                 test_success += 1
             else:
                 test_fail += 1
-                test_fail_cases.append(title_name)
+                test_fail_cases.append(lbd_scrape.convert_to_hyphenated_name(movie.title+str(movies.release_year)))
 
 
         except Exception as e:

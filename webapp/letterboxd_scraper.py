@@ -1,4 +1,4 @@
-# Scrape.py
+# letterboxd_scraper.py
 # Decsription: Scrapes letterboxd.com for Rating Information
 #
 # Author: John Zheng
@@ -12,13 +12,14 @@ import csv
 do_caching = False                              # option whether or not to perform caching
 cache_dir = "letterboxd_rating_cache" + "/"     # need the '/' at the end for directory
 
-def saveRating(filepath, rating_info):
+# Save or load information for caching and cached items
+def save_rating(filepath, rating_info):
     # Write a Cached Version of rating_info
     with open(filepath, 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
         for key, value in rating_info.items():
             writer.writerow([key, value])
-def loadRating(filepath):
+def load_rating(filepath):
     # Read Rating Information to loaded_dict
     loaded_dict = {}
     with open(filepath, 'r') as csv_file:
@@ -61,12 +62,13 @@ def convert_to_hyphenated_name(input_string):
     hyphenated_string = hyphenated_string.lower()
 
     return hyphenated_string
-    
-def getRating(movie_name):
+
+# Used by get_rating() to request from letterboxd using movie_name
+def get_rating_direct(movie_name):
     # Return Cached Version of Rating Info If Already Exist
     if do_caching and os.path.exists(cache_dir+movie_name+".csv"):
         print("Cached Version Found")
-        return loadRating(cache_dir+movie_name+".csv")
+        return load_rating(cache_dir+movie_name+".csv")
 
     # Dictionary of Returned Rating Information
     rating_info = {
@@ -119,7 +121,7 @@ def getRating(movie_name):
 
         # Save
         if do_caching:
-            saveRating(cache_dir+movie_name+".csv", rating_info)
+            save_rating(cache_dir+movie_name+".csv", rating_info)
 
         # Returns the Rating Information and Notifies it was Scraped
         print("Rating Info Scraped from Letterboxd")
@@ -127,13 +129,15 @@ def getRating(movie_name):
     except Exception as e:
         print("Failure to Scrape:", str(e))
         return None
-
-
-def main(rd):
-    title_name = rd.lower().replace(" ", "-")
-    release_year = "2011"
     
-    rating_dict = getRating(title_name+"-"+release_year)
+# Returns a dictionary of rating information from a movie name and year
+def get_rating(movie_name, year):
+    # Convert movie_name to something that makes sense for letterboxd
+    title_name = convert_to_hyphenated_name(movie_name)
+
+    # Try to get rating information from url with and without the year appended to movie title
+    rating_dict = get_rating_direct(title_name+"-"+str(year))
     if not rating_dict:
-        rating_dict = getRating(title_name)
-    print(rating_dict)
+        rating_dict = get_rating_direct(title_name)
+    
+    return rating_dict
