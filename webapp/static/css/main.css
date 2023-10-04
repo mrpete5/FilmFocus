@@ -1,5 +1,5 @@
 /*----------------------------------------
-[Master Stylesheet]conten
+[Master Stylesheet]
 
 Project:	FlixGo
 Version:	1.0
@@ -1080,7 +1080,6 @@ ul {
     font-size: 36px;
   }
 }
-
 /*==============================
 	Section
 ==============================*/
@@ -3847,7 +3846,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 /*==============================
 	Add Movie Popup
 ==============================*/
-
 .popupButton {
   background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   border-radius: 20px;
@@ -3856,11 +3854,9 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   cursor: pointer;
   padding: 10px 25px;
 }
-
 .popupButton:active {
   opacity: 0.8;
 }
-
 .popup {
   background-color: rgba(0,0,0,0.3);
   opacity: 0;
@@ -3878,21 +3874,17 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   align-items: center;
   justify-content: center;
 }
-
 .popup button {
   pointer-events: none;
 }
-
 .popup.open {
   opacity: 1;
   border: 1.5px solid #F12D92;
   pointer-events: all;
 }
-
 .popup.open button {
   pointer-events: all;
 }
-
 .popupInner {
   background-color:#2b2b31;
   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
@@ -3909,22 +3901,18 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   z-index: 103;
   pointer-events: none;
 }
-
 .popupInner h2 {
   margin: 0;
 }
-
 .popupInner p {
   line-height: 24px;
   margin: 10px 0;
 }
-
 .popupInner img {
   width: 25px;  /* Adjust width as needed */
   height: 25px;  /* Adjust height as needed */
   opacity: 0.5;  /* Initial opacity (50%) */
 }
-
 .popupInner img:hover {
   opacity: 1;  /* Opacity during hover (100%) */
   border: 2px solid #5EF209;
