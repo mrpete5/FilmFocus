@@ -404,6 +404,7 @@ def update_movie_recommendations():
             print(f'Processed recommendations for {index}/{movies.count()} movies')
 
 
+# Update the letterboxd ratings information
 def update_letterboxd_ratings():
     # Get all movies from your database
     movies = Movie.objects.all()
@@ -429,11 +430,16 @@ def update_letterboxd_ratings():
                 test_success += 1
             else:
                 test_fail += 1
-                test_fail_cases.append(lbd_scrape.convert_to_hyphenated_name(movie.title+str(movies.release_year)))
+                test_fail_cases.append(movie.title+" ("+str(movie.release_year)+")")
+                raise Exception
 
-
+            # Print Success
+            print("Successful scrape of letterboxd for", movie.title, "("+str(movie.release_year)+")")
         except Exception as e:
-            print("Failure to Scrape:", e)
+            test_fail += 1
+            test_fail_cases.append(movie.title+" ("+str(movie.release_year)+")")
+
+            print("Failed scrape of letterboxd for", movie.title, "("+str(movie.release_year)+")")
 
         # Save the updated recommended_movie_data field to the database
         movie.save()
