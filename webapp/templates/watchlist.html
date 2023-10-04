@@ -46,15 +46,8 @@
 				<div class="col-12">
 					<div class="section__wrap">
 						<!-- section title -->
-						<h2 class="section__title">Catalog grid</h2>
+						<h2 class="section__title">WATCHLISTS</h2>
 						<!-- end section title -->
-
-						<!-- breadcrumb -->
-						<ul class="breadcrumb">
-							<li class="breadcrumb__item"><a href="#">Home</a></li>
-							<li class="breadcrumb__item breadcrumb__item--active">Catalog grid</li>
-						</ul>
-						<!-- end breadcrumb -->
 					</div>
 				</div>
 			</div>
@@ -69,6 +62,24 @@
 				<div class="col-12">
 					<div class="filter__content">
 						<div class="filter__items">
+							<!-- Watchlist filter item -->
+							<div class="filter__item" id="filter__quality">
+								<span class="filter__item-label">WATCHLIST:</span>
+
+								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-quality" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<input type="button" value="Watchlist 1">
+									<span></span>
+								</div>
+
+								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-quality">
+									<li>Watchlist 1</li>
+									<li>Watchlist 2</li>
+									<li>Watchlist 3</li>
+									<li>Create New Watchlist</li>
+								</ul>
+							</div>
+							<!-- end watchlist filter item -->
+
 							<!-- filter item -->
 							<div class="filter__item" id="filter__genre">
 								<span class="filter__item-label">GENRE:</span>
@@ -119,25 +130,28 @@
 							</div>
 							<!-- end filter item -->
 
-							<!-- filter item -->
+							<!-- quality filter item -->
 							<div class="filter__item" id="filter__quality">
-								<span class="filter__item-label">QUALITY:</span>
+								<span class="filter__item-label">WHERE TO WATCH:</span>
 
 								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-quality" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<input type="button" value="HD 1080">
+									<input type="button" value="All">
 									<span></span>
 								</div>
 
 								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-quality">
-									<li>HD 1080</li>
-									<li>HD 720</li>
-									<li>DVD</li>
-									<li>TS</li>
+									<li>All</li>
+									<li>Netflix</li>
+									<li>Max</li>
+									<li>Disney+</li>
+									<li>Paramount+</li>
+									<li>Hulu</li>
+									<li>Prime Video</li>
 								</ul>
 							</div>
 							<!-- end filter item -->
 
-							<!-- filter item -->
+							<!-- rating filter item -->
 							<div class="filter__item" id="filter__rate">
 								<span class="filter__item-label">IMBd:</span>
 
@@ -153,9 +167,9 @@
 									<div id="filter__imbd"></div>
 								</div>
 							</div>
-							<!-- end filter item -->
+							<!-- end rating filter item -->
 
-							<!-- filter item -->
+							<!-- year filter item -->
 							<div class="filter__item" id="filter__year">
 								<span class="filter__item-label">RELEASE YEAR:</span>
 
@@ -171,12 +185,31 @@
 									<div id="filter__years"></div>
 								</div>
 							</div>
-							<!-- end filter item -->
+							<!-- end year filter item -->
+
+							<!-- runtime filter item -->
+							<!-- <div class="filter__item" id="filter__runtime">
+								<span class="filter__item-label">RUNTIME:</span>
+
+								<div class="filter__item-btn dropdown-toggle" role="button" id="filter-runtime" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<div class="filter__range">
+										<div id="filter__time-start"></div>
+										<div id="filter__time-end"></div>
+									</div>
+									<span></span>
+								</div>
+
+								<div class="filter__item-menu filter__item-menu--range dropdown-menu" aria-labelledby="filter-runtime">
+									<div id="filter__time"></div>
+								</div>
+							</div> -->
+							<!-- end runtime filter item -->
+
+							<!-- filter btn -->
+							<button class="filter__btn" type="button">apply filter</button>
+							<!-- end filter btn -->
 						</div>
 						
-						<!-- filter btn -->
-						<button class="filter__btn" type="button">apply filter</button>
-						<!-- end filter btn -->
 					</div>
 				</div>
 			</div>
@@ -596,11 +629,6 @@
 				</div>
 				<!-- end card -->
 
-				<!-- section btn -->
-				<div class="col-12">
-					<a href="#" class="section__btn">Show more</a>
-				</div>
-				<!-- end section btn -->
 			</div>
 		</div>
 	</section>

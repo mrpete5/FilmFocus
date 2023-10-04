@@ -484,23 +484,10 @@ def handle_test_for_ban(start_date, end_date):
 # Handle the test display page and manage the movie database
 def handle_test_display_page(settings):
     # 20 movies per page
-    popular_pages = 5
-    now_playing_pages = 5
-    fetch_movies_count = 10
-    fetch_discover_count = 5
-    
-    print(f"==========================")
-    flags = ['erase_movie_db', 
-             'init_movie_db', 
-             'get_now_playing', 
-             'update_streaming', 
-             'update_recs',
-             'get_discover_movies', 
-             'update_letterboxd_ratings',
-             ]
-    for index, flag in enumerate(flags):
-        print(f"{flag} = {settings[index]}")
-    print(f"==========================\n")  
+    popular_pages = 5           # Number of popular pages from 1 to x with 20 results each, TMDb
+    now_playing_pages = 10      # Number of now playing pages from 1 to x with 20 results each, TMDb
+    fetch_movies_count = 10     # Number of individual movies returned to testdisplay, testdisplay/
+    fetch_discover_count = 5    # Number of discover pages from 1 to x with 20 results each, TMDb
     
     if settings[0]:
         clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
@@ -523,7 +510,18 @@ def handle_test_display_page(settings):
     if settings[6]:
         update_letterboxd_ratings()
     
+    print(f"==========================")
+    flags = ['erase_movie_db', 
+             'init_movie_db', 
+             'get_now_playing', 
+             'update_streaming', 
+             'update_recs',
+             'get_discover_movies', 
+             'update_letterboxd_ratings',
+             ]
+    for index, flag in enumerate(flags):
+        print(f"{flag} = {settings[index]}")
+    print(f"==========================\n")  
+
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/
     return items
-
-
