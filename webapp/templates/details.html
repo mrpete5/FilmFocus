@@ -38,7 +38,20 @@
 
 </head>
 <body class="body">
-
+	<!-- popup -->
+	<div class="popup" id="popup">
+		<div class="popupInner">
+			<h2>Which Watchlist?</h2>
+			<p>
+				Animated Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br> 
+				Halloween Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br>
+				Comedy Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br>
+				Random Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br>
+				Create New Watchlist &nbsp; <br>
+			</p>
+			<button id="closePopup">Close</button>
+		</div>
+	</div>
 	<!-- details -->
 	<section class="section details">
 		<!-- details background -->
@@ -464,7 +477,7 @@
 									<div class="card__cover">
 										<img src="https://image.tmdb.org/t/p/w500{{ recommended_movie.poster_path }}" alt="{{ recommended_movie.title }}">
 									</div>
-									<a href="#" class="card__add">
+									<a href="#0" class="card__add">
 										<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 									</a>
 								</a>

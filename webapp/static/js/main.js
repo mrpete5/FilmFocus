@@ -507,10 +507,18 @@ $(document).ready(function () {
 		$clearButton.hide();  // Hide the clear button immediately after clearing the input
 	});
 
+	const openBtn = document.querySelectorAll(".card__add");
+	const closeBtn = document.getElementById("closePopup");
+	const popup = document.getElementById("popup");
+	console.log(popup);
 
+	openBtn.forEach(x => x.addEventListener("click", () => {
+		console.log("clicked");
+		popup.classList.add("open");
+	}))
 
-
-
-	
+	closeBtn.addEventListener("click", () => {
+		popup.classList.remove("open");
+	})
 
 });

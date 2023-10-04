@@ -1,5 +1,5 @@
 /*----------------------------------------
-[Master Stylesheet]
+[Master Stylesheet]conten
 
 Project:	FlixGo
 Version:	1.0
@@ -34,6 +34,7 @@ Primary use:	FlixGo Template
 24. Plyr customization
 25. PhotoSwipe customization
 26. mCustomScrollbar customization
+27. Add Movie Popup
 ----------------------------------------*/
 /*==============================
 	Common styles
@@ -1079,6 +1080,7 @@ ul {
     font-size: 36px;
   }
 }
+
 /*==============================
 	Section
 ==============================*/
@@ -3840,4 +3842,93 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   padding: 5px;
   border-radius: 50%;
   font-size: 16px;
+}
+
+/*==============================
+	Add Movie Popup
+==============================*/
+
+.popupButton {
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  border-radius: 20px;
+  border: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  cursor: pointer;
+  padding: 10px 25px;
+}
+
+.popupButton:active {
+  opacity: 0.8;
+}
+
+.popup {
+  background-color: rgba(0,0,0,0.3);
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  transition: all 0.3s ease-in-out;
+  z-index: 103;
+  pointer-events: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup button {
+  pointer-events: none;
+}
+
+.popup.open {
+  opacity: 1;
+  border: 1.5px solid #F12D92;
+  pointer-events: all;
+}
+
+.popup.open button {
+  pointer-events: all;
+}
+
+.popupInner {
+  background-color:#2b2b31;
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  border: 3px solid #F12D92;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  padding: 15px 25px;
+  text-align: center;
+  color: #fff;
+  width: 580px;
+  height: 380px;
+  position: relative;
+  z-index: 103;
+  pointer-events: none;
+}
+
+.popupInner h2 {
+  margin: 0;
+}
+
+.popupInner p {
+  line-height: 24px;
+  margin: 10px 0;
+}
+
+.popupInner img {
+  width: 25px;  /* Adjust width as needed */
+  height: 25px;  /* Adjust height as needed */
+  opacity: 0.5;  /* Initial opacity (50%) */
+}
+
+.popupInner img:hover {
+  opacity: 1;  /* Opacity during hover (100%) */
+  border: 2px solid #5EF209;
+  color: #fff;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
 }
