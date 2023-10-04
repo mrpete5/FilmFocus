@@ -3,7 +3,7 @@
 #
 # Author: John Zheng
 
-from urllib.request import urlopen, Request
+import requests
 from bs4 import BeautifulSoup
 import os
 import csv
@@ -76,59 +76,65 @@ def get_rating_direct(movie_name):
         "Histogram Weights" : [],
     }
 
-    try:
-        # Makes HTTPS Request for HTML
-        url = "https://letterboxd.com/csi/film/" + movie_name + "/rating-histogram"
-        headers = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.5;) Gecko/20100101 Firefox/56.7"}
-        request = Request(url, headers=headers)
-        page = urlopen(request)
+    # Make URL
+    url = "https://letterboxd.com/csi/film/" + movie_name + "/rating-histogram"
+    
+    # Form Request Header
+    headers = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.5;) Gecko/20100101 Firefox/56.7"}
 
-        # Convert the Request to a Readable HTML
-        html_bytes = page.read()
+    # Attempt to Make Request to Letterboxd 3 Times Before Giving Up
+    for i in range(3):
+        try:
+            response = requests.get(url, headers=headers,timeout=5) # Attempt Request
+            response.raise_for_status()                             # Throw Exception When Failed
+            break                                                   # Break Loop If No Problems
+        except requests.exceptions.Timeout:
+            print("Attempt", i+1, "Timeout Reached. Retrying...")   # Notify Timeout
+        except Exception as e:
+            return None
 
-        # Create BeautifulSoup parser object
-        soup = BeautifulSoup(html_bytes, "html.parser")
+    # Convert Response to HTML
+    html = response.text
 
-        # Get histogramed Ratings by Percent
-        rating_histogram_elements = soup.find_all(class_="rating-histogram-bar")
-        if rating_histogram_elements:
-            for element in rating_histogram_elements:
-                ir_element = element.find(class_="ir")
-                if ir_element:
-                    rating_histogram_content = ir_element.get("title")
-                    rating_histogram_split = rating_histogram_content.split()
-                    rating_info["Histogram Counts"].append(
-                        int(rating_histogram_split[0].replace(",", "")))
-                    rating_info["Histogram Weights"].append(
-                        float(rating_histogram_split[3].strip("()").rstrip("%")))
-                else:
-                    rating_info["Histogram Counts"].append(0)
-                    rating_info["Histogram Weights"].append(0.0)
+    # Create BeautifulSoup parser object
+    soup = BeautifulSoup(html, "html.parser")
 
-        # Get Weighted Average
-        rating_element = soup.find("a", class_="display-rating")
-        if rating_element:
-            rating_content = rating_element.get("title")
-            rating = float(rating_content.split()[3])
-            rating_info["Weighted Average"] = rating
-        else:
-            rating = 0.0
-            for i in range(0, 10):
-                current_rating = i * 0.5 + 0.5
-                rating += current_rating * (rating_info["Histogram Weights"][i] * 0.01)
-            rating_info["Weighted Average"] = rating
+    # Get histogramed Ratings by Percent
+    rating_histogram_elements = soup.find_all(class_="rating-histogram-bar")
+    if rating_histogram_elements:
+        for element in rating_histogram_elements:
+            ir_element = element.find(class_="ir")
+            if ir_element:
+                rating_histogram_content = ir_element.get("title")
+                rating_histogram_split = rating_histogram_content.split()
+                rating_info["Histogram Counts"].append(
+                    int(rating_histogram_split[0].replace(",", "")))
+                rating_info["Histogram Weights"].append(
+                    float(rating_histogram_split[3].strip("()").rstrip("%")))
+            else:
+                rating_info["Histogram Counts"].append(0)
+                rating_info["Histogram Weights"].append(0.0)
+
+    # Get Weighted Average
+    rating_element = soup.find("a", class_="display-rating")
+    if rating_element:
+        rating_content = rating_element.get("title")
+        rating = float(rating_content.split()[3])
+        rating_info["Weighted Average"] = rating
+    else:
+        rating = 0.0
+        for i in range(0, 10):
+            current_rating = i * 0.5 + 0.5
+            rating += current_rating * (rating_info["Histogram Weights"][i] * 0.01)
+        rating_info["Weighted Average"] = rating
 
 
-        # Save
-        if do_caching:
-            save_rating(cache_dir+movie_name+".csv", rating_info)
+    # Save to Cache
+    if do_caching:
+        save_rating(cache_dir+movie_name+".csv", rating_info)
 
-        # Returns the Rating Information and Notifies it was Scraped
-        print("Rating Info Scraped from Letterboxd")
-        return rating_info
-    except Exception as e:
-        print("Failure to Scrape:", str(e))
-        return None
+    # Returns the Rating Information and Notifies it was Scraped
+    return rating_info
     
 # Returns a dictionary of rating information from a movie name and year
 def get_rating(movie_name, year):
@@ -139,5 +145,5 @@ def get_rating(movie_name, year):
     rating_dict = get_rating_direct(title_name+"-"+str(year))
     if not rating_dict:
         rating_dict = get_rating_direct(title_name)
-    
+
     return rating_dict
