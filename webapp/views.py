@@ -99,7 +99,7 @@ def testdisplay(request):
     update_streaming = False              # Updates all movie streaming providers from TMDB, takes a while
     update_recs = False                   # Updates all movie recommendations from TMDB, takes a while
     get_discover_movies = False           # Fetches all discover movies from TMDB, takes a while
-    update_letterboxd = False             # Updates all movie letterboxd info from webscraper
+    update_letterboxd = False             # Updates all movie letterboxd info from webscraper, takes a while
     
     # Add all tests into settings list
     settings = [erase_movie_db,         # USE WITH CAUTION
