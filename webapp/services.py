@@ -445,13 +445,22 @@ def update_letterboxd_ratings():
         movie.save()
 
         # Print a message every 100 movies processed
-        if index % 100 == 0:
+        if index % 50 == 0:
             print(f'Processed letterboxd ratings for {index}/{movies.count()} movies')
 
     # For test purposes, gives how many succeeded, failed, and prints out the failed cases
+    total_attempts = test_success + test_fail
+    success_rate = test_success / total_attempts
+    failure_rate = test_fail / total_attempts
+    print("letterboxd scraper attempts:", total_attempts)
     print("letterboxd scraper successes:", test_success)
     print("letterboxd scraper failures:", test_fail)
-    print("letterboxd scraper failed cases:", test_fail_cases)
+    print("letterboxd scraper success rate:", success_rate)
+    print("letterboxd scraper failure rate:", failure_rate)
+    
+    movies_no_rating = Movie.objects.filter(letterboxd_rating=None)
+    titles_with_no_rating = [movie.title for movie in movies_no_rating]
+    print("letterboxd scraper titles with no rating:", titles_with_no_rating)
 
 
 def fetch_tmdb_discover_movies(start_page=1, end_page=50):
@@ -470,9 +479,6 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=50):
             tmdb_id = movie.get('id')
             title = movie.get('title')
             process_movie_search(tmdb_id, title)
-
-
-
 
 
 # Clear all movies from the database
