@@ -1,5 +1,5 @@
 # letterboxd_scraper.py
-# Decsription: Scrapes letterboxd.com for Rating Information
+# Description: Scrapes letterboxd.com for Rating Information
 #
 # Author: John Zheng
 

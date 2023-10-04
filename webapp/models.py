@@ -48,7 +48,7 @@ class Movie(models.Model):
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     recommended_movie_data = models.JSONField(default=list, blank=True)
     letterboxd_rating = models.FloatField(null=True, blank=True)
-    # letterboxd_histogram_weights = JSONField(null=True, blank=True)
+    # letterboxd_histogram_weights = JSONField(null=True, blank=True) # TODO: Add histogram weights or remove this line
 
     # This method can be used to fetch the recommended movies for a particular movie
     def get_recommended_movies(self, num_movies=6):

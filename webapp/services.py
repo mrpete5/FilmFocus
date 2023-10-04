@@ -144,6 +144,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
         trailer_key=trailer_key,
         now_playing=now_playing,
     )
+    movie.save()
     
     # Extract recommendations
     recommendations = movie_details.get('recommendations', {}).get('results', [])
@@ -159,7 +160,6 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
 
     movie.recommended_movie_data = recommended_movie_data
 
-    
     # Fetch additional data from OMDB
     omdb_data = fetch_movie_data_from_omdb(imdb_id)
     movie.imdb_rating = omdb_data.get('imdb_rating')
@@ -197,6 +197,15 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
             )
             movie.streaming_providers.add(provider)
 
+    # Fetch Letterboxd ratings data
+    try:
+        rating_dict = lbd_scrape.get_rating(movie.title, movie.release_year)    # TODO: Verify implemention
+        if rating_dict:
+            movie.letterboxd_rating = rating_dict["Weighted Average"]
+    except Exception as e:
+        print(f"Failure: {e}")
+
+    movie.save()
     print(f"Movie '{title}' (ID: {tmdb_id}) fetched and saved to the database.")
 
 
@@ -426,7 +435,7 @@ def update_letterboxd_ratings():
             # If rating dict exists, append information to movie model, otherwise fail
             if rating_dict:
                 movie.letterboxd_rating = rating_dict["Weighted Average"]
-                # movie.letterboxd_histogram_weights = rating_dict["Histogram Weights"]
+                # movie.letterboxd_histogram_weights = rating_dict["Histogram Weights"] # TODO: Add histogram weights or remove this line
                 test_success += 1
             else:
                 test_fail += 1
@@ -497,7 +506,7 @@ def handle_test_for_ban(start_date, end_date):
 def handle_test_display_page(settings):
     # 20 movies per page
     popular_pages = 5           # Number of popular pages from 1 to x with 20 results each, TMDb
-    now_playing_pages = 10      # Number of now playing pages from 1 to x with 20 results each, TMDb
+    now_playing_pages = 5      # Number of now playing pages from 1 to x with 20 results each, TMDb
     fetch_movies_count = 10     # Number of individual movies returned to testdisplay, testdisplay/
     fetch_discover_count = 5    # Number of discover pages from 1 to x with 20 results each, TMDb
     
