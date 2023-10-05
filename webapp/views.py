@@ -76,7 +76,7 @@ def four04(request):
     return render(request, "404.html")
 
 # View function for the log-in page
-def login(request):
+def signin(request):
     return render(request, "login.html")
 
 # View function for the sign-up page
