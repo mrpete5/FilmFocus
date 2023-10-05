@@ -84,7 +84,7 @@ def signup(request):
             login(request, user)
             username = form.cleaned_data.get('username')
             messages.success(request, f"Account was created for {username}!")
-            return redirect('signin')
+            return redirect('index')
         messages.error(request, "Registration Failed")
     else:
         form = NewUserForm()
