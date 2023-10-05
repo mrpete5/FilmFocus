@@ -47,25 +47,26 @@
 						<!-- registration form -->
 						<form method="POST" class="sign__form">
 							{% csrf_token %}
+
 							<a href="/" class="sign__logo">
 								<img src={% static "img/logos/FilmFocus_textonly.png" %} alt="">
 							</a>
 
 							<div class="sign__group">
-								<input type="text" class="sign__input" placeholder="Username">
+								{{ register_form.username }}
 							</div>
 
 							<div class="sign__group">
-								<input type="text" class="sign__input" placeholder="Email">
+								{{ register_form.email }}
 							</div>
 
 							<div class="sign__group">
-								<input type="password" id="id_password" class="sign__input" placeholder="Password">
+								{{ register_form.password1 }}
 								<div class="password-toggle" onclick="togglePasswordVisibility()"></div>
 							</div>
 
 							<div class="sign__group">
-								<input type="password" id="id_confirmationPassword" class="sign__input" placeholder="Confirm Password">
+								{{ register_form.password2 }}
 								<div class="password-toggle2" onclick="toggleConfirmPasswordVisibility()"></div>
 							</div>
 							

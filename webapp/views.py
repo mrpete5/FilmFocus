@@ -3,7 +3,7 @@ Name of code artifact: views.py
 Brief description: Contains view functions for the FilmFocus web application, responsible for handling HTTP requests and rendering appropriate templates.
 Programmer’s name: Mark
 Date the code was created: 09/17/2023
-Dates the code was revised: 09/21/2023
+Dates the code was revised: 10/05/2023
 Brief description of each revision & author: Initialized view functions for various pages (Mark)
 Preconditions: Django environment must be set up correctly. The services module must be available and correctly set up.
 Acceptable and unacceptable input values or types: Functions expect HTTP requests as input.
@@ -15,7 +15,7 @@ Invariants: None.
 Any known faults: None.
 """
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewUserForm
 from django.contrib.auth import login
 from django.contrib import messages
@@ -77,7 +77,19 @@ def signin(request):
 
 # View function for the sign-up page
 def signup(request):
-    return render(request, "signup.html")
+    if request.method == "POST":
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            username = form.cleaned_data.get('username')
+            messages.success(request, f"Account was created for {username}!")
+            return redirect('signin')
+        messages.error(request, "Registration Failed")
+    else:
+        form = NewUserForm()
+    return render(request=request, template_name="signup.html", context={"register_form":form})
+
 
 # View function for the FAQ page
 def faq(request):
@@ -113,20 +125,6 @@ def testdisplay(request):
                 get_discover_movies,    # Takes a while
                 update_letterboxd,      # Takes a while
                 ]
-
-             
+  
     movies_to_display = handle_test_display_page(settings)
     return render(request, "testdisplay.html", {"movies": movies_to_display})
-
-# Register Function for User Registration
-def register_request(request):
-    if request.method == "POST":
-        form = NewUserForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, "Registration successful.")
-            return render(request, 'index.html')
-        messages.error(request, "Registration Failed")
-    form = NewUserForm
-    return render(request=request, template_name="webapp/templates/signup.html", context={"register_form":form})

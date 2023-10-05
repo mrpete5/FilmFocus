@@ -1,9 +1,9 @@
 """
 Name of code artifact: forms.py
-Brief description: This python file is responsible for handling user registration
+Brief description: This Python file is responsible for handling user registration.
 Programmer’s name: Bill
-Date the code was created: 10/4/2023
-Dates the code was revised: 10/4/2023
+Date the code was created: 10/04/2023
+Dates the code was revised: 10/04/2023
 
 """
 
@@ -12,9 +12,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 
-
 class NewUserForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class':'sign__input', 'placeholder': 'Email'}))
 
     class Meta:
         model = User
@@ -26,3 +25,16 @@ class NewUserForm(UserCreationForm):
         if commit:
             user.save()
         return user
+    
+    def __init__(self, *args, **kwargs):
+        super(NewUserForm, self).__init__(*args, **kwargs)
+        
+        # Use widgets on built in authentication fields
+        username_attrs = {'class':'sign__input', 'placeholder': 'Username'} 
+        self.fields['username'].widget.attrs=username_attrs
+        
+        password1_attrs = {'class':'sign__input', 'placeholder': 'Password', 'type': 'password', 'id':'id_password'}
+        self.fields['password1'].widget.attrs=password1_attrs
+
+        password2_attrs = {'class':'sign__input', 'placeholder': 'Confirm Password', 'type': 'password', 'id':'id_confirmationPassword'}
+        self.fields['password2'].widget.attrs=password2_attrs
