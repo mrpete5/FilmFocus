@@ -84,7 +84,7 @@ def signup(request):
             login(request, user)
             username = form.cleaned_data.get('username')
             messages.success(request, f"Account was created for {username}!")
-            return redirect('login')
+            return redirect('index')        # Redirects to the homepage on successful sign up
         messages.error(request, "Registration Failed")
     else:
         form = NewUserForm()
