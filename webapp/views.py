@@ -16,6 +16,9 @@ Any known faults: None.
 """
 
 from django.shortcuts import render, get_object_or_404
+from .forms import NewUserForm
+from django.contrib.auth import login
+from django.contrib import messages
 from .services import *
 
 # View function for the index page
@@ -114,3 +117,16 @@ def testdisplay(request):
              
     movies_to_display = handle_test_display_page(settings)
     return render(request, "testdisplay.html", {"movies": movies_to_display})
+
+# Register Function for User Registration
+def register_request(request):
+    if request.method == "POST":
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful.")
+            return render(request, 'index.html')
+        messages.error(request, "Registration Failed")
+    form = NewUserForm
+    return render(request=request, template_name="webapp/templates/signup.html", context={"register_form":form})
