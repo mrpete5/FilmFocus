@@ -38,20 +38,32 @@
 
 </head>
 <body class="body">
+
 	<!-- popup -->
-	<div class="popup" id="popup">
-		<div class="popupInner">
-			<h2>Which Watchlist?</h2>
-			<p>
-				Animated Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br> 
-				Halloween Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br>
-				Comedy Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br>
-				Random Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br>
-				<button id="createWatchlist" class="create__watchlist">Create Watchlist</button>
-			</p>
-			<button id="closePopup" class="close__popup">Close</button>
+	{% if user.is_authenticated %}
+		<div class="popup" id="popup">
+			<div class="popupInner">
+				<h2>Add to Watchlist</h2><br>
+
+				{% for list in watchlists %}
+					{{ list.watchlist_name}} &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br> 
+				{% endfor %}
+
+				<p>	Create New Watchlist &nbsp;</p><br>
+				<button id="closePopup" class="close__popup">CLOSE</button>
+			</div>
 		</div>
-	</div>
+	{% else %}
+		<div class="popup" id="popup">
+			<div class="popupInner">
+				<h2>Log In to Add to Your Watchlist</h2><br>
+				<button id="loginPopup" class="login__popup">LOG IN</button><br>
+				<button id="closePopup" class="close__popup">CLOSE</button>
+			</div>
+		</div>
+	{% endif %}
+	<!-- end popup -->
+
 	<!-- home -->
 	<section class="home">
 		<!-- home bg -->

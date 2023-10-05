@@ -24,6 +24,10 @@ from .services import *
 # View function for the index page
 def index(request):
     context = get_movies_for_index()
+    user = request.user
+    if user.is_authenticated:
+        context['watchlists'] = Watchlist.objects.filter(user=user)
+        
     return render(request, 'index.html', context)
 
 # View function for the movie details page

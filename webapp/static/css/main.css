@@ -3892,10 +3892,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   border: 3px solid #F12D92;
   border-radius: 5px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-  padding: 15px 25px;
+  padding: 10px 10px;
   text-align: center;
   color: #fff;
-  width: 580px;
+  width: 450px;
   height: 380px;
   position: relative;
   z-index: 103;
@@ -3926,7 +3926,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
-  margin-top: 22.5%;
+  /* margin-top: 22.5%; */
+  margin-top: 50px;
 }
 .create__watchlist {
   color: #fff;
@@ -3945,4 +3946,21 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   color: #fff;
   -webkit-border-radius: 50%;
   border-radius: 50%;
+}
+.login__popup {
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+  /* margin-top: 22.5%; */
 }

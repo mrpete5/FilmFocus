@@ -521,4 +521,8 @@ $(document).ready(function () {
 		popup.classList.remove("open");
 	})
 
+	const loginBtn = document.getElementById("loginPopup");
+	loginBtn.addEventListener("click", () => {
+		window.location.href = "/login/";	// redirect to login page
+    })
 });
