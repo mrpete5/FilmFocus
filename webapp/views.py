@@ -71,9 +71,9 @@ def about(request):
 def four04(request):
     return render(request, "404.html")
 
-# View function for the sign-in page
-def signin(request):
-    return render(request, "signin.html")
+# View function for the log-in page
+def login(request):
+    return render(request, "login.html")
 
 # View function for the sign-up page
 def signup(request):
@@ -84,7 +84,7 @@ def signup(request):
             login(request, user)
             username = form.cleaned_data.get('username')
             messages.success(request, f"Account was created for {username}!")
-            return redirect('signin')
+            return redirect('login')
         messages.error(request, "Registration Failed")
     else:
         form = NewUserForm()
