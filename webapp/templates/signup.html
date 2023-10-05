@@ -45,7 +45,8 @@
 				<div class="col-12">
 					<div class="sign__content">
 						<!-- registration form -->
-						<form action="#" class="sign__form">
+						<form method="POST" class="sign__form">
+							{% csrf_token %}
 							<a href="/" class="sign__logo">
 								<img src={% static "img/logos/FilmFocus_textonly.png" %} alt="">
 							</a>
@@ -68,7 +69,7 @@
 								<div class="password-toggle2" onclick="toggleConfirmPasswordVisibility()"></div>
 							</div>
 							
-							<button class="sign__btn" type="button">Sign up</button>
+							<button class="sign__btn" type="submit">Sign up</button>
 
 							<span class="sign__text">Already have an account? <a href="/signin/">Sign in!</a></span>
 						</form>
