@@ -24,6 +24,7 @@ urlpatterns = [
     path("watchlist/", views.watchlist, name="watchlist"),
     path("about/", views.about, name="about"),
     path("404/", views.four04, name="404"),
+    path("pwreset/", views.pwreset, name="pwreset"),
     path("signin/", views.signin, name="signin"),
     path("signup/", views.signup, name="signup"),
     path("faq/", views.faq, name="faq"),

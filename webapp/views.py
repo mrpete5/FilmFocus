@@ -71,6 +71,10 @@ def about(request):
 def four04(request):
     return render(request, "404.html")
 
+# View function for the password reset page
+def pwreset(request):
+    return render(request, "pwreset.html")
+
 # View function for the sign-in page
 def signin(request):
     return render(request, "signin.html")
