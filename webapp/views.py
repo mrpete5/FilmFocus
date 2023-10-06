@@ -161,3 +161,12 @@ def testdisplay(request):
   
     movies_to_display = handle_test_display_page(settings)
     return render(request, "testdisplay.html", {"movies": movies_to_display})
+
+
+
+def poster_game(request):
+    ''' Play a poster reveal guessing game. '''
+    # TODO: Implement this function to play a poster reveal guessing game.    
+  
+    movies_to_display = handle_poster_game(movie_count=1)
+    return render(request, "postergame.html", {"movies": movies_to_display})

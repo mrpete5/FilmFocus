@@ -552,3 +552,7 @@ def handle_test_display_page(settings):
 
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/
     return items
+
+
+def handle_poster_game(movie_count=1):
+    return Movie.objects.all().order_by('?')[:movie_count]  # Fetch the first num_movie
