@@ -75,11 +75,19 @@ def about(request):
 def four04(request):
     return render(request, "404.html")
 
-# View function for the log-in page
+# View function for the password reset page
+def pwreset(request):
+    return render(request, "pwreset.html")
+
+# View function for the login page
+'''
+# Uses 'signin' view function and 'login.html'
+# If view function named login, then conflicts with Django login function, if view function named login
+'''
 def signin(request):
     return render(request, "login.html")
 
-# View function for the sign-up page
+# View function for the signup page
 def signup(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)

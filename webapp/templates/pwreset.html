@@ -4,7 +4,9 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
+<style>
+	p {text-align: center; max-width: 300px;}
+</style>
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -49,26 +51,18 @@
 							<a href="/" class="sign__logo">
 								<img src={% static "img/logos/FilmFocus_textonly.png" %} alt="">
 							</a>
-
+							<div>
+								<h2 style="color: white;">Reset your password</h2>
+							</div>
+							<div>
+								<p style="color: white;">Enter your username to receive an email with a link to reset your password.</p>
+							</div>
 							<div class="sign__group">
 								<input type="text" class="sign__input" placeholder="Username">
 							</div>
-
-							<div class="sign__group">
-								<input type="password" id="id_password" class="sign__input" placeholder="Password">
-								<div class="password-toggle" onclick="togglePasswordVisibility()"></div>
+							<div>
+								<button class="reset__send" type="button">Send</button>
 							</div>
-
-							<div class="sign__group sign__group--checkbox">
-								<input id="remember" name="remember" type="checkbox" checked="checked">
-								<label for="remember">Remember Me</label>
-							</div>
-							
-							<button class="sign__btn" type="button">Log in</button>
-
-							<span class="sign__text">Don't have an account? <a href="/signup/">Sign up!</a></span>
-
-							<span class="sign__text"><a href="/pwreset/">Forgot password?</a></span>
 						</form>
 						<!-- end authorization form -->
 					</div>
