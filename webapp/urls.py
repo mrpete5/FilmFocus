@@ -25,7 +25,6 @@ urlpatterns = [
     path("about/", views.about, name="about"),
     path("404/", views.four04, name="404"),
     path("pwreset/", views.pwreset, name="pwreset"),
-    path("signin/", views.signin, name="signin"),
     path("login/", views.signin, name="login"),     # Leave the different naming schemes
     path("signup/", views.signup, name="signup"),
     path("faq/", views.faq, name="faq"),
