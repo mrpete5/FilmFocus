@@ -598,6 +598,14 @@ ul {
   -moz-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
+
+.header__user_welcome {
+  /* Displays the 'Welcome, username?' when logged in */
+  position: relative;
+  display: block;
+  color: #fff;
+}
+
 @media (min-width: 576px) {
   .header__logo {
     width: 170px;

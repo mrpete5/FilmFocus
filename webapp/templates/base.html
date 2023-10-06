@@ -69,6 +69,13 @@
 
 							<!-- Log In or Log Out -->
 							{% if user.is_authenticated %}
+							
+								<!-- Welcome user message -->
+								<div class="header__user_welcome">
+                                	<span> Welcome, {{ user.username }}! </span>
+                                </div>
+								<!-- end Welcome user message -->
+
 								<!-- Log out header auth -->
 								<div class="header__auth">
 									<a href="/logout/" class="header__sign-in">
