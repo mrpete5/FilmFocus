@@ -67,15 +67,27 @@
 							</ul>
 							<!-- end header nav -->
 
-
-							<!-- header auth -->
-							<div class="header__auth">
-								<a href="/login/" class="header__sign-in">
-									<i class="icon ion-ios-log-in"></i>
-									<span>Log in</span>
-								</a>
-							</div>
-							<!-- end header auth -->
+							<!-- Log In or Log Out -->
+							{% if user.is_authenticated %}
+								<!-- Log out header auth -->
+								<div class="header__auth">
+									<a href="/logout/" class="header__sign-in">
+										<i class="icon ion-ios-log-in"></i>
+										<span>LOG OUT</span>
+									</a>
+								</div>
+								<!-- Log in end header auth -->
+							{% else%}
+								<!-- Log in header auth -->
+								<div class="header__auth">
+									<a href="/login/" class="header__sign-in">
+										<i class="icon ion-ios-log-in"></i>
+										<span>LOG IN</span>
+									</a>
+								</div>
+								<!-- Log in end header auth -->
+							{% endif %}
+							<!-- end Log In or Log Out -->
 
 							<!-- header menu btn -->
 							<button class="header__btn" type="button">

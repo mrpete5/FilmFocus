@@ -19,13 +19,15 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # Pay attention to the different naming schemes
     path("", views.index, name="index"),
     path('movie/<slug:movie_slug>/', views.movie_detail, name='movie_detail'),
     path("watchlist/", views.watchlist, name="watchlist"),
     path("about/", views.about, name="about"),
     path("404/", views.four04, name="404"),
     path("pwreset/", views.pwreset, name="pwreset"),
-    path("login/", views.signin, name="login"),     # Leave the different naming schemes
+    path("login/", views.login_user, name="login"),         # Leave the different naming schemes as is
+    path("logout/", views.logout_user, name="logout"),
     path("signup/", views.signup, name="signup"),
     path("faq/", views.faq, name="faq"),
     path("testdisplay/", views.testdisplay, name="testdisplay"),

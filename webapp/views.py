@@ -17,7 +17,7 @@ Any known faults: None.
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewUserForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from .services import *
 
@@ -79,13 +79,28 @@ def four04(request):
 def pwreset(request):
     return render(request, "pwreset.html")
 
+
+'''
 # View function for the login page
+# Uses 'login_user' view function and 'login.html'
+# If view function named login, then conflicts with Django built-in login function, if view function named login
 '''
-# Uses 'signin' view function and 'login.html'
-# If view function named login, then conflicts with Django login function, if view function named login
-'''
-def signin(request):
+def login_user(request):
     return render(request, "login.html")
+
+
+''' # Redirect to the index page
+    # OR 
+    # Render the logout page (current)
+    # - Need to pick which one
+'''
+# View function for the logout page
+def logout_user(request):
+    logout(request)
+    messages.success(request, "You have been logged out!")
+    # return redirect('index')              
+    return render(request, "logout.html")  
+
 
 # View function for the signup page
 def signup(request):
@@ -95,9 +110,15 @@ def signup(request):
             user = form.save()
             login(request, user)
             username = form.cleaned_data.get('username')
-            messages.success(request, f"Account was created for {username}!")
-            return redirect('index')        # Redirects to the homepage on successful sign up
-        messages.error(request, "Registration Failed")
+            messages.success(request, f"You created a new account for {username}!")
+            messages.success(request, f"You are now logged in as {username}!")
+            
+            # Redirect to the homepage on successful sign up
+            return redirect('index')
+        messages.error(request, "Registration failed")
+        messages.error(request, "Fill out all fields")
+        messages.error(request, "Please try again")
+
     else:
         form = NewUserForm()
     return render(request=request, template_name="signup.html", context={"register_form":form})
