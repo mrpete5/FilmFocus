@@ -16,6 +16,8 @@ Clone the repository and navigate to the project directory. Install the required
 git clone https://github.com/mrpete5/FilmFocus.git
 cd FilmFocus
 pip install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
 python manage.py runserver
 ```
 
