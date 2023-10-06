@@ -597,14 +597,6 @@ ul {
   -moz-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
-
-.header__user_welcome {
-  /* Displays the 'Welcome, username?' when logged in */
-  position: relative;
-  display: block;
-  color: #fff;
-}
-
 @media (min-width: 576px) {
   .header__logo {
     width: 170px;
@@ -3914,7 +3906,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .popupInner p {
   margin: 0;
-  border-bottom: .5px solid #F12D92;
+  border-bottom: .5px solid #F12D92; /* comment this out to remove pink underline below watchlist titles in popup */
   position: relative;
 }
 .popupInner button {
@@ -3955,7 +3947,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   align-self: right;
   display: inline-block;
   position: absolute;
-  right: 60px;
+  right: 60px; /* update this to 'left' to move "+" buttons to left side. Update pixels, to move it closer or farther from the edge of popup */
   bottom: 2px;
 }
 .popupInner img:hover {
@@ -3965,16 +3957,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   -webkit-border-radius: 50%;
   border-radius: 50%;
 }
-/*==============================
-	Password Reset
-==============================*/
-.reset__send button {
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  width: 40px;
 .login__popup {
   color: #fff;
   justify-content: center;
@@ -3990,6 +3972,5 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
-}
   /* margin-top: 22.5%; */
 }
