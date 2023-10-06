@@ -23,6 +23,8 @@ import os
 import random
 from django.db.models import F
 import webapp.letterboxd_scraper as lbd_scrape
+import threading
+import time
 
 
 # Load environment variables
@@ -421,19 +423,18 @@ def update_movie_recommendations():
 
 # Update the letterboxd ratings information
 def update_letterboxd_ratings():
+    # Limiter for calls; try to not overload letterboxd
+    request_frequency = 8
+    sleep_time = 1/request_frequency
+
+    # Start time
+    start_time = time.time()
+
     # Get all movies from your database
     movies = Movie.objects.all()
-    
-    # Print the number of movies in the database
-    print(f'Total movies in database: {movies.count()}')
 
-    # Track successful requests vs failed requests
-    test_success = 0
-    test_fail = 0
-    test_fail_cases = []
-
-    # Iterate through movie data base to get letterboxd rating details
-    for index, movie in enumerate(movies, start=1):
+    # Updates the movie with letterboxd rating
+    def iterate_movie(movie):
         try:
             # Try to get rating information using letterboxd web scraper
             rating_dict = lbd_scrape.get_rating(movie.title, movie.release_year)
@@ -441,41 +442,45 @@ def update_letterboxd_ratings():
             # If rating dict exists, append information to movie model, otherwise fail
             if rating_dict:
                 movie.letterboxd_rating = rating_dict["Weighted Average"]
-                # movie.letterboxd_histogram_weights = rating_dict["Histogram Weights"] # TODO: Add histogram weights or remove this line
-                test_success += 1
+                # TODO: Add histogram weights or remove this line
+                # movie.letterboxd_histogram_weights = rating_dict["Histogram Weights"] 
             else:
-                test_fail += 1
-                test_fail_cases.append(movie.title+" ("+str(movie.release_year)+")")
                 raise Exception
 
             # Print Success
             print("Successful scrape of letterboxd for", movie.title, "("+str(movie.release_year)+")")
         except Exception as e:
-            test_fail += 1
-            test_fail_cases.append(movie.title+" ("+str(movie.release_year)+")")
-
+            # Print Failure
             print("Failed scrape of letterboxd for", movie.title, "("+str(movie.release_year)+")")
 
         # Save the updated recommended_movie_data field to the database
         movie.save()
 
-        # Print a message every 100 movies processed
-        if index % 50 == 0:
-            print(f'Processed letterboxd ratings for {index}/{movies.count()} movies')
-
-    # For test purposes, gives how many succeeded, failed, and prints out the failed cases
-    total_attempts = test_success + test_fail
-    success_rate = test_success / total_attempts
-    failure_rate = test_fail / total_attempts
-    print("letterboxd scraper attempts:", total_attempts)
-    print("letterboxd scraper successes:", test_success)
-    print("letterboxd scraper failures:", test_fail)
-    print("letterboxd scraper success rate:", success_rate)
-    print("letterboxd scraper failure rate:", failure_rate)
+    # Make API Calls to update each movie
+    threads = []
+    for index, movie in enumerate(movies, start=1):
+        thread = threading.Thread(target=iterate_movie, args=(movie, ))
+        threads.append(thread)
+        thread.start()
+        time.sleep(sleep_time)
+        
+    # Wait until all threads are done
+    for thread in threads:
+        thread.join()
     
+    # For test purposes, gives how many succeeded, failed, and prints out the failed cases
+    movie_count = movies.count()
     movies_no_rating = Movie.objects.filter(letterboxd_rating=None)
     titles_with_no_rating = [movie.title for movie in movies_no_rating]
+    print(f'Total movies in database: {movie_count}')
+    print("letterboxd scraper success rate:", 1-movies_no_rating.count()/movies.count())
     print("letterboxd scraper titles with no rating:", titles_with_no_rating)
+    
+    # Print total time and fetches per second
+    end_time = time.time()
+    total_time = end_time - start_time
+    print("total time:", total_time)
+    print("calls per second:", movie_count/total_time)
 
 
 def fetch_tmdb_discover_movies(start_page=1, end_page=50):
