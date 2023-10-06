@@ -3913,8 +3913,12 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .close__popup {
   color: #fff;
+  position: absolute;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 185px;
   height: 40px;
   width: 80px;
   -webkit-border-radius: 4px;
