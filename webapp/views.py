@@ -96,7 +96,7 @@ def login_user(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"Hello {username}, welcome back!")
-                return redirect("index")
+                return redirect('index')
             else:
                 messages.error(request, "Invalid username or password")
         else:

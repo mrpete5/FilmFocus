@@ -45,7 +45,8 @@
 				<div class="col-12">
 					<div class="sign__content">
 						<!-- authorization form -->
-						<form action="#" class="sign__form">
+						<form method="POST" class="sign__form">
+							{% csrf_token %}
 							<a href="/" class="sign__logo">
 								<img src={% static "img/logos/FilmFocus_textonly.png" %} alt="">
 							</a>
@@ -56,7 +57,7 @@
 
 							<div class="sign__group">
 								{{ login_form.password }}
-								<div class="password-toggle" onclick="togglePasswordVisibility()"></div>
+								<!--<div class="password-toggle" onclick="togglePasswordVisibility()"></div> -->
 							</div>
 
 							<div class="sign__group sign__group--checkbox">
