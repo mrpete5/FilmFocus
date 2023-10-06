@@ -45,11 +45,26 @@
 			<div class="popupInner">
 				<h2>Add to Watchlist</h2><br>
 
-				{% for list in watchlists %}
-					{{ list.watchlist_name}} &nbsp; <button id="addToWatchlist"><img id="popup__add" src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"></button> <br> 
-				{% endfor %}
+				{% if watchlists %}
+					{% for list in watchlists %}
+						{{ list.watchlist_name}} &nbsp; <button id="addToWatchlist"><img id="popup__add" src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"></button> <br> 
+					{% endfor %}
+				{% else %}
+                    <p>You have no watchlists yet.</p>
+				{% endif %}
 
-				<p>	Create New Watchlist &nbsp;</p><br>
+				<br>
+				<button id="watchlistPopup" class="create__watchlist">CREATE NEW WATCHLIST</button>
+				
+				<div id="create-form" style="display:none;">
+					<form method="POST" action="#">
+					  {% csrf_token %}
+					  <input type="text" name="watchlist_name" placeholder="Watchlist Name">
+					  <input type="submit" value="Create">
+					</form>
+				</div>
+
+				<br>
 				<button id="closePopup" class="close__popup">CLOSE</button>
 			</div>
 		</div>
