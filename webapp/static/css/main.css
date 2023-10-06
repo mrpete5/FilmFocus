@@ -3927,7 +3927,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
   /* margin-top: 22.5%; */
-  margin-top: 50px;
+  /* margin-top: 50px; */
 }
 .create__watchlist {
   color: #fff;
@@ -3936,8 +3936,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   padding-right: 5px;
 }
 .popupInner img {
-  width: 25px;  /* Adjust width as needed */
-  height: 25px;  /* Adjust height as needed */
+  width: 20px;  /* Adjust width as needed */
+  height: 20px;  /* Adjust height as needed */
   opacity: 0.5;  /* Initial opacity (50%) */
 }
 .popupInner img:hover {

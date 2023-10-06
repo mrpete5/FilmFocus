@@ -46,7 +46,7 @@
 				<h2>Add to Watchlist</h2><br>
 
 				{% for list in watchlists %}
-					{{ list.watchlist_name}} &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br> 
+					{{ list.watchlist_name}} &nbsp; <button id="addToWatchlist"><img id="popup__add" src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"></button> <br> 
 				{% endfor %}
 
 				<p>	Create New Watchlist &nbsp;</p><br>
