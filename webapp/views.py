@@ -19,6 +19,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewUserForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
 from .services import *
 
 # View function for the index page
@@ -86,7 +87,23 @@ def pwreset(request):
 # If view function named login, then conflicts with Django built-in login function, if view function named login
 '''
 def login_user(request):
-    return render(request, "login.html")
+    if request.method == "POST":
+	    form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"Hello {username}, welcome back!")
+                return redirect("index")
+            else:
+                messages.error(request, "invalid username or password")
+        else:
+            messages.error(request, "invalid username or password")
+    else:
+        form = AuthenticationForm()
+    return render(request=request, template_name="login.html", context={"login_form":form})
 
 
 ''' # Redirect to the index page
