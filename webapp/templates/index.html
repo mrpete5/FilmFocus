@@ -47,7 +47,7 @@
 
 				{% if watchlists %}
 					{% for list in watchlists %}
-						{{ list.watchlist_name}} &nbsp; <button id="addToWatchlist"><img id="popup__add" src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"></button> <br> 
+						<p class="watchlist__title">{{ list.watchlist_name}} &nbsp; <button id="addToWatchlist"><img id="popup__add" src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"></button> <br> </p>
 					{% endfor %}
 				{% else %}
                     <p>You have no watchlists yet.</p>

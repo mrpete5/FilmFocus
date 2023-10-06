@@ -35,7 +35,6 @@ Primary use:	FlixGo Template
 25. PhotoSwipe customization
 26. mCustomScrollbar customization
 27. Add Movie Popup
-28. Password Reset
 ----------------------------------------*/
 /*==============================
 	Common styles
@@ -3914,8 +3913,9 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   margin: 0;
 }
 .popupInner p {
-  line-height: 24px;
-  margin: 10px 0;
+  margin: 0;
+  border-bottom: .5px solid #F12D92;
+  position: relative;
 }
 .popupInner button {
   text-align: center;
@@ -3948,10 +3948,15 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   padding-left: 5px;
   padding-right: 5px;
 }
-.popupInner img {
+.watchlist__title img {
   width: 20px;  /* Adjust width as needed */
   height: 20px;  /* Adjust height as needed */
   opacity: 0.5;  /* Initial opacity (50%) */
+  align-self: right;
+  display: inline-block;
+  position: absolute;
+  right: 60px;
+  bottom: 2px;
 }
 .popupInner img:hover {
   opacity: 1;  /* Opacity during hover (100%) */
