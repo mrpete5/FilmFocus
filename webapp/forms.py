@@ -8,7 +8,7 @@ Dates the code was revised: 10/04/2023
 """
 
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 
 
@@ -38,3 +38,26 @@ class NewUserForm(UserCreationForm):
 
         password2_attrs = {'class':'sign__input', 'placeholder': 'Confirm Password', 'type': 'password', 'id':'id_confirmationPassword'}
         self.fields['password2'].widget.attrs=password2_attrs
+        
+
+class NewAuthForm(AuthenticationForm):
+    class Meta:
+        model = User
+        fields = ("username", "password")
+
+    def save(self, commit=True):
+        user = super(AuthenticationForm, self).save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+        return user
+    
+    def __init__(self, *args, **kwargs):
+        super(AuthenticationForm, self).__init__(*args, **kwargs)
+        
+        # Use widgets on built in authentication fields
+        username_attrs = {'class':'sign__input', 'placeholder': 'Username'} 
+        self.fields['username'].widget.attrs=username_attrs
+        
+        password_attrs = {'class':'sign__input', 'placeholder': 'Password', 'type': 'password', 'id':'id_password'}
+        self.fields['password'].widget.attrs=password_attrs    

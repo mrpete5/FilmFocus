@@ -16,7 +16,7 @@ Any known faults: None.
 """
 
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import NewUserForm
+from .forms import NewUserForm, NewAuthForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -88,6 +88,7 @@ def pwreset(request):
 '''
 def login_user(request):
     if request.method == "POST":
+        # form = NewAuthForm(request, data=request.POST)        # TODO (1/2): switch to this, but causes bug
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
@@ -102,7 +103,9 @@ def login_user(request):
         else:
             messages.error(request, "Invalid username or password")
     else:
+        # form = NewAuthForm()                                  # TODO (2/2): switch to this, but causes bug
         form = AuthenticationForm()
+
     return render(request=request, template_name="login.html", context={"login_form": form})
 
 
