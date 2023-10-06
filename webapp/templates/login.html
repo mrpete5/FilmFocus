@@ -51,11 +51,11 @@
 							</a>
 
 							<div class="sign__group">
-								<input type="text" class="sign__input" placeholder="Username">
+								{{ login_form.username }}
 							</div>
 
 							<div class="sign__group">
-								<input type="password" id="id_password" class="sign__input" placeholder="Password">
+								{{ login_form.password }}
 								<div class="password-toggle" onclick="togglePasswordVisibility()"></div>
 							</div>
 
@@ -64,7 +64,7 @@
 								<label for="remember">Remember Me</label>
 							</div>
 							
-							<button class="sign__btn" type="button">Log in</button>
+							<button class="sign__btn" type="submit">Log in</button>
 
 							<span class="sign__text">Don't have an account? <a href="/signup/">Sign up!</a></span>
 
