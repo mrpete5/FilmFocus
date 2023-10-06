@@ -507,18 +507,30 @@ $(document).ready(function () {
 		$clearButton.hide();  // Hide the clear button immediately after clearing the input
 	});
 
-	const openBtn = document.querySelectorAll(".card__add");
+	/*==============================
+	Popup Buttons
+	==============================*/
+	// Get buttons by their IDs
+	const openBtn = document.querySelectorAll(".card__add"); 
 	const closeBtn = document.getElementById("closePopup");
 	const popup = document.getElementById("popup");
 	console.log(popup);
 
+	// Open the popup
 	openBtn.forEach(x => x.addEventListener("click", () => {
 		console.log("clicked");
 		popup.classList.add("open");
 	}))
 
+	// Close the popup
 	closeBtn.addEventListener("click", () => {
 		popup.classList.remove("open");
 	})
+
+	// Redirect to login on click
+	const loginBtn = document.getElementById("loginPopup");
+	loginBtn.addEventListener("click", () => {
+		window.location.href = "/login/";	// redirect to login page
+    })
 
 });

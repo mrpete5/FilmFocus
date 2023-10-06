@@ -77,6 +77,12 @@ def search_and_fetch_movie_by_id(tmdb_id):
     process_movie_search(tmdb_id, title)
 
 
+# Retrieve the watchlists for a user
+def get_watchlists_for_user(user):
+    watchlists = Watchlist.objects.filter(user=user)
+    return watchlists
+
+
 # Process the search results for a movie and fetch its details
 def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=filtered_providers):
     # Check if the movie is in the TMDB master list

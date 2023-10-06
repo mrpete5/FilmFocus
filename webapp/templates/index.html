@@ -38,20 +38,47 @@
 
 </head>
 <body class="body">
+
 	<!-- popup -->
-	<div class="popup" id="popup">
-		<div class="popupInner">
-			<h2>Which Watchlist?</h2>
-			<p>
-				Animated Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br> 
-				Halloween Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br>
-				Comedy Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br>
-				Random Watchlist &nbsp; <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"> <br>
-				Create New Watchlist &nbsp; <br>
-			</p>
-			<button id="closePopup">Close</button>
+	{% if user.is_authenticated %}
+		<div class="popup" id="popup">
+			<div class="popupInner">
+				<h2>Add to Watchlist</h2><br>
+
+				{% if watchlists %}
+					{% for list in watchlists %}
+						{{ list.watchlist_name}} &nbsp; <button id="addToWatchlist"><img id="popup__add" src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"></button> <br> 
+					{% endfor %}
+				{% else %}
+                    <p>You have no watchlists yet.</p>
+				{% endif %}
+
+				<br>
+				<button id="watchlistPopup" class="create__watchlist">CREATE NEW WATCHLIST</button>
+				
+				<div id="create-form" style="display:none;">
+					<form method="POST" action="#">
+					  {% csrf_token %}
+					  <input type="text" name="watchlist_name" placeholder="Watchlist Name">
+					  <input type="submit" value="Create">
+					</form>
+				</div>
+
+				<br>
+				<button id="closePopup" class="close__popup">CLOSE</button>
+			</div>
 		</div>
-	</div>
+	{% else %}
+		<div class="popup" id="popup">
+			<div class="popupInner">
+				<h2>Log In to Add to Your Watchlist</h2><br>
+				<button id="loginPopup" class="login__popup">LOG IN</button><br>
+				<button id="closePopup" class="close__popup">CLOSE</button>
+			</div>
+		</div>
+	{% endif %}
+	<!-- end popup -->
+
 	<!-- home -->
 	<section class="home">
 		<!-- home bg -->

@@ -24,6 +24,10 @@ from .services import *
 # View function for the index page
 def index(request):
     context = get_movies_for_index()
+    user = request.user
+    if user.is_authenticated:
+        context['watchlists'] = Watchlist.objects.filter(user=user)
+        
     return render(request, 'index.html', context)
 
 # View function for the movie details page
@@ -76,8 +80,9 @@ def pwreset(request):
     return render(request, "pwreset.html")
 
 # View function for the sign-in page
+# View function for the log-in page
 def signin(request):
-    return render(request, "signin.html")
+    return render(request, "login.html")
 
 # View function for the sign-up page
 def signup(request):
@@ -88,7 +93,7 @@ def signup(request):
             login(request, user)
             username = form.cleaned_data.get('username')
             messages.success(request, f"Account was created for {username}!")
-            return redirect('signin')
+            return redirect('index')        # Redirects to the homepage on successful sign up
         messages.error(request, "Registration Failed")
     else:
         form = NewUserForm()
