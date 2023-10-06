@@ -106,7 +106,6 @@ def login_user(request):
     return render(request=request, template_name="login.html", context={"login_form": form})
 
 
-
 ''' # Redirect to the index page
     # OR 
     # Render the logout page (current)
