@@ -19,12 +19,20 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewUserForm, CustomAuthForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+import json
+from .models import Movie, Watchlist, WatchlistEntry
+
 # from django.contrib.auth.forms import AuthenticationForm
 # from django.http import HttpRequest 
 from .services import *
 
-# View function for the index page
+
+# View function for the index/home page
 def index(request):
+    ''' Handles the FilmFocus homepage. '''
+    
     context = get_movies_for_index()
     user = request.user
     if user.is_authenticated:
@@ -32,8 +40,11 @@ def index(request):
         
     return render(request, 'index.html', context)
 
+
 # View function for the movie details page
 def movie_detail(request, movie_slug):
+    ''' Handles the movie details pages where more information for a movie is all displayed. '''
+    
     movie = get_object_or_404(Movie, slug=movie_slug)
     
     # Fetch recommended movies
@@ -93,8 +104,8 @@ def login_user(request):
         if form.is_valid():
             user = form.get_user()
             username = form.cleaned_data.get('username')
-            # password = form.cleaned_data.get('password')                  # do not delete before 11/01
-            # user = authenticate(username=username, password=password)     # do not delete before 11/01
+            # password = form.cleaned_data.get('password')                  # do not delete before 11/01, might need to change
+            # user = authenticate(username=username, password=password)     # do not delete before 11/01, might need to change
             if user is not None:
                 login(request, user)
                 messages.info(request, f"Hello {username}, welcome back!")
@@ -149,6 +160,37 @@ def faq(request):
     return render(request, "faq.html")
 
 
+# Require user to be logged in to access this view
+@login_required  
+def add_to_watchlist(request):
+    ''' Add a movie to a watchlist. '''
+    # TODO: Implement this function to add a movie to a watchlist.
+
+    data = json.loads(request.body) # Parse JSON data from request body
+    movie_id = data['movie_id']   # Get movie ID from request data  
+    watchlist_id = data['watchlist_id']  # Get watchlist ID from request data
+    movie = Movie.objects.get(id=movie_id) # Get Movie instance from DB using movie ID
+    watchlist = Watchlist.objects.get(id=watchlist_id)  # Get Watchlist instance from DB using watchlist ID  
+
+    # Create new WatchlistEntry to associate movie with watchlist
+    WatchlistEntry.objects.create(
+            watchlist=watchlist,
+            movie=movie,
+    )
+
+    # Return JSON success response 
+    return JsonResponse({'success': True})
+
+
+# View function for the poster game page
+def poster_game(request):
+    ''' Play a poster reveal guessing game. '''
+    # TODO: Implement this function to play a poster reveal guessing game.    
+  
+    movies_to_display = handle_poster_game(movie_count=1)
+    return render(request, "postergame.html", {"movies": movies_to_display})
+
+
 # Test page that displays posters for potential movie banning
 def testforban(request):
     start_date = "2023-10-06"  # Adjusted start date
@@ -181,12 +223,3 @@ def testdisplay(request):
   
     movies_to_display = handle_test_display_page(settings)
     return render(request, "testdisplay.html", {"movies": movies_to_display})
-
-
-
-def poster_game(request):
-    ''' Play a poster reveal guessing game. '''
-    # TODO: Implement this function to play a poster reveal guessing game.    
-  
-    movies_to_display = handle_poster_game(movie_count=1)
-    return render(request, "postergame.html", {"movies": movies_to_display})
