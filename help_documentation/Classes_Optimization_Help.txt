@@ -1,0 +1,92 @@
+###### Read Me for the switch to OOP classes documentation .py
+
+Objects: An entity in our program.
+
+Classes: Creates objects.
+
+
+member variables 'm_name' (Properties)
+methods 'get name', 'set name' (Behaviors)
+
+
+4 Pillars-
+Encapsulation: encapsulating the shared variables and methods into a class based on 	functionality. 
+
+Abstraction: simpler interface, reduce the impact of change.
+
+Inheritance: eliminates redundant code. 
+
+Polymorphism: (means 'Many Forms')   
+
+
+Benefits of OOP: reduce complexity, increase reusibility, isolate impact of changes,
+	eliminate redundant code, and refactor ugly loops or if statements.
+
+
+
+Whether it is worth it to make your code more object-oriented depends on several factors, such as the size, complexity, and purpose of your project, as well as your personal preference and style. Some of the possible advantages and disadvantages of using OOP are:
+
+- Advantages:
+    * You can reuse the code multiple times using inheritance and polymorphism, which reduces duplication and improves maintainability. ¹
+    * You can inherit the class to subclass for data reusability, which makes the code more modular and organized. ¹
+    * You can encapsulate the data and methods inside the objects, which enhances the security and readability of the code. ¹
+    * You can abstract the details of the implementation from the user, which makes the code more user-friendly and easy to use. ¹
+
+- Disadvantages:
+    * The size of the programs written in OOP language is larger than other programs, which requires more memory and processing power. ¹
+    * The execution of the programs is slower than other programs, which affects the performance and efficiency of the code. ¹
+    * OOP is not suitable for all types of problems, especially those that do not involve complex data structures or interactions between objects. ¹
+    * OOP requires a lot of effort to design and implement, as well as a good understanding of the concepts and principles of OOP. ¹
+
+If you decide to convert your procedural code to OOP code in Python, you can follow some general steps such as:
+
+- Identify the objects and classes in your problem domain, and define their attributes and methods. ²³
+- Use the `class` keyword to create a class definition, and use the `__init__` method to initialize the object attributes. ²³
+- Use the `self` parameter to refer to the current object instance within a class method. ²³
+- Use dot notation to access or modify the object attributes or methods. ²³
+- Use inheritance to create subclasses that inherit from a parent class, and use the `super` function to access the parent class methods. ²³
+- Use polymorphism to create different implementations of a method for different subclasses, and use duck typing to check if an object has a certain method or attribute. ²³
+- Use encapsulation to hide the internal details of an object from the outside world, and use getters and setters to control the access or modification of an object attribute. ²³
+- Use abstraction to provide a simple interface for an object that hides its complex implementation, and use abstract classes or interfaces to define a common set of methods for a group of objects. ²³
+
+You can find some examples of converting procedural code to OOP code in Python in these links: [6](https://stackoverflow.com/questions/2190880/python-convert-script-from-procedural-to-oop-style) , [7](https://stackoverflow.com/questions/53345938/converting-a-python-script-into-object-oriented-program) , [8](https://samiislam0306.medium.com/from-procedural-python-to-object-orientation-1441438d4b47) , [9](https://www.slideshare.net/DamianGordon1/python-migrating-from-procedural-to-objectoriented-programming) , [10](https://www.bigbinary.com/books/learn-object-oriented-programming/convertint-procedural-code-to-object-oriented-code) .
+
+I hope this helps you understand the advantages and disadvantages of OOP, and how to transition from procedural code to OOP code in Python. 😊
+
+Source: Conversation with Bing, 10/6/2023
+(1) Advantages and Disadvantages of OOP - GeeksforGeeks. https://www.geeksforgeeks.org/benefits-advantages-of-oop/.
+(2) Advantages And Disadvantages Of OOP - A Plus Topper. https://www.aplustopper.com/advantages-and-disadvantages-of-oop/.
+(3) Advantages & Disadvantages of Object-Oriented Programming. https://www.techwalla.com/articles/advantages-disadvantages-of-object-oriented-programming.
+(4) What are the advantages and disadvantages of object oriented .... https://sage-answer.com/what-are-the-advantages-and-disadvantages-of-object-oriented-programming-languages/.
+(5) What are the Advantages and disadvantages of OOPs?. https://www.goseeko.com/blog/what-are-the-advantages-and-disadvantages-of-oops%ef%bf%bc/.
+(6) Python: convert script from procedural to OOP style. https://stackoverflow.com/questions/2190880/python-convert-script-from-procedural-to-oop-style.
+(7) oop - converting a python script into object oriented program - Stack .... https://stackoverflow.com/questions/53345938/converting-a-python-script-into-object-oriented-program.
+(8) From Procedural Python to Object Orientation - Medium. https://samiislam0306.medium.com/from-procedural-python-to-object-orientation-1441438d4b47.
+(9) Python: Migrating from Procedural to Object-Oriented Programming. https://www.slideshare.net/DamianGordon1/python-migrating-from-procedural-to-objectoriented-programming.
+(10) Converting procedural style code to Object Oriented Code. https://www.bigbinary.com/books/learn-object-oriented-programming/convertint-procedural-code-to-object-oriented-code.
+
+
+RESOURCES
+
+
+Sure, there are many resources for learning OOP in Python online. Here are some of the free courses and books that I found using the `search_web` tool:
+
+- [Object-Oriented Programming (OOP) in Python 3](^1^): This is a tutorial from Real Python that covers the basics of OOP in Python, such as classes, objects, inheritance, polymorphism, abstraction, and encapsulation. It also includes some exercises and quizzes to test your understanding. ¹
+- [Object-Oriented Programming (OOP) With Python](^2^): This is a learning path from Real Python that consists of 12 resources, including courses, tutorials, and videos. It teaches you how to use OOP in Python to make your programs easier to write and maintain. It covers topics such as constructors, methods, inheritance, composition, descriptors, properties, string conversion, operator overloading, and more. ²
+- [5 Books and Courses to Learn Object Oriented Programming in Depth](^3^): This is an article from DEV Community that recommends five books and courses to learn OOP concepts and principles in depth. It includes books such as Head First Object-Oriented Analysis and Design, Head First Design Patterns, Clean Code, Elegant Objects, and The Object-Oriented Thought Process. It also includes courses such as Object Oriented Programming in Java by Coursera and Object Oriented Programming in Python by Udemy. ³
+- [7 Best Free Object-Oriented Programming Online Courses with Python ...](^4^): This is an article from Medium that lists seven free online courses to learn OOP with Python and other languages. It includes courses such as Object Oriented Programming in Java by edX, Introduction to Object Oriented Programming by Udacity, Learn Object Oriented Programming by Codecademy, Object Oriented Programming with Python by FutureLearn, and more. ⁴
+- [Python Object Oriented Programming - Exercises, Practice, Solution](^5^): This is a collection of exercises from W3Resource that helps you practice your OOP skills in Python. It includes exercises on creating classes for circles, persons, calculators, shapes, binary search trees, stacks, linked lists, shopping carts, queues, banks, and more. It also provides solutions and explanations for each exercise. ⁵
+
+I hope these resources help you learn OOP in Python. Have fun! 😊
+
+Source: Conversation with Bing, 10/6/2023
+(1) Object-Oriented Programming (OOP) in Python 3 – Real Python. https://realpython.com/python3-object-oriented-programming/.
+(2) Object-Oriented Programming (OOP) in Python 3 – Real Python. https://realpython.com/python3-object-oriented-programming/.
+(3) Object-Oriented Programming (OOP) With Python. https://realpython.com/learning-paths/object-oriented-programming-oop-python/.
+(4) Object-Oriented Programming (OOP) With Python. https://realpython.com/learning-paths/object-oriented-programming-oop-python/.
+(5) 5 Books and Courses to Learn Object Oriented Programming in Depth. https://dev.to/javinpaul/5-books-and-courses-to-learn-object-oriented-programming-in-depth-4kff.
+(6) 5 Books and Courses to Learn Object Oriented Programming in Depth. https://dev.to/javinpaul/5-books-and-courses-to-learn-object-oriented-programming-in-depth-4kff.
+(7) 7 Best Free Object-Oriented Programming Online Courses with Python .... https://medium.com/swlh/5-free-object-oriented-programming-online-courses-for-programmers-156afd0a3a73.
+(8) 7 Best Free Object-Oriented Programming Online Courses with Python .... https://medium.com/swlh/5-free-object-oriented-programming-online-courses-for-programmers-156afd0a3a73.
+(9) Python Object Oriented Programming - Exercises, Practice, Solution. https://w3resource.com/python-exercises/oop/.
+(10) Python Object Oriented Programming - Exercises, Practice, Solution. https://w3resource.com/python-exercises/oop/.

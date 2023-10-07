@@ -84,6 +84,28 @@ def get_watchlists_for_user(user):
     watchlists = Watchlist.objects.filter(user=user)
     return watchlists
 
+# Progress bar for a given function
+def progress_bar(title, current, total, bar_length=60):
+    percent = float(current) * 100 / total
+    arrow   = '=' * int(percent/100 * bar_length - 1) + '>'
+    spaces  = ' ' * (bar_length - len(arrow))
+    print(f'\r{title}: [{arrow}{spaces}] {percent:.0f}%  ', end='\r')
+    if current == total: 
+        print(f'\r{title}: [{arrow}{spaces}] {percent:.0f}%  ', end='\n')
+
+# Progress bar handler, if wait is iteration-based    
+def wait_iteration(title, current, num_iterations):
+    progress_bar(title, current, num_iterations, bar_length=50)
+    
+# Progress bar handler, if wait is time-based    
+def wait_time(title, wait_seconds):
+    count = 0
+    while count < (wait_seconds + 1):
+        count += 1
+        progress_bar(title, count, wait_seconds, bar_length=20)
+        time.sleep(1)
+    # print()     # formatting for the progress bar
+
 
 # Process the search results for a movie and fetch its details
 def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=filtered_providers):
@@ -94,7 +116,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
     
     # Check if the movie is in the ban list
     if str(tmdb_id) in BAN_LIST:
-        print(f"Movie '{title}' (ID: {tmdb_id}) is in the ban list and was not added.")
+        # print(f"Movie '{title}' (ID: {tmdb_id}) is in the ban list and was not added.") # TODO: leave here, switch depending on what you want to display
         return
 
     # Check if the movie exists in the database
@@ -108,7 +130,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
 
         # Update its now_playing status
         Movie.objects.filter(tmdb_id=tmdb_id).update(now_playing=now_playing)
-        print(f"Movie '{title}' (ID: {tmdb_id}) already exists in the database.")
+        # print(f"Movie '{title}' (ID: {tmdb_id}) already exists in the database.") # TODO: leave here, switch depending on what you want to display
         return
 
     # Make an API call to fetch more details about the movie from TMDB
@@ -116,7 +138,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
     
     # Check if the movie is adult content
     if movie_details.get('adult'):
-        print(f"Movie '{title}' (ID: {tmdb_id}) is for adults and was not added.")
+        # print(f"Movie '{title}' (ID: {tmdb_id}) is for adults and was not added.") # TODO: leave here, switch depending on what you want to display
         return
     
     overview = movie_details.get('overview')
@@ -214,7 +236,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
         print(f"Failure: {e}")
 
     movie.save()
-    print(f"Movie '{title}' (ID: {tmdb_id}) fetched and saved to the database.")
+    print(f"Movie '{title}' (ID: {tmdb_id}) fetched and saved to the database.")  # TODO: leave here, switch depending on what you want to display
 
 
 # Fetch detailed information about a movie from TMDB
@@ -261,9 +283,16 @@ def fetch_movie_trailer_key(video_results):
 
 # Fetch popular movies from TMDB
 def fetch_popular_movies(start_page=1, end_page=5):
+    total_num_movies = 20 * (end_page - start_page + 1)
+    
     
     for page_num in range(start_page, end_page + 1):
-        print(f"Fetching popular movies page number {page_num}")
+        index = (page_num + 1) * 20
+        # Create a loading progress bar
+        title = f'  Fetching popular movies page number {page_num}'
+        wait_iteration(title, index, total_num_movies)
+        
+        print(f"")
         url = f"https://api.themoviedb.org/3/movie/popular?language=en-US&page={page_num}"
         headers = {
             "accept": "application/json",
@@ -286,7 +315,7 @@ def fetch_now_playing_movies(start_page=1, end_page=5):
     Movie.objects.update(now_playing=False)
     
     for page_num in range(start_page, end_page + 1):  # Fetch the first 10 pages
-        print(f"Fetching now playing movies page number {page_num}")
+        # print(f"Fetching now playing movies page number {page_num}")   # TODO: leave here, switch depending on what you want to display
         url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page_num}"
         headers = {
             "accept": "application/json",
@@ -432,6 +461,10 @@ def update_letterboxd_ratings():
 
     # Get all movies from your database
     movies = Movie.objects.all()
+    
+    # Print the number of movies in the database
+    total_num_movies = movies.count()
+    print(f'Number of Movies: {total_num_movies}')
 
     # Updates the movie with letterboxd rating
     def iterate_movie(movie):
@@ -448,10 +481,11 @@ def update_letterboxd_ratings():
                 raise Exception
 
             # Print Success
-            print("Successful scrape of letterboxd for", movie.title, "("+str(movie.release_year)+")")
+            # print("Successful scrape of letterboxd for", movie.title, "("+str(movie.release_year)+")")    # TODO: uncomment this line
         except Exception as e:
             # Print Failure
-            print("Failed scrape of letterboxd for", movie.title, "("+str(movie.release_year)+")")
+            print("Failed Letterboxd scrape for", movie.title, "("+str(movie.release_year)+")")          # TODO: uncomment this line
+            
 
         # Save the updated recommended_movie_data field to the database
         movie.save()
@@ -460,6 +494,10 @@ def update_letterboxd_ratings():
     threads = []
     for index, movie in enumerate(movies, start=1):
         thread = threading.Thread(target=iterate_movie, args=(movie, ))
+        
+        # Create a loading progress bar
+        wait_iteration('  Letterboxd Scraping Progress', index, total_num_movies)
+        
         threads.append(thread)
         thread.start()
         time.sleep(sleep_time)
@@ -471,11 +509,18 @@ def update_letterboxd_ratings():
     # For test purposes, gives how many succeeded, failed, and prints out the failed cases
     movie_count = movies.count()
     movies_no_rating = Movie.objects.filter(letterboxd_rating=None)
+    success_rate = 1 - movies_no_rating.count()/movie_count
     titles_with_no_rating = [movie.title for movie in movies_no_rating]
-    print(f'Total movies in database: {movie_count}')
-    print("letterboxd scraper success rate:", 1-movies_no_rating.count()/movies.count())
+    print('================================================================')
+    print('================================================================')
+
     print("letterboxd scraper titles with no rating:", titles_with_no_rating)
+    print('================================================================')
+    print('================================================================')
     
+    print(f'Total movies in database: {movie_count}')
+    print("letterboxd scraper success rate:", success_rate)
+
     # Print total time and fetches per second
     end_time = time.time()
     total_time = end_time - start_time
@@ -516,10 +561,15 @@ def handle_test_for_ban(start_date, end_date):
 # Handle the test display page and manage the movie database
 def handle_test_display_page(settings):
     # 20 movies per page
-    popular_pages = 5           # Number of popular pages from 1 to x with 20 results each, TMDb
-    now_playing_pages = 5      # Number of now playing pages from 1 to x with 20 results each, TMDb
+    popular_pages = 5         # Number of popular pages from 1 to x with 20 results each, TMDb
+    now_playing_pages = 5       # Number of now playing pages from 1 to x with 20 results each, TMDb
     fetch_movies_count = 10     # Number of individual movies returned to testdisplay, testdisplay/
     fetch_discover_count = 5    # Number of discover pages from 1 to x with 20 results each, TMDb
+  
+    # TODO: Implementation is in progress.  
+    movies_per_page = 20
+    # pop_count = popular_pages * (1 + movies_per_page) # 1 for popular pages, 20 associated movie details.
+    # iterations_count = popular_pages + now_playing_pages + fetch_movies_count + fetch_discover_count
     
     if settings[0]:
         clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
@@ -561,3 +611,6 @@ def handle_test_display_page(settings):
 
 def handle_poster_game(movie_count=1):
     return Movie.objects.all().order_by('?')[:movie_count]  # Fetch the first num_movie
+
+
+

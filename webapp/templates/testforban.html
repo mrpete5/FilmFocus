@@ -44,14 +44,25 @@
 <div class="movies-container">
     {% for movie in movies %}
     <div class="movie-card">
-        {% if movie.poster_path %}
+        <a href="{% url 'movie_detail' movie.slug %}">
+            {% if movie.poster_path %}
+              <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster">
+            {% else %}
+              <div class="no-poster">No poster available</div>
+            {% endif %}  
+        </a>
+
+        {% comment %} {% if movie.poster_path %}
         <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster">
         {% else %}
         <div class="no-poster">No poster available</div>
         {% endif %}
         <div class="movie-card-content">
             <div class="movie-card-title">{{ movie.title }}</div>
-        </div>
+        </div> {% endcomment %}
+
+
+
     </div>
     {% endfor %}
 </div>

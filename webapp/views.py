@@ -19,7 +19,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewUserForm, NewAuthForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
+# from django.contrib.auth.forms import AuthenticationForm
+# from django.http import HttpRequest 
 from .services import *
 
 # View function for the index page
@@ -87,9 +88,9 @@ def pwreset(request):
 # If view function named login, then conflicts with Django built-in login function, if view function named login
 '''
 def login_user(request):
-    if request.method == "POST":
-        # form = NewAuthForm(request, data=request.POST)        # TODO (1/2): switch to this, but causes bug
-        form = AuthenticationForm(request, data=request.POST)
+    if request.method == 'POST':
+        form.data = request.POST
+        form = NewAuthForm()
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -103,9 +104,8 @@ def login_user(request):
         else:
             messages.error(request, "Invalid username or password")
     else:
-        # form = NewAuthForm()                                  # TODO (2/2): switch to this, but causes bug
-        form = AuthenticationForm()
-
+        form = NewAuthForm()                                 
+        
     return render(request=request, template_name="login.html", context={"login_form": form})
 
 
@@ -151,8 +151,8 @@ def faq(request):
 
 # Test page that displays posters for potential movie banning
 def testforban(request):
-    start_date = "2023-01-01"  # Adjusted start date
-    end_date = "2023-10-31"    # Adjusted end date
+    start_date = "2023-10-06"  # Adjusted start date
+    end_date = "2023-12-30"    # Adjusted end date
 
     movies_to_display = handle_test_for_ban(start_date, end_date)
     return render(request, "testforban.html", {"movies": movies_to_display})
@@ -162,7 +162,7 @@ def testforban(request):
 def testdisplay(request):
     # Always set these flags as False before committing changes
     erase_movie_db = False                # USE WITH CAUTION, erases all movie database contents
-    init_movie_db = False                 # Performs Popular fetch from TMDB 
+    init_movie_db = True                 # Performs Popular fetch from TMDB 
     get_now_playing = False               # Performs Now Playing fetch from TMDB
     update_streaming = False              # Updates all movie streaming providers from TMDB, takes a while
     update_recs = False                   # Updates all movie recommendations from TMDB, takes a while
