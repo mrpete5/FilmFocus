@@ -1,4 +1,4 @@
-### Add Movie to Watchlist Documentation
+## Add Movie to Watchlist Documentation
 
 ## Overview
 The Add Movie to Watchlist functionality works with the watchlist popups and the Django databases (models).

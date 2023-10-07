@@ -533,4 +533,41 @@ $(document).ready(function () {
 		window.location.href = "/login/";	// redirect to login page
     })
 
+
+	/*==============================
+	Popup add movie to watchlist
+	==============================*/
+	// Add movie to watchlist on click
+	const addToWatchlistBtn = document.getElementById('addToWatchlist');
+	const movieId = button.dataset.movieId;
+	const watchlistId = button.dataset.watchlistId; 
+
+	addToWatchlistBtn.addEventListener('click', () => {
+	// Add code here to handle adding movie to watchlist
+	});
+
+	// Add movie to watchlist
+	const addToWatchlist = (movieId, watchlistId) => {
+		fetch('/add-to-watchlist/', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': csrftoken, 
+		},
+		body: JSON.stringify({
+			movie_id: movieId,
+			watchlist_id: watchlistId, 
+		})
+		})
+		.then(response => {
+		// Check for success
+		if (response.ok) {
+			// Movie added, update UI
+		} else {
+			// Handle error 
+		}
+		})
+	}
+
+
 });
