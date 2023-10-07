@@ -1,9 +1,9 @@
 """
 Name of code artifact: forms.py
 Brief description: This Python file is responsible for handling user registration.
-Programmer’s name: Bill
+Programmer’s name: Bill, Mark
 Date the code was created: 10/04/2023
-Dates the code was revised: 10/04/2023
+Dates the code was revised: 10/07/2023
 
 """
 
@@ -40,7 +40,7 @@ class NewUserForm(UserCreationForm):
         self.fields['password2'].widget.attrs=password2_attrs
         
 
-class NewAuthForm(AuthenticationForm):
+class CustomAuthForm(AuthenticationForm):
     class Meta:
         model = User
         fields = ("username", "password")
@@ -53,7 +53,7 @@ class NewAuthForm(AuthenticationForm):
         return user
     
     def __init__(self, *args, **kwargs):
-        super(AuthenticationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         
         # Use widgets on built in authentication fields
         username_attrs = {'class':'sign__input', 'placeholder': 'Username'} 

@@ -49,9 +49,7 @@
 								<li class="header__nav-item">
 									<a href="/watchlist/" class="header__nav-link">Watchlists</a>
 								</li>
-								<li class="header__nav-item">
-									<a href="/faq/" class="header__nav-link">FAQ</a>
-								</li>
+
 								<li>
 									<button class="header__search-btn" type="button">
 										<i class="icon ion-ios-search"></i>
@@ -72,8 +70,9 @@
 							
 								<!-- Welcome user message -->
 								<div class="header__user_welcome">
-                                	<span> Welcome, {{ user.username }}! </span>
-                                </div>
+									<span class="welcome-text">Welcome,</span>
+									<span class="username">{{ user.username }}!</span>  
+								</div>
 								<!-- end Welcome user message -->
 
 								<!-- Log out header auth -->

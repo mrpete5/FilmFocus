@@ -541,6 +541,27 @@ ul {
 .header__sign-in:hover {
   opacity: 1;
 }
+
+/*---- Welcome User in header section ---------*/
+.header__user_welcome {
+  /* Displays the 'Welcome, username?' when logged in */
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: #fff;
+}
+.welcome-text, 
+.username {
+  color: #fff;
+}
+.welcome-text {
+  margin-left: 10px;
+}
+.username {
+  margin-left: 5px;
+}
+/*---- end Welcome User in header section ---------*/
+
 .header__btn {
   display: block;
   position: absolute;

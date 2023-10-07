@@ -315,7 +315,7 @@ def fetch_now_playing_movies(start_page=1, end_page=5):
     Movie.objects.update(now_playing=False)
     
     for page_num in range(start_page, end_page + 1):  # Fetch the first 10 pages
-        # print(f"Fetching now playing movies page number {page_num}")   # TODO: leave here, switch depending on what you want to display
+        print(f"Fetching now playing movies page number {page_num}")   # TODO: leave here, switch depending on what you want to display
         url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page_num}"
         headers = {
             "accept": "application/json",

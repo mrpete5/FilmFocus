@@ -16,7 +16,7 @@ Any known faults: None.
 """
 
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import NewUserForm, NewAuthForm
+from .forms import NewUserForm, CustomAuthForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 # from django.contrib.auth.forms import AuthenticationForm
@@ -89,12 +89,12 @@ def pwreset(request):
 '''
 def login_user(request):
     if request.method == 'POST':
-        form.data = request.POST
-        form = NewAuthForm()
+        form = CustomAuthForm(data=request.POST)
         if form.is_valid():
+            user = form.get_user()
             username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
+            # password = form.cleaned_data.get('password')                  # do not delete before 11/01
+            # user = authenticate(username=username, password=password)     # do not delete before 11/01
             if user is not None:
                 login(request, user)
                 messages.info(request, f"Hello {username}, welcome back!")
@@ -104,7 +104,7 @@ def login_user(request):
         else:
             messages.error(request, "Invalid username or password")
     else:
-        form = NewAuthForm()                                 
+        form = CustomAuthForm()                                 
         
     return render(request=request, template_name="login.html", context={"login_form": form})
 
@@ -162,7 +162,7 @@ def testforban(request):
 def testdisplay(request):
     # Always set these flags as False before committing changes
     erase_movie_db = False                # USE WITH CAUTION, erases all movie database contents
-    init_movie_db = True                 # Performs Popular fetch from TMDB 
+    init_movie_db = False                 # Performs Popular fetch from TMDB 
     get_now_playing = False               # Performs Now Playing fetch from TMDB
     update_streaming = False              # Updates all movie streaming providers from TMDB, takes a while
     update_recs = False                   # Updates all movie recommendations from TMDB, takes a while
