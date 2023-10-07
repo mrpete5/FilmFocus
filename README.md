@@ -1,4 +1,6 @@
 # FilmFocus
+Visit the site at: 
+http://filmfocus.io
 
 ## Description
 FilmFocus is a web application designed to help movie enthusiasts manage their watchlists and discover new movies.
@@ -21,9 +23,15 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+
+
 ## Usage
 Visit http://127.0.0.1:8000/ to access FilmFocus. Create an account to start managing your watchlists and discovering new movies.
 
 ## License
+
 ## Contact
+filmfocusku.gmail.com
+
 ## Acknowledgements
+Data provided by TMDb and OMDb
