@@ -1,6 +1,7 @@
 # FilmFocus
 Visit the site at: 
-http://filmfocus.io
+(Under Construction)
+https://filmfocus.io
 
 ## Description
 FilmFocus is a web application designed to help movie enthusiasts manage their watchlists and discover new movies.
