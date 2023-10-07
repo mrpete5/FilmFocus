@@ -537,37 +537,165 @@ $(document).ready(function () {
 	/*==============================
 	Popup add movie to watchlist
 	==============================*/
-	// Add movie to watchlist on click
+	// STILL NOT WORKING, leaving this commented out for now
+	// // Add movie to watchlist on click
+	// const addToWatchlistBtn = document.getElementById('addToWatchlist');
+	// const movieId = button.dataset.data-movie-id;
+	// const watchlistId = button.dataset.data-watchlist-id; 
+
+	// addToWatchlistBtn.addEventListener('click', () => {
+	// // Add code here to handle adding movie to watchlist
+	// });
+
+	// // Add movie to watchlist
+	// const addToWatchlist = (movieId, watchlistId) => {
+	// 	fetch('/add-to-watchlist/', {
+	// 	method: 'POST',
+	// 	headers: {
+	// 		'Content-Type': 'application/json',
+	// 		'X-CSRFToken': csrftoken, 
+	// 	},
+	// 	body: JSON.stringify({
+	// 		movie_id: movieId,
+	// 		watchlist_id: watchlistId, 
+	// 	})
+	// 	})
+	// 	.then(response => {
+	// 	// Check for success
+	// 	if (response.ok) {
+	// 		// Movie added, update UI
+	// 	} else {
+	// 		// Handle error 
+	// 	}
+	// 	})
+	// }
+
+
+	/*==============================
+    Popup add movie to watchlist
+    ==============================*/
+	// Get DOM elements
 	const addToWatchlistBtn = document.getElementById('addToWatchlist');
-	const movieId = button.dataset.movieId;
-	const watchlistId = button.dataset.watchlistId; 
 
-	addToWatchlistBtn.addEventListener('click', () => {
-	// Add code here to handle adding movie to watchlist
-	});
+	// Handle click event
+	const handleAddToWatchlistClick = () => {
 
-	// Add movie to watchlist
-	const addToWatchlist = (movieId, watchlistId) => {
-		fetch('/add-to-watchlist/', {
+		// Get movieId and watchlistId from data attributes
+		const movieId = addToWatchlistBtn.dataset.movieId; 
+		const watchlistId = addToWatchlistBtn.dataset.watchlistId;
+
+		// Call addToWatchlist function 
+		addToWatchlist(movieId, watchlistId)
+			.then(handleResponse) 
+			.catch(handleError);
+
+	}
+
+	// Make POST request to add movie to watchlist
+	const addToWatchlist = async (movieId, watchlistId) => {
+
+	// POST data
+	const data = {
+		movie_id: movieId,
+		watchlist_id: watchlistId
+	};
+
+	// Request options
+	const options = {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json',
-			'X-CSRFToken': csrftoken, 
+		'Content-Type': 'application/json',
+		'X-CSRFToken': csrftoken  
 		},
-		body: JSON.stringify({
-			movie_id: movieId,
-			watchlist_id: watchlistId, 
-		})
-		})
-		.then(response => {
-		// Check for success
-		if (response.ok) {
-			// Movie added, update UI
-		} else {
-			// Handle error 
-		}
-		})
+		body: JSON.stringify(data)
+	};
+
+	// Make request and return response
+	return fetch('/add-to-watchlist/', options)
+		.then(res => res.json());
+
 	}
+
+	// Handle successful response 
+	const handleResponse = (response) => {
+	if (response.success) {
+		// Movie added, update UI
+	} else {
+		// Show error 
+	}
+	}
+
+	// Handle errors
+	const handleError = (error) => {
+	console.error(error);
+	}
+
+	// Event listener
+	addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
 
 
 });
+
+
+
+
+// FULL COPY BELOW THIS LINE ********************************
+// // Get DOM elements
+// const addToWatchlistBtn = document.getElementById('addToWatchlist');
+
+// // Handle click event
+// const handleAddToWatchlistClick = () => {
+
+//   // Get movieId and watchlistId from data attributes
+//   const movieId = addToWatchlistBtn.dataset.movieId; 
+//   const watchlistId = addToWatchlistBtn.dataset.watchlistId;
+
+//   // Call addToWatchlist function 
+//   addToWatchlist(movieId, watchlistId)
+//     .then(handleResponse) 
+//     .catch(handleError);
+
+// }
+
+// // Make POST request to add movie to watchlist
+// const addToWatchlist = async (movieId, watchlistId) => {
+
+//   // POST data
+//   const data = {
+//     movie_id: movieId,
+//     watchlist_id: watchlistId
+//   };
+  
+//   // Request options
+//   const options = {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'X-CSRFToken': csrftoken  
+//     },
+//     body: JSON.stringify(data)
+//   };
+
+//   // Make request and return response
+//   return fetch('/add-to-watchlist/', options)
+//     .then(res => res.json());
+
+// }
+
+// // Handle successful response 
+// const handleResponse = (response) => {
+//   if (response.success) {
+//     // Movie added, update UI
+//   } else {
+//     // Show error 
+//   }
+// }
+
+// // Handle errors
+// const handleError = (error) => {
+//   console.error(error);
+// }
+
+// // Event listener
+// addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
+

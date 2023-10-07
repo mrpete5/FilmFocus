@@ -52,9 +52,11 @@
 							{{ list.watchlist_name }} &nbsp;
 							<!-- Add data attributes -->
 							<button id="addToWatchlist"
-								data-movie-id="{{ movie.id }}"
-								data-watchlist-id="{{ list.id }}">
-								<img id="popup__add" src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+								movieId="{{ movie.id }}"
+								watchlistId="{{ list.id }}">
+								<a href="#0" class="popup__add">
+									<img id="popup__add" src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+								</a>
 							</button> <br>
 						</p>
 					{% endfor %}
