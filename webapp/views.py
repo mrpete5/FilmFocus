@@ -20,9 +20,18 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404
 from django.contrib import messages
 from .models import Movie, Watchlist, WatchlistEntry
-from .forms import NewUserForm, CustomAuthForm, NewWatchlistForm
-from django.contrib.auth import login, logout, authenticate
+from .forms import (
+    NewUserForm,
+    CustomAuthForm,
+    NewWatchlistForm,
+    PasswordResetForm,
+    PasswordResetConfirmForm,
+)
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import login, logout, authenticate, get_user_model
 import json
+import webapp.password_reset as pass_reset
+from django.utils.http import urlsafe_base64_decode
 
 # Constants
 RECOMMENDED_MOVIES_COUNT = 10
@@ -118,8 +127,57 @@ def four04(request):
 
 # View function for the password reset page
 def pwreset(request):
+    if request.method == "POST":
+        # Define form information
+        form = PasswordResetForm(request.POST or None)
+        if form.is_valid():
+            # get user using username from form
+            username = form.cleaned_data.get("username")
+            user = User.objects.get(username=username)
+
+            pass_reset.send_email(request, user)
+
+            # return redirect('index')
+        else:
+            messages.error(request, "Invalid username")
+    
+    
     return render(request, "pwreset.html")
 
+# View definition for password comfirmation page
+def pwresetconfirm(request, uidb64, token):
+    if request.method == "POST":
+        # Define form information
+        form = PasswordResetConfirmForm(request.POST or None)
+        try:
+            # get uid and user information
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = get_object_or_404(get_user_model(), pk=uid)
+
+            # error if uidb64 or token failure
+            if user == None or not default_token_generator.check_token(user, token):
+                raise Exception("Invalid Reset Link")
+            
+            if form.is_valid():
+                    # get password details from form
+                    new_password_1 = form.cleaned_data.get("new_password_1")
+                    new_password_2 = form.cleaned_data.get("new_password_2")
+
+                    # errors if something is wrong with password inputs
+                    pass_reset.confirm_password(new_password_1, new_password_2)
+
+                    # otherwise change the password
+                    pass_reset.change_password(user, new_password_1)
+
+                    # TODO redirect to a password change comfirmation page
+                    return redirect("index")
+            else:
+                raise Exception("Invalid Password")
+        except Exception as e:
+            # post error message
+            messages.error(request, e)
+    
+    return render(request, "pwresetconfirm.html")
 
 '''
 # View function for the login page

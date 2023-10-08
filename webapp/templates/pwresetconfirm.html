@@ -47,24 +47,40 @@
 				<div class="col-12">
 					<div class="sign__content">
 						<!-- authorization form -->
-						<form method="POST" class="sign__form">
+						<form method="post" class="sign__form">
 							{% csrf_token %}
+							<!-- header labels -->
 							<a href="/" class="sign__logo">
-								<img src={% static "img/logos/FilmFocus_textonly.png" %} alt="">
+								<img src="{% static 'img/logos/FilmFocus_textonly.png' %}" alt="">
 							</a>
 							<div>
 								<h2 style="color: white;">Reset your password</h2>
 							</div>
 							<div>
-								<p style="color: white;">Enter your username to receive an email with a link to reset your password.</p>
+								<p style="color: white;">Enter your new password and confirm it below.</p>
+							</div>
+							<!-- error message breadcrumb -->
+							{% if messages %}
+							<div style="color: white;" class="alert alert-danger" role="alert">
+								<ul class="errorlist">
+									{% for message in messages %}
+									<li>{{ message }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+							{% endif %}
+							<!-- input fields -->
+							<div class="sign__group">
+								<input type="password" class="sign__input" name="new_password_1" placeholder="New Password">
 							</div>
 							<div class="sign__group">
-								<input type="text" class="sign__input" name="username" placeholder="Username">
+								<input type="password" class="sign__input" name="new_password_2" placeholder="Confirm Password">
 							</div>
+							<!-- submit button -->
 							<div>
-								<button class="reset__send" type="submit">Send</button>
+								<button class="reset__send" type="submit">Reset Password</button>
 							</div>
-						</form>
+						</form>	
 						<!-- end authorization form -->
 					</div>
 				</div>
