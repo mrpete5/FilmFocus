@@ -16,13 +16,16 @@ Any known faults: None.
 """
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, Http404
+from django.contrib import messages
+from .models import Movie, Watchlist, WatchlistEntry
 from .forms import NewUserForm, CustomAuthForm
 from django.contrib.auth import login, logout, authenticate
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 import json
-from .models import Movie, Watchlist, WatchlistEntry
+
+# Constants
+RECOMMENDED_MOVIES_COUNT = 10
 
 # from django.contrib.auth.forms import AuthenticationForm
 # from django.http import HttpRequest 
@@ -49,24 +52,16 @@ def movie_detail(request, movie_slug):
     
     # Fetch recommended movies
     # TODO: Implement this function to fetch Similar & Recommended from
-    recommended_movies = movie.get_recommended_movies(10)
-    
+    recommended_movies = movie.get_recommended_movies(RECOMMENDED_MOVIES_COUNT)
+    rt_rating = None
     # Parse the Rotten Tomatoes rating to an integer
     try:
         rt_rating = int(movie.rotten_tomatoes_rating.split('%')[0])
     except (ValueError, AttributeError):
-        rt_rating = None
+        pass
     
     # Determine which icon to use based on the Rotten Tomatoes rating
-    if rt_rating is not None:
-        if rt_rating >= 75:
-            movie.rt_icon = 'img/logos/Rotten_Tomatoes_certified_fresh.png'
-        elif rt_rating >= 60:
-            movie.rt_icon = 'img/logos/Rotten_Tomatoes_fresh.png'
-        else:
-            movie.rt_icon = 'img/logos/Rotten_Tomatoes_rotten.png'
-    else:
-        movie.rt_icon = None
+    movie.rt_icon = determine_rt_icon(rt_rating)
     
     context = {
         'movie': movie,
@@ -75,6 +70,17 @@ def movie_detail(request, movie_slug):
     
     return render(request, 'details.html', context)
 
+
+# Determines the Rotten Tomatoes icon based on the Rotten Tomatoes rating
+def determine_rt_icon(rt_rating):
+    if rt_rating is not None:
+        if rt_rating >= 75:
+            return 'img/logos/Rotten_Tomatoes_certified_fresh.png'
+        elif rt_rating >= 60:
+            return 'img/logos/Rotten_Tomatoes_fresh.png'
+        else:
+            return 'img/logos/Rotten_Tomatoes_rotten.png'
+    return None
 
 # View function for the movie watchlists page
 def watchlist(request):
@@ -146,9 +152,10 @@ def signup(request):
             
             # Redirect to the homepage on successful sign up
             return redirect('index')
-        messages.error(request, "Registration failed")
-        messages.error(request, "Fill out all fields")
-        messages.error(request, "Please try again")
+        else:
+            messages.error(request, "Registration failed")
+            messages.error(request, "Fill out all fields")
+            messages.error(request, "Please try again")
 
     else:
         form = NewUserForm()
@@ -162,24 +169,27 @@ def faq(request):
 
 # Require user to be logged in to access this view
 @login_required  
-def add_to_watchlist(request):
-    ''' Add a movie to a watchlist. '''
-    # TODO: Implement this function to add a movie to a watchlist.
-
-    data = json.loads(request.body) # Parse JSON data from request body
-    movie_id = data['movie_id']   # Get movie ID from request data  
-    watchlist_id = data['watchlist_id']  # Get watchlist ID from request data
-    movie = Movie.objects.get(id=movie_id) # Get Movie instance from DB using movie ID
-    watchlist = Watchlist.objects.get(id=watchlist_id)  # Get Watchlist instance from DB using watchlist ID  
-
-    # Create new WatchlistEntry to associate movie with watchlist
-    WatchlistEntry.objects.create(
-            watchlist=watchlist,
-            movie=movie,
-    )
-
-    # Return JSON success response 
-    return JsonResponse({'success': True})
+def add_movie_to_watchlist(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            movie_id = data.get('movie_id')
+            watchlist_id = data.get('watchlist_id')
+            movie = get_object_or_404(Movie, id=movie_id)
+            watchlist = get_object_or_404(Watchlist, id=watchlist_id, user=request.user)
+            
+            # Check if the movie is already in the watchlist
+            if not WatchlistEntry.objects.filter(watchlist=watchlist, movie=movie).exists():
+                WatchlistEntry.objects.create(watchlist=watchlist, movie=movie)
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Movie already in watchlist'})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
+        except KeyError:
+            return JsonResponse({'success': False, 'error': 'Invalid data format'})
+    else:
+        raise Http404
 
 
 # View function for the poster game page

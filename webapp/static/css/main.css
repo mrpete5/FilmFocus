@@ -3878,6 +3878,20 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .popupButton:active {
   opacity: 0.8;
 }
+
+/* Popup Movie Title Styling */
+.popup__title {
+  position: flex;
+  top: 0%; 
+  left: 0%;
+  /* transform: translate(-50%, -50%); */
+  color: #fff;
+  font-size: 20px; 
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+}
+
 .popup {
   background-color: rgba(0,0,0,0.3);
   opacity: 0;

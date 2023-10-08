@@ -21,6 +21,10 @@ from django.db import models
 from django.utils.text import slugify
 from django.db.models import Q
 from django.utils.module_loading import import_string
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.urls import reverse
+
 
 
 class Movie(models.Model):
@@ -50,6 +54,10 @@ class Movie(models.Model):
     letterboxd_rating = models.FloatField(null=True, blank=True)
     # letterboxd_histogram_weights = JSONField(null=True, blank=True) # TODO: Add histogram weights or remove this line
 
+    # This method can be used to generate a unique slug for a movie
+    def get_absolute_url(self):
+        return reverse('movie_detail', args=[str(self.slug)])
+    
     # This method can be used to fetch the recommended movies for a particular movie
     def get_recommended_movies(self, num_movies=6):
         # Dynamically import the process_movie_search function
@@ -154,3 +162,13 @@ class WatchlistEntry(models.Model):
 
     def __str__(self):
         return f"{self.movie.title} in {self.watchlist.watchlist_name}"
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()

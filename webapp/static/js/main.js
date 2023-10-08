@@ -518,7 +518,7 @@ $(document).ready(function () {
 
 	// Open the popup
 	openBtn.forEach(x => x.addEventListener("click", () => {
-		console.log("clicked");
+		// console.log("clicked");		# Leave for testing purposes, modify as needed
 		popup.classList.add("open");
 	}))
 
@@ -574,8 +574,22 @@ $(document).ready(function () {
 	/*==============================
     Popup add movie to watchlist
     ==============================*/
+	const bookmarkLinks = document.querySelectorAll(".popup__add"); 
+	bookmarkLinks.forEach(link => {
+	  link.addEventListener('click', () => {
+		console.log("TEST 1: clicked");
+		const movieId = link.dataset.movieId;
+		const watchlistId = link.dataset.watchlistId;
+		add_movie_to_watchlist(movieId, watchlistId);
+	  });
+	});
+	
+
+
 	// Get DOM elements
-	const addToWatchlistBtn = document.getElementById('addToWatchlist');
+	// const addToWatchlistBtn = document.getElementById('addToWatchlist');
+
+	addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
 
 	// Handle click event
 	const handleAddToWatchlistClick = () => {
@@ -589,6 +603,7 @@ $(document).ready(function () {
 			.then(handleResponse) 
 			.catch(handleError);
 
+		// add_movie_to_watchlist(movieId, watchlistId) // Testing this as possible solution
 	}
 
 	// Make POST request to add movie to watchlist
