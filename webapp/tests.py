@@ -41,147 +41,153 @@ import datetime
 OUTPUT_DIR = '/webapp/outputs/'
 
 
-# Create your tests here.
-class Test():
+# # Create your tests here.
+# class Test():
     
-    def __init__(self) -> None:
-        ''' Constructor for the Test class. '''
-        # TODO: Implement the constructor for the Test class.
+#     def __init__(self) -> None:
+#         ''' Constructor for the Test class. '''
+#         # TODO: Implement the constructor for the Test class.
         
-        self.input_file_name = 'test_input_file_v1.txt' # Initialize the input file name.
-        self.output_file_name = 'test_output_v1.txt'    # Initialize the output file name.
-        self.is_input_valid = False                     # Initialize the input file name validity flag.
-        self.file_data = []                             # Initialize the file data list. Optionally, change the data structre.
+#         self.input_file_name = 'test_input_file_v1.txt' # Initialize the input file name.
+#         self.output_file_name = 'test_output_v1.txt'    # Initialize the output file name.
+#         self.is_input_valid = False                     # Initialize the input file name validity flag.
+#         self.file_data = []                             # Initialize the file data list. Optionally, change the data structre.
     
-    def run(self) -> None:
-        ''' Runs the test. '''
-        # TODO: Implement the run function for the Test class.
+#     def run(self) -> None:
+#         ''' Runs the test. '''
+#         # TODO: Implement the run function for the Test class.
         
-        print(f"Test started.")
+#         print(f"Test started.")
         
-        # self.test_display()               # Run the test display function.
-        self.verify_input_file()            # Run the test verify_input_file function.
+#         # self.test_display()               # Run the test display function.
+#         self.verify_input_file()            # Run the test verify_input_file function.
         
-        print(f"Test output file name: /webapp/outputs/{self.output_file_name}")
-        print(f"Test completed successfully.")
+#         print(f"Test output file name: /webapp/outputs/{self.output_file_name}")
+#         print(f"Test completed successfully.")
     
-    def read_from_file(self) -> None:
-        ''' Read the test file. '''
-        # TODO: Implement the read_file function within the Test class.
+#     def read_from_file(self) -> None:
+#         ''' Read the test file. '''
+#         # TODO: Implement the read_file function within the Test class.
         
-        # Read the file.
-        if self.is_input_valid: 
-            with open(self.input_file_name, 'r') as file:
-                for line in file.readlines():
-                    # print(line)
-                    self.file_data = line.strip() # Strip the newline character from the file data.
+#         # Read the file.
+#         if self.is_input_valid: 
+#             with open(self.input_file_name, 'r') as file:
+#                 for line in file.readlines():
+#                     # print(line)
+#                     self.file_data = line.strip() # Strip the newline character from the file data.
 
-    def write_to_file(self) -> None:
-        ''' Write the test file. '''
-        # TODO: Implement the write_to_file function within the Test class.
+#     def write_to_file(self) -> None:
+#         ''' Write the test file. '''
+#         # TODO: Implement the write_to_file function within the Test class.
         
-        self.generate_output_file_name()
+#         self.generate_output_file_name()
         
-        # Include the output directory in the output file name.
-        self.output_file_name = str(OUTPUT_DIR + self.output_file_name)
+#         # Include the output directory in the output file name.
+#         self.output_file_name = str(OUTPUT_DIR + self.output_file_name)
         
-        # Write the output file.
-        with open(self.output_file_name, 'w', newline='\n') as file:
-            # TODO: Finish implementation of the write_to_file function.
+#         # Write the output file.
+#         with open(self.output_file_name, 'w', newline='\n') as file:
+#             # TODO: Finish implementation of the write_to_file function.
             
-            # file.write(self.file_data)            # Test version
-            file.writelines(self.file_data)
+#             # file.write(self.file_data)            # Test version
+#             file.writelines(self.file_data)
 
-    def verify_input_file(self) -> None:
-        ''' Verify the input file name and type. '''
-        # TODO: Implement the verify_input_file_name and type function within the Test class.
+#     def verify_input_file(self) -> None:
+#         ''' Verify the input file name and type. '''
+#         # TODO: Implement the verify_input_file_name and type function within the Test class.
         
-        if not os.path.isfile(self.input_file_name):
-            print(f"The input file name '{self.input_file_name}' does not exist in the directory.")
-            print(f"Creating: the input file name '{self.input_file_name}' in the directory.")
-            self.is_input_valid = False     # False, because the newly created input file needs to be verified.
-            self.create_file(file_function="input_file")
-            return
-        else:
-            self.is_input_valid = True
-            # print(f"The input file name '{self.input_file_name}' is valid.") # Test version, remove later.
+#         if not os.path.isfile(self.input_file_name):
+#             print(f"The input file name '{self.input_file_name}' does not exist in the directory.")
+#             print(f"Creating: the input file name '{self.input_file_name}' in the directory.")
+#             self.is_input_valid = False     # False, because the newly created input file needs to be verified.
+#             self.create_file(file_function="input_file")
+#             return
+#         else:
+#             self.is_input_valid = True
+#             # print(f"The input file name '{self.input_file_name}' is valid.") # Test version, remove later.
 
-    def create_file(self, file_function="input_file") -> None:
-        """ Create a new file name. """
-        # TODO: Implement the create_file function within the Test class.
+#     def create_file(self, file_function="input_file") -> None:
+#         """ Create a new file name. """
+#         # TODO: Implement the create_file function within the Test class.
         
-        self.input_file_name = f'{OUTPUT_DIR}/test_input_file_v1.txt'
-        print(f'Test remove: {self.input_file_name}')
-        file1 = open(self.input_file_name,"a")
+#         self.input_file_name = f'{OUTPUT_DIR}/test_input_file_v1.txt'
+#         print(f'Test remove: {self.input_file_name}')
+#         file1 = open(self.input_file_name,"a")
         
-        print(file1.read())                     # Test version, remove later.
+#         print(file1.read())                     # Test version, remove later.
         
-        if file_function == "input_file":
-            file1.write(self.file_data)
-        elif file_function == "output_file":
-            new_outFile = f"test_output_file_v1_{datetime.datetime.now}.txt"
-            self.output_file_name = new_outFile
-        else:
-            print(f"The file function '{file_function}' is invalid.")
-            return
-        file1.close()
+#         if file_function == "input_file":
+#             file1.write(self.file_data)
+#         elif file_function == "output_file":
+#             new_outFile = f"test_output_file_v1_{datetime.datetime.now}.txt"
+#             self.output_file_name = new_outFile
+#         else:
+#             print(f"The file function '{file_function}' is invalid.")
+#             return
+#         file1.close()
 
-    def generate_output_file_name(self) -> None:
-        ''' Generate the output file name. '''
-        # TODO: Implement the generate_output_file function within the Test class.
+#     def generate_output_file_name(self) -> None:
+#         ''' Generate the output file name. '''
+#         # TODO: Implement the generate_output_file function within the Test class.
         
-        date_time_format = "%MM/%DD/%YYYY_%HH_%mm:%ss"
-        date_time_value = date_time_format  # TODO: Temporary fix. Remove later.
+#         date_time_format = "%MM/%DD/%YYYY_%HH_%mm:%ss"
+#         date_time_value = date_time_format  # TODO: Temporary fix. Remove later.
         
-        # TODO: finish implementation of the date_time_value.
-        # date_time_value = None
+#         # TODO: finish implementation of the date_time_value.
+#         # date_time_value = None
                 
-        self.output_file_name = f"output_{date_time_value}.txt"
-        pass    # 'pass' is a reserved word in Python to skip the function.
+#         self.output_file_name = f"output_{date_time_value}.txt"
+#         pass    # 'pass' is a reserved word in Python to skip the function.
 
-    def test_display(self) -> None:
-        ''' Display the test page. '''
-        # TODO: Implement the test_display function within the Test class.
+#     def test_display(self) -> None:
+#         ''' Display the test page. '''
+#         # TODO: Implement the test_display function within the Test class.
        
-        pass
+#         pass
 
-def main():
-    my_test = Test()    # Create a new instance of the Test class.
-    my_test.run()       # Run the test.
+# def main():
+#     my_test = Test()    # Create a new instance of the Test class.
+#     my_test.run()       # Run the test.
     
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
 
 
 
-# # tests.py
+import unittest
+from django.test import Client
 
-# import unittest 
-# from services import MovieService
+class TestViews(unittest.TestCase):
 
-# class TestMovieService(unittest.TestCase):
+    def setUp(self):
+        self.client = Client()
 
-#     def test_search_success(self):
-#         service = MovieService()
-#         results = service.search_movies('The Matrix')
-        
-#         self.assertGreater(len(results), 0)
-#         self.assertEqual(results[0].title, 'The Matrix')
-        
-#     def test_search_no_results(self):
-#         service = MovieService()
-#         results = service.search_movies('asdfasdfasdf')
-        
-#         self.assertEqual(len(results), 0)
-        
-#     def test_get_popular(self):
-#         service = MovieService()
-#         results = service.get_popular_movies(page=1)
-        
-#         self.assertGreater(len(results), 0)
-#         self.assertIsInstance(results[0], Movie)
-        
+    def test_display(self):
+        response = self.client.get('/testdisplay/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Test Post')
 
-# if __name__ == '__main__':
-#     unittest.main()
+    def test_for_ban(self):
+        response = self.client.get('/testforban/') 
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'This is a test')
+
+    # def test_post_create(self):
+    #     response = self.client.post('/blog/create/', {
+    #         'title': 'New Post',
+    #         'content': 'Testing'
+    #     })s
+    #     self.assertEqual(response.status_code, 302)
+    #     self.assertEqual(Post.objects.last().title, 'New Post')
+
+    # def test_post_update(self):
+    #     response = self.client.post('/blog/1/update/', {
+    #         'title': 'Updated Post',
+    #         'content': 'Updated test content'  
+    #     })
+    #     self.assertEqual(response.status_code, 302)
+    #     self.assertEqual(Post.objects.get(pk=1).title, 'Updated Post')
+
+if __name__ == '__main__':
+    unittest.main()
