@@ -66,8 +66,11 @@ class CustomAuthForm(AuthenticationForm):
         
 
 class NewWatchlistForm(forms.Form):
-    watchlist_name = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'class':'wlist__input', 'placeholder': 'Watchlist Name'}))
-    
+    watchlist_name = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'class':'wlist__input',
+                                                                                                  'placeholder': 'Watchlist Name',
+                                                                                                  'type': 'text',
+                                                                                                  'id':'watchlistNameInput',
+                                                                                                  'placeholder': 'New Watchlist'}))
     class Meta:
         model = Watchlist
         fields = ("watchlist_name")
