@@ -34,7 +34,7 @@ import webapp.password_reset as pass_reset
 from django.utils.http import urlsafe_base64_decode
 
 # Constants
-RECOMMENDED_MOVIES_COUNT = 10
+RECOMMENDED_MOVIES_COUNT = 12
 
 # from django.contrib.auth.forms import AuthenticationForm
 # from django.http import HttpRequest 

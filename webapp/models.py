@@ -67,8 +67,8 @@ class Movie(models.Model):
         processed_movies = set()  # Keep track of processed movies to avoid duplicates
         
         for movie_data in self.recommended_movie_data:
-            if len(recommended_movies) >= num_movies:
-                break  # Stop processing when the desired number of movies is reached
+            # if len(recommended_movies) >= num_movies:
+            #     break  # Stop processing when the desired number of movies is reached
             
             tmdb_id = movie_data.get('tmdb_id')
             if tmdb_id in processed_movies:
@@ -88,6 +88,11 @@ class Movie(models.Model):
                 if recommended_movie:
                     recommended_movies.append(recommended_movie)
                     processed_movies.add(tmdb_id)
+        if len(recommended_movies) < num_movies:
+            # If the number of recommended movies is less than the desired number of movies,
+            # Add the remaining recommended movies to the list from the existing database movies.
+            # Add the most recently added movies
+            recommended_movies.extend(Movie.objects.all().order_by('-created_at')[:num_movies - len(recommended_movies)])
         
         # Return the specified number of recommended movies
         return recommended_movies[:num_movies]
