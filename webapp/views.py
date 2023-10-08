@@ -191,12 +191,6 @@ def login_user(request):
             user = form.get_user()  
             username = form.cleaned_data.get('username')
             
-            # Check if user has profile, create one if not
-            if not hasattr(user, 'userprofile'):
-                UserProfile.objects.create(user=user) 
-            else:   
-                userprofile = user.userprofile
-            
             # Check if user has profile
             if not hasattr(user, 'userprofile'):
                 UserProfile.objects.get_or_create(user=user)
