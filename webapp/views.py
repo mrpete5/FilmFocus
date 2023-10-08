@@ -105,26 +105,42 @@ def pwreset(request):
 # If view function named login, then conflicts with Django built-in login function, if view function named login
 '''
 def login_user(request):
+
+    # First define the form 
+    form = CustomAuthForm(data=request.POST or None)
+
     if request.method == 'POST':
-        form = CustomAuthForm(data=request.POST)
+
         if form.is_valid():
-            user = form.get_user()
+            
+            # Get user after validating form 
+            user = form.get_user()  
             username = form.cleaned_data.get('username')
-            # password = form.cleaned_data.get('password')                  # do not delete before 11/01, might need to change
-            # user = authenticate(username=username, password=password)     # do not delete before 11/01, might need to change
-            if user is not None:
-                login(request, user)
-                messages.info(request, f"Hello {username}, welcome back!")
-                return redirect('index')
-            else:
-                messages.error(request, "Invalid username or password")
+            
+            # Check if user has profile, create one if not
+            if not hasattr(user, 'userprofile'):
+                UserProfile.objects.create(user=user) 
+            else:   
+                userprofile = user.userprofile
+            
+            # Login user
+            login(request, user)
+            
+            # Rest of login logic
+            messages.info(request, f"Hello {username}, welcome back!")
+            return redirect('index')
+            
         else:
             messages.error(request, "Invalid username or password")
-    else:
-        form = CustomAuthForm()                                 
-        
-    return render(request=request, template_name="login.html", context={"login_form": form})
 
+    else:
+        form = CustomAuthForm()
+
+    return render(
+        request=request,
+        template_name="login.html",
+        context={"login_form": form}
+    )
 
 ''' # Redirect to the index page
     # OR 
@@ -167,29 +183,7 @@ def faq(request):
     return render(request, "faq.html")
 
 
-# Require user to be logged in to access this view
-@login_required  
-def add_movie_to_watchlist(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            movie_id = data.get('movie_id')
-            watchlist_id = data.get('watchlist_id')
-            movie = get_object_or_404(Movie, id=movie_id)
-            watchlist = get_object_or_404(Watchlist, id=watchlist_id, user=request.user)
-            
-            # Check if the movie is already in the watchlist
-            if not WatchlistEntry.objects.filter(watchlist=watchlist, movie=movie).exists():
-                WatchlistEntry.objects.create(watchlist=watchlist, movie=movie)
-                return JsonResponse({'success': True})
-            else:
-                return JsonResponse({'success': False, 'error': 'Movie already in watchlist'})
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
-        except KeyError:
-            return JsonResponse({'success': False, 'error': 'Invalid data format'})
-    else:
-        raise Http404
+
 
 
 # Require user to be logged in to access this view
@@ -246,3 +240,28 @@ def testdisplay(request):
   
     movies_to_display = handle_test_display_page(settings)
     return render(request, "testdisplay.html", {"movies": movies_to_display})
+
+
+# Require user to be logged in to access this view
+@login_required  
+def add_movie_to_watchlist(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            movie_id = data.get('movie_id')
+            watchlist_id = data.get('watchlist_id')
+            movie = get_object_or_404(Movie, id=movie_id)
+            watchlist = get_object_or_404(Watchlist, id=watchlist_id, user=request.user)
+            
+            # Check if the movie is already in the watchlist
+            if not WatchlistEntry.objects.filter(watchlist=watchlist, movie=movie).exists():
+                WatchlistEntry.objects.create(watchlist=watchlist, movie=movie)
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Movie already in watchlist'})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
+        except KeyError:
+            return JsonResponse({'success': False, 'error': 'Invalid data format'})
+    else:
+        raise Http404

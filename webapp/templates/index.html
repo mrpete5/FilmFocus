@@ -67,12 +67,22 @@
 
 				{% endif %}
 			
-					<br>
-					<form method="POST">
+					{% comment %} <br> {% endcomment %}
+					<!-- Create New Watchlist form -->
+						<form method="POST" class="sign__form">
+							{% csrf_token %}
+							<div class="sign__group">
+								{{ register_form.username }}
+							</div>
+							<button class="sign__btn" type="submit">Create Watchlist</button>
+						</form>
+					<!-- end Create New Watchlist form -->
+
+					{% comment %} <form method="POST">
 						{% csrf_token %}
-						<input type="text" name="watchlist_name">
+						<input type="text" name="watchlist_name" placeholder='New Watchlist Name'>
 						<button type="submit">Create New Watchlist</button> 
-					  </form>
+					  </form> {% endcomment %}
 					{% comment %} <button id="watchlistPopup" class="create__watchlist">CREATE NEW WATCHLIST</button> {% endcomment %}
 					
 					<div id="create-form" style="display:none;">

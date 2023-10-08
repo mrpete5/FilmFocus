@@ -61,3 +61,14 @@ class CustomAuthForm(AuthenticationForm):
         
         password_attrs = {'class':'sign__input', 'placeholder': 'Password', 'type': 'password', 'id':'id_password'}
         self.fields['password'].widget.attrs=password_attrs    
+        
+
+class CreateWatchlistForm(forms.Form):
+    watchlist_name = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'class':'sign__input', 'placeholder': 'Watchlist Name'}))
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Use widgets on built in authentication fields
+        watchlist_name_attrs = {'class':'sign__input', 'placeholder': 'Watchlist Name'} 
+        self.fields['watchlist_name'].widget.attrs=watchlist_name_attrs
