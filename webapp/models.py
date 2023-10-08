@@ -144,10 +144,14 @@ class UserProfile(models.Model):
 from django.contrib.auth.models import User
 
 class Watchlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE) 
-    name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    watchlist_name = models.CharField(max_length=100)
     # user = models.ForeignKey(User, related_name='watchlists', on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"{self.user.username}'s {self.watchlist_name} Watchlist"

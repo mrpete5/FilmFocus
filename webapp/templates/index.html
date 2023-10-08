@@ -66,33 +66,17 @@
 					<p>You have no watchlists yet.</p>
 
 				{% endif %}
-			
-					{% comment %} <br> {% endcomment %}
+				<br>
+
 				<!-- Create New Watchlist form -->
-					<form method="POST" action="/" class="sign__form">
-						{% csrf_token %}
-						<div class="sign__group">
-							{{ watchlist_form.watchlist_name }}
-						</div>
-						<button class="sign__btn" type="submit">Create Watchlist</button>
-					</form>
-					<div id="create-form" style="display:none;">
-						{% comment %} <form method="POST" action="#">
-						{% csrf_token %}
-						<input type="text" name="watchlist_name" placeholder="Name Your New Watchlist"> {% endcomment %}
-						<input type="submit" value="Create">
-						</form>
+				<form method="POST" class="wlist__form">
+					{% csrf_token %}
+					<div class="wlist__group">
+						{{ watchlist_form.watchlist_name }}
+						<button class="wlist__btn" type="submit">New Watchlist</button>
 					</div>
+				</form>
 				<!-- end Create New Watchlist form -->
-
-					{% comment %} <form method="POST">
-						{% csrf_token %}
-						<input type="text" name="watchlist_name" placeholder='New Watchlist Name'>
-						<button type="submit">Create New Watchlist</button> 
-					  </form> {% endcomment %}
-					{% comment %} <button id="watchlistPopup" class="create__watchlist">CREATE NEW WATCHLIST</button> {% endcomment %}
-					
-
 
 				<br>
 				<button id="closePopup" class="close__popup">CLOSE</button>

@@ -36,27 +36,30 @@ from .services import *
 def index(request):
     ''' Handles the FilmFocus homepage. '''
     context = get_movies_for_index()
+            
     if request.method == 'POST':
         form = NewWatchlistForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
+            watchlist_name = form.save()
+            # login(request, user)
+            # username = form.cleaned_data.get('username')
+            user = request.user
             watchlist_name = form.cleaned_data.get('watchlist_name')
-            add_movie_to_watchlist(username, watchlist_name)
+            add_movie_to_watchlist(user, watchlist_name)
             messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
 
             # Redirect to the homepage on successful sign up
             return redirect('index')
         else:
-            messages.error(request, "Registration failed")       
-
-        user = request.user
-        if user.is_authenticated:
-            context['watchlists'] = Watchlist.objects.filter(user=user)
+            messages.error(request, "Watchlist creation failed")               
         
+
     else:
         form = NewWatchlistForm()
     context['watchlist_form'] = form
+    user = request.user
+    if user.is_authenticated:
+        context['watchlists'] = Watchlist.objects.filter(user=user)
     return render(request, 'index.html', context)
 
 
@@ -317,4 +320,10 @@ def create_watchlist(request):
     form = NewWatchlistForm()
   
   context = {'form': form}
-  return render(request, 'create.html', context)
+  return render(request, 'index.html', context)
+
+
+# watchlist = Watchlist()
+# watchlist.user = request.user
+# watchlist.watchlist_name = form.cleaned_data['watchlist_name']
+# watchlist.save()

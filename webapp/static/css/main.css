@@ -4009,3 +4009,97 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   opacity: 0.85;
   /* margin-top: 22.5%; */
 }
+
+/*==============================
+  Add Movie to Watchlist
+==============================*
+/* Add Movie to Watchlist forms, fields, and buttons */
+.wlist__form {
+  background-color: #28282d;
+  -webkit-box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  position: relative;
+  margin: 10px;
+}
+.wlist__form:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  display: block;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+}
+.wlist__group {
+  /* position: relative; */
+  /* margin-bottom: 20px; */
+  display: flex;
+}
+.wlist__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 55%;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+  font-size: 13px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin: 0px auto 0;
+
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  bottom: 0px; 
+  left: 0px;
+  /* height: 40px; */
+  /* width: 80px; */
+  opacity: 0.85;
+
+
+
+}
+.wlist__btn:hover {
+  opacity: 1;
+  color: #fff;
+}
+
+.wlist__input {
+  background-color: #2b2b31;
+  border: none;
+  height: 50px;
+  position: relative;
+  justify-content: left;
+  color: #fff;
+  font-size: 15px;
+  width: 250px;
+  color: #fff;
+  /* -webkit-border-radius: 0;
+  border-radius: 0; */
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  padding: 0 20px;
+  letter-spacing: 0.2px;
+  font-family: 'Open Sans', sans-serif;
+}

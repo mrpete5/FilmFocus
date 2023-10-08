@@ -66,7 +66,7 @@ class CustomAuthForm(AuthenticationForm):
         
 
 class NewWatchlistForm(forms.Form):
-    watchlist_name = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'class':'sign__input', 'placeholder': 'Watchlist Name'}))
+    watchlist_name = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'class':'wlist__input', 'placeholder': 'Watchlist Name'}))
     
     class Meta:
         model = User
@@ -74,7 +74,7 @@ class NewWatchlistForm(forms.Form):
     
     def save(self, commit=True):
         watchlist = Watchlist()
-        watchlist.name = self.cleaned_data['watchlist_name']
+        watchlist.watchlist_name = self.cleaned_data['watchlist_name']
         
         if commit:
             watchlist.save()
@@ -84,20 +84,27 @@ class NewWatchlistForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        # Use widgets on built in authentication fields
-        watchlist_name_attrs = {'class':'sign__input', 'placeholder': 'Watchlist Name'} 
-        self.fields['watchlist_name'].widget.attrs=watchlist_name_attrs
+        # # Use widgets on built in authentication fields
+        # watchlist_name_attrs = {'class':'sign__input', 'placeholder': 'Watchlist Name'} 
+        # self.fields['watchlist_name'].widget.attrs=watchlist_name_attrs
 
 
 
-from .models import Watchlist
+# from .models import Watchlist
 
-class NewWatchlistForm(forms.Form):
+# class NewWatchlistForm(forms.Form):
 
-  name = forms.CharField()
+#     watchlist_name = forms.CharField()
 
-  def save(self, user, commit=True):
-    watchlist = Watchlist(user=user, name=self.cleaned_data['name'])
-    if commit:
-      watchlist.save()
-    return watchlist
+#     def save(self, user, commit=True):
+#         watchlist = Watchlist(user=user, name=self.cleaned_data['name'])
+#         if commit:
+#             watchlist.save()
+#             return watchlist
+    
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+        
+#         # Use widgets on built in authentication fields
+#         watchlist_name_attrs = {'class':'sign__input', 'placeholder': 'Watchlist Name'} 
+#         self.fields['watchlist_name'].widget.attrs=watchlist_name_attrs
