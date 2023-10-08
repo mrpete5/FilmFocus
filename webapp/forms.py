@@ -63,8 +63,12 @@ class CustomAuthForm(AuthenticationForm):
         self.fields['password'].widget.attrs=password_attrs    
         
 
-class CreateWatchlistForm(forms.Form):
+class NewWatchlistForm(forms.Form):
     watchlist_name = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'class':'sign__input', 'placeholder': 'Watchlist Name'}))
+    
+    class Meta:
+        model = User
+        fields = ("watchlist_name")
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

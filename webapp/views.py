@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404
 from django.contrib import messages
 from .models import Movie, Watchlist, WatchlistEntry
-from .forms import NewUserForm, CustomAuthForm
+from .forms import NewUserForm, CustomAuthForm, NewWatchlistForm
 from django.contrib.auth import login, logout, authenticate
 import json
 
@@ -35,12 +35,28 @@ from .services import *
 # View function for the index/home page
 def index(request):
     ''' Handles the FilmFocus homepage. '''
-    
     context = get_movies_for_index()
-    user = request.user
-    if user.is_authenticated:
-        context['watchlists'] = Watchlist.objects.filter(user=user)
+    if request.method == 'POST':
+        form = NewWatchlistForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            watchlist_name = form.cleaned_data.get('watchlist_name')
+            add_movie_to_watchlist(username, watchlist_name)
+            messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
+
+            # Redirect to the homepage on successful sign up
+            return redirect('index')
+        else:
+            messages.error(request, "Registration failed")       
+
+        user = request.user
+        if user.is_authenticated:
+            context['watchlists'] = Watchlist.objects.filter(user=user)
         
+    else:
+        form = NewWatchlistForm()
+    context['watchlist_form'] = form
     return render(request, 'index.html', context)
 
 
@@ -122,6 +138,10 @@ def login_user(request):
                 UserProfile.objects.create(user=user) 
             else:   
                 userprofile = user.userprofile
+            
+            # Check if user has profile
+            if not hasattr(user, 'userprofile'):
+                UserProfile.objects.get_or_create(user=user)
             
             # Login user
             login(request, user)
