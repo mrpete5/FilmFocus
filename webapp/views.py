@@ -285,3 +285,36 @@ def add_movie_to_watchlist(request):
             return JsonResponse({'success': False, 'error': 'Invalid data format'})
     else:
         raise Http404
+
+
+# # Require user to be logged in to access this view
+# @login_required  
+# def remove_movie_from_watchlist(request):
+#     if request.method == 'POST':
+#         try:
+#             data = json.loads(request.body)
+#             return JsonResponse({'success': True, 'error': 'Not implemented'})
+#         except json.JSONDecodeError:
+#             return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
+#     else:
+#         raise Http404
+    
+#     # return JsonResponse({'success': False, 'error': 'Not implemented'})
+
+
+
+from .forms import NewWatchlistForm
+
+def create_watchlist(request):
+
+  if request.method == 'POST':
+    form = NewWatchlistForm(request.POST)
+    if form.is_valid():
+      watchlist = form.save(commit=True, user=request.user) 
+      return redirect('home')
+
+  else:
+    form = NewWatchlistForm()
+  
+  context = {'form': form}
+  return render(request, 'create.html', context)

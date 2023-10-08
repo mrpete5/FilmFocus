@@ -68,15 +68,22 @@
 				{% endif %}
 			
 					{% comment %} <br> {% endcomment %}
-					<!-- Create New Watchlist form -->
-						<form method="POST" class="sign__form">
-							{% csrf_token %}
-							<div class="sign__group">
-								{{ register_form.username }}
-							</div>
-							<button class="sign__btn" type="submit">Create Watchlist</button>
+				<!-- Create New Watchlist form -->
+					<form method="POST" action="/" class="sign__form">
+						{% csrf_token %}
+						<div class="sign__group">
+							{{ watchlist_form.watchlist_name }}
+						</div>
+						<button class="sign__btn" type="submit">Create Watchlist</button>
+					</form>
+					<div id="create-form" style="display:none;">
+						{% comment %} <form method="POST" action="#">
+						{% csrf_token %}
+						<input type="text" name="watchlist_name" placeholder="Name Your New Watchlist"> {% endcomment %}
+						<input type="submit" value="Create">
 						</form>
-					<!-- end Create New Watchlist form -->
+					</div>
+				<!-- end Create New Watchlist form -->
 
 					{% comment %} <form method="POST">
 						{% csrf_token %}
@@ -85,16 +92,10 @@
 					  </form> {% endcomment %}
 					{% comment %} <button id="watchlistPopup" class="create__watchlist">CREATE NEW WATCHLIST</button> {% endcomment %}
 					
-					<div id="create-form" style="display:none;">
-						<form method="POST" action="#">
-						{% csrf_token %}
-						<input type="text" name="watchlist_name" placeholder="Watchlist Name">
-						<input type="submit" value="Create">
-						</form>
-					</div>
-	
-					<br>
-					<button id="closePopup" class="close__popup">CLOSE</button>
+
+
+				<br>
+				<button id="closePopup" class="close__popup">CLOSE</button>
 			</div>
 		</div>
 	{% else %}

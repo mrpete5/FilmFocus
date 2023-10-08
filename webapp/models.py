@@ -3,7 +3,7 @@ Name of code artifact: models.py
 Brief description: Contains Django ORM models for the FilmFocus web application, defining the structure of the movie and genre database tables.
 Programmer’s name: Mark
 Date the code was created: 09/17/2023
-Dates the code was revised: 09/21/2023
+Dates the code was revised: 10/08/2023
 Brief description of each revision & author: Initialized Movie and Genre models (Mark)
 Preconditions: Django environment must be set up correctly. The Django ORM must be available and correctly configured.
 Acceptable and unacceptable input values or types: Model fields have specific types and constraints as defined in their respective comments.
@@ -141,10 +141,11 @@ class UserProfile(models.Model):
     friends = models.ManyToManyField('self', blank=True)
     
 
+from django.contrib.auth.models import User
+
 class Watchlist(models.Model):
-    """Model representing a user's watchlist."""
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
-    watchlist_name = models.CharField(max_length=100, blank=False)    
+    name = models.CharField(max_length=100)
     # user = models.ForeignKey(User, related_name='watchlists', on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
 

@@ -3,13 +3,15 @@ Name of code artifact: forms.py
 Brief description: This Python file is responsible for handling user registration.
 Programmer’s name: Bill, Mark
 Date the code was created: 10/04/2023
-Dates the code was revised: 10/07/2023
+Dates the code was revised: 10/08/2023
 
 """
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from .models import Watchlist 
+
 
 
 class NewUserForm(UserCreationForm):
@@ -70,9 +72,32 @@ class NewWatchlistForm(forms.Form):
         model = User
         fields = ("watchlist_name")
     
+    def save(self, commit=True):
+        watchlist = Watchlist()
+        watchlist.name = self.cleaned_data['watchlist_name']
+        
+        if commit:
+            watchlist.save()
+            
+        return watchlist
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
         # Use widgets on built in authentication fields
         watchlist_name_attrs = {'class':'sign__input', 'placeholder': 'Watchlist Name'} 
         self.fields['watchlist_name'].widget.attrs=watchlist_name_attrs
+
+
+
+from .models import Watchlist
+
+class NewWatchlistForm(forms.Form):
+
+  name = forms.CharField()
+
+  def save(self, user, commit=True):
+    watchlist = Watchlist(user=user, name=self.cleaned_data['name'])
+    if commit:
+      watchlist.save()
+    return watchlist
