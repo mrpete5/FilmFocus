@@ -44,6 +44,7 @@ from .services import *
 # View function for the index/home page
 def index(request):
     ''' Handles the FilmFocus homepage. '''
+    
     context = get_movies_for_index()
     user = request.user
     if user.is_authenticated:
@@ -53,9 +54,6 @@ def index(request):
         form = NewWatchlistForm(request.POST)
         if form.is_valid():
             watchlist_name = form.save()
-            # login(request, user)
-            # username = form.cleaned_data.get('username')
-            user = request.user
             watchlist_name = form.cleaned_data.get('watchlist_name')
             add_movie_to_watchlist(user, watchlist_name)
             messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
@@ -64,14 +62,10 @@ def index(request):
             return redirect('index')
         else:
             messages.error(request, "Watchlist creation failed")               
-        
-
     else:
         form = NewWatchlistForm()
+        
     context['watchlist_form'] = form
-    # user = request.user
-    # if user.is_authenticated:
-    #     context['watchlists'] = Watchlist.objects.filter(user=user)
     return render(request, 'index.html', context)
 
 
