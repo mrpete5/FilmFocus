@@ -88,6 +88,12 @@ class NewWatchlistForm(forms.Form):
         # watchlist_name_attrs = {'class':'sign__input', 'placeholder': 'Watchlist Name'} 
         # self.fields['watchlist_name'].widget.attrs=watchlist_name_attrs
 
+class PasswordResetForm(forms.Form):
+    username = forms.CharField(label="Username", max_length=254)
+
+class PasswordResetConfirmForm(forms.Form):
+    new_password_1 = forms.CharField(label="New Password", max_length=254)
+    new_password_2 = forms.CharField(label="Confirm Password", max_length=254)
 
 
 # from .models import Watchlist

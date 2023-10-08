@@ -17,6 +17,7 @@ Any known faults: None.
 
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # Pay attention to the different naming schemes
@@ -25,7 +26,14 @@ urlpatterns = [
     path("watchlist/", views.watchlist, name="watchlist"),
     path("about/", views.about, name="about"),
     path("404/", views.four04, name="404"),
-    path("pwreset/", views.pwreset, name="pwreset"),
+    path("pwreset/", views.pwreset, name="pwreset"),                                        # Page for requesting a password reset
+    path("reset/<uidb64>/<token>/", views.pwresetconfirm, name="password_reset_confirm"),   # Page that processes the password reset
+    path("password_reset_sent/", auth_views.PasswordResetDoneView.as_view(),                # Page that tells user pass reset email is sent
+          name="password_reset_done"),
+    path("password_reset/", auth_views.PasswordResetView.as_view(),                         # Django's default page for requesting a password reset (uses email instead)
+          name="password_reset"),
+    path("password_reset_complete/", auth_views.PasswordResetCompleteView.as_view(),        # Page that comfirms the password has been changed
+          name="password_reset_complete"),
     path("login/", views.login_user, name="login"),         # Leave the different naming schemes as is
     path("logout/", views.logout_user, name="logout"),
     path("signup/", views.signup, name="signup"),
