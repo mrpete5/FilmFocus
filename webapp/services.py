@@ -134,6 +134,8 @@ def timer(function_name, fetch_func, args):
 
 # Process the search results for a movie and fetch its details
 def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=filtered_providers):
+    ''' Process the search results for a movie and fetch its details. '''
+    
     # Check if the movie is in the TMDB master list
     if not tmdb_id:
         print(f"Movie '{title}' not found in the master list.")
@@ -254,9 +256,12 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
 
     # Fetch Letterboxd ratings data
     try:
-        rating_dict = lbd_scrape.get_rating(movie.title, movie.release_year)    # TODO: Verify implemention
-        if rating_dict:
-            movie.letterboxd_rating = rating_dict["Weighted Average"]
+        rating_data = lbd_scrape.get_rating(movie.title, movie.release_year)
+        if rating_data:
+            if isinstance(rating_data, dict):
+                movie.letterboxd_rating = rating_data['Weighted Average']
+            elif isinstance(rating_data, list): 
+                movie.letterboxd_rating = rating_data[0]
     except Exception as e:
         print(f"Failure: {e}")
 
@@ -309,6 +314,16 @@ def fetch_movie_trailer_key(video_results):
 # Fetch popular movies from TMDB
 def fetch_popular_movies(start_page=1, end_page=5):
     total_num_movies = 20 * (end_page - start_page + 1)
+    
+    print(f"Fetching {total_num_movies} movies from TMDB")
+    fetches_per_second = 0.5
+
+    movies = Movie.objects.all()
+    num_movies_in_db = movies.count()
+    estimate_time_secs = (total_num_movies - num_movies_in_db) / fetches_per_second
+
+    print(f"Movies in database: {num_movies_in_db}")
+    print(f"Estimated seconds to fetch {total_num_movies} movies: {estimate_time_secs}")
     
     for page_num in range(start_page, end_page + 1):
         index = (page_num + 1) * 20
@@ -486,10 +501,32 @@ def update_movie_recommendations():
         
         # Save the updated recommended_movie_data field to the database
         movie.save()
-                    
+        
         # Print a message every 100 movies processed
         if index % 100 == 0:
             print(f'Processed recommendations for {index}/{movies.count()} movies')
+        
+    # After fetching TMDB recommendations
+    if len(movie.recommended_movie_data) < 20:
+
+        # Calculate number of recommendations needed
+        needed = 20 - len(movie.recommended_movie_data)
+
+        # Query for recent movies in database
+        recent_movies = Movie.objects.order_by('-date_entered')[:needed*2]
+        
+        for r_movie in recent_movies:
+            if len(movie.recommended_movie_data) >= 20:
+                break
+
+            movie.recommended_movie_data.append({
+                'tmdb_id': r_movie.tmdb_id,
+                'title': r_movie.title, 
+                'tmdb_popularity': r_movie.tmdb_popularity
+            })
+            
+            # Save updated recommendations 
+            movie.save()
 
 
 # Update the Letterboxd ratings for all movies in the Movie database
