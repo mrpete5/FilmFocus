@@ -144,7 +144,7 @@ class UserProfile(models.Model):
 class Watchlist(models.Model):
     """Model representing a user's watchlist."""
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
-    name = models.CharField(max_length=100, blank=False)    
+    watchlist_name = models.CharField(max_length=100, blank=False)    
     # user = models.ForeignKey(User, related_name='watchlists', on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
 
