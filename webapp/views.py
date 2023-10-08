@@ -36,6 +36,9 @@ from .services import *
 def index(request):
     ''' Handles the FilmFocus homepage. '''
     context = get_movies_for_index()
+    user = request.user
+    if user.is_authenticated:
+        context['watchlists'] = Watchlist.objects.filter(user=user)
             
     if request.method == 'POST':
         form = NewWatchlistForm(request.POST)
@@ -57,9 +60,9 @@ def index(request):
     else:
         form = NewWatchlistForm()
     context['watchlist_form'] = form
-    user = request.user
-    if user.is_authenticated:
-        context['watchlists'] = Watchlist.objects.filter(user=user)
+    # user = request.user
+    # if user.is_authenticated:
+    #     context['watchlists'] = Watchlist.objects.filter(user=user)
     return render(request, 'index.html', context)
 
 
