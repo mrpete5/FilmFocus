@@ -143,8 +143,9 @@ class UserProfile(models.Model):
 
 class Watchlist(models.Model):
     """Model representing a user's watchlist."""
-    watchlist_name = models.CharField(max_length=255)
-    user = models.ForeignKey(User, related_name='watchlists', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    name = models.CharField(max_length=100, blank=False)    
+    # user = models.ForeignKey(User, related_name='watchlists', on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
 
     def __str__(self):
@@ -152,7 +153,8 @@ class Watchlist(models.Model):
     
 
 class WatchlistEntry(models.Model):
-    """Model representing an entry in a user's watchlist."""
+    ''' Model representing an entry in a user's watchlist. '''
+        
     watchlist = models.ForeignKey(Watchlist, related_name='entries', on_delete=models.CASCADE)
     movie = models.ForeignKey('Movie', on_delete=models.CASCADE)
     added_at = models.DateTimeField(auto_now_add=True)

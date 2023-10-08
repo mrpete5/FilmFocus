@@ -68,7 +68,12 @@
 				{% endif %}
 			
 					<br>
-					<button id="watchlistPopup" class="create__watchlist">CREATE NEW WATCHLIST</button>
+					<form method="POST">
+						{% csrf_token %}
+						<input type="text" name="watchlist_name">
+						<button type="submit">Create New Watchlist</button> 
+					  </form>
+					{% comment %} <button id="watchlistPopup" class="create__watchlist">CREATE NEW WATCHLIST</button> {% endcomment %}
 					
 					<div id="create-form" style="display:none;">
 						<form method="POST" action="#">

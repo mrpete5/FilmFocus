@@ -192,6 +192,19 @@ def add_movie_to_watchlist(request):
         raise Http404
 
 
+# Require user to be logged in to access this view
+@login_required  
+def create_watchlist(request):
+    ''' Create a watchlist. Requires user to be logged in. '''
+    if request.method == 'POST':
+        name = request.POST.get('watchlist_name')
+        if name:
+            watchlist = Watchlist(user=request.user, name=name)
+            watchlist.save()
+        return redirect('home')
+        
+    return render(request, 'create.html')
+
 # View function for the poster game page
 def poster_game(request):
     ''' Play a poster reveal guessing game. '''
