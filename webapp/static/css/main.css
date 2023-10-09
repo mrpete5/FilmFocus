@@ -1090,7 +1090,7 @@ ul {
   }
   .content__title {
     font-size: 32px;
-    margin: 25px 0 10px;
+    margin: 10px 0 10px;  /* controls spacing around the content title, previously was: 25px 0 10px; */
   }
   .content__head {
     margin-bottom: 50px;
@@ -1310,7 +1310,7 @@ ul {
 	Card
 ==============================*/
 .card {
-  margin-bottom: 30px;
+  margin-bottom: 15px;  /* controls spacing around the content title, previously was: 30px; */
 }
 .card__cover {
   position: relative;
