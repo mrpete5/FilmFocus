@@ -17,12 +17,11 @@ Any known faults: None.
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.http import JsonResponse, Http404
 from django.contrib import messages
 from .models import Movie, Watchlist, WatchlistEntry
-from django.core.exceptions import (
-    ObjectDoesNotExist,
-)
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import (
     NewUserForm,
     CustomAuthForm,
@@ -35,13 +34,11 @@ from django.contrib.auth import login, logout, authenticate, get_user_model
 import json
 import webapp.password_reset as pass_reset
 from django.utils.http import urlsafe_base64_decode
+from .services import *
+
 
 # Constants
 RECOMMENDED_MOVIES_COUNT = 12
-
-# from django.contrib.auth.forms import AuthenticationForm
-# from django.http import HttpRequest 
-from .services import *
 
 
 # View function for the index/home page
@@ -354,19 +351,6 @@ def add_movie_to_watchlist(request):
         raise Http404
 
 
-# # Require user to be logged in to access this view
-# @login_required  
-# def remove_movie_from_watchlist(request):
-#     if request.method == 'POST':
-#         try:
-#             data = json.loads(request.body)
-#             return JsonResponse({'success': True, 'error': 'Not implemented'})
-#         except json.JSONDecodeError:
-#             return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
-#     else:
-#         raise Http404
-    
-#     # return JsonResponse({'success': False, 'error': 'Not implemented'})
 
 
 
@@ -391,3 +375,30 @@ def create_watchlist(request):
 # watchlist.user = request.user
 # watchlist.watchlist_name = form.cleaned_data['watchlist_name']
 # watchlist.save()
+
+
+
+
+@login_required
+@require_POST
+def add_to_watchlist(request, watchlist_id, movie_id):
+    try:
+        watchlist = Watchlist.objects.get(pk=watchlist_id, user=request.user)
+        movie = Movie.objects.get(pk=movie_id)
+        watchlist.movies.add(movie)
+        return JsonResponse({'status': 'success', 'message': 'Movie added to watchlist'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+@login_required
+@require_POST
+def remove_from_watchlist(request, watchlist_id, movie_id):
+    try:
+        watchlist = Watchlist.objects.get(pk=watchlist_id, user=request.user)
+        movie = Movie.objects.get(pk=movie_id)
+        watchlist.movies.remove(movie)
+        return JsonResponse({'status': 'success', 'message': 'Movie removed from watchlist'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
