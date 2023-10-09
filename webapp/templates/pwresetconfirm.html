@@ -72,10 +72,12 @@
 							{% endif %} -->
 							<!-- input fields -->
 							<div class="sign__group">
-								<input type="password" class="sign__input" name="new_password_1" placeholder="New Password">
+								<input type="password" class="sign__input" name="new_password_1" placeholder="New Password" id="id_password">
+								<div class="password-toggle" onclick="togglePasswordVisibility()"></div>
 							</div>
 							<div class="sign__group">
-								<input type="password" class="sign__input" name="new_password_2" placeholder="Confirm Password">
+								<input type="password" class="sign__input" name="new_password_2" placeholder="Confirm Password" id="id_confirmationPassword">
+								<div class="password-toggle2" onclick="toggleConfirmPasswordVisibility()"></div>
 							</div>
 							<!-- submit button -->
 							<div>
