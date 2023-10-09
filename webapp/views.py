@@ -20,6 +20,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404
 from django.contrib import messages
 from .models import Movie, Watchlist, WatchlistEntry
+from django.core.exceptions import (
+    ObjectDoesNotExist,
+)
 from .forms import (
     NewUserForm,
     CustomAuthForm,
@@ -124,34 +127,46 @@ def pwreset(request):
     if request.method == "POST":
         # Define form information
         form = PasswordResetForm(request.POST or None)
-        if form.is_valid():
-            # get user using username from form
-            username = form.cleaned_data.get("username")
-            user = User.objects.get(username=username)
+        try:
+            if form.is_valid():
+                # get user using username from form
+                username = form.cleaned_data.get("username")
+                user = User.objects.get(username=username)
 
-            pass_reset.send_email(request, user)
+                # Send Email
+                pass_reset.send_email(request, user)
 
-            # return redirect('index')
-        else:
-            messages.error(request, "Invalid username")
+                # TODO redirect to email sent page
+                return redirect("index")
+            else:
+                raise Exception("Invalid Form")
+        # post error message
+        except ObjectDoesNotExist:
+            messages.error(request, "User Could not be Found or Doesn't Exist")
+        except Exception as e:
+            messages.error(request, str(e))
     
     
     return render(request, "pwreset.html")
 
 # View definition for password comfirmation page
 def pwresetconfirm(request, uidb64, token):
+    try:
+        # get uid and user information
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = get_object_or_404(get_user_model(), pk=uid)
+
+        # error if uidb64 or token failure
+        if user == None or not default_token_generator.check_token(user, token):
+            raise Exception("Invalid Reset Link")
+    except Exception as e:
+        # TODO change to redirect to 404 or failed page
+        return redirect("index")
+
     if request.method == "POST":
         # Define form information
         form = PasswordResetConfirmForm(request.POST or None)
         try:
-            # get uid and user information
-            uid = urlsafe_base64_decode(uidb64).decode()
-            user = get_object_or_404(get_user_model(), pk=uid)
-
-            # error if uidb64 or token failure
-            if user == None or not default_token_generator.check_token(user, token):
-                raise Exception("Invalid Reset Link")
-            
             if form.is_valid():
                     # get password details from form
                     new_password_1 = form.cleaned_data.get("new_password_1")
@@ -166,9 +181,9 @@ def pwresetconfirm(request, uidb64, token):
                     # TODO redirect to a password change comfirmation page
                     return redirect("index")
             else:
-                raise Exception("Invalid Password")
+                raise Exception("Invalid Form")
+        # post error message
         except Exception as e:
-            # post error message
             messages.error(request, e)
     
     return render(request, "pwresetconfirm.html")
