@@ -25,7 +25,7 @@ def send_email(request, user):
             message=f"Click the link to reset your password: {reset_url} ",
         )
     except Exception as e:
-        print("Password Reset Error:", e)
+        raise Exception ("Email Password Reset Error:", e)
 
 # Change Password given a user object and plaintext string
 def change_password(userIn, passIn):
