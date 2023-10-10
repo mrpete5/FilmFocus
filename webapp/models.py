@@ -97,11 +97,20 @@ class Movie(models.Model):
             recommended_movie = Movie.objects.filter(tmdb_id=tmdb_id).first()
             if recommended_movie:
                 recommended_movies.append(recommended_movie)
-        
+
         # If the number of recommended movies is less than the desired number,
         # add the most recently added movies from the existing database.
         if len(recommended_movies) < num_movies:
-            additional_movies = Movie.objects.all().order_by('-created_at')[:num_movies - len(recommended_movies)]
+            # Get the genres of the original movie
+            original_movie_genres = self.genres.all()
+            
+            # Fetch additional movies that share at least one genre with the original movie
+            # and are not already in the recommended_movies list.
+            additional_movies = Movie.objects.exclude(pk__in=[movie.pk for movie in recommended_movies])\
+                .filter(genres__in=original_movie_genres)\
+                .distinct()\
+                .order_by('-created_at')[:num_movies - len(recommended_movies)]
+            
             recommended_movies.extend(additional_movies)
         
         # Return the specified number of recommended movies
