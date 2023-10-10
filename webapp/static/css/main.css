@@ -4018,8 +4018,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   display: flex;
   justify-content: space-between; /* This ensures maximum space between items */
   align-items: center;
-  padding-left: 10px; /* Adjust padding as per requirement */
-  padding-right: 10px; /* Ensure there's some space on the right side as well */
+  padding-left: 90px; /* Adjust padding as per requirement */
+  padding-right: 0px; /* Ensure there's some space on the right side as well */
 
 }
 
@@ -4177,16 +4177,16 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 
 
 
-.watchlist__title {
-  margin: 0;
+.watchlist__title p {
+  margin: 0px 0px 0px 0px;
   flex-grow: 1;
-  padding-left: 30px; /* Space between button and text */
+  padding-left: 120px; /* Space between button and text */
   text-align: right; /* Align text to the right */
 }
 
 .wlistremove__btn, .wlistadd__btn {
   cursor: pointer;
-  margin-right: 80px; /* Ensures the button stays to the left */
+  margin-right: 40px; /* Ensures the button stays to the left */
   width: 50px;  /* Adjust width as per requirement */
   height: 25px;  /* Adjust height as per requirement */
   font-size: 12px;  /* Adjust font size as per requirement */
