@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load my_filters %}
 {% block content %}
 
 <!DOCTYPE html>
@@ -47,19 +48,16 @@
 				<h2>Add to Watchlist</h2><br>
 				{% if watchlists %}
 				
-					{% for list in watchlists %}
-						<p class="watchlist__title">
-							{{ list.watchlist_name }} &nbsp;
-							<!-- Add data attributes -->
-							<button id="addToWatchlist"
-								movieId="{{ movie.id }}"
-								watchlistId="{{ list.id }}">
-								<a href="#0" class="popup__add">
-									<img id="popup__add" src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
-								</a>
-							</button> <br>
-						</p>
-					{% endfor %}
+				{% for watchlist in watchlists %}
+					<div class="watchlist__item">
+						<p class="watchlist__title">{{ watchlist.watchlist_name }}</p>
+						{% if movie in watchlist.entries|get_movies %}
+							<button class="wlistremove__btn" onclick="removeFromWatchlist({{ watchlist.id }}, {{ movie.id }})">Remove</button>
+						{% else %}
+							<button class="wlistadd__btn" onclick="addToWatchlist( {{ watchlist.id}}, {{ movie.id}} )">Add</button>
+						{% endif %}
+					</div>
+				{% endfor %}
 
 				{% else %}
 

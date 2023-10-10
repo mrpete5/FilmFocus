@@ -15,7 +15,6 @@ Invariants: None.
 Any known faults: None.
 """
 
-import random
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
@@ -24,7 +23,6 @@ from django.utils.module_loading import import_string
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
-
 
 
 class Movie(models.Model):
@@ -145,8 +143,6 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  # links to built-in Django User model
     friends = models.ManyToManyField('self', blank=True)
     
-
-from django.contrib.auth.models import User
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
