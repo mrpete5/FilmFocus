@@ -3,8 +3,8 @@ Name of code artifact: services.py
 Brief description: Contains business logic for the FilmFocus web application, including functions to fetch movie details from TMDB and OMDB, and to manage the movie database.
 Programmer’s name: Mark
 Date the code was created: 09/18/2023
-Dates the code was revised: 09/21/2023
-Brief description of each revision & author: Initialized code and basic functions (Mark)
+Dates the code was revised: 10/10/2023
+Brief description of each revision & author: Added threading to multiple API calling functions (Mark)
 Preconditions: Django environment must be set up correctly, and necessary environment variables (API keys) must be available.
 Acceptable and unacceptable input values or types: Functions expect specific types as documented in their respective comments.
 Postconditions: Functions return values or modify the database as per their documentation.
@@ -15,18 +15,19 @@ Invariants: None.
 Any known faults: None.
 """
 
-from webapp.models import *
-import requests
-import json
-from dotenv import load_dotenv
-import os
-import random
-from django.db.models import F, Max
-import webapp.letterboxd_scraper as lbd_scrape
 import threading
 import time
 import datetime
+import os
 import random
+import requests
+import json
+import webapp.letterboxd_scraper as lbd_scrape
+from webapp.models import *
+from dotenv import load_dotenv
+from django.db.models import F, Max
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from threading import Semaphore
 
 
 # Load environment variables
@@ -317,22 +318,33 @@ def fetch_popular_movies(start_page=1, end_page=5):
     total_num_movies = 20 * (end_page - start_page + 1)
     
     print(f"Fetching {total_num_movies} movies from TMDB")
-    fetches_per_second = 0.5
+    fetches_per_second = 20  # Updated to 20 requests per second as per requirement
 
     movies = Movie.objects.all()
     num_movies_in_db = movies.count()
-    estimate_time_secs = (total_num_movies - num_movies_in_db) / fetches_per_second
-
-    print(f"Movies in database: {num_movies_in_db}")
-    print(f"Estimated seconds to fetch {total_num_movies} movies: {estimate_time_secs}")
+    slow_down_factor = 0.5  # adjust as needed for estimated time
+    estimate_time_secs = (total_num_movies) / (fetches_per_second * slow_down_factor)
     
+    start_time = time.time()
+    readable_time = seconds_to_readable_time(estimate_time_secs)
+    print(f"Movies in database: {num_movies_in_db}")
+    print(f"Estimated time to fetch {total_num_movies} movies: {readable_time}")
+    
+    # Semaphore to limit the number of concurrent API fetches
+    semaphore = Semaphore(fetches_per_second)
+
+    def fetch_movie(movie_id):
+        with semaphore:
+            # Ensure we don't make more than 10 requests per second
+            time.sleep(1/fetches_per_second)  # sleep 100ms
+            search_and_fetch_movie_by_id(movie_id)
+    
+    title = f'  Fetching popular movies'
     for page_num in range(start_page, end_page + 1):
         index = (page_num + 1) * 20
         # Create a loading progress bar
-        title = f'  Fetching popular movies'
-        wait_iteration(title, index, total_num_movies)
+        wait_iteration(title, index, total_num_movies)  # Assuming wait_iteration is defined somewhere in your code
         
-        # print(f"")
         url = f"https://api.themoviedb.org/3/movie/popular?language=en-US&page={page_num}"
         headers = {
             "accept": "application/json",
@@ -342,10 +354,24 @@ def fetch_popular_movies(start_page=1, end_page=5):
         json_response = response.json()
         results = json_response['results']
 
-        for movie in results:
-            movie_id = movie["id"]
-            search_and_fetch_movie_by_id(movie_id)
-                    
+        # Use a thread pool to process movies in parallel
+        with ThreadPoolExecutor() as executor:
+            futures = [executor.submit(fetch_movie, movie["id"]) for movie in results]
+            for future in as_completed(futures):
+                try:
+                    # If the function returns a result, it will be available as future.result()
+                    result = future.result()
+                except Exception as e:
+                    # Handle exception
+                    print(f"An error occurred: {str(e)}")
+
+    end_time = time.time()
+    total_time_secs = end_time - start_time
+    total_readable_time = seconds_to_readable_time(total_time_secs)
+    difference_time_secs = total_time_secs - estimate_time_secs
+    print(f'Estimate time: {readable_time}')
+    print(f"Time to run: {total_readable_time}, Longer than estimated time: {difference_time_secs} secs")
+
     return json_response
 
 
@@ -356,13 +382,23 @@ def fetch_now_playing_movies(start_page=1, end_page=5):
     
     total_num_movies = 20 * (end_page - start_page + 1)
     
-    for page_num in range(start_page, end_page + 1):  # Fetch the first 10 pages
-        # print(f"Fetching now playing movies page number")   # TODO: leave here, switch depending on what you want to display
-        
+    # Semaphore to limit the number of concurrent API fetches
+    semaphore = Semaphore(20)  # Allowing 20 fetches per second
+
+    def process_movie(movie):
+        with semaphore:
+            # Ensure we don't make more than 20 requests per second
+            time.sleep(1/20)  # sleep 50ms
+            tmdb_id = movie.get('id')
+            title = movie.get('title')
+            # Process each movie using the process_movie_search function
+            process_movie_search(tmdb_id, title, now_playing=True)
+
+    for page_num in range(start_page, end_page + 1):
         index = (page_num + 1) * 20
         # Create a loading progress bar
         title = f'  Fetching now playing movies'
-        wait_iteration(title, index, total_num_movies)
+        wait_iteration(title, index, total_num_movies)  # Assuming wait_iteration is defined somewhere in your code
         
         url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page_num}"
         headers = {
@@ -372,11 +408,16 @@ def fetch_now_playing_movies(start_page=1, end_page=5):
         response = requests.get(url, headers=headers)
         movies = response.json().get('results', [])
 
-        for movie in movies:
-            tmdb_id = movie.get('id')
-            title = movie.get('title')
-            # Process each movie using the process_movie_search function
-            process_movie_search(tmdb_id, title, now_playing=True)
+        # Use a thread pool to process movies in parallel
+        with ThreadPoolExecutor() as executor:
+            futures = [executor.submit(process_movie, movie) for movie in movies]
+            for future in as_completed(futures):
+                try:
+                    # If the function returns a result, it will be available as future.result()
+                    result = future.result()
+                except Exception as e:
+                    # Handle exception
+                    print(f"An error occurred: {str(e)}")
 
 
 # Fetch movies for the index page
@@ -617,9 +658,40 @@ def update_letterboxd_ratings():
     print(f"Total duration: {fmt_duration}")
 
 
-# Fetches pages from the TMDd API for Discover movies
-def fetch_tmdb_discover_movies(start_page=1, end_page=50):
+# Fetches pages from the TMDb API for Discover movies
+def fetch_tmdb_discover_movies(start_page=1, end_page=10):
+    total_num_movies = 20 * (end_page - start_page + 1)
+    
+    print(f"Fetching {total_num_movies} movies from TMDB")
+    fetches_per_second = 20  # Updated to 20 requests per second as per requirement
+
+    movies = Movie.objects.all()
+    num_movies_in_db = movies.count()
+    slow_down_factor = 0.5  # adjust as needed for estimated time
+    estimate_time_secs = (total_num_movies) / (fetches_per_second * slow_down_factor)
+
+    readable_time = seconds_to_readable_time(estimate_time_secs)
+    print(f"Movies in database: {num_movies_in_db}")
+    print(f"Estimated time to fetch {total_num_movies} movies: {readable_time}")
+    
+    # Semaphore to limit the number of concurrent API fetches
+    semaphore = Semaphore(fetches_per_second)
+
+    def process_movie(movie):
+        with semaphore:
+            # Ensure we don't make more than 20 requests per second
+            time.sleep(1/20)  # sleep 50ms
+            tmdb_id = movie.get('id')
+            title = movie.get('title')
+            # Process each movie using the process_movie_search function
+            process_movie_search(tmdb_id, title)
+
     for page in range(start_page, end_page + 1):
+        index = (page + 1) * 20
+        # Create a loading progress bar
+        title = f'  Fetching TMDb discover movies'
+        wait_iteration(title, index, total_num_movies)  # Assuming wait_iteration is defined somewhere in your code
+
         url = f"https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&language=en-US&page={page}"
         headers = {
             "accept": "application/json",
@@ -627,14 +699,29 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=50):
         }
         response = requests.get(url, headers=headers)
         response.raise_for_status()  # This will raise an HTTPError for bad responses (4xx and 5xx)
-        response_data = response.json()
-        movies = response_data.get('results', [])
+        movies = response.json().get('results', [])
         
-        for movie in movies:
-            tmdb_id = movie.get('id')
-            title = movie.get('title')
-            process_movie_search(tmdb_id, title)
+        # Use a thread pool to process movies in parallel
+        with ThreadPoolExecutor() as executor:
+            futures = [executor.submit(process_movie, movie) for movie in movies]
+            for future in as_completed(futures):
+                try:
+                    # If the function returns a result, it will be available as future.result()
+                    result = future.result()
+                except Exception as e:
+                    # Handle exception
+                    print(f"An error occurred: {str(e)}")
 
+
+def seconds_to_readable_time(estimate_time_secs):
+    ''' Convert seconds to a readable time string '''
+    estimate_time_secs = int(estimate_time_secs)
+    # Convert to minutes and seconds
+    minutes, seconds = divmod(estimate_time_secs, 60)
+    # Convert to hours and minutes
+    hours, minutes = divmod(minutes, 60)
+    # Ensure two digits for hours, minutes, and seconds
+    return f'{hours:02d}:{minutes:02d}:{seconds:02d}'
 
 # Determines the Rotten Tomatoes icon based on the Rotten Tomatoes rating
 def determine_rt_icon(rt_rating):
@@ -665,7 +752,7 @@ def handle_test_display_page(settings):
     
     # 20 movies per page
     popular_pages = 5           # Number of popular pages from 1 to x with 20 results each, TMDb
-    now_playing_pages = 5       # Number of now playing pages from 1 to x with 20 results each, TMDb
+    now_playing_pages = 10      # Number of now playing pages from 1 to x with 20 results each, TMDb
     fetch_movies_count = 10     # Number of individual movies returned to testdisplay, testdisplay/
     fetch_discover_count = 5    # Number of discover pages from 1 to x with 20 results each, TMDb
   

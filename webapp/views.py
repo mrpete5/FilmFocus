@@ -256,9 +256,6 @@ def faq(request):
     return render(request, "faq.html")
 
 
-
-
-
 # Require user to be logged in to access this view
 @login_required  
 def create_watchlist(request):

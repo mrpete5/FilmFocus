@@ -67,8 +67,10 @@ class Movie(models.Model):
         recommended_movies = []
         processed_movies = set()  # Keep track of processed movies to avoid duplicates
         
+        fetches_per_second = 20  # Updated to 20 requests per second as per requirement
+
         # Semaphore to limit the number of concurrent API fetches
-        semaphore = Semaphore(10)
+        semaphore = Semaphore(fetches_per_second)
 
         def fetch_and_process_movie(movie_data):
             tmdb_id = movie_data.get('tmdb_id')
@@ -76,7 +78,7 @@ class Movie(models.Model):
             if tmdb_id not in processed_movies:
                 with semaphore:
                     # Ensure we don't make more than 10 requests per second
-                    time.sleep(1/10)  # sleep 100ms
+                    time.sleep(1/fetches_per_second)
                     process_movie_search(tmdb_id, title)
                     processed_movies.add(tmdb_id)
 
