@@ -23,6 +23,9 @@ from django.utils.module_loading import import_string
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from threading import Semaphore
+import time
 
 
 class Movie(models.Model):
@@ -64,38 +67,47 @@ class Movie(models.Model):
         recommended_movies = []
         processed_movies = set()  # Keep track of processed movies to avoid duplicates
         
-        for movie_data in self.recommended_movie_data:
-            # if len(recommended_movies) >= num_movies:
-            #     break  # Stop processing when the desired number of movies is reached
-            
+        # Semaphore to limit the number of concurrent API fetches
+        semaphore = Semaphore(10)
+
+        def fetch_and_process_movie(movie_data):
             tmdb_id = movie_data.get('tmdb_id')
-            if tmdb_id in processed_movies:
-                continue  # Skip processing if the movie has already been processed
-            
             title = movie_data.get('title')
+            if tmdb_id not in processed_movies:
+                with semaphore:
+                    # Ensure we don't make more than 10 requests per second
+                    time.sleep(1/10)  # sleep 100ms
+                    process_movie_search(tmdb_id, title)
+                    processed_movies.add(tmdb_id)
+
+        # Use a thread pool to process movies in parallel
+        with ThreadPoolExecutor() as executor:
+            futures = [executor.submit(fetch_and_process_movie, movie_data) for movie_data in self.recommended_movie_data]
+            for future in as_completed(futures):
+                try:
+                    # If the function returns a result, it will be available as future.result()
+                    result = future.result()
+                except Exception as e:
+                    # Handle exception
+                    print(f"An error occurred: {str(e)}")
+
+        # Fetch recommended movies from the database
+        for movie_data in self.recommended_movie_data:
+            tmdb_id = movie_data.get('tmdb_id')
             recommended_movie = Movie.objects.filter(tmdb_id=tmdb_id).first()
-            
             if recommended_movie:
                 recommended_movies.append(recommended_movie)
-                processed_movies.add(tmdb_id)
-            else:
-                # Fetch and save the recommended movie details if it doesn't exist in your database
-                process_movie_search(tmdb_id, title)
-                recommended_movie = Movie.objects.filter(tmdb_id=tmdb_id).first()
-                
-                if recommended_movie:
-                    recommended_movies.append(recommended_movie)
-                    processed_movies.add(tmdb_id)
+        
+        # If the number of recommended movies is less than the desired number,
+        # add the most recently added movies from the existing database.
         if len(recommended_movies) < num_movies:
-            # If the number of recommended movies is less than the desired number of movies,
-            # Add the remaining recommended movies to the list from the existing database movies.
-            # Add the most recently added movies
-            recommended_movies.extend(Movie.objects.all().order_by('-created_at')[:num_movies - len(recommended_movies)])
+            additional_movies = Movie.objects.all().order_by('-created_at')[:num_movies - len(recommended_movies)]
+            recommended_movies.extend(additional_movies)
         
         # Return the specified number of recommended movies
         return recommended_movies[:num_movies]
 
-    
+
     def save(self, *args, **kwargs):
         self.slug = self.get_slug()
         super().save(*args, **kwargs)

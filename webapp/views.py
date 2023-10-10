@@ -96,17 +96,6 @@ def movie_detail(request, movie_slug):
     return render(request, 'details.html', context)
 
 
-# Determines the Rotten Tomatoes icon based on the Rotten Tomatoes rating
-def determine_rt_icon(rt_rating):
-    if rt_rating is not None:
-        if rt_rating >= 75:
-            return 'img/logos/Rotten_Tomatoes_certified_fresh.png'
-        elif rt_rating >= 60:
-            return 'img/logos/Rotten_Tomatoes_fresh.png'
-        else:
-            return 'img/logos/Rotten_Tomatoes_rotten.png'
-    return None
-
 # View function for the movie watchlists page
 def watchlist(request):
     return render(request, "watchlist.html")
@@ -287,9 +276,8 @@ def create_watchlist(request):
 def poster_game(request):
     ''' Play a poster reveal guessing game. '''
     # TODO: Implement this function to play a poster reveal guessing game.    
-  
-    movies_to_display = handle_poster_game(movie_count=1)
-    return render(request, "postergame.html", {"movies": movies_to_display})
+    context = handle_poster_game()
+    return render(request, "postergame.html", context)
 
 
 # Test page that displays posters for potential movie banning
@@ -349,7 +337,6 @@ def add_movie_to_watchlist(request):
             return JsonResponse({'success': False, 'error': 'Invalid data format'})
     else:
         raise Http404
-
 
 
 

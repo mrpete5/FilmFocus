@@ -21,11 +21,12 @@ import json
 from dotenv import load_dotenv
 import os
 import random
-from django.db.models import F
+from django.db.models import F, Max
 import webapp.letterboxd_scraper as lbd_scrape
 import threading
 import time
 import datetime
+import random
 
 
 # Load environment variables
@@ -635,6 +636,18 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=50):
             process_movie_search(tmdb_id, title)
 
 
+# Determines the Rotten Tomatoes icon based on the Rotten Tomatoes rating
+def determine_rt_icon(rt_rating):
+    if rt_rating is not None:
+        if rt_rating >= 75:
+            return 'img/logos/Rotten_Tomatoes_certified_fresh.png'
+        elif rt_rating >= 60:
+            return 'img/logos/Rotten_Tomatoes_fresh.png'
+        else:
+            return 'img/logos/Rotten_Tomatoes_rotten.png'
+    return None
+
+
 # Clear all movies from the database
 def clear_movie_database():
     deleted_count, _ = Movie.objects.all().delete()
@@ -741,5 +754,31 @@ def handle_test_display_page(settings):
     return items
 
 
-def handle_poster_game(movie_count=1):
-    return Movie.objects.all().order_by('?')[:movie_count]  # Fetch the first num_movie
+def handle_poster_game(start_movie=None, finish_movie=None, current_movie=None):
+    """ Get 2 random movies, start and finish, and 
+    generate the 8 recommended movies for the start or current movie."""
+
+    if start_movie is None:
+        start_movie = get_random_obj_from_queryset(Movie.objects.all())
+        current_movie = start_movie
+    if finish_movie is None:
+        finish_movie = get_random_obj_from_queryset(Movie.objects.all())
+
+    movie_count = 3
+    recommended_movies = current_movie.get_recommended_movies(movie_count)
+    context = {
+        'start_movie': start_movie,
+        'finish_movie': finish_movie,
+        'current_movie': current_movie,
+        'recommended_movies': recommended_movies,
+    }
+    return context
+
+
+# Get a random movie from the database and return it
+def get_random_obj_from_queryset(queryset):
+    max_pk = queryset.aggregate(max_pk=Max("pk"))['max_pk']
+    while True:
+        obj = queryset.filter(pk=random.randint(1, max_pk)).first()
+        if obj:
+            return obj

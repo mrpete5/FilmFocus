@@ -41,104 +41,116 @@
 </head>
 <body class="body">
 
-
-
 	<!-- content -->
 	<section class="content">
 		<div class="content__head">
 			<div class="container">
 
-				{% comment %} <!-- Popular Movies section -->
+
+
+
+				<!-- Popular Movies section -->
 				<div class="row">
 					<div class="col-12">
 						<!-- content title -->
-						<h2 class="content__title"><b>Popular Movies</b></h2>
+						<br><br><br><br>
+						<h2 class="section__title">Poster Path Game</h2>
+						<h3 class="section__subtitle">Jump from the start movie to the finish movie to win.</h3>
 						<!-- end content title -->
 						<div class="container">
 							<div class="row">
-								{% for movie in popular_movies %}
-								<!-- card -->
+
+								<!-- start card -->
+									<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+										<div class="card">
+											<a href="#0">
+												<div class="card__cover">
+													<img src="https://image.tmdb.org/t/p/w500{{ start_movie.poster_path }}" alt="{{ start_movie.title }}">
+												</div>
+												<a href="#0" class="card__add">
+													<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+												</a>
+											</a>
+											<div class="card__content">
+												<h3 class="card__title">Start Movie</h3>
+											</div>
+										</div>
+									</div>
+								<!-- end start card -->
+
+								<!-- current card -->
+									<div class="col-12 col-sm-4 col-lg-3 col-xl-2">
+										<div class="card">
+											<a href="#0">
+												<div class="card__cover">
+													<img src="https://image.tmdb.org/t/p/w500{{ current_movie.poster_path }}" alt="{{ current_movie.title }}">
+												</div>
+												<a href="#0" class="card__add">
+													<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+												</a>
+											</a>
+											<div class="card__content">
+												<h3 class="card__title">Current Movie</h3>
+											</div>
+										</div>
+									</div>
+								<!-- end current card -->
+
+
+								{% for movie in recommended_movies %}
+								<!-- 4 recommended movies card -->
+									<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+										<div class="card">
+											<a href="{% url 'movie_detail' movie_slug=movie.slug %}">
+												<div class="card__cover">
+													<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+												</div>
+												<a href="#0" class="card__add">
+													<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+												</a>
+											</a>
+										</div>
+									</div>
+								<!-- end 4 recommended movies card -->
+								{% endfor %}
+
+								<!-- finish card -->
 								<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
 									<div class="card">
-										<a href="{% url 'movie_detail' movie_slug=movie.slug %}">
+										<a href="#0">
 											<div class="card__cover">
-												<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+												<img src="https://image.tmdb.org/t/p/w500{{ finish_movie.poster_path }}" alt="{{ finish_movie.title }}">
 											</div>
 											<a href="#0" class="card__add">
 												<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 											</a>
 										</a>
 										<div class="card__content">
-											<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
-											<span class="card__category">
-												{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
-													<a>{{ genre.name }}</a>
-												{% endfor %}
-											</span>
-											<span class="card__rate">
-												<img src="{% static 'img/logos/imdb-logo.svg' %}" alt="IMDb" style="width: 30px; vertical-align: middle; margin-right: 5px;">
-												{{ movie.imdb_rating }}
-											</span>
+											<h3 class="card__title">Finish Movie</h3>
 										</div>
 									</div>
 								</div>
-								<!-- end card -->
-								{% endfor %}
+								<!-- end finish card -->
+
 							</div>
 						</div>
 					</div>
 				</div>
+			
 				<!-- end Popular Movies section -->
+
 			</div>
 		</div>
 	</section>
+
 	
-	<!-- end content --> {% endcomment %}
+	<!-- end content --> 
 
 
 
 
 
 
-
-	<div class="sign section--bg" data-bg={% static "img/section/section.jpg" %}>
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<div class="sign__content">
-						<!-- authorization form -->
-						<form action="#" class="sign__form">
-							<a href="/" class="sign__logo">
-								<img src={% static "img/logos/FilmFocus_textonly.png" %} alt="">
-							</a>
-							<div>
-								<h2 style="color: white;">Guess the Movie</h2>
-							</div>
-
-
-							{% for movie in movies %}
-								<div class="card__cover">
-									<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
-								</div>
-								
-							{% endfor %}
-
-
-							{% comment %} <div class="sign__group">
-								<input type="text" class="sign__input" placeholder="Username">
-							</div>
-							<div>
-								<button class="reset__send" type="button">Send</button>
-							</div>
-						</form> {% endcomment %}
-
-
-						<!-- end authorization form -->
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<!-- JS -->
 	<script src={% static "js/passwordVisibility.js" %}></script>
