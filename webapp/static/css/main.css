@@ -4018,8 +4018,9 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   display: flex;
   justify-content: space-between; /* This ensures maximum space between items */
   align-items: center;
-  padding-left: 90px; /* Adjust padding as per requirement */
+  padding-left: 80px; /* Adjust padding as per requirement */
   padding-right: 0px; /* Ensure there's some space on the right side as well */
+  margin: 7px;        /* Distance between the buttons/rows */
 
 }
 
