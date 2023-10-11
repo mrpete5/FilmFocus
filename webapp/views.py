@@ -279,8 +279,8 @@ def poster_game(request):
 
 # Test page that displays posters for potential movie banning
 def testforban(request):
-    start_date = "2023-10-06"  # Adjusted start date
-    end_date = "2023-12-30"    # Adjusted end date
+    start_date = "2023-10-01"  # Range of movies to display
+    end_date = "2023-12-30"
 
     movies_to_display = handle_test_for_ban(start_date, end_date)
     return render(request, "testforban.html", {"movies": movies_to_display})

@@ -64,23 +64,45 @@ with open(ALLOWED_PROVIDERS_LIST, 'r') as input_file:
 def search_movie_by_title(title):
     return title_to_id_dict.get(title.lower())
 
-
 # Search for a movie by its TMDB ID
 def search_movie_by_id(tmdb_id):
     return id_to_title_dict.get(tmdb_id)
-
 
 # Search for a movie by its title and fetch its details
 def search_and_fetch_movie_by_title(title):
     tmdb_id = search_movie_by_title(title)
     process_movie_search(tmdb_id, title)
 
-
 # Search for a movie by its TMDB ID and fetch its details
 def search_and_fetch_movie_by_id(tmdb_id):
     title = search_movie_by_id(tmdb_id)
     process_movie_search(tmdb_id, title)
 
+# Get a random movie from the database and return it
+def get_random_obj_from_queryset(queryset):
+    max_pk = queryset.aggregate(max_pk=Max("pk"))['max_pk']
+    while True:
+        obj = queryset.filter(pk=random.randint(1, max_pk)).first()
+        if obj:
+            return obj
+
+# Convert a number of seconds to a readable time string
+def seconds_to_readable_time(estimate_time_secs):
+    estimate_time_secs = int(estimate_time_secs)
+    minutes, seconds = divmod(estimate_time_secs, 60)
+    hours, minutes = divmod(minutes, 60)
+    return f'{hours:02d}:{minutes:02d}:{seconds:02d}'
+
+# Determines the Rotten Tomatoes icon based on the Rotten Tomatoes rating
+def determine_rt_icon(rt_rating):
+    if rt_rating is not None:
+        if rt_rating >= 75:
+            return 'img/logos/Rotten_Tomatoes_certified_fresh.png'
+        elif rt_rating >= 60:
+            return 'img/logos/Rotten_Tomatoes_fresh.png'
+        else:
+            return 'img/logos/Rotten_Tomatoes_rotten.png'
+    return None
 
 # Retrieve the watchlists for a user
 def get_watchlists_for_user(user):
@@ -89,26 +111,23 @@ def get_watchlists_for_user(user):
 
 # Progress bar for a given function
 def progress_bar(title, current, total, bar_length=100):
+    title = f'  {title}'
     percent = float(current) * 100 / total
-    arrow   = '=' * int(percent/100 * bar_length - 1) + '>'
-    spaces  = ' ' * (bar_length - len(arrow))
-    print(f'\r{title}: [{arrow}{spaces}] {percent:.0f}%  ', end='\r')
-    if current == total: 
-        print(f'\r{title}: [{arrow}{spaces}] {percent:.0f}%  ', end='\n')
+    arrow_count = int(percent/100 * bar_length - 1)
+    arrow_str = "=" * arrow_count + '>'
+    spaces = ' ' * (bar_length - len(arrow_str))
+    end_char = '\r' if current < total else '\n'
+    print(f'\r{title}: [{arrow_str}{spaces}] {percent:.0f}%  ', end=end_char)
 
 # Progress bar handler, if wait is iteration-based    
-def wait_iteration(title, current, num_iterations):
+def progress_bar_iteration(title, current, num_iterations):
     progress_bar(title, current, num_iterations, bar_length=100)
     
 # Progress bar handler, if wait is time-based    
-def wait_time(title, wait_seconds):
-    count = 0
-    while count < (wait_seconds + 1):
-        count += 1
+def progress_bar_time(title, wait_seconds):
+    for count in range(wait_seconds + 1):
         progress_bar(title, count, wait_seconds, bar_length=100)
         time.sleep(1)
-    # print()     # formatting for the progress bar
-
 
 # Timer for testing funtions
 def timer(function_name, fetch_func, args):
@@ -315,15 +334,19 @@ def fetch_movie_trailer_key(video_results):
 
 # Fetch popular movies from TMDB
 def fetch_popular_movies(start_page=1, end_page=5):
+    if end_page > 500:
+        end_page = 500  # Limit the number of pages to 500
+
     total_num_movies = 20 * (end_page - start_page + 1)
     
     print(f"Fetching {total_num_movies} movies from TMDB")
-    fetches_per_second = 20  # Updated to 20 requests per second as per requirement
+    fetches_per_second = 20
 
     movies = Movie.objects.all()
     num_movies_in_db = movies.count()
-    slow_down_factor = 0.5  # adjust as needed for estimated time
-    estimate_time_secs = (total_num_movies) / (fetches_per_second * slow_down_factor)
+    slow_down_factor = 6                            # adjust as needed for estimated time
+    existing_movies = num_movies_in_db * 0.5        # adjust as needed for estimated time
+    estimate_time_secs = slow_down_factor * (total_num_movies - existing_movies) / fetches_per_second
     
     start_time = time.time()
     readable_time = seconds_to_readable_time(estimate_time_secs)
@@ -339,11 +362,11 @@ def fetch_popular_movies(start_page=1, end_page=5):
             time.sleep(1/fetches_per_second)  # sleep 100ms
             search_and_fetch_movie_by_id(movie_id)
     
-    title = f'  Fetching popular movies'
+    title = 'Fetching popular movies'
     for page_num in range(start_page, end_page + 1):
         index = (page_num + 1) * 20
         # Create a loading progress bar
-        wait_iteration(title, index, total_num_movies)  # Assuming wait_iteration is defined somewhere in your code
+        progress_bar_iteration(title, index, total_num_movies)
         
         url = f"https://api.themoviedb.org/3/movie/popular?language=en-US&page={page_num}"
         headers = {
@@ -397,8 +420,8 @@ def fetch_now_playing_movies(start_page=1, end_page=5):
     for page_num in range(start_page, end_page + 1):
         index = (page_num + 1) * 20
         # Create a loading progress bar
-        title = f'  Fetching now playing movies'
-        wait_iteration(title, index, total_num_movies)  # Assuming wait_iteration is defined somewhere in your code
+        title = 'Fetching now playing movies'
+        progress_bar_iteration(title, index, total_num_movies)
         
         url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page_num}"
         headers = {
@@ -461,7 +484,8 @@ def update_streaming_providers():
         # Define the TMDB API endpoint and parameters
         
         # Create a loading progress bar
-        wait_iteration('  Updating Streaming Providers', index, total_num_movies)
+        title = 'Updating Streaming Providers'
+        progress_bar_iteration(title, index, total_num_movies)
         
         url = f"https://api.themoviedb.org/3/movie/{movie.tmdb_id}?language=en-US&append_to_response=watch/providers"
         headers = {
@@ -507,7 +531,8 @@ def update_movie_recommendations():
         # Define the TMDB API endpoint and parameters for fetching recommendations
         
         # Create a loading progress bar
-        wait_iteration('  Updating Movie Recs', index, total_num_movies)
+        title = 'Updating Movie Recs'
+        progress_bar_iteration(title, index, total_num_movies)
         
         url = f"https://api.themoviedb.org/3/movie/{movie.tmdb_id}/recommendations?language=en-US"
         headers = {
@@ -632,7 +657,8 @@ def update_letterboxd_ratings():
         thread = threading.Thread(target=iterate_movie, args=(movie, ))
         
         # Create a loading progress bar
-        wait_iteration('  Letterboxd Scraping Progress', index, total_movies)
+        title = 'Letterboxd Scraping Progress'
+        progress_bar_iteration(title, index, total_movies)
         
         threads.append(thread)
         thread.start()
@@ -663,12 +689,13 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=10):
     total_num_movies = 20 * (end_page - start_page + 1)
     
     print(f"Fetching {total_num_movies} movies from TMDB")
-    fetches_per_second = 20  # Updated to 20 requests per second as per requirement
+    fetches_per_second = 20
 
     movies = Movie.objects.all()
     num_movies_in_db = movies.count()
-    slow_down_factor = 0.5  # adjust as needed for estimated time
-    estimate_time_secs = (total_num_movies) / (fetches_per_second * slow_down_factor)
+    slow_down_factor = 6                            # adjust as needed for estimated time
+    existing_movies = num_movies_in_db * 0.5        # adjust as needed for estimated time
+    estimate_time_secs = slow_down_factor * (total_num_movies - existing_movies) / fetches_per_second
 
     readable_time = seconds_to_readable_time(estimate_time_secs)
     print(f"Movies in database: {num_movies_in_db}")
@@ -689,8 +716,8 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=10):
     for page in range(start_page, end_page + 1):
         index = (page + 1) * 20
         # Create a loading progress bar
-        title = f'  Fetching TMDb discover movies'
-        wait_iteration(title, index, total_num_movies)  # Assuming wait_iteration is defined somewhere in your code
+        title = 'Fetching TMDb discover movies'
+        progress_bar_iteration(title, index, total_num_movies)
 
         url = f"https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&language=en-US&page={page}"
         headers = {
@@ -713,28 +740,6 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=10):
                     print(f"An error occurred: {str(e)}")
 
 
-def seconds_to_readable_time(estimate_time_secs):
-    ''' Convert seconds to a readable time string '''
-    estimate_time_secs = int(estimate_time_secs)
-    # Convert to minutes and seconds
-    minutes, seconds = divmod(estimate_time_secs, 60)
-    # Convert to hours and minutes
-    hours, minutes = divmod(minutes, 60)
-    # Ensure two digits for hours, minutes, and seconds
-    return f'{hours:02d}:{minutes:02d}:{seconds:02d}'
-
-# Determines the Rotten Tomatoes icon based on the Rotten Tomatoes rating
-def determine_rt_icon(rt_rating):
-    if rt_rating is not None:
-        if rt_rating >= 75:
-            return 'img/logos/Rotten_Tomatoes_certified_fresh.png'
-        elif rt_rating >= 60:
-            return 'img/logos/Rotten_Tomatoes_fresh.png'
-        else:
-            return 'img/logos/Rotten_Tomatoes_rotten.png'
-    return None
-
-
 # Clear all movies from the database
 def clear_movie_database():
     deleted_count, _ = Movie.objects.all().delete()
@@ -749,55 +754,40 @@ def handle_test_for_ban(start_date, end_date):
 
 # Handle the test display page and manage the movie database
 def handle_test_display_page(settings):
-    
     # 20 movies per page
     popular_pages = 5           # Number of popular pages from 1 to x with 20 results each, TMDb
     now_playing_pages = 10      # Number of now playing pages from 1 to x with 20 results each, TMDb
     fetch_movies_count = 10     # Number of individual movies returned to testdisplay, testdisplay/
     fetch_discover_count = 5    # Number of discover pages from 1 to x with 20 results each, TMDb
-  
-    # TODO: Implementation is in progress.  
-    # movies_per_page = 20
-    # pop_count = popular_pages * (1 + movies_per_page) # 1 for popular pages, 20 associated movie details.
-    # iterations_count = popular_pages + now_playing_pages + fetch_movies_count + fetch_discover_count
     
     # Diplay the starting time of the test display page
     now_time = time.time()
     now_time_readable = datetime.datetime.fromtimestamp(now_time).strftime('%H:%M:%S')
     print(f'Starting test display page at {now_time_readable}\n')
-    
-    
+        
     test_mode = True
     if test_mode: # test_mode == True
         ''' Test mode (ON). Tests the times and data for the various functions. '''
         
         if settings[0]:
-            # clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
             timer(function_name='clear_movie_database', fetch_func=clear_movie_database, args={})
 
         if settings[1]:
-            # fetch_popular_movies(1, end_page=popular_pages)
-            # fetch_now_playing_movies(1, end_page=now_playing_pages)  # Fetch now playing movies after initializing the database
             timer(function_name='fetch_popular_movies', fetch_func=fetch_popular_movies, args={'start_page': 1, 'end_page': popular_pages})
             timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages })
         elif settings[2]:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
-            # fetch_now_playing_movies(1, end_page=now_playing_pages)
             timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages})
         
         if settings[3]:
-            # update_streaming_providers()
             timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
         
         if settings[4]:
-            # update_movie_recommendations()
             timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
         
         if settings[5]:
-            # fetch_tmdb_discover_movies(1, end_page=fetch_discover_count)
             timer(function_name='fetch_tmdb_discover_movies', fetch_func=fetch_tmdb_discover_movies, args={'start_page': 1, 'end_page': fetch_discover_count})
 
         if settings[6]:
-            # update_letterboxd_ratings()
             timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
     else: # test_mode == False
         ''' Test mode (OFF). '''
@@ -861,11 +851,3 @@ def handle_poster_game(start_movie=None, finish_movie=None, current_movie=None):
     }
     return context
 
-
-# Get a random movie from the database and return it
-def get_random_obj_from_queryset(queryset):
-    max_pk = queryset.aggregate(max_pk=Max("pk"))['max_pk']
-    while True:
-        obj = queryset.filter(pk=random.randint(1, max_pk)).first()
-        if obj:
-            return obj
