@@ -38,7 +38,6 @@ urlpatterns = [
     path("logout/", views.logout_user, name="logout"),
     path("signup/", views.signup, name="signup"),
     path("faq/", views.faq, name="faq"),
-    path('game/poster/', views.poster_game, name='poster_game'),
     path("testdisplay/", views.testdisplay, name="testdisplay"),
     path("testforban/", views.testforban, name="testforban"),
 ]
