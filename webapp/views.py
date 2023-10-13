@@ -180,7 +180,6 @@ def pwresetconfirm(request, uidb64, token):
 # If view function named login, then conflicts with Django built-in login function, if view function named login
 '''
 def login_user(request):
-
     # First define the form 
     form = CustomAuthForm(data=request.POST or None)
 
@@ -269,13 +268,6 @@ def create_watchlist(request):
         
     return render(request, 'create.html')
 
-# View function for the poster game page
-def poster_game(request):
-    ''' Play a poster reveal guessing game. '''
-    # TODO: Implement this function to play a poster reveal guessing game.    
-    context = handle_poster_game()
-    return render(request, "postergame.html", context)
-
 
 # Test page that displays posters for potential movie banning
 def testforban(request):
@@ -353,14 +345,6 @@ def create_watchlist(request):
   
   context = {'form': form}
   return render(request, 'index.html', context)
-
-
-# watchlist = Watchlist()
-# watchlist.user = request.user
-# watchlist.watchlist_name = form.cleaned_data['watchlist_name']
-# watchlist.save()
-
-
 
 
 @login_required

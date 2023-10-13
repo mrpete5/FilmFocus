@@ -641,10 +641,8 @@ def update_letterboxd_ratings():
             else:
                 raise Exception
 
-            # Print Success
             # print("Successful scrape of letterboxd for", movie.title, "("+str(movie.release_year)+")")    # TODO: uncomment this line
         except Exception as e:
-            # Print Failure
             print("Failed Letterboxd scrape for", movie.title, "("+str(movie.release_year)+")")          # TODO: uncomment this line
             
 
@@ -829,25 +827,4 @@ def handle_test_display_page(settings):
 
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/
     return items
-
-
-def handle_poster_game(start_movie=None, finish_movie=None, current_movie=None):
-    """ Get 2 random movies, start and finish, and 
-    generate the 8 recommended movies for the start or current movie."""
-
-    if start_movie is None:
-        start_movie = get_random_obj_from_queryset(Movie.objects.all())
-        current_movie = start_movie
-    if finish_movie is None:
-        finish_movie = get_random_obj_from_queryset(Movie.objects.all())
-
-    movie_count = 3
-    recommended_movies = current_movie.get_recommended_movies(movie_count)
-    context = {
-        'start_movie': start_movie,
-        'finish_movie': finish_movie,
-        'current_movie': current_movie,
-        'recommended_movies': recommended_movies,
-    }
-    return context
 
