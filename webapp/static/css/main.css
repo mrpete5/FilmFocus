@@ -3974,7 +3974,16 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
   /* margin-top: 22.5%; */
-  /* margin-top: 50px; */
+  /* 
+  margin-top: 50px; */
+}
+.x__popup {
+  color: #fff;
+  position: absolute;
+  justify-content: right;
+  align-items: right;
+  right: 15px;
+  
 }
 .create__watchlist {
   color: #fff;

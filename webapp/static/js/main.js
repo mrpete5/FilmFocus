@@ -513,6 +513,7 @@ $(document).ready(function () {
 	// Get buttons by their IDs
 	const openBtn = document.querySelectorAll(".card__add"); 
 	const closeBtn = document.getElementById("closePopup");
+	const xBtn = document.getElementById("closePopupAlt");
 	const popup = document.getElementById("popup");
 	console.log(popup);
 
@@ -526,7 +527,10 @@ $(document).ready(function () {
 	closeBtn.addEventListener("click", () => {
 		popup.classList.remove("open");
 	})
-
+	// Close the popup with the x button
+	xBtn.addEventListener("click", () => {
+		popup.classList.remove("open");
+	})
 	// Redirect to login on click
 	const loginBtn = document.getElementById("loginPopup");
 	loginBtn.addEventListener("click", () => {
