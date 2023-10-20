@@ -49,6 +49,7 @@
 				<h2>Add to Watchlist</h2><br>
 				{% if watchlists %}
 				
+				<div class="watchlist__container">
 				{% for watchlist in watchlists %}
 					<div class="watchlist__item">
 						<p class="watchlist__title">{{ watchlist.watchlist_name }}</p>
@@ -59,6 +60,7 @@
 						{% endif %}
 					</div>
 				{% endfor %}
+				</div>
 
 				{% else %}
 

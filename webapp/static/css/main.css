@@ -3909,9 +3909,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   left: 0;
   bottom: 0;
   transition: all 0.3s ease-in-out;
-  z-index: 103;
+  z-index: 100;
   pointer-events: none;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3922,9 +3921,12 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .popup.open {
   opacity: 1;
   border: 1.5px solid #F12D92;
-  pointer-events: all;
+  pointer-events: auto;
 }
 .popup.open button {
+  pointer-events: all;
+}
+.popup.open div{
   pointer-events: all;
 }
 .popupInner {
@@ -4029,7 +4031,25 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 /*==============================
   Add Movie to Watchlist
 ==============================*/
-
+.watchlist__container {
+  width: 430px; /*width of watchlist container in popup*/
+  height: 195px; /* height of watchlist container in popup*/
+  position: absolute;
+  top: 50px;
+  overflow-y:auto;
+}
+.watchlist__container::-webkit-scrollbar {
+  width: 1em;
+}
+ 
+.watchlist__container::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+ 
+.watchlist__container::-webkit-scrollbar-thumb {
+  background-color: #fff; /* Change color of scroll bar */
+  outline: 1px solid #F12D92;
+}
 .watchlist__item {
   display: flex;
   justify-content: space-between; /* This ensures maximum space between items */
@@ -4047,6 +4067,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
+  position: absolute;
+  bottom: 50px; /* move add watchlist button off the bottom */
   justify-content: center;
   align-items: center;
   padding: 5px 10px;
@@ -4139,8 +4161,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   background-image: -webkit-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
   background-image: -ms-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
   background-image: linear-gradient(90deg, #32CD32 0%, #29A329 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);  # These two lines add the pink glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
   font-size: 13px;
   color: #fff;

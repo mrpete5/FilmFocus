@@ -515,20 +515,37 @@ $(document).ready(function () {
 	const closeBtn = document.getElementById("closePopup");
 	const xBtn = document.getElementById("closePopupAlt");
 	const popup = document.getElementById("popup");
-	console.log(popup);
+	const header = document.getElementById("header");
+	document.body.style.marginRight = 'calc(-1 * (100vw - 100%))'; // Accounts for scroll bar to prevent content shifting
+	header.style.right = 'calc(-1 * (100vw - 100%))'; // Accounts for scroll bar to prevent content shifting
 
 	// Open the popup
 	openBtn.forEach(x => x.addEventListener("click", () => {
 		// console.log("clicked");		# Leave for testing purposes, modify as needed
 		popup.classList.add("open");
+		document.body.style.top = `-${window.scrollY}px`; // keeps your place on the main page when popup happens
+		document.body.style.position = 'fixed';
+		document.body.style.overflowX = 'hidden';
+		document.body.style.left = '0';
+		document.body.style.right = '0';
+		
+		
 	}))
 
 	// Close the popup
 	closeBtn.addEventListener("click", () => {
+		const scrollY = document.body.style.top;
+		document.body.style.position = '';
+		document.body.style.top = '';
+		window.scrollTo(0, parseInt(scrollY || '0') * -1); //restores your page position
 		popup.classList.remove("open");
 	})
 	// Close the popup with the x button
 	xBtn.addEventListener("click", () => {
+		const scrollY = document.body.style.top;
+		document.body.style.position = '';
+		document.body.style.top = '';
+		window.scrollTo(0, parseInt(scrollY || '0') * -1); //restores your page position
 		popup.classList.remove("open");
 	})
 	// Redirect to login on click
