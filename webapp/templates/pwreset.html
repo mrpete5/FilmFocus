@@ -58,6 +58,12 @@
 							<div>
 								<p style="color: white;">Enter your username to receive an email with a link to reset your password.</p>
 							</div>
+							<!-- error message -->
+							{% if form.non_field_errors %}
+                            <ul class="errorlist">
+								<li style="color: red;">{{ form.non_field_errors }}</li>
+                            </ul>
+                        	{% endif %}
 							<div class="sign__group">
 								<input type="text" class="sign__input" name="username" placeholder="Username">
 							</div>

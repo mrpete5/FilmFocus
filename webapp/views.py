@@ -110,9 +110,9 @@ def four04(request):
 
 # View function for the password reset page
 def pwreset(request):
+    form = PasswordResetForm(request.POST or None)
     if request.method == "POST":
         # Define form information
-        form = PasswordResetForm(request.POST or None)
         try:
             if form.is_valid():
                 # get user using username from form
@@ -128,12 +128,10 @@ def pwreset(request):
                 raise Exception("Invalid Form")
         # post error message
         except ObjectDoesNotExist:
-            messages.error(request, "User Could not be Found or Doesn't Exist")
+            form.add_error(None, "User Could not be Found or Doesn't Exist")
         except Exception as e:
-            messages.error(request, str(e))
-    
-    
-    return render(request, "pwreset.html")
+            form.add_error(None, e)
+    return render(request, "pwreset.html", {"form": form})
 
 # View definition for password comfirmation page
 def pwresetconfirm(request, uidb64, token):
@@ -149,9 +147,9 @@ def pwresetconfirm(request, uidb64, token):
         # TODO change to redirect to 404 or failed page
         return redirect("index")
 
+    # Define form information
+    form = PasswordResetConfirmForm(request.POST or None)
     if request.method == "POST":
-        # Define form information
-        form = PasswordResetConfirmForm(request.POST or None)
         try:
             if form.is_valid():
                     # get password details from form
@@ -170,9 +168,8 @@ def pwresetconfirm(request, uidb64, token):
                 raise Exception("Invalid Form")
         # post error message
         except Exception as e:
-            messages.error(request, e)
-    
-    return render(request, "pwresetconfirm.html")
+            form.add_error(None, e)
+    return render(request, "pwresetconfirm.html", {"form": form})
 
 '''
 # View function for the login page
