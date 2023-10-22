@@ -522,7 +522,7 @@ $(document).ready(function () {
 
 	// Open the popup
 	openBtn.forEach(x => x.addEventListener("click", () => {
-		// console.log("clicked");		# Leave for testing purposes, modify as needed
+		// console.log("clicked");		// Leave for testing purposes, modify as needed
 		popup.classList.add("open");
 		document.body.style.top = `-${window.scrollY}px`; // keeps your place on the main page when popup happens
 		document.body.style.position = 'fixed';
@@ -530,7 +530,7 @@ $(document).ready(function () {
 		document.body.style.left = '0';
 		document.body.style.right = '0';
 		
-		
+		popup.setAttribute('movie_id', x.getAttribute('movie_id'))
 	}))
 
 	// Close the popup
@@ -551,14 +551,46 @@ $(document).ready(function () {
 	})
 	// Redirect to login on click
 	const loginBtn = document.getElementById("loginPopup");
-	loginBtn.addEventListener("click", () => {
-		window.location.href = "/login/";	// redirect to login page
-    })
+	if (loginBtn) {
+		loginBtn.addEventListener("click", () => {
+			window.location.href = "/login/";	// redirect to login page
+		})
+	}
 
 
 	/*==============================
 	Popup add movie to watchlist
 	==============================*/
+	// Get Buttons
+	const wlistadd_btn = document.querySelectorAll(".wlistadd__btn"); 
+	
+	// Make Request to Add Movie to Watchlist
+	wlistadd_btn.forEach(x => x.addEventListener("click", async () => {
+		const watchlist_id = x.getAttribute('watchlist_id')
+		const movie_id = popup.getAttribute('movie_id')
+
+		const url = `/add_to_watchlist/${watchlist_id}/${movie_id}/`;
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		try {
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'X-CSRFToken': csrfToken
+				}
+			});
+
+			const data = await response.json();
+
+			if (data.status === 'success') {
+				alert(data.message);
+			} else {
+				alert(data.message);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}))
 	// STILL NOT WORKING, leaving this commented out for now
 	// // Add movie to watchlist on click
 	// const addToWatchlistBtn = document.getElementById('addToWatchlist');

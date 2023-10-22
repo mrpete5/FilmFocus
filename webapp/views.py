@@ -375,7 +375,11 @@ def add_to_watchlist(request, watchlist_id, movie_id):
     try:
         watchlist = Watchlist.objects.get(pk=watchlist_id, user=request.user)
         movie = Movie.objects.get(pk=movie_id)
-        watchlist.movies.add(movie)
+        new_watchlist_entry = WatchlistEntry(
+            watchlist = watchlist,
+            movie = movie,
+        )
+        new_watchlist_entry.save()
         return JsonResponse({'status': 'success', 'message': 'Movie added to watchlist'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})

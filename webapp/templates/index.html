@@ -54,9 +54,9 @@
 					<div class="watchlist__item">
 						<p class="watchlist__title">{{ watchlist.watchlist_name }}</p>
 						{% if movie in watchlist.entries|get_movies %}
-							<button class="wlistremove__btn" onclick="removeFromWatchlist({{ watchlist.id }}, {{ movie.id }})">Remove</button>
+							<button class="wlistremove__btn" watchlist_id="{{ watchlist.id }}">Remove</button>
 						{% else %}
-							<button class="wlistadd__btn" onclick="addToWatchlist( {{ watchlist.id}}, {{ movie.id}} )">Add</button>
+							<button class="wlistadd__btn" watchlist_id="{{ watchlist.id }}">Add</button>
 						{% endif %}
 					</div>
 				{% endfor %}
@@ -132,7 +132,7 @@
 									<div class="card__cover">
 										<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 									</div>
-									<a href="#0" class="card__add">
+									<a href="#0" class="card__add" movie_id="{{ movie.id }}">
 										<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 									</a>
 								</a>
@@ -182,7 +182,7 @@
 											<div class="card__cover">
 												<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 											</div>
-											<a href="#0" class="card__add">
+											<a href="#0" class="card__add" movie_id="{{ movie.id }}">
 												<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 											</a>
 										</a>
@@ -222,7 +222,7 @@
 											<div class="card__cover">
 												<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 											</div>
-											<a href="#0" class="card__add">
+											<a href="#0" class="card__add" movie_id="{{ movie.id }}">
 												<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 											</a>
 										</a>
@@ -264,7 +264,7 @@
 											<div class="card__cover">
 												<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 											</div>
-											<a href="#0" class="card__add">
+											<a href="#0" class="card__add" movie_id="{{ movie.id }}">
 												<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 											</a>
 										</a>
