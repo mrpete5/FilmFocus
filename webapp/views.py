@@ -119,10 +119,15 @@ def movie_detail(request, movie_slug):
 
 # View function for the movie watchlists page
 def watchlist(request):
-    context = {}
     user = request.user
+    context = {}
     if user.is_authenticated:
-        context['watchlists'] = Watchlist.objects.filter(user=user)
+        watchlists = Watchlist.objects.filter(user=user)
+        # TODO this might be temporary depending on how we want to implement the watchlist page
+        if watchlists:
+            context['watchlists'] = watchlists
+            context['current_watchlist'] = watchlists[0]
+            context['current_movies'] = WatchlistEntry.objects.filter(watchlist=watchlists[0])
     return render(request, "watchlist.html", context)
 
 # View function for the about page
