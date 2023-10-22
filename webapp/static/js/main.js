@@ -391,12 +391,12 @@ $(document).ready(function () {
 			var firstSlider = document.getElementById('filter__years');
 			noUiSlider.create(firstSlider, {
 				range: {
-					'min': 2000,
-					'max': 2018
+					'min': 1900,
+					'max': 2023
 				},
 				step: 1,
 				connect: true,
-				start: [2005, 2015],
+				start: [1990, 2020],
 				format: wNumb({
 					decimals: 0,
 				})
@@ -426,7 +426,7 @@ $(document).ready(function () {
 				},
 				step: 0.1,
 				connect: true,
-				start: [2.5, 8.6],
+				start: [4.0, 8.5],
 				format: wNumb({
 					decimals: 1,
 				})
