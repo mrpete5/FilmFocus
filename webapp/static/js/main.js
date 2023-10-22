@@ -585,7 +585,7 @@ $(document).ready(function () {
 			if (data.status === 'success') {
 				alert(data.message);
 			} else {
-				alert(data.message);
+				alert("Movie already in watchlist");
 			}
 		} catch (error) {
 			console.error(error);
