@@ -46,6 +46,7 @@ html {
 html,
 body {
   height: 100%;
+  overflow-x: hidden;
 }
 body {
   font-family: 'Ubuntu', sans-serif;

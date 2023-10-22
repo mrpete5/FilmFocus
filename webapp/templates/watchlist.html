@@ -70,13 +70,19 @@
 									<input type="button" value="Watchlist 1">
 									<span></span>
 								</div>
+								
 
-								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-quality">
-									<li>Watchlist 1</li>
-									<li>Watchlist 2</li>
-									<li>Watchlist 3</li>
-									<li>Create New Watchlist</li>
-								</ul>
+									<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-quality">
+										{% if user.is_authenticated %}
+											{% for watchlist in watchlists %}
+												<li>{{ watchlist.watchlist_name }}</li>
+											{% endfor %}
+
+											<li>Create New Watchlist</li>
+											</ul>
+										{% else %}
+											<li>Log In</li>
+										{% endif %}
 							</div>
 							<!-- end watchlist filter item -->
 

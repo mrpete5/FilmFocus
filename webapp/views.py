@@ -88,17 +88,42 @@ def movie_detail(request, movie_slug):
     # Determine which icon to use based on the Rotten Tomatoes rating
     movie.rt_icon = determine_rt_icon(rt_rating)
     
+    if request.method == 'POST':
+            form = NewWatchlistForm(request.POST)
+            if form.is_valid():
+                watchlist_name = form.save()
+                watchlist_name = form.cleaned_data.get('watchlist_name')
+                add_movie_to_watchlist(user, watchlist_name)
+                messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
+
+                # Redirect to the details on successful sign up
+                return redirect('details')
+            else:
+                messages.error(request, "Watchlist creation failed")               
+    else:
+        form = NewWatchlistForm()
+
     context = {
         'movie': movie,
         'recommended_movies': recommended_movies
     }
-    
+
+    context['watchlist_form'] = form
+
+    user = request.user
+    if user.is_authenticated:
+        context['watchlists'] = Watchlist.objects.filter(user=user)
+
     return render(request, 'details.html', context)
 
 
 # View function for the movie watchlists page
 def watchlist(request):
-    return render(request, "watchlist.html")
+    context = {}
+    user = request.user
+    if user.is_authenticated:
+        context['watchlists'] = Watchlist.objects.filter(user=user)
+    return render(request, "watchlist.html", context)
 
 # View function for the about page
 def about(request):

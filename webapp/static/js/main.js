@@ -518,6 +518,7 @@ $(document).ready(function () {
 	const header = document.getElementById("header");
 	document.body.style.marginRight = 'calc(-1 * (100vw - 100%))'; // Accounts for scroll bar to prevent content shifting
 	header.style.right = 'calc(-1 * (100vw - 100%))'; // Accounts for scroll bar to prevent content shifting
+	//document.body.style.overflowX = 'hidden';
 
 	// Open the popup
 	openBtn.forEach(x => x.addEventListener("click", () => {
@@ -525,7 +526,7 @@ $(document).ready(function () {
 		popup.classList.add("open");
 		document.body.style.top = `-${window.scrollY}px`; // keeps your place on the main page when popup happens
 		document.body.style.position = 'fixed';
-		document.body.style.overflowX = 'hidden';
+		//document.body.style.overflowX = 'hidden';
 		document.body.style.left = '0';
 		document.body.style.right = '0';
 		
