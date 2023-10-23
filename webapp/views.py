@@ -137,9 +137,9 @@ def watchlist(request):
                     context['current_watchlist'] = watchlist
                     context['current_movies'] = WatchlistEntry.objects.filter(watchlist=watchlist)
                     return render(request, "watchlist.html", context)
-    context['watchlists'] = watchlists
-    context['current_watchlist'] = watchlists[0]
-    context['current_movies'] = WatchlistEntry.objects.filter(watchlist=watchlists[0])
+        context['watchlists'] = watchlists
+        context['current_watchlist'] = watchlists[0]
+        context['current_movies'] = WatchlistEntry.objects.filter(watchlist=watchlists[0])
     return render(request, "watchlist.html", context)
 
 # View function for the about page
