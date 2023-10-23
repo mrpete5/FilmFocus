@@ -534,28 +534,29 @@ $(document).ready(function () {
 	}))
 
 	// Close the popup
+	if (closeBtn) {
 	closeBtn.addEventListener("click", () => {
 		const scrollY = document.body.style.top;
 		document.body.style.position = '';
 		document.body.style.top = '';
 		window.scrollTo(0, parseInt(scrollY || '0') * -1); //restores your page position
 		popup.classList.remove("open");
-	})
+	})}
 	// Close the popup with the x button
+	if (xBtn) {
 	xBtn.addEventListener("click", () => {
 		const scrollY = document.body.style.top;
 		document.body.style.position = '';
 		document.body.style.top = '';
 		window.scrollTo(0, parseInt(scrollY || '0') * -1); //restores your page position
 		popup.classList.remove("open");
-	})
+	})}
 	// Redirect to login on click
 	const loginBtn = document.getElementById("loginPopup");
 	if (loginBtn) {
-		loginBtn.addEventListener("click", () => {
-			window.location.href = "/login/";	// redirect to login page
-		})
-	}
+	loginBtn.addEventListener("click", () => {
+		window.location.href = "/login/";	// redirect to login page
+	})}
 
 
 	/*==============================
@@ -640,69 +641,84 @@ $(document).ready(function () {
 	
 
 
-	// Get DOM elements
-	// const addToWatchlistBtn = document.getElementById('addToWatchlist');
+	// // Get DOM elements
+	// // const addToWatchlistBtn = document.getElementById('addToWatchlist');
 
-	addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
+	// addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
 
-	// Handle click event
-	const handleAddToWatchlistClick = () => {
+	// // Handle click event
+	// const handleAddToWatchlistClick = () => {
 
-		// Get movieId and watchlistId from data attributes
-		const movieId = addToWatchlistBtn.dataset.movieId; 
-		const watchlistId = addToWatchlistBtn.dataset.watchlistId;
+	// 	// Get movieId and watchlistId from data attributes
+	// 	const movieId = addToWatchlistBtn.dataset.movieId; 
+	// 	const watchlistId = addToWatchlistBtn.dataset.watchlistId;
 
-		// Call addToWatchlist function 
-		addToWatchlist(movieId, watchlistId)
-			.then(handleResponse) 
-			.catch(handleError);
+	// 	// Call addToWatchlist function 
+	// 	addToWatchlist(movieId, watchlistId)
+	// 		.then(handleResponse) 
+	// 		.catch(handleError);
 
-		// add_movie_to_watchlist(movieId, watchlistId) // Testing this as possible solution
-	}
+	// 	// add_movie_to_watchlist(movieId, watchlistId) // Testing this as possible solution
+	// }
 
-	// Make POST request to add movie to watchlist
-	const addToWatchlist = async (movieId, watchlistId) => {
+	// // Make POST request to add movie to watchlist
+	// const addToWatchlist = async (movieId, watchlistId) => {
 
-	// POST data
-	const data = {
-		movie_id: movieId,
-		watchlist_id: watchlistId
-	};
+	// // POST data
+	// const data = {
+	// 	movie_id: movieId,
+	// 	watchlist_id: watchlistId
+	// };
 
-	// Request options
-	const options = {
-		method: 'POST',
-		headers: {
-		'Content-Type': 'application/json',
-		'X-CSRFToken': csrftoken  
-		},
-		body: JSON.stringify(data)
-	};
+	// // Request options
+	// const options = {
+	// 	method: 'POST',
+	// 	headers: {
+	// 	'Content-Type': 'application/json',
+	// 	'X-CSRFToken': csrftoken  
+	// 	},
+	// 	body: JSON.stringify(data)
+	// };
 
-	// Make request and return response
-	return fetch('/add-to-watchlist/', options)
-		.then(res => res.json());
+	// // Make request and return response
+	// return fetch('/add-to-watchlist/', options)
+	// 	.then(res => res.json());
 
-	}
+	// }
 
-	// Handle successful response 
-	const handleResponse = (response) => {
-	if (response.success) {
-		// Movie added, update UI
-	} else {
-		// Show error 
-	}
-	}
+	// // Handle successful response 
+	// const handleResponse = (response) => {
+	// if (response.success) {
+	// 	// Movie added, update UI
+	// } else {
+	// 	// Show error 
+	// }
+	// }
 
-	// Handle errors
-	const handleError = (error) => {
-	console.error(error);
-	}
+	// // Handle errors
+	// const handleError = (error) => {
+	// console.error(error);
+	// }
 
-	// Event listener
-	addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
+	// // Event listener
+	// addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
 
 
+
+	/*==============================
+    Select Watchlist to Display
+    ==============================*/
+	// Get Input Fields for Form
+	const watchlist_items = document.querySelectorAll(".watchlist-dropdown-option")
+	const form_watchlist_id = document.getElementById("hidden-watchlist-id")
+
+	// Event Handler for Dropdown Menu of Filtering Watchlist
+	watchlist_items.forEach(x => {
+		x.addEventListener('click', () => {
+			const watchlist_id = x.getAttribute('watchlist_id')
+			form_watchlist_id.value = watchlist_id
+		});
+	  });
 });
 
 

@@ -28,6 +28,7 @@ from .forms import (
     NewWatchlistForm,
     PasswordResetForm,
     PasswordResetConfirmForm,
+    WatchlistFilterForm,
 )
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import login, logout, authenticate, get_user_model
@@ -120,14 +121,25 @@ def movie_detail(request, movie_slug):
 # View function for the movie watchlists page
 def watchlist(request):
     user = request.user
+    form = WatchlistFilterForm(request.POST or None)
     context = {}
     if user.is_authenticated:
         watchlists = Watchlist.objects.filter(user=user)
+
         # TODO this might be temporary depending on how we want to implement the watchlist page
         if watchlists:
-            context['watchlists'] = watchlists
-            context['current_watchlist'] = watchlists[0]
-            context['current_movies'] = WatchlistEntry.objects.filter(watchlist=watchlists[0])
+            if request.method == 'POST':
+                if form.is_valid():
+                    watchlist_id = form.cleaned_data.get("watchlist_id")
+                    watchlist = Watchlist.objects.get(pk=watchlist_id)
+
+                    context['watchlists'] = watchlists
+                    context['current_watchlist'] = watchlist
+                    context['current_movies'] = WatchlistEntry.objects.filter(watchlist=watchlist)
+                    return render(request, "watchlist.html", context)
+    context['watchlists'] = watchlists
+    context['current_watchlist'] = watchlists[0]
+    context['current_movies'] = WatchlistEntry.objects.filter(watchlist=watchlists[0])
     return render(request, "watchlist.html", context)
 
 # View function for the about page

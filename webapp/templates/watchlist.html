@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,21 +63,18 @@
 				<div class="col-12">
 					<div class="filter__content">
 						<div class="filter__items">
-							<!-- Watchlist filter item -->
 							<div class="filter__item" id="filter__quality">
 								<span class="filter__item-label">WATCHLIST:</span>
-
-								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-quality" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<input type="button" value="{{ watchlists.0.watchlist_name }}">
+								
+								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-watchlist" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<input type="button" value="{{ current_watchlist.watchlist_name }}">
 									<span></span>
 								</div>
 									<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-quality">
 										{% if user.is_authenticated %}
 											{% for watchlist in watchlists %}
-												<li>{{ watchlist.watchlist_name }}</li>
+												<li class="watchlist-dropdown-option" watchlist_id="{{watchlist.id}}">{{ watchlist.watchlist_name }}</li>
 											{% endfor %}
-
-										
 									</ul>
 										{% else %}
 											<li>Log In</li>
@@ -209,9 +207,14 @@
 							</div> -->
 							<!-- end runtime filter item -->
 
-							<!-- filter btn -->
-							<button class="filter__btn" type="button">apply filter</button>
-							<!-- end filter btn -->
+							<form id="watchlist-form" method="POST">
+								{% csrf_token %}
+								<input type="hidden" name="watchlist_id" id="hidden-watchlist-id" value="{{ watchlists.0.id }}">
+							
+								<!-- filter btn -->
+								<button class="filter__btn" type="submit">apply filter</button>
+								<!-- end filter btn -->
+							</form>
 						</div>
 						
 					</div>

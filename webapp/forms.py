@@ -97,6 +97,8 @@ class PasswordResetConfirmForm(forms.Form):
     new_password_1 = forms.CharField(label="New Password", max_length=254)
     new_password_2 = forms.CharField(label="Confirm Password", max_length=254)
 
+class WatchlistFilterForm(forms.Form):
+    watchlist_id = forms.IntegerField(label="Wishlist ID")
 
 # from .models import Watchlist
 
