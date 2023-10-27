@@ -69,6 +69,15 @@
 								{{ register_form.password2 }}
 								<div class="password-toggle2" onclick="toggleConfirmPasswordVisibility()"></div>
 							</div>
+
+							<!-- error message -->
+							{% if register_form.errors %}
+								{% for field_name, field_errors in register_form.errors.items %}
+								{% for error in field_errors %}
+								<label style="color: red;">{{ error|escape }}</label>
+								{% endfor %}
+								{% endfor %}
+                        	{% endif %}
 							
 							<button class="sign__btn" type="submit">Sign up</button>
 

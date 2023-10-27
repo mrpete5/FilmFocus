@@ -268,6 +268,7 @@ def login_user(request):
             
         else:
             messages.error(request, "Invalid username or password")
+            form.add_error("username", "Invalid username or password")
 
     else:
         form = CustomAuthForm()
