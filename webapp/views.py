@@ -123,23 +123,48 @@ def watchlist(request):
     user = request.user
     form = WatchlistFilterForm(request.POST or None)
     context = {}
+
     if user.is_authenticated:
         watchlists = Watchlist.objects.filter(user=user)
+        context['watchlists'] = watchlists
 
         # TODO this might be temporary depending on how we want to implement the watchlist page
         if watchlists:
             if request.method == 'POST':
                 if form.is_valid():
+                    # Get The watchlist Id from the form
                     watchlist_id = form.cleaned_data.get("watchlist_id")
-                    watchlist = Watchlist.objects.get(pk=watchlist_id)
 
-                    context['watchlists'] = watchlists
-                    context['current_watchlist'] = watchlist
-                    context['current_movies'] = WatchlistEntry.objects.filter(watchlist=watchlist)
+                    # Get Selected Watchlist and Associated Movies in the Watchlist
+                    watchlist = Watchlist.objects.get(pk=watchlist_id)
+                    movie_list = Movie.objects.filter(watchlistentry__watchlist=watchlist)
+
+                    # Excludes genre or streaming provider options that don't exist in the movie_list
+                    context["genres"] = Genre.objects.all().filter(movies__in=movie_list).distinct()
+                    context["streamers"] = StreamingProvider.objects.all().filter(movies__in=movie_list).distinct()
+
+                    # Fitler for Genre
+                    genre = Genre.objects.filter(name=form.cleaned_data["genre"]).first()
+                    if genre:
+                        movie_list = movie_list.filter(genres=genre)
+
+                    # Filter for Streaming Providers
+                    streamer = StreamingProvider.objects.filter(name=form.cleaned_data["streaming_provider"]).first()
+                    if streamer:
+                        movie_list = movie_list.filter(streaming_providers=streamer)
+
+                    # Setup Context for the frontend
+                    context['filter_watchlist'] = watchlist
+                    context['filter_genre'] = genre
+                    context['filter_streamer'] = streamer
+                    context['movie_list'] = movie_list
                     return render(request, "watchlist.html", context)
-        context['watchlists'] = watchlists
-        context['current_watchlist'] = watchlists[0]
-        context['current_movies'] = WatchlistEntry.objects.filter(watchlist=watchlists[0])
+
+        # Setup Context for the frontend
+        context['filter_watchlist'] = watchlists[0]
+        context['movie_list'] = Movie.objects.filter(watchlistentry__watchlist=watchlists[0])
+        context["genres"] = Genre.objects.all().filter(movies__in=context['movie_list']).distinct()
+        context["streamers"] = StreamingProvider.objects.all().filter(movies__in=context['movie_list']).distinct()
     return render(request, "watchlist.html", context)
 
 # View function for the about page
@@ -205,7 +230,7 @@ def pwresetconfirm(request, uidb64, token):
                     pass_reset.change_password(user, new_password_1)
 
                     # TODO redirect to a password change comfirmation page
-                    return redirect("index")
+                    return redirect("signin")
             else:
                 raise Exception("Invalid Form")
         # post error message

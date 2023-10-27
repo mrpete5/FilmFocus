@@ -99,6 +99,8 @@ class PasswordResetConfirmForm(forms.Form):
 
 class WatchlistFilterForm(forms.Form):
     watchlist_id = forms.IntegerField(label="Wishlist ID")
+    genre = forms.CharField(label="Genre", max_length=255)
+    streaming_provider = forms.CharField(label="Streaming Provider", max_length=255)
 
 # from .models import Watchlist
 

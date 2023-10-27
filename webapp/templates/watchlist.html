@@ -62,12 +62,13 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="filter__content">
-						<div class="filter__items">
-							<div class="filter__item" id="filter__quality">
+						<form class="filter__items" id="watchlist-form" method="POST">
+							{% csrf_token %}
+							<div class="filter__item" id="filter__watchlist">
 								<span class="filter__item-label">WATCHLIST:</span>
 								
 								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-watchlist" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<input type="button" value="{{ current_watchlist.watchlist_name }}">
+									<input type="button" value="{{ filter_watchlist.watchlist_name }}">
 									<span></span>
 								</div>
 									<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-quality">
@@ -82,73 +83,40 @@
 							</div>
 							<!-- end watchlist filter item -->
 
-							<!-- filter item -->
+							<!-- genre filter -->
 							<div class="filter__item" id="filter__genre">
 								<span class="filter__item-label">GENRE:</span>
 
 								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-genre" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<input type="button" value="Action/Adventure">
+									<input type="button" value="{{ filter_genre.name|default:'None' }}">
+									<input type="hidden" name="genre" value="{{ filter_genre.name|default:'None' }}">
 									<span></span>
 								</div>
 
 								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-genre">
-									<li>Action/Adventure</li>
-									<li>Animals</li>
-									<li>Animation</li>
-									<li>Biography</li>
-									<li>Comedy</li>
-									<li>Cooking</li>
-									<li>Dance</li>
-									<li>Documentary</li>
-									<li>Drama</li>
-									<li>Education</li>
-									<li>Entertainment</li>
-									<li>Family</li>
-									<li>Fantasy</li>
-									<li>History</li>
-									<li>Horror</li>
-									<li>Independent</li>
-									<li>International</li>
-									<li>Kids</li>
-									<li>Kids & Family</li>
-									<li>Medical</li>
-									<li>Military/War</li>
-									<li>Music</li>
-									<li>Musical</li>
-									<li>Mystery/Crime</li>
-									<li>Nature</li>
-									<li>Paranormal</li>
-									<li>Politics</li>
-									<li>Racing</li>
-									<li>Romance</li>
-									<li>Sci-Fi/Horror</li>
-									<li>Science</li>
-									<li>Science Fiction</li>
-									<li>Science/Nature</li>
-									<li>Spanish</li>
-									<li>Travel</li>
-									<li>Western</li>
+									<li>None</li>
+									{% for genre in genres %}
+										<li>{{ genre }}</li>
+									{% endfor %}
 								</ul>
 							</div>
-							<!-- end filter item -->
+							<!-- end genre filter-->
 
-							<!-- quality filter item -->
-							<div class="filter__item" id="filter__quality">
+							<!-- streaming provider filter item -->
+							<div class="filter__item" id="filter__streamer">
 								<span class="filter__item-label">WHERE TO WATCH:</span>
 
-								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-quality" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<input type="button" value="All">
+								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-streamer" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<input type="button" value="{{ filter_streamer.name|default:'All' }}">
+									<input type="hidden" name="streaming_provider" value="{{ filter_streamer.name|default:'All' }}">
 									<span></span>
 								</div>
 
-								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-quality">
+								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-streamer">
 									<li>All</li>
-									<li>Netflix</li>
-									<li>Max</li>
-									<li>Disney+</li>
-									<li>Paramount+</li>
-									<li>Hulu</li>
-									<li>Prime Video</li>
+									{% for provider in streamers %}
+										<li>{{ provider }}</li>
+									{% endfor %}
 								</ul>
 							</div>
 							<!-- end filter item -->
@@ -207,15 +175,14 @@
 							</div> -->
 							<!-- end runtime filter item -->
 
-							<form id="watchlist-form" method="POST">
-								{% csrf_token %}
-								<input type="hidden" name="watchlist_id" id="hidden-watchlist-id" value="{{ watchlists.0.id }}">
-							
-								<!-- filter btn -->
-								<button class="filter__btn" type="submit">apply filter</button>
-								<!-- end filter btn -->
-							</form>
-						</div>
+							<!-- hidden form information -->
+							<input type="hidden" name="watchlist_id" id="hidden-watchlist-id" value="{{ filter_watchlist.id }}">
+							<!-- end hidden form infromation -->
+
+							<!-- filter btn -->
+							<button class="filter__btn" type="submit">apply filter</button>
+							<!-- end filter btn -->
+						</form>
 						
 					</div>
 				</div>
@@ -228,28 +195,28 @@
 	<div class="catalog">
 		<div class="container">
 			<div class="row">
-				{% for entry in current_movies %}
+				{% for movie in movie_list %}
 				<!-- card -->
 				<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
 					<div class="card">
-						<a href="{% url 'movie_detail' movie_slug=entry.movie.slug %}">
+						<a href="{% url 'movie_detail' movie_slug=movie.slug %}">
 							<div class="card__cover">
-								<img src="https://image.tmdb.org/t/p/w500{{ entry.movie.poster_path }}" alt="{{ movie.title }}">
+								<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 								<!-- <a href="#" class="card__play">
 									<i class="icon ion-ios-play"></i>
 								</a> -->
 							</div>
 						</a>
 						<div class="card__content">
-							<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=entry.movie.slug %}">{{ entry.movie.title }} ({{ entry.movie.release_year }})</a></h3>
+							<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 							<span class="card__category">
-								{% for genre in entry.movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
+								{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
 									<a>{{ genre.name }}</a>
 								{% endfor %}
 							</span>
 							<span class="card__rate">
 								<img src="{% static 'img/logos/imdb-logo.svg' %}" alt="IMDb" style="width: 30px; vertical-align: middle; margin-right: 5px;">
-								{{ entry.movie.imdb_rating }}
+								{{ movie.imdb_rating }}
 							</span>
 						</div>
 					</div>
