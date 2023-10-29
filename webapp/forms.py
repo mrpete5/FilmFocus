@@ -101,6 +101,10 @@ class WatchlistFilterForm(forms.Form):
     watchlist_id = forms.IntegerField(label="Wishlist ID")
     genre = forms.CharField(label="Genre", max_length=255)
     streaming_provider = forms.CharField(label="Streaming Provider", max_length=255)
+    year_begin = forms.IntegerField(label="Year Begin")
+    year_end = forms.IntegerField(label="Year End")
+    imdb_begin = forms.FloatField(label="IMDB Rating Begin")
+    imdb_end = forms.FloatField(label="IMDB Rating End")
 
 # from .models import Watchlist
 

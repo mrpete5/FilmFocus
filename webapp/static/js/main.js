@@ -389,6 +389,14 @@ $(document).ready(function () {
 	function initializeFirstSlider() {
 		if ($('#filter__years').length) {
 			var firstSlider = document.getElementById('filter__years');
+			var firstValues = [
+				document.getElementById('filter__years-start'),
+				document.getElementById('filter__years-end')
+			];
+			var yearForm = [
+				document.getElementById('hidden-year-begin'),
+				document.getElementById('hidden-year-end')
+			]
 			noUiSlider.create(firstSlider, {
 				range: {
 					'min': 1900,
@@ -396,17 +404,15 @@ $(document).ready(function () {
 				},
 				step: 1,
 				connect: true,
-				start: [1990, 2020],
+				start: [yearForm[0].value, yearForm[1].value],
 				format: wNumb({
 					decimals: 0,
 				})
 			});
-			var firstValues = [
-				document.getElementById('filter__years-start'),
-				document.getElementById('filter__years-end')
-			];
+
 			firstSlider.noUiSlider.on('update', function( values, handle ) {
 				firstValues[handle].innerHTML = values[handle];
+				yearForm[handle].value = values[handle];
 			});
 		} else {
 			return false;
@@ -419,6 +425,15 @@ $(document).ready(function () {
 	function initializeSecondSlider() {
 		if ($('#filter__imbd').length) {
 			var secondSlider = document.getElementById('filter__imbd');
+			var secondValues = [
+				document.getElementById('filter__imbd-start'),
+				document.getElementById('filter__imbd-end')
+			];
+			var imdbForm = [
+				document.getElementById('hidden-imdb-begin'),
+				document.getElementById('hidden-imdb-end')
+			]
+
 			noUiSlider.create(secondSlider, {
 				range: {
 					'min': 0,
@@ -426,19 +441,15 @@ $(document).ready(function () {
 				},
 				step: 0.1,
 				connect: true,
-				start: [4.0, 8.5],
+				start: [imdbForm[0].value, imdbForm[1].value],
 				format: wNumb({
 					decimals: 1,
 				})
 			});
 
-			var secondValues = [
-				document.getElementById('filter__imbd-start'),
-				document.getElementById('filter__imbd-end')
-			];
-
 			secondSlider.noUiSlider.on('update', function( values, handle ) {
 				secondValues[handle].innerHTML = values[handle];
+				imdbForm[handle].value = values[handle];
 			});
 
 			$('.filter__item-menu--range').on('click.bs.dropdown', function (e) {
@@ -451,35 +462,6 @@ $(document).ready(function () {
 		return false;
 	}
 	$(window).on('load', initializeSecondSlider());
-
-	/*3*/
-	function initializeThirdSlider() {
-		if ($('#slider__rating').length) {
-			var thirdSlider = document.getElementById('slider__rating');
-			noUiSlider.create(thirdSlider, {
-				range: {
-					'min': 0,
-					'max': 10
-				},
-				connect: [true, false],
-				step: 0.1,
-				start: 8.6,
-				format: wNumb({
-					decimals: 1,
-				})
-			});
-
-			var thirdValue = document.getElementById('form__slider-value');
-
-			thirdSlider.noUiSlider.on('update', function( values, handle ) {
-				thirdValue.innerHTML = values[handle];
-			});
-		} else {
-			return false;
-		}
-		return false;
-	}
-	$(window).on('load', initializeThirdSlider());
 
 	/*==============================
 	Clear Button

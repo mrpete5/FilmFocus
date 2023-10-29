@@ -125,7 +125,13 @@ def watchlist(request):
     context = {}
 
     if user.is_authenticated:
+        # Get watchlists
         watchlists = Watchlist.objects.filter(user=user)
+
+        # TODO If no watchlists
+        if not watchlists:
+            return redirect('index')
+
         context['watchlists'] = watchlists
 
         # TODO this might be temporary depending on how we want to implement the watchlist page
@@ -153,10 +159,28 @@ def watchlist(request):
                     if streamer:
                         movie_list = movie_list.filter(streaming_providers=streamer)
 
+                    # Filter for release year
+                    year_begin = form.cleaned_data["year_begin"]
+                    year_end = form.cleaned_data["year_end"]
+                    if year_begin and year_end:
+                        movie_list = movie_list.filter(release_year__range=(year_begin, year_end))
+
+                    # Filte for IMDB rating
+                    imdb_begin = form.cleaned_data["imdb_begin"]
+                    imdb_end = form.cleaned_data["imdb_end"]
+                    # TODO imdb rating is a ChatField in the movie model and you can't range it
+                    # if imdb_begin and imdb_end:
+                    #     movie_list = movie_list.filter(imdb_rating__range=(imdb_begin, imdb_end))
+                    
+
                     # Setup Context for the frontend
                     context['filter_watchlist'] = watchlist
                     context['filter_genre'] = genre
                     context['filter_streamer'] = streamer
+                    context['filter_year_begin'] = year_begin
+                    context['filter_year_end'] = year_end
+                    context['filter_imdb_begin'] = imdb_begin
+                    context['filter_imdb_end'] = imdb_end
                     context['movie_list'] = movie_list
                     return render(request, "watchlist.html", context)
 
@@ -165,7 +189,8 @@ def watchlist(request):
         context['movie_list'] = Movie.objects.filter(watchlistentry__watchlist=watchlists[0])
         context["genres"] = Genre.objects.all().filter(movies__in=context['movie_list']).distinct()
         context["streamers"] = StreamingProvider.objects.all().filter(movies__in=context['movie_list']).distinct()
-    return render(request, "watchlist.html", context)
+        return render(request, "watchlist.html", context)
+    return redirect('login')
 
 # View function for the about page
 def about(request):
@@ -230,7 +255,7 @@ def pwresetconfirm(request, uidb64, token):
                     pass_reset.change_password(user, new_password_1)
 
                     # TODO redirect to a password change comfirmation page
-                    return redirect("signin")
+                    return redirect("login")
             else:
                 raise Exception("Invalid Form")
         # post error message
