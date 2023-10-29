@@ -56,7 +56,8 @@ def index(request):
         if form.is_valid():
             watchlist_name = form.save()
             watchlist_name = form.cleaned_data.get('watchlist_name')
-            add_movie_to_watchlist(user, watchlist_name)
+            create_watchlist(request, watchlist_name=watchlist_name)
+            # add_movie_to_watchlist(request, user, watchlist_name)
             messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
 
             # Redirect to the homepage on successful sign up
@@ -94,7 +95,7 @@ def movie_detail(request, movie_slug):
             if form.is_valid():
                 watchlist_name = form.save()
                 watchlist_name = form.cleaned_data.get('watchlist_name')
-                add_movie_to_watchlist(user, watchlist_name)
+                add_movie_to_watchlist(request, user, watchlist_name)
                 messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
 
                 # Redirect to the details on successful sign up
@@ -347,6 +348,7 @@ def faq(request):
 
 # Require user to be logged in to access this view
 @login_required  
+@require_POST
 def create_watchlist(request):
     ''' Create a watchlist. Requires user to be logged in. '''
     if request.method == 'POST':
@@ -395,7 +397,7 @@ def testdisplay(request):
 
 # Require user to be logged in to access this view
 @login_required  
-def add_movie_to_watchlist(request):
+def add_movie_to_watchlist(request, user, watchlist):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -406,7 +408,7 @@ def add_movie_to_watchlist(request):
             
             # Check if the movie is already in the watchlist
             if not WatchlistEntry.objects.filter(watchlist=watchlist, movie=movie).exists():
-                WatchlistEntry.objects.create(watchlist=watchlist, movie=movie)
+                WatchlistEntry.objects.create(watchlist=watchlist, movie=movie, user=user)
                 return JsonResponse({'success': True})
             else:
                 return JsonResponse({'success': False, 'error': 'Movie already in watchlist'})
@@ -422,19 +424,19 @@ def add_movie_to_watchlist(request):
 
 from .forms import NewWatchlistForm
 
-def create_watchlist(request):
-
-  if request.method == 'POST':
-    form = NewWatchlistForm(request.POST)
-    if form.is_valid():
-      watchlist = form.save(commit=True, user=request.user) 
-      return redirect('home')
-
-  else:
-    form = NewWatchlistForm()
-  
-  context = {'form': form}
-  return render(request, 'index.html', context)
+@login_required
+@require_POST
+def create_watchlist(request, watchlist_name):
+    try:
+        watchlist = Watchlist.objects.create(user=request.user, watchlist_name=watchlist_name)
+        watchlist.save()
+        return JsonResponse({'status': 'success', 'message': 'Watchlist created'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+    # form = NewWatchlistForm(request.POST)
+    # if form.is_valid():
+    #   watchlist = form.save(commit=True, user=request.user) 
+    #   return redirect('home')
 
 
 @login_required
