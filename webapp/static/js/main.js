@@ -97,6 +97,44 @@ $(document).ready(function () {
 	$(window).trigger('resize');
 
 	/*==============================
+	More Movies
+	==============================*/
+	$('.more_movies__carousel').owlCarousel({
+		mouseDrag: false,
+		touchDrag: false,
+		dots: false,
+		loop: true,
+		autoplay: false,
+		smartSpeed: 600,
+		margin: 0,
+		responsive : {
+			0 : {
+				items: 2,
+			},
+			576 : {
+				items: 2,
+			},
+			768 : {
+				items: 3,
+			},
+			992 : {
+				items: 6,
+			},
+			1200 : {
+				items: 6,
+			},
+		}
+	});
+
+	$('.more_movies__nav--next').on('click', function() {
+		$('.more_movies__carousel').trigger('next.owl.carousel');
+	});
+	$('.more_movies__nav--prev').on('click', function() {
+		$('.more_movies__carousel').trigger('prev.owl.carousel');
+	});
+
+
+	/*==============================
 	Tabs
 	==============================*/
 	$('.content__mobile-tabs-menu li').each( function() {

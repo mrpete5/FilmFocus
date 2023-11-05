@@ -851,6 +851,9 @@ ul {
   .home__title {
     font-size: 36px;
   }
+.more_movies__nav--prev {
+  right: 60px;
+}
 }
 /*==============================
 	Content
