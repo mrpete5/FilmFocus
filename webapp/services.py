@@ -460,8 +460,8 @@ def get_movies_for_index():
     # Randomly select 6 movies from the top 60
     top_rated_movies = random.sample(list(top_60_movies), min(6, len(top_60_movies)))
     
-    # Fetch 12 random movies for "More Movies", excluding the ones already selected in new_movies, popular_movies, and top_rated_movies
-    more_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies] + [movie.id for movie in top_rated_movies]).order_by('?')[:12]
+    # Fetch 30 random movies for "More Movies", excluding the ones already selected in new_movies, popular_movies, and top_rated_movies
+    more_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies] + [movie.id for movie in top_rated_movies]).order_by('?')[:30]
     
     return {
         'new_movies': new_movies,
