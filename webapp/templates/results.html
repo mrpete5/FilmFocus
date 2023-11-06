@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block content %}
+
+<head>
+</head>
+<body class="body">
+    <h2>Search Results</h2>
+
+        <div class = "container">
+
+            <div class="row">
+                <div class="col-12">
+                    <!-- content title -->
+                    <div class="search_title_container">
+                        <h2 class="content__title"><b>Search Results For: '{{ query }}'</b></h2>
+                    </div>
+                    <!-- end content title -->
+                    <div class="container">
+                        <div class="row">
+                            {% if searchedMovies %}
+
+                            {% for movie in searchedMovies %}
+                            <!-- card -->
+                            <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                                <div class="card">
+                                    <a href="{% url 'movie_detail' movie_slug=movie.slug %}">
+                                        <div class="card__cover">
+                                            <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+                                        </div>
+                                        <a href="#0" class="card__add" movie_id="{{ movie.id }}">
+                                            <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+                                        </a>
+                                    </a>
+                                    <div class="card__content">
+                                        <h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
+                                        <span class="card__category">
+                                            {% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
+                                                <a>{{ genre.name }}</a>
+                                            {% endfor %}
+                                        </span>
+                                        <span class="card__rate">
+                                            <img src="{% static 'img/logos/imdb-logo.svg' %}" alt="IMDb" style="width: 30px; vertical-align: middle; margin-right: 5px;">
+                                            {{ movie.imdb_rating }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end card -->
+                            {% endfor %}
+
+                            {% else %}
+                            <div class="search__fail"><h2><b>No Movies Found</b></h2></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
+</body>

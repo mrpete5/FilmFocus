@@ -193,6 +193,21 @@ def watchlist(request):
         return render(request, "watchlist.html", context)
     return redirect('login')
 
+def searchBar(request):
+    context = {}
+    if request.method == 'GET':
+        query = request.GET.get('query')
+        context['query'] = query
+        if query:
+            movies = Movie.objects.filter(title__icontains=query)
+            context['searchedMovies'] = movies
+            return render(request, 'results.html', context)
+            # return render(request, 'results.html', 'searchedMovies': movies)
+        else:
+            print("No Info to show")
+            return render(request, 'results.html', context)
+
+
 # View function for the about page
 def about(request):
     return render(request, "about.html")

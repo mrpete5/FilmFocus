@@ -35,6 +35,7 @@ Primary use:	FlixGo Template
 25. PhotoSwipe customization
 26. mCustomScrollbar customization
 27. Add Movie Popup
+28. Search Results
 ----------------------------------------*/
 /*==============================
 	Common styles
@@ -4228,4 +4229,21 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   flex-grow: 1;
   padding-left: 120px; /* Space between button and text */
   text-align: right; /* Align text to the right */
+}
+/*==============================
+Search Results
+==============================*/
+.search__fail{
+  position: relative;
+  justify-content: center;
+  color: #fff;
+  font-weight: 300;
+  font-size: 28px;
+  margin: 20px 0 5px;
+  margin-left: 35%;
+  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-color: red;
+}
+.search_title_container{
+  margin-top: 50px;
 }
