@@ -195,6 +195,27 @@ def watchlist(request):
 
 def searchBar(request):
     context = {}
+    user = request.user
+    if user.is_authenticated:
+        context['watchlists'] = Watchlist.objects.filter(user=user)
+            
+    if request.method == 'POST':
+        form = NewWatchlistForm(request.POST)
+        if form.is_valid():
+            watchlist_name = form.save()
+            watchlist_name = form.cleaned_data.get('watchlist_name')
+            create_watchlist(request, watchlist_name=watchlist_name)
+            # add_movie_to_watchlist(request, user, watchlist_name)
+            messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
+
+            # Redirect to the homepage on successful sign up
+            return redirect('index')
+        else:
+            messages.error(request, "Watchlist creation failed")               
+    else:
+        form = NewWatchlistForm()
+    
+    context['watchlist_form'] = form
     if request.method == 'GET':
         query = request.GET.get('query')
         context['query'] = query
