@@ -39,7 +39,7 @@ class Movie(models.Model):
     release_year = models.IntegerField(null=True, blank=True)
     runtime = models.IntegerField(null=True, blank=True)
     tagline = models.CharField(max_length=255, null=True, blank=True)
-    genres = models.ManyToManyField('Genre', blank=True)
+    genres = models.ManyToManyField('Genre', blank=True, related_name='movies')
     trailer_key = models.CharField(max_length=255, null=True, blank=True)
     imdb_rating = models.CharField(max_length=10, null=True, blank=True)
     tmdb_popularity = models.CharField(max_length=10, null=True, blank=True)

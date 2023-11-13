@@ -28,6 +28,7 @@ from .forms import (
     NewWatchlistForm,
     PasswordResetForm,
     PasswordResetConfirmForm,
+    WatchlistFilterForm,
 )
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import login, logout, authenticate, get_user_model
@@ -55,7 +56,8 @@ def index(request):
         if form.is_valid():
             watchlist_name = form.save()
             watchlist_name = form.cleaned_data.get('watchlist_name')
-            add_movie_to_watchlist(user, watchlist_name)
+            create_watchlist(request, watchlist_name=watchlist_name)
+            # add_movie_to_watchlist(request, user, watchlist_name)
             messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
 
             # Redirect to the homepage on successful sign up
@@ -88,17 +90,144 @@ def movie_detail(request, movie_slug):
     # Determine which icon to use based on the Rotten Tomatoes rating
     movie.rt_icon = determine_rt_icon(rt_rating)
     
+    if request.method == 'POST':
+            form = NewWatchlistForm(request.POST)
+            if form.is_valid():
+                watchlist_name = form.save()
+                watchlist_name = form.cleaned_data.get('watchlist_name')
+                add_movie_to_watchlist(request, user, watchlist_name)
+                messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
+
+                # Redirect to the details on successful sign up
+                return redirect('details')
+            else:
+                messages.error(request, "Watchlist creation failed")               
+    else:
+        form = NewWatchlistForm()
+
     context = {
         'movie': movie,
         'recommended_movies': recommended_movies
     }
-    
+
+    context['watchlist_form'] = form
+
+    user = request.user
+    if user.is_authenticated:
+        context['watchlists'] = Watchlist.objects.filter(user=user)
+
     return render(request, 'details.html', context)
 
 
 # View function for the movie watchlists page
 def watchlist(request):
-    return render(request, "watchlist.html")
+    user = request.user
+    form = WatchlistFilterForm(request.POST or None)
+    context = {}
+
+    if user.is_authenticated:
+        # Get watchlists
+        watchlists = Watchlist.objects.filter(user=user)
+
+        # TODO If no watchlists
+        if not watchlists:
+            return redirect('index')
+
+        context['watchlists'] = watchlists
+
+        # TODO this might be temporary depending on how we want to implement the watchlist page
+        if watchlists:
+            if request.method == 'POST':
+                if form.is_valid():
+                    # Get The watchlist Id from the form
+                    watchlist_id = form.cleaned_data.get("watchlist_id")
+
+                    # Get Selected Watchlist and Associated Movies in the Watchlist
+                    watchlist = Watchlist.objects.get(pk=watchlist_id)
+                    movie_list = Movie.objects.filter(watchlistentry__watchlist=watchlist)
+
+                    # Excludes genre or streaming provider options that don't exist in the movie_list
+                    context["genres"] = Genre.objects.all().filter(movies__in=movie_list).distinct()
+                    context["streamers"] = StreamingProvider.objects.all().filter(movies__in=movie_list).distinct()
+
+                    # Fitler for Genre
+                    genre = Genre.objects.filter(name=form.cleaned_data["genre"]).first()
+                    if genre:
+                        movie_list = movie_list.filter(genres=genre)
+
+                    # Filter for Streaming Providers
+                    streamer = StreamingProvider.objects.filter(name=form.cleaned_data["streaming_provider"]).first()
+                    if streamer:
+                        movie_list = movie_list.filter(streaming_providers=streamer)
+
+                    # Filter for release year
+                    year_begin = form.cleaned_data["year_begin"]
+                    year_end = form.cleaned_data["year_end"]
+                    if year_begin and year_end:
+                        movie_list = movie_list.filter(release_year__range=(year_begin, year_end))
+
+                    # Filte for IMDB rating
+                    imdb_begin = form.cleaned_data["imdb_begin"]
+                    imdb_end = form.cleaned_data["imdb_end"]
+                    # TODO imdb rating is a ChatField in the movie model and you can't range it
+                    # if imdb_begin and imdb_end:
+                    #     movie_list = movie_list.filter(imdb_rating__range=(imdb_begin, imdb_end))
+                    
+
+                    # Setup Context for the frontend
+                    context['filter_watchlist'] = watchlist
+                    context['filter_genre'] = genre
+                    context['filter_streamer'] = streamer
+                    context['filter_year_begin'] = year_begin
+                    context['filter_year_end'] = year_end
+                    context['filter_imdb_begin'] = imdb_begin
+                    context['filter_imdb_end'] = imdb_end
+                    context['movie_list'] = movie_list
+                    return render(request, "watchlist.html", context)
+
+        # Setup Context for the frontend
+        context['filter_watchlist'] = watchlists[0]
+        context['movie_list'] = Movie.objects.filter(watchlistentry__watchlist=watchlists[0])
+        context["genres"] = Genre.objects.all().filter(movies__in=context['movie_list']).distinct()
+        context["streamers"] = StreamingProvider.objects.all().filter(movies__in=context['movie_list']).distinct()
+        return render(request, "watchlist.html", context)
+    return redirect('login')
+
+def searchBar(request):
+    context = {}
+    user = request.user
+    if user.is_authenticated:
+        context['watchlists'] = Watchlist.objects.filter(user=user)
+            
+    if request.method == 'POST':
+        form = NewWatchlistForm(request.POST)
+        if form.is_valid():
+            watchlist_name = form.save()
+            watchlist_name = form.cleaned_data.get('watchlist_name')
+            create_watchlist(request, watchlist_name=watchlist_name)
+            # add_movie_to_watchlist(request, user, watchlist_name)
+            messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
+
+            # Redirect to the homepage on successful sign up
+            return redirect('index')
+        else:
+            messages.error(request, "Watchlist creation failed")               
+    else:
+        form = NewWatchlistForm()
+    
+    context['watchlist_form'] = form
+    if request.method == 'GET':
+        query = request.GET.get('query')
+        context['query'] = query
+        if query:
+            movies = Movie.objects.filter(title__icontains=query)
+            context['searchedMovies'] = movies
+            return render(request, 'results.html', context)
+            # return render(request, 'results.html', 'searchedMovies': movies)
+        else:
+            print("No Info to show")
+            return render(request, 'results.html', context)
+
 
 # View function for the about page
 def about(request):
@@ -110,9 +239,9 @@ def four04(request):
 
 # View function for the password reset page
 def pwreset(request):
+    form = PasswordResetForm(request.POST or None)
     if request.method == "POST":
         # Define form information
-        form = PasswordResetForm(request.POST or None)
         try:
             if form.is_valid():
                 # get user using username from form
@@ -128,12 +257,10 @@ def pwreset(request):
                 raise Exception("Invalid Form")
         # post error message
         except ObjectDoesNotExist:
-            messages.error(request, "User Could not be Found or Doesn't Exist")
+            form.add_error(None, "User Could not be Found or Doesn't Exist")
         except Exception as e:
-            messages.error(request, str(e))
-    
-    
-    return render(request, "pwreset.html")
+            form.add_error(None, e)
+    return render(request, "pwreset.html", {"form": form})
 
 # View definition for password comfirmation page
 def pwresetconfirm(request, uidb64, token):
@@ -149,9 +276,9 @@ def pwresetconfirm(request, uidb64, token):
         # TODO change to redirect to 404 or failed page
         return redirect("index")
 
+    # Define form information
+    form = PasswordResetConfirmForm(request.POST or None)
     if request.method == "POST":
-        # Define form information
-        form = PasswordResetConfirmForm(request.POST or None)
         try:
             if form.is_valid():
                     # get password details from form
@@ -165,14 +292,13 @@ def pwresetconfirm(request, uidb64, token):
                     pass_reset.change_password(user, new_password_1)
 
                     # TODO redirect to a password change comfirmation page
-                    return redirect("index")
+                    return redirect("login")
             else:
                 raise Exception("Invalid Form")
         # post error message
         except Exception as e:
-            messages.error(request, e)
-    
-    return render(request, "pwresetconfirm.html")
+            form.add_error(None, e)
+    return render(request, "pwresetconfirm.html", {"form": form})
 
 '''
 # View function for the login page
@@ -204,6 +330,7 @@ def login_user(request):
             
         else:
             messages.error(request, "Invalid username or password")
+            form.add_error("username", "Invalid username or password")
 
     else:
         form = CustomAuthForm()
@@ -257,6 +384,7 @@ def faq(request):
 
 # Require user to be logged in to access this view
 @login_required  
+@require_POST
 def create_watchlist(request):
     ''' Create a watchlist. Requires user to be logged in. '''
     if request.method == 'POST':
@@ -305,7 +433,7 @@ def testdisplay(request):
 
 # Require user to be logged in to access this view
 @login_required  
-def add_movie_to_watchlist(request):
+def add_movie_to_watchlist(request, user, watchlist):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -316,7 +444,7 @@ def add_movie_to_watchlist(request):
             
             # Check if the movie is already in the watchlist
             if not WatchlistEntry.objects.filter(watchlist=watchlist, movie=movie).exists():
-                WatchlistEntry.objects.create(watchlist=watchlist, movie=movie)
+                WatchlistEntry.objects.create(watchlist=watchlist, movie=movie, user=user)
                 return JsonResponse({'success': True})
             else:
                 return JsonResponse({'success': False, 'error': 'Movie already in watchlist'})
@@ -332,19 +460,19 @@ def add_movie_to_watchlist(request):
 
 from .forms import NewWatchlistForm
 
-def create_watchlist(request):
-
-  if request.method == 'POST':
-    form = NewWatchlistForm(request.POST)
-    if form.is_valid():
-      watchlist = form.save(commit=True, user=request.user) 
-      return redirect('home')
-
-  else:
-    form = NewWatchlistForm()
-  
-  context = {'form': form}
-  return render(request, 'index.html', context)
+@login_required
+@require_POST
+def create_watchlist(request, watchlist_name):
+    try:
+        watchlist = Watchlist.objects.create(user=request.user, watchlist_name=watchlist_name)
+        watchlist.save()
+        return JsonResponse({'status': 'success', 'message': 'Watchlist created'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+    # form = NewWatchlistForm(request.POST)
+    # if form.is_valid():
+    #   watchlist = form.save(commit=True, user=request.user) 
+    #   return redirect('home')
 
 
 @login_required
@@ -353,7 +481,11 @@ def add_to_watchlist(request, watchlist_id, movie_id):
     try:
         watchlist = Watchlist.objects.get(pk=watchlist_id, user=request.user)
         movie = Movie.objects.get(pk=movie_id)
-        watchlist.movies.add(movie)
+        new_watchlist_entry = WatchlistEntry(
+            watchlist = watchlist,
+            movie = movie,
+        )
+        new_watchlist_entry.save()
         return JsonResponse({'status': 'success', 'message': 'Movie added to watchlist'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})

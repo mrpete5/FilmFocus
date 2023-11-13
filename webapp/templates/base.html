@@ -26,7 +26,7 @@
 </head>
 <body>
     <!-- header -->
-	<header class="header">
+	<header id ="header" class="header">
         {% block header %}
 
 		<div class="header__wrap">
@@ -56,10 +56,11 @@
 									</button>
 								</li>
 								<li class="header__nav-item header__nav-item--search">
-									<div class="header__search-inline">
-										<input type="text" id="searchInput" placeholder="Search for a movie">
-										<button id="clearButton" class="clear-button">X</button>
-									</div>
+									<form action="{% url 'search' %}" method="get">
+										{% csrf_token %}
+										<input type="text" name="query" placeholder="Search Movies">
+										<button type="submit">Search</button>
+									</form>										
 								</li>
 
 							</ul>

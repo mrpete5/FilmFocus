@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load my_filters %}
 {% block content %}
 
 <!DOCTYPE html>
@@ -38,37 +39,51 @@
 
 </head>
 <body class="body">
-		<!-- popup -->
-		{% if user.is_authenticated %}
+	<!-- popup -->
+	{% if user.is_authenticated %}
+
 		<div class="popup" id="popup">
 			<div class="popupInner">
 				<button id="closePopupAlt" class="x__popup">&#x2715</button>
 				<h2>Add to Watchlist</h2><br>
-
 				{% if watchlists %}
-					{% for list in watchlists %}
-						<p class="watchlist__title">{{ list.watchlist_name}} &nbsp; <button id="addToWatchlist"><img id="popup__add" src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark"></button> <br> </p>
-					{% endfor %}
-				{% else %}
-                    <p>You have no watchlists yet.</p>
-				{% endif %}
-
-				<br>
-				<button id="watchlistPopup" class="create__watchlist">CREATE NEW WATCHLIST</button>
 				
-				<div id="create-form" style="display:none;">
-					<form method="POST" action="#">
-					  {% csrf_token %}
-					  <input type="text" name="watchlist_name" placeholder="Watchlist Name">
-					  <input type="submit" value="Create">
-					</form>
+				<div class="watchlist__container">
+				{% for watchlist in watchlists %}
+					<div class="watchlist__item">
+						<p class="watchlist__title">{{ watchlist.watchlist_name }}</p>
+						{% if movie in watchlist.entries|get_movies %}
+							<button class="wlistremove__btn" onclick="removeFromWatchlist({{ watchlist.id }}, {{ movie.id }})">Remove</button>
+						{% else %}
+							<button class="wlistadd__btn" onclick="addToWatchlist( {{ watchlist.id}}, {{ movie.id}} )">Add</button>
+						{% endif %}
+					</div>
+				{% endfor %}
 				</div>
+
+				{% else %}
+
+					<p>You have no watchlists yet.</p>
+
+				{% endif %}
+				<br>
+
+				<!-- Create New Watchlist form -->
+				<form method="POST" class="wlist__form">
+					{% csrf_token %}
+					<div class="wlist__group">
+						{{ watchlist_form.watchlist_name }}
+						<button class="wlist__btn" type="submit">New Watchlist</button>
+					</div>
+				</form>
+				<!-- end Create New Watchlist form -->
 
 				<br>
 				<button id="closePopup" class="close__popup">CLOSE</button>
 			</div>
 		</div>
 	{% else %}
+
 		<div class="popup" id="popup">
 			<div class="popupInner">
 				<button id="closePopupAlt" class="x__popup">&#x2715</button>
@@ -77,6 +92,7 @@
 				<button id="closePopup" class="close__popup">CLOSE</button>
 			</div>
 		</div>
+		
 	{% endif %}
 	<!-- end popup -->
 	

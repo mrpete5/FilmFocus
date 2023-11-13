@@ -60,16 +60,12 @@
 								<p style="color: white;">Enter your new password and confirm.</p>
 							</div>
 							<!-- TODO: fix error message on form -->
-							<!-- error message breadcrumb -->
-							<!-- {% if messages %}
-							<div style="color: white;" class="alert alert-danger" role="alert">
-								<ul class="errorlist">
-									{% for message in messages %}
-									<li>{{ message }}</li>
-									{% endfor %}
-								</ul>
-							</div>
-							{% endif %} -->
+							<!-- error message -->
+							{% if form.non_field_errors %}
+                            <ul class="errorlist">
+								<li style="color: red;">{{ form.non_field_errors }}</li>
+                            </ul>
+                        	{% endif %}
 							<!-- input fields -->
 							<div class="sign__group">
 								<input type="password" class="sign__input" name="new_password_1" placeholder="New Password" id="id_password">
@@ -78,9 +74,7 @@
 							<div class="sign__group">
 								<input type="password" class="sign__input" name="new_password_2" placeholder="Confirm Password" id="id_confirmationPassword">
 								<div class="password-toggle2" onclick="toggleConfirmPasswordVisibility()"></div>
-							</div>
 							<!-- submit button -->
-							<div>
 								<button class="reset__send" type="submit">Reset Password</button>
 							</div>
 						</form>	

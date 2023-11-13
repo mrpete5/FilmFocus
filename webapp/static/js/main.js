@@ -97,6 +97,44 @@ $(document).ready(function () {
 	$(window).trigger('resize');
 
 	/*==============================
+	More Movies
+	==============================*/
+	$('.more_movies__carousel').owlCarousel({
+		mouseDrag: false,
+		touchDrag: false,
+		dots: false,
+		loop: true,
+		autoplay: false,
+		smartSpeed: 600,
+		margin: 0,
+		responsive : {
+			0 : {
+				items: 2,
+			},
+			576 : {
+				items: 2,
+			},
+			768 : {
+				items: 3,
+			},
+			992 : {
+				items: 6,
+			},
+			1200 : {
+				items: 6,
+			},
+		}
+	});
+
+	$('.more_movies__nav--next').on('click', function() {
+		$('.more_movies__carousel').trigger('next.owl.carousel');
+	});
+	$('.more_movies__nav--prev').on('click', function() {
+		$('.more_movies__carousel').trigger('prev.owl.carousel');
+	});
+
+
+	/*==============================
 	Tabs
 	==============================*/
 	$('.content__mobile-tabs-menu li').each( function() {
@@ -389,24 +427,30 @@ $(document).ready(function () {
 	function initializeFirstSlider() {
 		if ($('#filter__years').length) {
 			var firstSlider = document.getElementById('filter__years');
-			noUiSlider.create(firstSlider, {
-				range: {
-					'min': 2000,
-					'max': 2018
-				},
-				step: 1,
-				connect: true,
-				start: [2005, 2015],
-				format: wNumb({
-					decimals: 0,
-				})
-			});
 			var firstValues = [
 				document.getElementById('filter__years-start'),
 				document.getElementById('filter__years-end')
 			];
+			var yearForm = [
+				document.getElementById('hidden-year-begin'),
+				document.getElementById('hidden-year-end')
+			]
+			noUiSlider.create(firstSlider, {
+				range: {
+					'min': 1900,
+					'max': 2023
+				},
+				step: 1,
+				connect: true,
+				start: [yearForm[0].value, yearForm[1].value],
+				format: wNumb({
+					decimals: 0,
+				})
+			});
+
 			firstSlider.noUiSlider.on('update', function( values, handle ) {
 				firstValues[handle].innerHTML = values[handle];
+				yearForm[handle].value = values[handle];
 			});
 		} else {
 			return false;
@@ -419,6 +463,15 @@ $(document).ready(function () {
 	function initializeSecondSlider() {
 		if ($('#filter__imbd').length) {
 			var secondSlider = document.getElementById('filter__imbd');
+			var secondValues = [
+				document.getElementById('filter__imbd-start'),
+				document.getElementById('filter__imbd-end')
+			];
+			var imdbForm = [
+				document.getElementById('hidden-imdb-begin'),
+				document.getElementById('hidden-imdb-end')
+			]
+
 			noUiSlider.create(secondSlider, {
 				range: {
 					'min': 0,
@@ -426,19 +479,15 @@ $(document).ready(function () {
 				},
 				step: 0.1,
 				connect: true,
-				start: [2.5, 8.6],
+				start: [imdbForm[0].value, imdbForm[1].value],
 				format: wNumb({
 					decimals: 1,
 				})
 			});
 
-			var secondValues = [
-				document.getElementById('filter__imbd-start'),
-				document.getElementById('filter__imbd-end')
-			];
-
 			secondSlider.noUiSlider.on('update', function( values, handle ) {
 				secondValues[handle].innerHTML = values[handle];
+				imdbForm[handle].value = values[handle];
 			});
 
 			$('.filter__item-menu--range').on('click.bs.dropdown', function (e) {
@@ -451,35 +500,6 @@ $(document).ready(function () {
 		return false;
 	}
 	$(window).on('load', initializeSecondSlider());
-
-	/*3*/
-	function initializeThirdSlider() {
-		if ($('#slider__rating').length) {
-			var thirdSlider = document.getElementById('slider__rating');
-			noUiSlider.create(thirdSlider, {
-				range: {
-					'min': 0,
-					'max': 10
-				},
-				connect: [true, false],
-				step: 0.1,
-				start: 8.6,
-				format: wNumb({
-					decimals: 1,
-				})
-			});
-
-			var thirdValue = document.getElementById('form__slider-value');
-
-			thirdSlider.noUiSlider.on('update', function( values, handle ) {
-				thirdValue.innerHTML = values[handle];
-			});
-		} else {
-			return false;
-		}
-		return false;
-	}
-	$(window).on('load', initializeThirdSlider());
 
 	/*==============================
 	Clear Button
@@ -515,32 +535,83 @@ $(document).ready(function () {
 	const closeBtn = document.getElementById("closePopup");
 	const xBtn = document.getElementById("closePopupAlt");
 	const popup = document.getElementById("popup");
-	console.log(popup);
+	const header = document.getElementById("header");
+	document.body.style.marginRight = 'calc(-1 * (100vw - 100%))'; // Accounts for scroll bar to prevent content shifting
+	header.style.right = 'calc(-1 * (100vw - 100%))'; // Accounts for scroll bar to prevent content shifting
+	//document.body.style.overflowX = 'hidden';
 
 	// Open the popup
 	openBtn.forEach(x => x.addEventListener("click", () => {
-		// console.log("clicked");		# Leave for testing purposes, modify as needed
+		// console.log("clicked");		// Leave for testing purposes, modify as needed
 		popup.classList.add("open");
+		document.body.style.top = `-${window.scrollY}px`; // keeps your place on the main page when popup happens
+		document.body.style.position = 'fixed';
+		//document.body.style.overflowX = 'hidden';
+		document.body.style.left = '0';
+		document.body.style.right = '0';
+		
+		popup.setAttribute('movie_id', x.getAttribute('movie_id'))
 	}))
 
 	// Close the popup
+	if (closeBtn) {
 	closeBtn.addEventListener("click", () => {
+		const scrollY = document.body.style.top;
+		document.body.style.position = '';
+		document.body.style.top = '';
+		window.scrollTo(0, parseInt(scrollY || '0') * -1); //restores your page position
 		popup.classList.remove("open");
-	})
+	})}
 	// Close the popup with the x button
+	if (xBtn) {
 	xBtn.addEventListener("click", () => {
+		const scrollY = document.body.style.top;
+		document.body.style.position = '';
+		document.body.style.top = '';
+		window.scrollTo(0, parseInt(scrollY || '0') * -1); //restores your page position
 		popup.classList.remove("open");
-	})
+	})}
 	// Redirect to login on click
 	const loginBtn = document.getElementById("loginPopup");
+	if (loginBtn) {
 	loginBtn.addEventListener("click", () => {
 		window.location.href = "/login/";	// redirect to login page
-    })
+	})}
 
 
 	/*==============================
 	Popup add movie to watchlist
 	==============================*/
+	// Get Buttons
+	const wlistadd_btn = document.querySelectorAll(".wlistadd__btn"); 
+	
+	// Make Request to Add Movie to Watchlist
+	wlistadd_btn.forEach(x => x.addEventListener("click", async () => {
+		const watchlist_id = x.getAttribute('watchlist_id')
+		const movie_id = popup.getAttribute('movie_id')
+
+		const url = `/add_to_watchlist/${watchlist_id}/${movie_id}/`;
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		try {
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'X-CSRFToken': csrfToken
+				}
+			});
+
+			const data = await response.json();
+
+			if (data.status === 'success') {
+				alert(data.message);
+			} else {
+				alert("Movie already in watchlist");
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}))
 	// STILL NOT WORKING, leaving this commented out for now
 	// // Add movie to watchlist on click
 	// const addToWatchlistBtn = document.getElementById('addToWatchlist');
@@ -590,69 +661,84 @@ $(document).ready(function () {
 	
 
 
-	// Get DOM elements
-	// const addToWatchlistBtn = document.getElementById('addToWatchlist');
+	// // Get DOM elements
+	// // const addToWatchlistBtn = document.getElementById('addToWatchlist');
 
-	addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
+	// addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
 
-	// Handle click event
-	const handleAddToWatchlistClick = () => {
+	// // Handle click event
+	// const handleAddToWatchlistClick = () => {
 
-		// Get movieId and watchlistId from data attributes
-		const movieId = addToWatchlistBtn.dataset.movieId; 
-		const watchlistId = addToWatchlistBtn.dataset.watchlistId;
+	// 	// Get movieId and watchlistId from data attributes
+	// 	const movieId = addToWatchlistBtn.dataset.movieId; 
+	// 	const watchlistId = addToWatchlistBtn.dataset.watchlistId;
 
-		// Call addToWatchlist function 
-		addToWatchlist(movieId, watchlistId)
-			.then(handleResponse) 
-			.catch(handleError);
+	// 	// Call addToWatchlist function 
+	// 	addToWatchlist(movieId, watchlistId)
+	// 		.then(handleResponse) 
+	// 		.catch(handleError);
 
-		// add_movie_to_watchlist(movieId, watchlistId) // Testing this as possible solution
-	}
+	// 	// add_movie_to_watchlist(movieId, watchlistId) // Testing this as possible solution
+	// }
 
-	// Make POST request to add movie to watchlist
-	const addToWatchlist = async (movieId, watchlistId) => {
+	// // Make POST request to add movie to watchlist
+	// const addToWatchlist = async (movieId, watchlistId) => {
 
-	// POST data
-	const data = {
-		movie_id: movieId,
-		watchlist_id: watchlistId
-	};
+	// // POST data
+	// const data = {
+	// 	movie_id: movieId,
+	// 	watchlist_id: watchlistId
+	// };
 
-	// Request options
-	const options = {
-		method: 'POST',
-		headers: {
-		'Content-Type': 'application/json',
-		'X-CSRFToken': csrftoken  
-		},
-		body: JSON.stringify(data)
-	};
+	// // Request options
+	// const options = {
+	// 	method: 'POST',
+	// 	headers: {
+	// 	'Content-Type': 'application/json',
+	// 	'X-CSRFToken': csrftoken  
+	// 	},
+	// 	body: JSON.stringify(data)
+	// };
 
-	// Make request and return response
-	return fetch('/add-to-watchlist/', options)
-		.then(res => res.json());
+	// // Make request and return response
+	// return fetch('/add-to-watchlist/', options)
+	// 	.then(res => res.json());
 
-	}
+	// }
 
-	// Handle successful response 
-	const handleResponse = (response) => {
-	if (response.success) {
-		// Movie added, update UI
-	} else {
-		// Show error 
-	}
-	}
+	// // Handle successful response 
+	// const handleResponse = (response) => {
+	// if (response.success) {
+	// 	// Movie added, update UI
+	// } else {
+	// 	// Show error 
+	// }
+	// }
 
-	// Handle errors
-	const handleError = (error) => {
-	console.error(error);
-	}
+	// // Handle errors
+	// const handleError = (error) => {
+	// console.error(error);
+	// }
 
-	// Event listener
-	addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
+	// // Event listener
+	// addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
 
 
+
+	/*==============================
+    Select Watchlist to Display
+    ==============================*/
+	// Get Input Fields for Form
+	const watchlist_items = document.querySelectorAll(".watchlist-dropdown-option")
+	const form_watchlist_id = document.getElementById("hidden-watchlist-id")
+
+	// Event Handler for Dropdown Menu of Filtering Watchlist
+	watchlist_items.forEach(x => {
+		x.addEventListener('click', () => {
+			const watchlist_id = x.getAttribute('watchlist_id')
+			form_watchlist_id.value = watchlist_id
+		});
+	  });
 });
 
 

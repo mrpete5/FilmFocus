@@ -65,6 +65,11 @@
 								<label for="remember">Remember Me</label>
 							</div>
 							
+							<!-- error message -->
+							{% if login_form.username.errors %}
+								<label style="color: red;">{{ login_form.username.errors }}</label>
+                        	{% endif %}
+
 							<button class="sign__btn" type="submit">Log in</button>
 
 							<span class="sign__text">Don't have an account? <a href="/signup/">Sign up!</a></span>
