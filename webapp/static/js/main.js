@@ -28,6 +28,46 @@ $(document).ready(function () {
 			$('.body').toggleClass('body--active');
 		}
 	});
+	const searchbar = document.getElementById("searchbar");
+	const searchbar_queries = document.getElementById("searchbar-queries");
+	var searchbar_timeout;
+	async function get_searchbar_queries(input_value) {
+		if (input_value.length >= 3) {
+			const url = "/searchbar/"+input_value;
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+			const response = await fetch(url, {
+				method: 'GET',
+				headers: {
+					'X-CSRFToken': csrfToken
+				}
+			});
+
+			if (response.ok) {
+				const data = await response.text();
+				searchbar_queries.innerHTML = data;
+			}
+
+		}
+	}
+	function clear_searchbar_queries() {
+		clearTimeout(searchbar_timeout);
+		searchbar_queries.innerHTML = "";
+	}
+	searchbar.addEventListener('input', function() {
+		clearTimeout(searchbar_timeout);
+    
+		// Start a new timer to detect when typing stops
+		searchbar_timeout = setTimeout(function () {
+			get_searchbar_queries(searchbar.value)
+		}, 500);
+	})
+	searchbar.addEventListener('click', function() {get_searchbar_queries(this.value)});
+	searchbar.addEventListener('blur', function(event) {
+		if (event.relatedTarget && event.relatedTarget.classList.contains("searchbar-query"))
+			return;
+		clear_searchbar_queries();
+	})
 
 	/*==============================
 	Home

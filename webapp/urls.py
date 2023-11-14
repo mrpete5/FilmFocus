@@ -41,5 +41,6 @@ urlpatterns = [
     path("faq/", views.faq, name="faq"),
     path("testdisplay/", views.testdisplay, name="testdisplay"),
     path("testforban/", views.testforban, name="testforban"),
-    path("search/", views.searchBar, name="search")
+    path("search/", views.searchBar, name="search"),
+    path("searchbar/<str:query>", views.searchbar, name="searchbar")
 ]

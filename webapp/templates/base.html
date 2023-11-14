@@ -58,9 +58,9 @@
 								<li class="header__nav-item header__nav-item--search">
 									<form action="{% url 'search' %}" method="get">
 										{% csrf_token %}
-										<input type="text" name="query" placeholder="Search Movies">
+										<input id="searchbar" type="text" name="query" placeholder="Search Movies">
 										<button type="submit">Search</button>
-									</form>										
+									</form>							
 								</li>
 
 							</ul>
@@ -110,8 +110,10 @@
 		</div>
 
         {% endblock %}
+		<div id="searchbar-queries"></div>	
 	</header>
 	<!-- end header -->
+
 
     <main>
         {% block content %}{% endblock %}

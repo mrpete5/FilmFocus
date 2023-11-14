@@ -234,6 +234,12 @@ def searchBar(request):
         else:
             print("No Info to show")
             return render(request, 'results.html', context)
+def searchbar(request, query):
+    if request.method == 'GET':
+        movies = Movie.objects.filter(title__icontains=query)
+        return render(request, "searchbar.html", {"movies":movies[:2]})
+
+
 
 # View function for the about page
 def about(request):
