@@ -24,6 +24,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path('movie/<slug:movie_slug>/', views.movie_detail, name='movie_detail'),
     path('add_to_watchlist/<int:watchlist_id>/<int:movie_id>/', views.add_to_watchlist, name='add_to_watchlist'),
+    path('create_watchlist/<str:watchlist_name>', views.create_watchlist, name='create_watchlist'),
     path("watchlist/", views.watchlist, name="watchlist"),
     path("about/", views.about, name="about"),
     path("404/", views.four04, name="404"),
@@ -42,5 +43,6 @@ urlpatterns = [
     path("testdisplay/", views.testdisplay, name="testdisplay"),
     path("testforban/", views.testforban, name="testforban"),
     path("search/", views.searchBar, name="search"),
-    path("searchbar/<str:query>", views.searchbar, name="searchbar")
+    path("searchbar/<str:query>", views.searchbar, name="searchbar"),
+    path("popup/<int:movie_id>", views.popup, name="popup"),
 ]

@@ -118,7 +118,6 @@ def movie_detail(request, movie_slug):
 
     return render(request, 'details.html', context)
 
-
 # View function for the movie watchlists page
 def watchlist(request):
     user = request.user
@@ -239,6 +238,14 @@ def searchbar(request, query):
         movies = Movie.objects.filter(title__icontains=query)
         return render(request, "searchbar.html", {"movies":movies[:2]})
 
+def popup(request, movie_id):
+    context = {}
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            context["watchlists"] = Watchlist.objects.filter(user=request.user)
+        context["movie"] = Movie.objects.get(pk=movie_id)
+        context["movie_in_watchlists"] = Watchlist.objects.filter(entries__movie=context["movie"]).distinct()
+        return render(request, "popup.html", context)
 
 
 # View function for the about page
@@ -394,21 +401,6 @@ def faq(request):
     return render(request, "faq.html")
 
 
-# Require user to be logged in to access this view
-@login_required  
-@require_POST
-def create_watchlist(request):
-    ''' Create a watchlist. Requires user to be logged in. '''
-    if request.method == 'POST':
-        name = request.POST.get('watchlist_name')
-        if name:
-            watchlist = Watchlist(user=request.user, name=name)
-            watchlist.save()
-        return redirect('home')
-        
-    return render(request, 'create.html')
-
-
 # Test page that displays posters for potential movie banning
 def testforban(request):
     start_date = "2023-10-01"  # Range of movies to display
@@ -466,7 +458,29 @@ def add_movie_to_watchlist(request, user, watchlist):
             return JsonResponse({'success': False, 'error': 'Invalid data format'})
     else:
         raise Http404
+    
 
+# Require user to be logged in to access this view
+@login_required  
+@require_POST
+def create_watchlist(request, watchlist_name):
+    ''' Create a watchlist. Requires user to be logged in. '''
+    if request.method == 'POST':
+        try:
+            if len(watchlist_name) < 1:
+                return JsonResponse({'success': False, 'error': 'Invalid watchlist name'})
+            if not Watchlist.objects.filter(user=request.user, name=watchlist_name).exist():
+                Watchlist.objects.create(user=request.user, name=watchlist_name)
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Watchlist already exists'})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
+        except KeyError:
+            return JsonResponse({'success': False, 'error': 'Invalid data format'})
+    else:
+        raise Http404
+            
 
 
 

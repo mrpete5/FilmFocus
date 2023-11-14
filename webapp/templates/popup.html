@@ -1,0 +1,46 @@
+
+{% if user.is_authenticated %}
+    <div class="popupInner">
+        <button id="closePopupAlt" class="x__popup">&#x2715</button>
+        <h2>Add to Watchlist</h2><br>
+        {% if watchlists %}
+        <div class="watchlist__container">
+        {% for watchlist in watchlists %}
+            <div class="watchlist__item">
+                <p class="watchlist__title">{{ watchlist.watchlist_name }}</p>
+                {% if watchlist in movie_in_watchlists %}
+                    <button class="wlistremove__btn" watchlist_id="{{ watchlist.id }}">Remove</button>
+                {% else %}
+                    <button class="wlistadd__btn" watchlist_id="{{ watchlist.id }}">Add</button>
+                {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+
+        {% else %}
+
+            <p>You have no watchlists yet.</p>
+
+        {% endif %}
+        <br>
+
+        <!-- Create New Watchlist form -->
+        <div class="wlist__form">
+            <div class="wlist__group">
+                <input id="wlistinput" class="wlist__input" placeholder="New Watchlist Name" type="text">
+                <button id="wlistbtn" class="wlist__btn" type="submit">New Watchlist</button>
+            </div>
+        </div>
+        <!-- end Create New Watchlist form -->
+
+        <br>
+        <button id="closePopup" class="close__popup">CLOSE</button>
+    </div>
+{% else %}
+    <div class="popupInner">
+        <button id="closePopupAlt" class="x__popup">&#x2715</button>
+        <h2>Log In to Add to Your Watchlist</h2><br>
+        <button id="loginPopup" class="login__popup">LOG IN</button><br>
+        <button id="closePopup" class="close__popup">CLOSE</button>
+    </div>
+{% endif %}
