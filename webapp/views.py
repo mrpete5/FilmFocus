@@ -434,56 +434,6 @@ def testdisplay(request):
     movies_to_display = handle_test_display_page(settings)
     return render(request, "testdisplay.html", {"movies": movies_to_display})
 
-
-# Require user to be logged in to access this view
-@login_required  
-def add_movie_to_watchlist(request, user, watchlist):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            movie_id = data.get('movie_id')
-            watchlist_id = data.get('watchlist_id')
-            movie = get_object_or_404(Movie, id=movie_id)
-            watchlist = get_object_or_404(Watchlist, id=watchlist_id, user=request.user)
-            
-            # Check if the movie is already in the watchlist
-            if not WatchlistEntry.objects.filter(watchlist=watchlist, movie=movie).exists():
-                WatchlistEntry.objects.create(watchlist=watchlist, movie=movie, user=user)
-                return JsonResponse({'success': True})
-            else:
-                return JsonResponse({'success': False, 'error': 'Movie already in watchlist'})
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
-        except KeyError:
-            return JsonResponse({'success': False, 'error': 'Invalid data format'})
-    else:
-        raise Http404
-    
-
-# Require user to be logged in to access this view
-@login_required  
-@require_POST
-def create_watchlist(request, watchlist_name):
-    ''' Create a watchlist. Requires user to be logged in. '''
-    if request.method == 'POST':
-        try:
-            if len(watchlist_name) < 1:
-                return JsonResponse({'success': False, 'error': 'Invalid watchlist name'})
-            if not Watchlist.objects.filter(user=request.user, name=watchlist_name).exist():
-                Watchlist.objects.create(user=request.user, name=watchlist_name)
-                return JsonResponse({'success': True})
-            else:
-                return JsonResponse({'success': False, 'error': 'Watchlist already exists'})
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
-        except KeyError:
-            return JsonResponse({'success': False, 'error': 'Invalid data format'})
-    else:
-        raise Http404
-            
-
-
-
 from .forms import NewWatchlistForm
 
 @login_required
@@ -495,11 +445,19 @@ def create_watchlist(request, watchlist_name):
         return JsonResponse({'status': 'success', 'message': 'Watchlist created'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
-    # form = NewWatchlistForm(request.POST)
-    # if form.is_valid():
-    #   watchlist = form.save(commit=True, user=request.user) 
-    #   return redirect('home')
 
+@login_required
+@require_POST
+def remove_watchlist(request, watchlist_id):
+    try:
+        watchlist = Watchlist.objects.get(user=request.user, pk=watchlist_id)
+        watchlist_entries = WatchlistEntry.objects.filter(watchlist=watchlist)
+        for entry in watchlist_entries:
+            entry.delete()
+        watchlist.delete()
+        return JsonResponse({'status': 'success', 'message': 'Watchlist removed'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
 
 @login_required
 @require_POST
@@ -516,14 +474,14 @@ def add_to_watchlist(request, watchlist_id, movie_id):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
 
-
 @login_required
 @require_POST
 def remove_from_watchlist(request, watchlist_id, movie_id):
     try:
         watchlist = Watchlist.objects.get(pk=watchlist_id, user=request.user)
         movie = Movie.objects.get(pk=movie_id)
-        watchlist.movies.remove(movie)
+        watchlist_entry = WatchlistEntry.objects.get(watchlist=watchlist, movie=movie)
+        watchlist_entry.delete()
         return JsonResponse({'status': 'success', 'message': 'Movie removed from watchlist'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})

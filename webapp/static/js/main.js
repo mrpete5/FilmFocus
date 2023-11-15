@@ -606,6 +606,7 @@ $(document).ready(function () {
 			if (popupLogin) popup_login_event_handler(popupLogin);
 			if (createWatchlistPopup) create_watchlist_event_handler(createWatchlistPopup);
 			add_movie_to_watchlist_event_handler();
+			remove_movie_from_watchlist_event_handler();
 		}
 	}
 	async function open_popup() {
@@ -654,12 +655,40 @@ $(document).ready(function () {
 				});
 	
 				const data = await response.json();
+				alert(data.message);
 	
 				if (data.status === 'success') {
-					alert(data.message);
 					request_popup(popup_movie_id);
-				} else {
-					alert("Movie already in watchlist");
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		}))
+	}
+	function remove_movie_from_watchlist_event_handler() {
+		// Get Buttons
+		const wlistremove_btn = document.querySelectorAll(".wlistremove__btn"); 
+	
+		// Make Request to Add Movie to Watchlist
+		wlistremove_btn.forEach(x => x.addEventListener("click", async () => {
+			const watchlist_id = x.getAttribute('watchlist_id')
+	
+			const url = `/remove_from_watchlist/${watchlist_id}/${popup_movie_id}/`;
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+	
+			try {
+				const response = await fetch(url, {
+					method: 'POST',
+					headers: {
+						'X-CSRFToken': csrfToken
+					}
+				});
+	
+				const data = await response.json();
+				alert(data.message);
+	
+				if (data.status === 'success') {
+					request_popup(popup_movie_id);
 				}
 			} catch (error) {
 				console.error(error);
@@ -670,7 +699,7 @@ $(document).ready(function () {
 		x.addEventListener("click", async () => {
 			const wlistinput = x.parentNode.querySelector("#wlistinput");
 	
-			const url = `/create_watchlist/`+wlistinput.value;
+			const url = `/create_watchlist/${wlistinput.value}/`;
 			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
 	
 			try {
