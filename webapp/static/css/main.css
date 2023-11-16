@@ -4309,13 +4309,17 @@ User Profile Page
 .friends_block{
   color: #fff;
   position: sticky;
-  left: 150px;
+  left: 300px;
+  width: 300px;
+  margin-top: 10px;
 }
 
 .watchlist_block{
   color: #fff;
   position: sticky;
-  right: 150px;
+  right: 300px;
+  width: 300px;
+  margin-top: 10px;
 }
 
 .friends_block_title{

@@ -70,14 +70,14 @@
 		<div class="container">
 			<div class="row">
 				<div class="friends_block">
-					<h3 class="friends_block_title">Your Friends</h3>
+					<h3 class="friends_block_title">Friends</h3>
 					<a href="/profile/"><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle;"></a>
 					<h3>Traizen McKown<br> @traizen</h3>
 				</div>
 
                 <div class="prof_divider"></div>
 				<div class="watchlist_block">
-					<h3 class="wlist_block_title">Your Watchlists</h3>
+					<h3 class="wlist_block_title">Watchlists</h3>
 					<ul>
 						{% for watchlist in watchlists %}
 							<li watchlist_id="{{watchlist.id}}">{{ watchlist.watchlist_name }}</li>
