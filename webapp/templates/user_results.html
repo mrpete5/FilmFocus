@@ -64,7 +64,11 @@
                                     </a>
                                     <div class="card__content">
                                         <h3 class="card__title" style="text-align: center;"><a>@{{ user.user }}</a></h3>
+                                        {% if isFriend %}
                                         <center><button class="add_friend__btn" type="button">Add Friend</button></center>
+                                        {% else %}
+                                        <center><button class="remove_friend__btn" type="button">Remove Friend</button></center>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
