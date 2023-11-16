@@ -56,15 +56,15 @@
                             {% for user in searchedUsers %}
                             <!-- card -->
                             <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                                <div class="card">
+                                <div class="user_card">
                                     <a>
-                                        <div class="profile__cover">
+                                        <div>
                                             <center><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 90px;"></center>
                                         </div>
                                     </a>
-                                    <div class="card__content">
-                                        <h3 class="card__title" style="text-align: center;"><a>@{{ user.user }}</a></h3>
-                                        {% if isFriend %}
+                                    <div class="user_card__content">
+                                        <h3 class="user_card__title" style="text-align: center;"><a>@{{ user.user }}</a></h3>
+                                        {% if friends %}
                                         <center><button class="add_friend__btn" type="button">Add Friend</button></center>
                                         {% else %}
                                         <center><button class="remove_friend__btn" type="button">Remove Friend</button></center>

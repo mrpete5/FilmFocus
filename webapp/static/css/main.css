@@ -4416,7 +4416,7 @@ User Profile Page
 }
 
 /*==============================
-	Add Movie Popup
+	User Results Page
 ==============================*/
 .add_friend__btn {
   display: flex;
@@ -4456,5 +4456,24 @@ User Profile Page
   text-transform: uppercase;
   font-weight: 500;
   letter-spacing: 1px;
-  margin: 20px auto 0
+  margin: 5px auto 0
+}
+.user_card {
+  margin-bottom: 20px;
+}
+.user_card__content {
+  position: relative;
+  display: block;
+  margin-top: 2px;
+}
+.user_card__title {
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
+  overflow: visible;
+  white-space: normal;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  word-wrap: break-word;
 }
