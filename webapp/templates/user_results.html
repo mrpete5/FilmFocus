@@ -49,23 +49,32 @@
                         <h2 class="content__title"><b>Search Results For: '{{ query }}'</b></h2>
                     </div>
                     <!-- end content title -->
-                    {% if searchedUsers %}
-
-                    {% for user in searchedUsers %}
                     <div class="container">
                         <div class="row">
+                            {% if searchedUsers %}
+
+                            {% for user in searchedUsers %}
                             <!-- card -->
-                            <div class="card">
-                                {{ user.user }}
+                            <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                                <div class="card">
+                                    <a>
+                                        <div class="profile__cover">
+                                            <img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 100px;">
+                                        </div>
+                                    </a>
+                                    <div class="card__content">
+                                        <h3 class="card__title"><a>{{ user.user }}</a></h3>
+                                    </div>
+                                </div>
                             </div>
                             <!-- end card -->
-                        </div>
-                    </div>
+
                     {% endfor %}
 
                     {% else %}
                     <div class="search__fail"><h2><b>No Users Found</b></h2></div>
                     {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
