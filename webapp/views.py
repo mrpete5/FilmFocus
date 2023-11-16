@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse, Http404
 from django.contrib import messages
-from .models import Movie, Watchlist, WatchlistEntry
+from .models import Movie, Watchlist, WatchlistEntry, UserProfile
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import (
     NewUserForm,
@@ -251,6 +251,15 @@ def popup(request, movie_id):
 # View function for the about page
 def about(request):
     return render(request, "about.html")
+
+# View function for the user profile page
+def profile(request):
+    context = {}
+    user = request.user
+    if user.is_authenticated:
+        context['user_profile'] = UserProfile.objects.get(user=user)
+        context['watchlists'] = Watchlist.objects.filter(user=user)
+    return render(request, "userprofile.html", context)
 
 # View function for the 404 error page
 def four04(request):

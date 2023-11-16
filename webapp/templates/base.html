@@ -68,12 +68,18 @@
 
 							<!-- Log In or Log Out -->
 							{% if user.is_authenticated %}
-							
+
+								<div class="header__user_photo">
+									<a href="/profile/"><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 10px;"></a>
+								</div>
+
 								<!-- Welcome user message -->
 								<div class="header__user_welcome">
 									<span class="welcome-text">Hello,</span>
 									<span class="username">{{ user.username }}!</span>  
 								</div>
+
+
 								<!-- end Welcome user message -->
 
 								<!-- Log out header auth -->

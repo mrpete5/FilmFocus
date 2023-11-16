@@ -165,6 +165,7 @@ class UserProfile(models.Model):
     """Model representing user profiles with additional information and friend relationships."""
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  # links to built-in Django User model
     friends = models.ManyToManyField('self', blank=True)
+    biography = models.CharField(max_length=300, blank=True)
     
 
 class Watchlist(models.Model):
