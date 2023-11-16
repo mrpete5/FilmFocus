@@ -66,7 +66,6 @@ class Movie(models.Model):
         
         recommended_movies = []
         processed_movies = set()  # Keep track of processed movies to avoid duplicates
-        
         fetches_per_second = 20  # Updated to 20 requests per second as per requirement
 
         # Semaphore to limit the number of concurrent API fetches
@@ -166,6 +165,9 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  # links to built-in Django User model
     friends = models.ManyToManyField('self', blank=True)
     biography = models.CharField(max_length=300, blank=True)
+    
+    def __str__(self):
+        return f"{self.user.username}"
     
 
 class Watchlist(models.Model):
