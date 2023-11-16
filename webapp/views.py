@@ -57,7 +57,6 @@ def index(request):
             watchlist_name = form.save()
             watchlist_name = form.cleaned_data.get('watchlist_name')
             create_watchlist(request, watchlist_name=watchlist_name)
-            # add_movie_to_watchlist(request, user, watchlist_name)
             messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
 
             # Redirect to the homepage on successful sign up
@@ -95,7 +94,6 @@ def movie_detail(request, movie_slug):
             if form.is_valid():
                 watchlist_name = form.save()
                 watchlist_name = form.cleaned_data.get('watchlist_name')
-                add_movie_to_watchlist(request, user, watchlist_name)
                 messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
 
                 # Redirect to the details on successful sign up
@@ -172,7 +170,6 @@ def watchlist(request):
                     # if imdb_begin and imdb_end:
                     #     movie_list = movie_list.filter(imdb_rating__range=(imdb_begin, imdb_end))
                     
-
                     # Setup Context for the frontend
                     context['filter_watchlist'] = watchlist
                     context['filter_genre'] = genre
@@ -204,7 +201,6 @@ def searchBar(request):
             watchlist_name = form.save()
             watchlist_name = form.cleaned_data.get('watchlist_name')
             create_watchlist(request, watchlist_name=watchlist_name)
-            # add_movie_to_watchlist(request, user, watchlist_name)
             messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
 
             # Redirect to the homepage on successful sign up
@@ -410,41 +406,6 @@ def faq(request):
     return render(request, "faq.html")
 
 
-# Test page that displays posters for potential movie banning
-def testforban(request):
-    start_date = "2023-10-01"  # Range of movies to display
-    end_date = "2023-12-30"
-
-    movies_to_display = handle_test_for_ban(start_date, end_date)
-    return render(request, "testforban.html", {"movies": movies_to_display})
-
-
-# Test page that handles data fetch calls and displays movies
-def testdisplay(request):
-    # Always set these flags as False before committing changes
-    erase_movie_db = False                # USE WITH CAUTION, erases all movie database contents
-    init_movie_db = False                 # Performs Popular fetch from TMDB 
-    get_now_playing = False               # Performs Now Playing fetch from TMDB
-    update_streaming = False              # Updates all movie streaming providers from TMDB, takes a while
-    update_recs = False                   # Updates all movie recommendations from TMDB, takes a while
-    get_discover_movies = False           # Fetches all discover movies from TMDB, takes a while
-    update_letterboxd = False             # Updates all movie letterboxd info from webscraper, takes a while
-    
-    # Add all tests into settings list
-    settings = [erase_movie_db,         # USE WITH CAUTION
-                init_movie_db,
-                get_now_playing,        
-                update_streaming,       # Takes a while
-                update_recs,            # Takes a while
-                get_discover_movies,    # Takes a while
-                update_letterboxd,      # Takes a while
-                ]
-  
-    movies_to_display = handle_test_display_page(settings)
-    return render(request, "testdisplay.html", {"movies": movies_to_display})
-
-from .forms import NewWatchlistForm
-
 @login_required
 @require_POST
 def create_watchlist(request, watchlist_name):
@@ -495,3 +456,36 @@ def remove_from_watchlist(request, watchlist_id, movie_id):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
 
+
+# Test page that displays posters for potential movie banning
+def testforban(request):
+    start_date = "2023-10-01"  # Range of movies to display
+    end_date = "2023-12-30"
+
+    movies_to_display = handle_test_for_ban(start_date, end_date)
+    return render(request, "testforban.html", {"movies": movies_to_display})
+
+
+# Test page that handles data fetch calls and displays movies
+def testdisplay(request):
+    # Always set these flags as False before committing changes
+    erase_movie_db = False                # USE WITH CAUTION, erases all movie database contents
+    init_movie_db = False                 # Performs Popular fetch from TMDB 
+    get_now_playing = False               # Performs Now Playing fetch from TMDB
+    update_streaming = False              # Updates all movie streaming providers from TMDB, takes a while
+    update_recs = False                   # Updates all movie recommendations from TMDB, takes a while
+    get_discover_movies = False           # Fetches all discover movies from TMDB, takes a while
+    update_letterboxd = False             # Updates all movie letterboxd info from webscraper, takes a while
+    
+    # Add all tests into settings list
+    settings = [erase_movie_db,         # USE WITH CAUTION
+                init_movie_db,
+                get_now_playing,        
+                update_streaming,       # Takes a while
+                update_recs,            # Takes a while
+                get_discover_movies,    # Takes a while
+                update_letterboxd,      # Takes a while
+                ]
+  
+    movies_to_display = handle_test_display_page(settings)
+    return render(request, "testdisplay.html", {"movies": movies_to_display})
