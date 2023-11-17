@@ -759,5 +759,25 @@ $(document).ready(function () {
 			form_watchlist_id.value = watchlist_id
 		});
 	  });
+
+	/*==============================
+	Profile Edit Popup Buttons
+	==============================*/
+	async function request_popup_profile_edit() {
+		const url = "/edit_profile_popup/";
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'X-CSRFToken': csrfToken
+			}
+		});
+
+		if (response.ok) {
+			const data = await response.text();
+			popup.innerHTML = data;
+		}
+	}
 });
 
