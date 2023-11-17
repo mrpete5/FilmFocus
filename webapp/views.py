@@ -249,12 +249,16 @@ def about(request):
     return render(request, "about.html")
 
 # View function for the user profile page
-def profile(request):
+def profile(request, profile_name):
     context = {}
+    profile = UserProfile.objects.get(user__username=profile_name)
+
+    context['user_profile'] = profile
+    context['watchlists'] = Watchlist.objects.filter(user=profile.user)
+
     user = request.user
     if user.is_authenticated:
-        context['user_profile'] = UserProfile.objects.get(user=user)
-        context['watchlists'] = Watchlist.objects.filter(user=user)
+        context['is_self'] = user == profile.user
     return render(request, "userprofile.html", context)
 
 # View function for the 404 error page
