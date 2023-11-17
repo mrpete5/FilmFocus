@@ -4287,9 +4287,25 @@ User Profile Page
   margin-left: 100px;
   position: sticky;
   display: flex;
+  flex-direction: row;  
+  align-items: center;
+  gap: 15px;
+}
+.profile__photo {
+  display: block;
+  order: 1;
+}
+.profile__info {
+  display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
+  order: 2;
+}
+.profile__username {
+  margin: 0;
+  color: #fff;
+}
+.profile__edit {
+  margin: 0;
 }
 .prof_catalog{
   padding: 0;

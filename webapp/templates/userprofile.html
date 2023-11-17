@@ -43,27 +43,28 @@
 	<!-- page title -->
 	{% if user.is_authenticated %}
 
-	<section class="section section--first section--bg" data-bg={% static "img/section/section.jpg" %}>
+	<section class="section section--first section--bg" data-bg="{% static 'img/section/section.jpg' %}">
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
 					<div class="profile__wrap">
-						<!-- section title -->
-                        <img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 80px; vertical-align: middle;">
-						<h3 class="user_name">{{ user.first_name }} {{ user.last_name }} <br> @{{ user.username }}</h3>
-                        <h3 class="bio_label">Bio</h3>
-                        <p class="user_bio">{{ user_profile.biography }}</p>
-                        <a href="#0" class="num_friends"> {{ user_profile.friends.count }} <br> Friends</a>
-                        <a href="/watchlist/" class="num_watchlists"> {{ watchlists.count }} <br> Watchlists</a>
-						<!-- end section title -->
+						<div class="profile__photo">
+							<img src="{% static 'img/user.png' %}" alt="profile_photo" style="width: 80px;">
+						</div>
+						<div class="profile__info">
+							<h3 class="profile__username">@{{ user.username }}</h3><br>
+							<a href="#editProfileModal" class="profile__edit" data-toggle="modal">Edit Profile</a>
+						</div>
+						<h3 class="bio_label">Bio</h3>
+						<p class="user_bio">{{ user_profile.biography }}</p>
+						<a href="#0" class="num_friends">{{ user_profile.friends.count }}<br>Friends</a>
+						<a href="/watchlist/" class="num_watchlists">{{ watchlists.count }}<br>Watchlists</a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
 	<!-- end page title -->
-
-
 
 	<!-- catalog -->
 	<div class="prof_catalog">

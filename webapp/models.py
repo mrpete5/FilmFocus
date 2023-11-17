@@ -165,6 +165,12 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  # links to built-in Django User model
     friends = models.ManyToManyField('self', blank=True)
     biography = models.CharField(max_length=300, blank=True)
+    PROFILE_PICS_CHOICES = [
+        ('default.jpg', 'Default'),
+        # ('pic1.jpg', 'Picture 1'),
+        # ('pic2.jpg', 'Picture 2'),
+    ]
+    profile_pic = models.CharField(max_length=100, choices=PROFILE_PICS_CHOICES, default='default.jpg')
     
     def __str__(self):
         return f"{self.user.username}"
