@@ -261,6 +261,14 @@ def profile(request, profile_name):
         context['is_self'] = user == profile.user
     return render(request, "userprofile.html", context)
 
+@login_required
+def edit_profile_popup(request):
+    context = {}
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            context["user_profile"] = UserProfile.objects.get(user=request.user)
+        return render(request, "popup_profile_edit.html", context)
+
 # View function for the 404 error page
 def four04(request):
     return render(request, "404.html")

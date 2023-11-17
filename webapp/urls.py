@@ -29,6 +29,7 @@ urlpatterns = [
     path('remove_watchlist/<int:watchlist_id>/', views.remove_watchlist, name='remove_watchlist'),
     path("watchlist/", views.watchlist, name="watchlist"),
     path("profile/<str:profile_name>", views.profile, name="user_profile"),
+    path("edit_profile_popup/", views.edit_profile_popup, name="edit_profile_popup"),
     path("about/", views.about, name="about"),
     path("404/", views.four04, name="404"),
     path("pwreset/", views.pwreset, name="pwreset"),                                        # Page for requesting a password reset
