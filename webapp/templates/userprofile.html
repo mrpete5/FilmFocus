@@ -70,13 +70,21 @@
 	<div class="prof_catalog">
 		<div class="container">
 			<div class="row">
-				{% for friend in user_profile.friends.all %}
+
 				<div class="friends_block">
 					<h3 class="friends_block_title">Friends</h3>
+					
+					{% if friend_requests %}
+					<div class="row">
+						<a href="/friend_requests/">Pending Requests ({{ friend_requests.count }})</a>
+					</div>
+					{% endif %}
+
+					{% for friend in user_profile.friends.all %}
 					<a href="/profile/{{ friend.user }}"><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle;"></a>
 					<h3>@{{ friend.user }}</h3>
+					{% endfor %}
 				</div>
-				{% endfor %}
 
                 <div class="prof_divider"></div>
 				<div class="watchlist_block">

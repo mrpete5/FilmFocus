@@ -257,12 +257,20 @@ def profile(request, profile_name):
     context = {}
     profile = UserProfile.objects.get(user__username=profile_name)
 
-    context['user_profile'] = profile
-    context['watchlists'] = Watchlist.objects.filter(user=profile.user)
-
     user = request.user
     if user.is_authenticated:
-        context['is_self'] = user == profile.user
+        context['is_self'] = (user == profile.user)
+    else:
+        context['is_self'] = False
+
+    context['user_profile'] = profile
+
+    if context['is_self']:
+        context['watchlists'] = Watchlist.objects.filter(user=profile.user)
+        context['friend_requests'] = FriendRequest.objects.filter(to_user=request.user)
+    else:
+        context['watchlists'] = Watchlist.objects.filter(user=profile.user, is_private=False)
+
     return render(request, "userprofile.html", context)
 
 # View fucntion for getting the profile edit popup
