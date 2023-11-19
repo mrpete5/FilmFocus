@@ -203,6 +203,16 @@ class WatchlistEntry(models.Model):
     def __str__(self):
         return f"{self.movie.title} in {self.watchlist.watchlist_name}"
 
+class FriendRequest(models.Model):
+    from_user = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('to_user', 'from_user')
+
+    def __str__(self):
+        return f"{self.from_user.username}'s request to {self.to_user.username}"
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

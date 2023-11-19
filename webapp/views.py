@@ -269,6 +269,42 @@ def edit_profile_popup(request):
             context["user_profile"] = UserProfile.objects.get(user=request.user)
         return render(request, "popup_profile_edit.html", context)
 
+@login_required
+def friend_requests(request):
+    context={}
+    if request.user.is_authenticated:
+        context["in_requests"] = FriendRequest.objects.filter(to_user=request.user)
+        return render(request, "friend_requests.html", context)
+    
+@login_required
+@require_POST
+def friend_accept(request, from_id):
+    if request.user.is_authenticated:
+        user = UserProfile.objects.get(user=request.user)
+        friend = UserProfile.objects.get(user__id=from_id)
+
+        user.friends.add(friend)
+        friend.friends.add(user)
+        
+        friend_user = User.objects.get(pk=from_id)
+        FriendRequest.objects.get(from_user=friend_user, to_user=request.user).delete()
+    return redirect("friend_requests")
+
+@login_required
+@require_POST
+def friend_reject(request, from_id):
+    if request.user.is_authenticated:
+        user = UserProfile.objects.get(user=request.user)
+        friend = UserProfile.objects.get(user__id=from_id)
+
+        user.friends.remove(friend)
+        friend.friends.remove(user)
+        
+        friend_user = User.objects.get(pk=from_id)
+        FriendRequest.objects.get(from_user=friend_user, to_user=request.user).delete()
+    return redirect("friend_requests")
+
+
 # View function for the 404 error page
 def four04(request):
     return render(request, "404.html")
