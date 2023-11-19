@@ -10,8 +10,8 @@
             flex-wrap: wrap;
             gap: 4px; /* Adjust gap between items */
             margin-bottom: 6px;
-            margin-left: 10%; /* Adjust left margin */
-            margin-right: 10%; /* Adjust right margin */
+            /* margin-left: 10%; Adjust left margin */
+            /* margin-right: 10%; Adjust right margin */
         }
         .movie-card {
             flex: 1 1 calc(12% - 8px); /* 5 items per row, adjust for gap */
@@ -28,7 +28,7 @@
             padding: 4px;
         }
         .movie-card-title {
-            font-size: 1.2em;
+            font-size: 1em;
             margin-bottom: 6px;
         }
         .movie-card-overview {
@@ -46,25 +46,19 @@
     <div class="movie-card">
         <a href="{% url 'movie_detail' movie.slug %}">
             {% if movie.poster_path %}
-              <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster">
+                <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster">
             {% else %}
-              <div class="no-poster">No poster available</div>
+                <div class="no-poster">No poster available</div>
             {% endif %}  
         </a>
-
-        {% comment %} {% if movie.poster_path %}
-        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster">
-        {% else %}
-        <div class="no-poster">No poster available</div>
-        {% endif %}
+    
         <div class="movie-card-content">
             <div class="movie-card-title">{{ movie.title }}</div>
-        </div> {% endcomment %}
-
-
-
+        </div>
+    
     </div>
     {% endfor %}
+    
 </div>
 
 </body>

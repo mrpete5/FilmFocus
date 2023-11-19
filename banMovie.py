@@ -17,6 +17,7 @@ Any known faults: None.
 
 import os
 import django
+import sys
 
 # Set up the Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FilmFocus.settings')
@@ -75,11 +76,23 @@ def ban_movie_by_id(movie):
     else:
         print(f"Movie '{movie.title}' (ID: {tmdb_id}) is already in the ban list.")
 
-if __name__ == "__main__":
-    # Prompt the user for a movie title
-    title = input(" > Enter the movie title you want to ban: ").strip()
+def ban_movies_from_file(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:  # Set encoding to utf-8
+        for line in file:
+            title = line.strip()
+            if title:
+                ban_movie(title)
 
-    if title:
-        ban_movie(title)
+if __name__ == "__main__":
+    # Check if a file is provided as an argument
+    if len(sys.argv) > 1 and sys.argv[1].endswith('.txt'):
+        file_path = sys.argv[1]
+        ban_movies_from_file(file_path)
     else:
-        print("Invalid input. Please enter a valid movie title.")
+        # Existing functionality for single title input
+        title = input(" > Enter the movie title you want to ban: ").strip()
+
+        if title:
+            ban_movie(title)
+        else:
+            print("Invalid input. Please enter a valid movie title.")

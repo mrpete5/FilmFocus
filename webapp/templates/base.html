@@ -58,9 +58,9 @@
 								<li class="header__nav-item header__nav-item--search">
 									<form action="{% url 'search' %}" method="get">
 										{% csrf_token %}
-										<input type="text" name="query" placeholder="Search Movies">
+										<input id="searchbar" type="text" name="query" placeholder="Search Movies">
 										<button type="submit">Search</button>
-									</form>										
+									</form>							
 								</li>
 
 							</ul>
@@ -68,12 +68,18 @@
 
 							<!-- Log In or Log Out -->
 							{% if user.is_authenticated %}
-							
+
+								<div class="header__user_photo">
+									<a href="/profile/"><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 10px;"></a>
+								</div>
+
 								<!-- Welcome user message -->
 								<div class="header__user_welcome">
-									<span class="welcome-text">Hello,</span>
-									<span class="username">{{ user.username }}!</span>  
+									<a href="/profile/{{ user.username }}"><span class="welcome-text">Hello,</span></a>
+									<a href="/profile/{{ user.username }}"><span class="username">{{ user.username }}!</span></a>
 								</div>
+
+
 								<!-- end Welcome user message -->
 
 								<!-- Log out header auth -->
@@ -110,8 +116,13 @@
 		</div>
 
         {% endblock %}
+		<div id="searchbar-queries"></div>	
 	</header>
 	<!-- end header -->
+
+	<!-- popup -->
+	<div class="popup" id="popup"></div>
+	<!-- end popup -->
 
     <main>
         {% block content %}{% endblock %}

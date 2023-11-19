@@ -1,0 +1,14 @@
+{% if movies %}
+<div class="container">
+{% for movie in movies %}
+<a class="row searchbar-query" href="{% url 'movie_detail' movie_slug=movie.slug %}">
+    <div class="card__cover col-2">
+        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+    </div>
+    <div class="card__content">
+        {{movie.title}}
+    </div>
+</a>
+{% endfor %}
+</div>
+{% endif %}

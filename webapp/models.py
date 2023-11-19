@@ -66,7 +66,6 @@ class Movie(models.Model):
         
         recommended_movies = []
         processed_movies = set()  # Keep track of processed movies to avoid duplicates
-        
         fetches_per_second = 20  # Updated to 20 requests per second as per requirement
 
         # Semaphore to limit the number of concurrent API fetches
@@ -165,6 +164,16 @@ class UserProfile(models.Model):
     """Model representing user profiles with additional information and friend relationships."""
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  # links to built-in Django User model
     friends = models.ManyToManyField('self', blank=True)
+    biography = models.CharField(max_length=300, blank=True)
+    PROFILE_PICS_CHOICES = [
+        ('default.jpg', 'Default'),
+        # ('pic1.jpg', 'Picture 1'),
+        # ('pic2.jpg', 'Picture 2'),
+    ]
+    profile_pic = models.CharField(max_length=100, choices=PROFILE_PICS_CHOICES, default='default.jpg')
+    
+    def __str__(self):
+        return f"{self.user.username}"
     
 
 class Watchlist(models.Model):
@@ -194,6 +203,16 @@ class WatchlistEntry(models.Model):
     def __str__(self):
         return f"{self.movie.title} in {self.watchlist.watchlist_name}"
 
+class FriendRequest(models.Model):
+    from_user = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('to_user', 'from_user')
+
+    def __str__(self):
+        return f"{self.from_user.username}'s request to {self.to_user.username}"
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

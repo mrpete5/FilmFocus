@@ -37,6 +37,7 @@ Primary use:	FlixGo Template
 27. mCustomScrollbar customization
 28. Add Movie Popup
 29. Search Results
+30. User Profile Page
 ----------------------------------------*/
 /*==============================
 	Common styles
@@ -4278,4 +4279,217 @@ Search Results
 }
 .search_title_container{
   margin-top: 50px;
+}
+/*==============================
+User Profile Page
+==============================*/
+.profile__wrap {
+  margin-left: 100px;
+  position: sticky;
+  display: flex;
+  flex-direction: row;  
+  align-items: center;
+  gap: 15px;
+}
+.profile__photo {
+  display: block;
+  order: 1;
+}
+.profile__info {
+  display: flex;
+  flex-direction: column;
+  order: 2;
+}
+.profile__username {
+  margin: 0;
+  color: #fff;
+}
+.profile__edit {
+  margin: 0;
+}
+.prof_catalog{
+  padding: 0;
+}
+.prof_divider {
+  background-size: 75px;
+  width: 75px;
+  height: 300px;
+  position: sticky;
+  background-image: url('../img/film_strip.png');
+  background-repeat:repeat-y;
+  left: 47%;
+  right: 45%;
+  margin: 0 auto;
+}
+
+.friends_block{
+  color: #fff;
+  position: sticky;
+  left: 300px;
+  width: 300px;
+  margin-top: 10px;
+}
+
+.watchlist_block{
+  color: #fff;
+  position: sticky;
+  right: 300px;
+  width: 300px;
+  margin-top: 10px;
+}
+
+.friends_block_title{
+  text-align: center;
+}
+
+.friends_block_title::after{
+  content: '';
+   position: absolute;
+   top: 25px;
+   left: 0;
+   right: 0;
+   height: 2px;
+   display: block;
+   background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+   background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+   background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+   background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+ }
+
+.wlist_block_title{
+  text-align: center;
+}
+
+.wlist_block_title::after{
+ content: '';
+  position: absolute;
+  top: 25px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  display: block;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+}
+.user_name{
+  color: #fff;
+  position: absolute;
+  margin-left: 90px;
+  margin-top: 7px;
+}
+
+.bio_label{
+  color: #fff;
+  position: absolute;
+  left: 325px;
+  top: 10px;
+}
+
+.user_bio{
+  color: #fff;
+  font-size: medium;
+  position: absolute;
+  left: 325px;
+  top: 40px;
+  width: 250px;
+  margin-bottom: 0;
+}
+
+.num_friends{
+  color: #fff;
+  text-align: center;
+  font-size: 1.5em;
+  position: absolute;
+  left: 575px;
+  top: 15px;
+  width: 200px;
+}
+
+.num_friends:hover {
+  opacity: 0.50;
+  color: #fff;
+}
+
+.num_watchlists{
+  color: #fff;
+  text-align: center;
+  font-size: 1.5em;
+  position: absolute;
+  left: 775px;
+  top: 15px;
+  width: 200px;
+}
+
+.num_watchlists:hover {
+  opacity: 0.50;
+  color: #fff;
+}
+
+/*==============================
+	User Results Page
+==============================*/
+.add_friend__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 80%;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  background-image: -webkit-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  background-image: -ms-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  background-image: linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  opacity: 0.85;
+  font-size: 13px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin: 5px auto 0
+}
+.remove_friend__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 80%;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  opacity: 0.85;
+  font-size: 13px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin: 5px auto 0
+}
+.user_card {
+  margin-bottom: 35px;
+}
+.user_card__content {
+  position: relative;
+  display: block;
+  margin-top: 2px;
+}
+.user_card__title {
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
+  overflow: visible;
+  white-space: normal;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  word-wrap: break-word;
 }

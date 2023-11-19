@@ -28,6 +28,46 @@ $(document).ready(function () {
 			$('.body').toggleClass('body--active');
 		}
 	});
+	const searchbar = document.getElementById("searchbar");
+	const searchbar_queries = document.getElementById("searchbar-queries");
+	var searchbar_timeout;
+	async function get_searchbar_queries(input_value) {
+		if (input_value.length >= 3) {
+			const url = "/searchbar/"+input_value;
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+			const response = await fetch(url, {
+				method: 'GET',
+				headers: {
+					'X-CSRFToken': csrfToken
+				}
+			});
+
+			if (response.ok) {
+				const data = await response.text();
+				searchbar_queries.innerHTML = data;
+			}
+
+		}
+	}
+	function clear_searchbar_queries() {
+		clearTimeout(searchbar_timeout);
+		searchbar_queries.innerHTML = "";
+	}
+	searchbar.addEventListener('input', function() {
+		clearTimeout(searchbar_timeout);
+    
+		// Start a new timer to detect when typing stops
+		searchbar_timeout = setTimeout(function () {
+			get_searchbar_queries(searchbar.value)
+		}, 500);
+	})
+	searchbar.addEventListener('click', function() {get_searchbar_queries(this.value)});
+	searchbar.addEventListener('blur', function(event) {
+		if (event.relatedTarget && event.relatedTarget.classList.contains("searchbar-query"))
+			return;
+		clear_searchbar_queries();
+	})
 
 	/*==============================
 	Home
@@ -539,111 +579,156 @@ $(document).ready(function () {
 	document.body.style.marginRight = 'calc(-1 * (100vw - 100%))'; // Accounts for scroll bar to prevent content shifting
 	header.style.right = 'calc(-1 * (100vw - 100%))'; // Accounts for scroll bar to prevent content shifting
 	//document.body.style.overflowX = 'hidden';
+	var popup_movie_id
 
-	// Open the popup
-	openBtn.forEach(x => x.addEventListener("click", () => {
+	async function request_popup(movie_id) {
+		popup_movie_id = movie_id
+
+		const url = "/popup/"+popup_movie_id;
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'X-CSRFToken': csrfToken
+			}
+		});
+
+		if (response.ok) {
+			const data = await response.text();
+			popup.innerHTML = data;
+			const closePopupAlt = popup.querySelector("#closePopupAlt");
+			const closePopup = popup.querySelector("#closePopup");
+			const popupLogin = popup.querySelector("#loginPopup");
+			const createWatchlistPopup = popup.querySelector("#wlistbtn")
+			if (closePopupAlt) close_event_handler(closePopupAlt);
+			if (closePopup) close_event_handler(closePopup);
+			if (popupLogin) popup_login_event_handler(popupLogin);
+			if (createWatchlistPopup) create_watchlist_event_handler(createWatchlistPopup);
+			add_movie_to_watchlist_event_handler();
+			remove_movie_from_watchlist_event_handler();
+		}
+	}
+	async function open_popup() {
 		// console.log("clicked");		// Leave for testing purposes, modify as needed
 		popup.classList.add("open");
 		document.body.style.top = `-${window.scrollY}px`; // keeps your place on the main page when popup happens
 		document.body.style.position = 'fixed';
-		//document.body.style.overflowX = 'hidden';
+		// document.body.style.overflowX = 'hidden';
 		document.body.style.left = '0';
 		document.body.style.right = '0';
-		
-		popup.setAttribute('movie_id', x.getAttribute('movie_id'))
-	}))
-
-	// Close the popup
-	if (closeBtn) {
-	closeBtn.addEventListener("click", () => {
+	}
+	function close_popup() {
 		const scrollY = document.body.style.top;
 		document.body.style.position = '';
 		document.body.style.top = '';
 		window.scrollTo(0, parseInt(scrollY || '0') * -1); //restores your page position
 		popup.classList.remove("open");
-	})}
-	// Close the popup with the x button
-	if (xBtn) {
-	xBtn.addEventListener("click", () => {
-		const scrollY = document.body.style.top;
-		document.body.style.position = '';
-		document.body.style.top = '';
-		window.scrollTo(0, parseInt(scrollY || '0') * -1); //restores your page position
-		popup.classList.remove("open");
-	})}
-	// Redirect to login on click
-	const loginBtn = document.getElementById("loginPopup");
-	if (loginBtn) {
-	loginBtn.addEventListener("click", () => {
-		window.location.href = "/login/";	// redirect to login page
-	})}
-
-
-	/*==============================
-	Popup add movie to watchlist
-	==============================*/
-	// Get Buttons
-	const wlistadd_btn = document.querySelectorAll(".wlistadd__btn"); 
+	}
+	function close_event_handler(x) {
+		x.addEventListener("click", ()=> {
+			close_popup();
+		})
+	}
+	function popup_login_event_handler(x) {
+		x.addEventListener("click", () => {
+			window.location.href = "/login/";	// redirect to login page
+		})
+	}
+	function add_movie_to_watchlist_event_handler() {
+		// Get Buttons
+		const wlistadd_btn = document.querySelectorAll(".wlistadd__btn"); 
 	
-	// Make Request to Add Movie to Watchlist
-	wlistadd_btn.forEach(x => x.addEventListener("click", async () => {
-		const watchlist_id = x.getAttribute('watchlist_id')
-		const movie_id = popup.getAttribute('movie_id')
-
-		const url = `/add_to_watchlist/${watchlist_id}/${movie_id}/`;
-		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
-
-		try {
-			const response = await fetch(url, {
-				method: 'POST',
-				headers: {
-					'X-CSRFToken': csrfToken
-				}
-			});
-
-			const data = await response.json();
-
-			if (data.status === 'success') {
+		// Make Request to Add Movie to Watchlist
+		wlistadd_btn.forEach(x => x.addEventListener("click", async () => {
+			const watchlist_id = x.getAttribute('watchlist_id')
+	
+			const url = `/add_to_watchlist/${watchlist_id}/${popup_movie_id}/`;
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+	
+			try {
+				const response = await fetch(url, {
+					method: 'POST',
+					headers: {
+						'X-CSRFToken': csrfToken
+					}
+				});
+	
+				const data = await response.json();
 				alert(data.message);
-			} else {
-				alert("Movie already in watchlist");
+	
+				if (data.status === 'success') {
+					request_popup(popup_movie_id);
+				}
+			} catch (error) {
+				console.error(error);
 			}
-		} catch (error) {
-			console.error(error);
-		}
+		}))
+	}
+	function remove_movie_from_watchlist_event_handler() {
+		// Get Buttons
+		const wlistremove_btn = document.querySelectorAll(".wlistremove__btn"); 
+	
+		// Make Request to Add Movie to Watchlist
+		wlistremove_btn.forEach(x => x.addEventListener("click", async () => {
+			const watchlist_id = x.getAttribute('watchlist_id')
+	
+			const url = `/remove_from_watchlist/${watchlist_id}/${popup_movie_id}/`;
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+	
+			try {
+				const response = await fetch(url, {
+					method: 'POST',
+					headers: {
+						'X-CSRFToken': csrfToken
+					}
+				});
+	
+				const data = await response.json();
+				alert(data.message);
+	
+				if (data.status === 'success') {
+					request_popup(popup_movie_id);
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		}))
+	}
+	function create_watchlist_event_handler(x) {
+		x.addEventListener("click", async () => {
+			const wlistinput = x.parentNode.querySelector("#wlistinput");
+	
+			const url = `/create_watchlist/${wlistinput.value}/`;
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+	
+			try {
+				const response = await fetch(url, {
+					method: 'POST',
+					headers: {
+						'X-CSRFToken': csrfToken
+					}
+				});
+	
+				const data = await response.json();
+	
+				if (data.status === 'success') {
+					alert(data.message);
+					request_popup(popup_movie_id);
+				} else {
+					alert("Movie already in watchlist");
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		})
+	}
+
+	// Open the popup
+	openBtn.forEach(x => x.addEventListener("click", async () => {
+		request_popup(x.getAttribute("movie_id"));
+		open_popup(x);
 	}))
-	// STILL NOT WORKING, leaving this commented out for now
-	// // Add movie to watchlist on click
-	// const addToWatchlistBtn = document.getElementById('addToWatchlist');
-	// const movieId = button.dataset.data-movie-id;
-	// const watchlistId = button.dataset.data-watchlist-id; 
-
-	// addToWatchlistBtn.addEventListener('click', () => {
-	// // Add code here to handle adding movie to watchlist
-	// });
-
-	// // Add movie to watchlist
-	// const addToWatchlist = (movieId, watchlistId) => {
-	// 	fetch('/add-to-watchlist/', {
-	// 	method: 'POST',
-	// 	headers: {
-	// 		'Content-Type': 'application/json',
-	// 		'X-CSRFToken': csrftoken, 
-	// 	},
-	// 	body: JSON.stringify({
-	// 		movie_id: movieId,
-	// 		watchlist_id: watchlistId, 
-	// 	})
-	// 	})
-	// 	.then(response => {
-	// 	// Check for success
-	// 	if (response.ok) {
-	// 		// Movie added, update UI
-	// 	} else {
-	// 		// Handle error 
-	// 	}
-	// 	})
-	// }
 
 
 	/*==============================
@@ -660,71 +745,6 @@ $(document).ready(function () {
 	});
 	
 
-
-	// // Get DOM elements
-	// // const addToWatchlistBtn = document.getElementById('addToWatchlist');
-
-	// addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
-
-	// // Handle click event
-	// const handleAddToWatchlistClick = () => {
-
-	// 	// Get movieId and watchlistId from data attributes
-	// 	const movieId = addToWatchlistBtn.dataset.movieId; 
-	// 	const watchlistId = addToWatchlistBtn.dataset.watchlistId;
-
-	// 	// Call addToWatchlist function 
-	// 	addToWatchlist(movieId, watchlistId)
-	// 		.then(handleResponse) 
-	// 		.catch(handleError);
-
-	// 	// add_movie_to_watchlist(movieId, watchlistId) // Testing this as possible solution
-	// }
-
-	// // Make POST request to add movie to watchlist
-	// const addToWatchlist = async (movieId, watchlistId) => {
-
-	// // POST data
-	// const data = {
-	// 	movie_id: movieId,
-	// 	watchlist_id: watchlistId
-	// };
-
-	// // Request options
-	// const options = {
-	// 	method: 'POST',
-	// 	headers: {
-	// 	'Content-Type': 'application/json',
-	// 	'X-CSRFToken': csrftoken  
-	// 	},
-	// 	body: JSON.stringify(data)
-	// };
-
-	// // Make request and return response
-	// return fetch('/add-to-watchlist/', options)
-	// 	.then(res => res.json());
-
-	// }
-
-	// // Handle successful response 
-	// const handleResponse = (response) => {
-	// if (response.success) {
-	// 	// Movie added, update UI
-	// } else {
-	// 	// Show error 
-	// }
-	// }
-
-	// // Handle errors
-	// const handleError = (error) => {
-	// console.error(error);
-	// }
-
-	// // Event listener
-	// addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
-
-
-
 	/*==============================
     Select Watchlist to Display
     ==============================*/
@@ -739,68 +759,25 @@ $(document).ready(function () {
 			form_watchlist_id.value = watchlist_id
 		});
 	  });
+
+	/*==============================
+	Profile Edit Popup Buttons
+	==============================*/
+	async function request_popup_profile_edit() {
+		const url = "/edit_profile_popup/";
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'X-CSRFToken': csrfToken
+			}
+		});
+
+		if (response.ok) {
+			const data = await response.text();
+			popup.innerHTML = data;
+		}
+	}
 });
-
-
-
-
-// FULL COPY BELOW THIS LINE ********************************
-// // Get DOM elements
-// const addToWatchlistBtn = document.getElementById('addToWatchlist');
-
-// // Handle click event
-// const handleAddToWatchlistClick = () => {
-
-//   // Get movieId and watchlistId from data attributes
-//   const movieId = addToWatchlistBtn.dataset.movieId; 
-//   const watchlistId = addToWatchlistBtn.dataset.watchlistId;
-
-//   // Call addToWatchlist function 
-//   addToWatchlist(movieId, watchlistId)
-//     .then(handleResponse) 
-//     .catch(handleError);
-
-// }
-
-// // Make POST request to add movie to watchlist
-// const addToWatchlist = async (movieId, watchlistId) => {
-
-//   // POST data
-//   const data = {
-//     movie_id: movieId,
-//     watchlist_id: watchlistId
-//   };
-  
-//   // Request options
-//   const options = {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'X-CSRFToken': csrftoken  
-//     },
-//     body: JSON.stringify(data)
-//   };
-
-//   // Make request and return response
-//   return fetch('/add-to-watchlist/', options)
-//     .then(res => res.json());
-
-// }
-
-// // Handle successful response 
-// const handleResponse = (response) => {
-//   if (response.success) {
-//     // Movie added, update UI
-//   } else {
-//     // Show error 
-//   }
-// }
-
-// // Handle errors
-// const handleError = (error) => {
-//   console.error(error);
-// }
-
-// // Event listener
-// addToWatchlistBtn.addEventListener('click', handleAddToWatchlistClick);
 

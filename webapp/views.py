@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse, Http404
 from django.contrib import messages
-from .models import Movie, Watchlist, WatchlistEntry
+from .models import Movie, Watchlist, WatchlistEntry, UserProfile
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import (
     NewUserForm,
@@ -57,7 +57,6 @@ def index(request):
             watchlist_name = form.save()
             watchlist_name = form.cleaned_data.get('watchlist_name')
             create_watchlist(request, watchlist_name=watchlist_name)
-            # add_movie_to_watchlist(request, user, watchlist_name)
             messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
 
             # Redirect to the homepage on successful sign up
@@ -95,7 +94,6 @@ def movie_detail(request, movie_slug):
             if form.is_valid():
                 watchlist_name = form.save()
                 watchlist_name = form.cleaned_data.get('watchlist_name')
-                add_movie_to_watchlist(request, user, watchlist_name)
                 messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
 
                 # Redirect to the details on successful sign up
@@ -117,7 +115,6 @@ def movie_detail(request, movie_slug):
         context['watchlists'] = Watchlist.objects.filter(user=user)
 
     return render(request, 'details.html', context)
-
 
 # View function for the movie watchlists page
 def watchlist(request):
@@ -173,7 +170,6 @@ def watchlist(request):
                     # if imdb_begin and imdb_end:
                     #     movie_list = movie_list.filter(imdb_rating__range=(imdb_begin, imdb_end))
                     
-
                     # Setup Context for the frontend
                     context['filter_watchlist'] = watchlist
                     context['filter_genre'] = genre
@@ -193,6 +189,7 @@ def watchlist(request):
         return render(request, "watchlist.html", context)
     return redirect('login')
 
+# View function to process search results
 def searchBar(request):
     context = {}
     user = request.user
@@ -205,7 +202,6 @@ def searchBar(request):
             watchlist_name = form.save()
             watchlist_name = form.cleaned_data.get('watchlist_name')
             create_watchlist(request, watchlist_name=watchlist_name)
-            # add_movie_to_watchlist(request, user, watchlist_name)
             messages.success(request, f"You created a new watchlist named: {watchlist_name}!")
 
             # Redirect to the homepage on successful sign up
@@ -220,18 +216,102 @@ def searchBar(request):
         query = request.GET.get('query')
         context['query'] = query
         if query:
-            movies = Movie.objects.filter(title__icontains=query)
-            context['searchedMovies'] = movies
-            return render(request, 'results.html', context)
-            # return render(request, 'results.html', 'searchedMovies': movies)
+            if query[0] == '@':
+                username = query[1:]  # Remove the '@' symbol
+                users = User.objects.filter(username__icontains=username)
+                userProfiles = UserProfile.objects.filter(user__in=users)
+                context['searchedUsers'] = userProfiles
+                return render(request, 'user_results.html', context)
+            else:
+                movies = Movie.objects.filter(title__icontains=query)
+                context['searchedMovies'] = movies
+                return render(request, 'results.html', context)
+                # return render(request, 'results.html', 'searchedMovies': movies)
         else:
             print("No Info to show")
             return render(request, 'results.html', context)
+        
+# View function for getting asynchronous search results in real time
+def searchbar(request, query):
+    if request.method == 'GET':
+        movies = Movie.objects.filter(title__icontains=query)
+        return render(request, "searchbar.html", {"movies":movies[:2]})
+
+# View function for getting movie watchlist popup
+def popup(request, movie_id):
+    context = {}
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            context["watchlists"] = Watchlist.objects.filter(user=request.user)
+        context["movie"] = Movie.objects.get(pk=movie_id)
+        context["movie_in_watchlists"] = Watchlist.objects.filter(entries__movie=context["movie"]).distinct()
+        return render(request, "popup.html", context)
 
 
 # View function for the about page
 def about(request):
     return render(request, "about.html")
+
+# View function for the user profile page
+def profile(request, profile_name):
+    context = {}
+    profile = UserProfile.objects.get(user__username=profile_name)
+
+    context['user_profile'] = profile
+    context['watchlists'] = Watchlist.objects.filter(user=profile.user)
+
+    user = request.user
+    if user.is_authenticated:
+        context['is_self'] = user == profile.user
+    return render(request, "userprofile.html", context)
+
+# View fucntion for getting the profile edit popup
+@login_required
+def edit_profile_popup(request):
+    context = {}
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            context["user_profile"] = UserProfile.objects.get(user=request.user)
+        return render(request, "popup_profile_edit.html", context)
+
+# View function for friend request page
+@login_required
+def friend_requests(request):
+    context={}
+    if request.user.is_authenticated:
+        context["in_requests"] = FriendRequest.objects.filter(to_user=request.user)
+        return render(request, "friend_requests.html", context)
+    
+# View function for accepting a friend request
+@login_required
+@require_POST
+def friend_accept(request, from_id):
+    if request.user.is_authenticated:
+        user = UserProfile.objects.get(user=request.user)
+        friend = UserProfile.objects.get(user__id=from_id)
+
+        user.friends.add(friend)
+        friend.friends.add(user)
+        
+        friend_user = User.objects.get(pk=from_id)
+        FriendRequest.objects.get(from_user=friend_user, to_user=request.user).delete()
+    return redirect("friend_requests")
+
+# View function for rejecting a friend request
+@login_required
+@require_POST
+def friend_reject(request, from_id):
+    if request.user.is_authenticated:
+        user = UserProfile.objects.get(user=request.user)
+        friend = UserProfile.objects.get(user__id=from_id)
+
+        user.friends.remove(friend)
+        friend.friends.remove(user)
+        
+        friend_user = User.objects.get(pk=from_id)
+        FriendRequest.objects.get(from_user=friend_user, to_user=request.user).delete()
+    return redirect("friend_requests")
+
 
 # View function for the 404 error page
 def four04(request):
@@ -382,19 +462,55 @@ def faq(request):
     return render(request, "faq.html")
 
 
-# Require user to be logged in to access this view
-@login_required  
+@login_required
 @require_POST
-def create_watchlist(request):
-    ''' Create a watchlist. Requires user to be logged in. '''
-    if request.method == 'POST':
-        name = request.POST.get('watchlist_name')
-        if name:
-            watchlist = Watchlist(user=request.user, name=name)
-            watchlist.save()
-        return redirect('home')
-        
-    return render(request, 'create.html')
+def create_watchlist(request, watchlist_name):
+    try:
+        watchlist = Watchlist.objects.create(user=request.user, watchlist_name=watchlist_name)
+        watchlist.save()
+        return JsonResponse({'status': 'success', 'message': 'Watchlist created'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+@login_required
+@require_POST
+def remove_watchlist(request, watchlist_id):
+    try:
+        watchlist = Watchlist.objects.get(user=request.user, pk=watchlist_id)
+        watchlist_entries = WatchlistEntry.objects.filter(watchlist=watchlist)
+        for entry in watchlist_entries:
+            entry.delete()
+        watchlist.delete()
+        return JsonResponse({'status': 'success', 'message': 'Watchlist removed'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+@login_required
+@require_POST
+def add_to_watchlist(request, watchlist_id, movie_id):
+    try:
+        watchlist = Watchlist.objects.get(pk=watchlist_id, user=request.user)
+        movie = Movie.objects.get(pk=movie_id)
+        new_watchlist_entry = WatchlistEntry(
+            watchlist = watchlist,
+            movie = movie,
+        )
+        new_watchlist_entry.save()
+        return JsonResponse({'status': 'success', 'message': 'Movie added to watchlist'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+@login_required
+@require_POST
+def remove_from_watchlist(request, watchlist_id, movie_id):
+    try:
+        watchlist = Watchlist.objects.get(pk=watchlist_id, user=request.user)
+        movie = Movie.objects.get(pk=movie_id)
+        watchlist_entry = WatchlistEntry.objects.get(watchlist=watchlist, movie=movie)
+        watchlist_entry.delete()
+        return JsonResponse({'status': 'success', 'message': 'Movie removed from watchlist'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
 
 
 # Test page that displays posters for potential movie banning
@@ -429,76 +545,3 @@ def testdisplay(request):
   
     movies_to_display = handle_test_display_page(settings)
     return render(request, "testdisplay.html", {"movies": movies_to_display})
-
-
-# Require user to be logged in to access this view
-@login_required  
-def add_movie_to_watchlist(request, user, watchlist):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            movie_id = data.get('movie_id')
-            watchlist_id = data.get('watchlist_id')
-            movie = get_object_or_404(Movie, id=movie_id)
-            watchlist = get_object_or_404(Watchlist, id=watchlist_id, user=request.user)
-            
-            # Check if the movie is already in the watchlist
-            if not WatchlistEntry.objects.filter(watchlist=watchlist, movie=movie).exists():
-                WatchlistEntry.objects.create(watchlist=watchlist, movie=movie, user=user)
-                return JsonResponse({'success': True})
-            else:
-                return JsonResponse({'success': False, 'error': 'Movie already in watchlist'})
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
-        except KeyError:
-            return JsonResponse({'success': False, 'error': 'Invalid data format'})
-    else:
-        raise Http404
-
-
-
-
-from .forms import NewWatchlistForm
-
-@login_required
-@require_POST
-def create_watchlist(request, watchlist_name):
-    try:
-        watchlist = Watchlist.objects.create(user=request.user, watchlist_name=watchlist_name)
-        watchlist.save()
-        return JsonResponse({'status': 'success', 'message': 'Watchlist created'})
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)})
-    # form = NewWatchlistForm(request.POST)
-    # if form.is_valid():
-    #   watchlist = form.save(commit=True, user=request.user) 
-    #   return redirect('home')
-
-
-@login_required
-@require_POST
-def add_to_watchlist(request, watchlist_id, movie_id):
-    try:
-        watchlist = Watchlist.objects.get(pk=watchlist_id, user=request.user)
-        movie = Movie.objects.get(pk=movie_id)
-        new_watchlist_entry = WatchlistEntry(
-            watchlist = watchlist,
-            movie = movie,
-        )
-        new_watchlist_entry.save()
-        return JsonResponse({'status': 'success', 'message': 'Movie added to watchlist'})
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)})
-
-
-@login_required
-@require_POST
-def remove_from_watchlist(request, watchlist_id, movie_id):
-    try:
-        watchlist = Watchlist.objects.get(pk=watchlist_id, user=request.user)
-        movie = Movie.objects.get(pk=movie_id)
-        watchlist.movies.remove(movie)
-        return JsonResponse({'status': 'success', 'message': 'Movie removed from watchlist'})
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)})
-

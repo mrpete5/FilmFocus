@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet"> 
+
+	<!-- CSS -->
+	<link rel="stylesheet" href={% static "css/bootstrap-reboot.min.css" %}>
+	<link rel="stylesheet" href={% static "css/bootstrap-grid.min.css" %}>
+	<link rel="stylesheet" href={% static "css/owl.carousel.min.css" %}>
+	<link rel="stylesheet" href={% static "css/jquery.mCustomScrollbar.min.css" %}>
+	<link rel="stylesheet" href={% static "css/nouislider.min.css" %}>
+	<link rel="stylesheet" href={% static "css/ionicons.min.css" %}>
+	<link rel="stylesheet" href={% static "css/plyr.css" %}>
+	<link rel="stylesheet" href={% static "css/photoswipe.css" %}>
+	<link rel="stylesheet" href={% static "css/default-skin.css" %}>
+	<link rel="stylesheet" href={% static "css/main.css" %}>
+
+	<!-- Favicons -->
+	<link rel="icon" type="image/png" href={% static "icon/favicon-32x32.png" %} %} sizes="32x32">
+	<link rel="apple-touch-icon" href={% static "icon/favicon-32x32.png" %} %}>
+	<link rel="apple-touch-icon" sizes="72x72" href={% static "icon/apple-touch-icon-72x72.png" %} %}>
+	<link rel="apple-touch-icon" sizes="114x114" href={% static "icon/apple-touch-icon-114x114.png" %} %}>
+	<link rel="apple-touch-icon" sizes="144x144" href={% static "icon/apple-touch-icon-144x144.png" %} %}>
+
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="author" content="Dmitry Volkov">
+	<title>FilmFocus – Your Watchlist, Your Way</title>
+
+</head>
+<body class="body">
+
+	<!-- page title -->
+	{% if user.is_authenticated %}
+
+	<section class="section section--first section--bg" data-bg="{% static 'img/section/section.jpg' %}">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="profile__wrap">
+						<div class="profile__photo">
+							<img src="{% static 'img/user.png' %}" alt="profile_photo" style="width: 80px;">
+						</div>
+						<div class="profile__info">
+							<h3 class="profile__username">@{{ user.username }}</h3><br>
+							<a href="#editProfileModal" class="profile__edit" data-toggle="modal">Edit Profile</a>
+						</div>
+						<h3 class="bio_label">Bio</h3>
+						<p class="user_bio">{{ user_profile.biography }}</p>
+						<a href="#0" class="num_friends">{{ user_profile.friends.count }}<br>Friends</a>
+						<a href="/watchlist/" class="num_watchlists">{{ watchlists.count }}<br>Watchlists</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end page title -->
+
+	<!-- catalog -->
+	<div class="prof_catalog">
+		<div class="container">
+			<div class="row">
+				<div class="friends_block">
+					<h3 class="friends_block_title">Friends</h3>
+					<a href="/profile/"><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle;"></a>
+					<h3>Traizen McKown<br> @traizen</h3>
+				</div>
+
+                <div class="prof_divider"></div>
+				<div class="watchlist_block">
+					<h3 class="wlist_block_title">Watchlists</h3>
+					<ul>
+						{% for watchlist in watchlists %}
+							<li watchlist_id="{{watchlist.id}}">{{ watchlist.watchlist_name }}</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end catalog -->
+
+	{% endif %}
+
+	<!-- JS -->
+	<script src={% static "js/jquery-3.3.1.min.js" %}></script>
+	<script src={% static "js/bootstrap.bundle.min.js" %}></script>
+	<script src={% static "js/owl.carousel.min.js" %}></script>
+	<script src={% static "js/jquery.mousewheel.min.js" %}></script>
+	<script src={% static "js/jquery.mCustomScrollbar.min.js" %}></script>
+	<script src={% static "js/wNumb.js" %}></script>
+	<script src={% static "js/nouislider.min.js" %}></script>
+	<script src={% static "js/plyr.min.js" %}></script>
+	<script src={% static "js/jquery.morelines.min.js" %}></script>
+	<script src={% static "js/photoswipe.min.js" %}></script>
+	<script src={% static "js/photoswipe-ui-default.min.js" %}></script>
+	<script src={% static "js/main.js" %}></script>
+</body>
+
+</html>
+
+{% endblock %}
