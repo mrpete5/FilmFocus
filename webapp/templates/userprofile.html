@@ -52,7 +52,7 @@
 							<img src="{% static 'img/user.png' %}" alt="profile_photo" style="width: 80px;">
 						</div>
 						<div class="profile__info">
-							<h3 class="profile__username">@{{ user.username }}</h3><br>
+							<h3 class="profile__username">@{{ user_profile.user }}</h3><br>
 							<a href="#editProfileModal" class="profile__edit" data-toggle="modal">Edit Profile</a>
 						</div>
 						<h3 class="bio_label">Bio</h3>
@@ -70,11 +70,13 @@
 	<div class="prof_catalog">
 		<div class="container">
 			<div class="row">
+				{% for friend in user_profile.friends.all %}
 				<div class="friends_block">
 					<h3 class="friends_block_title">Friends</h3>
-					<a href="/profile/"><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle;"></a>
-					<h3>Traizen McKown<br> @traizen</h3>
+					<a href="/profile/{{ friend.user }}"><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle;"></a>
+					<h3>@{{ friend.user }}</h3>
 				</div>
+				{% endfor %}
 
                 <div class="prof_divider"></div>
 				<div class="watchlist_block">
