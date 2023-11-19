@@ -6,6 +6,12 @@ Version:	1.0
 Primary use:	FlixGo Template
 ----------------------------------------*/
 /*----------------------------------------
+[FilmFocus Color Codes]
+
+FilmFocus Pink: #ff55a5
+FilmFocus Grey: #2b2b31
+----------------------------------------*/
+/*----------------------------------------
 [Table of contents]
 
 1. Header
@@ -4431,6 +4437,35 @@ User Profile Page
   color: #fff;
 }
 
+.watchlist_element {
+  position: relative;
+  height: 50px;
+  line-height: 50px;
+  margin: 5px;
+  border: 1px solid #ff55a5;
+  border-radius: 8px;
+  width: 250px;
+  cursor: pointer;
+  box-shadow: 2px 2px 3px #666;
+}
+
+.watchlist_element:hover {
+  border-color: #777;
+  box-shadow: 3px 3px 5px #333;
+  border: 2px solid #ff55a5;
+}
+
+.watchlist_element:active {
+  background: #ff55a5;
+  box-shadow: inset 0 1px 1px #666;
+}
+
+.watchlist_el_link{
+  color: #fff;
+}
+.watchlist_el_link:hover{
+  color: #fff;
+}
 /*==============================
 	User Results Page
 ==============================*/
