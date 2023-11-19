@@ -4319,7 +4319,6 @@ User Profile Page
 .prof_divider {
   background-size: 75px;
   width: 75px;
-  height: 300px;
   position: sticky;
   background-image: url('../img/film_strip.png');
   background-repeat:repeat-y;
