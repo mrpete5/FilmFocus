@@ -189,6 +189,7 @@ def watchlist(request):
         return render(request, "watchlist.html", context)
     return redirect('login')
 
+# View function to process search results
 def searchBar(request):
     context = {}
     user = request.user
@@ -229,11 +230,14 @@ def searchBar(request):
         else:
             print("No Info to show")
             return render(request, 'results.html', context)
+        
+# View function for getting asynchronous search results in real time
 def searchbar(request, query):
     if request.method == 'GET':
         movies = Movie.objects.filter(title__icontains=query)
         return render(request, "searchbar.html", {"movies":movies[:2]})
 
+# View function for getting movie watchlist popup
 def popup(request, movie_id):
     context = {}
     if request.method == 'GET':
@@ -261,6 +265,7 @@ def profile(request, profile_name):
         context['is_self'] = user == profile.user
     return render(request, "userprofile.html", context)
 
+# View fucntion for getting the profile edit popup
 @login_required
 def edit_profile_popup(request):
     context = {}
@@ -269,6 +274,7 @@ def edit_profile_popup(request):
             context["user_profile"] = UserProfile.objects.get(user=request.user)
         return render(request, "popup_profile_edit.html", context)
 
+# View function for friend request page
 @login_required
 def friend_requests(request):
     context={}
@@ -276,6 +282,7 @@ def friend_requests(request):
         context["in_requests"] = FriendRequest.objects.filter(to_user=request.user)
         return render(request, "friend_requests.html", context)
     
+# View function for accepting a friend request
 @login_required
 @require_POST
 def friend_accept(request, from_id):
@@ -290,6 +297,7 @@ def friend_accept(request, from_id):
         FriendRequest.objects.get(from_user=friend_user, to_user=request.user).delete()
     return redirect("friend_requests")
 
+# View function for rejecting a friend request
 @login_required
 @require_POST
 def friend_reject(request, from_id):
