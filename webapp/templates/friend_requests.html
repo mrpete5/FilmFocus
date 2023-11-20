@@ -57,11 +57,11 @@
                     <div class="profile__info">
                         <h3 class="profile__username">@{{ request.from_user }}</h3><br>
                     </div>
-                    <form method="post" action="{% url 'friend_accept' request.from_user.id %}">
+                    <form method="post" action="{% url 'accept_friend_request' request.from_user.id %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-success">Accept</button>
                     </form>
-                    <form method="post" action="{% url 'friend_reject' request.from_user.id %}">
+                    <form method="post" action="{% url 'reject_friend_request' request.from_user.id %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">Reject</button>
                     </form>

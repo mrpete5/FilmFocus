@@ -655,7 +655,6 @@ $(document).ready(function () {
 				});
 	
 				const data = await response.json();
-				alert(data.message);
 	
 				if (data.status === 'success') {
 					request_popup(popup_movie_id);
@@ -685,7 +684,6 @@ $(document).ready(function () {
 				});
 	
 				const data = await response.json();
-				alert(data.message);
 	
 				if (data.status === 'success') {
 					request_popup(popup_movie_id);
@@ -713,10 +711,7 @@ $(document).ready(function () {
 				const data = await response.json();
 	
 				if (data.status === 'success') {
-					alert(data.message);
 					request_popup(popup_movie_id);
-				} else {
-					alert("Movie already in watchlist");
 				}
 			} catch (error) {
 				console.error(error);

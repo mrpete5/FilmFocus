@@ -52,7 +52,7 @@
 							<img src="{% static 'img/user.png' %}" alt="profile_photo" style="width: 80px;">
 						</div>
 						<div class="profile__info">
-							<h3 class="profile__username">@{{ user.username }}</h3><br>
+							<h3 class="profile__username">@{{ user_profile.user }}</h3><br>
 							<a href="#editProfileModal" class="profile__edit" data-toggle="modal">Edit Profile</a>
 						</div>
 						<h3 class="bio_label">Bio</h3>
@@ -70,10 +70,24 @@
 	<div class="prof_catalog">
 		<div class="container">
 			<div class="row">
+
 				<div class="friends_block">
 					<h3 class="friends_block_title">Friends</h3>
-					<a href="/profile/"><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle;"></a>
-					<h3>Traizen McKown<br> @traizen</h3>
+					
+					{% if friend_requests %}
+					<div class="row">
+						<a href="/friend_requests/">Pending Requests ({{ friend_requests.count }})</a>
+					</div>
+					{% endif %}
+
+					{% for friend in user_profile.friends.all %}
+					<div style="display: flex; align-items: center; margin-left: 50px; margin-bottom: 10px;">
+						<a href="/profile/{{ friend.user }}" style="display: flex; align-items: center; text-decoration: none;">
+							<img src="{% static 'img/user.png' %}" class="profile_photo" alt="profile_photo" style="width: 30px;">
+							<h3 style="margin: 0 0 0 5px;">@{{ friend.user }}</h3>
+						</a>
+					</div>
+					{% endfor %}
 				</div>
 
                 <div class="prof_divider"></div>
