@@ -772,8 +772,16 @@ $(document).ready(function () {
 		if (response.ok) {
 			const data = await response.text();
 			popup.innerHTML = data;
+			//TODO add event handlers to the new HTML here
 		}
 	}
+
+	document.querySelectorAll(".profile__edit").forEach(x => {
+		x.addEventListener("click", async () => {
+			request_popup_profile_edit()
+			open_popup()
+		})
+	})
 
 
 	/*==============================
