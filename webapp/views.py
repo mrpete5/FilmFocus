@@ -180,7 +180,7 @@ def watchlist(request):
                     context['filter_imdb_end'] = imdb_end
                     context['movie_list'] = movie_list
                     return render(request, "watchlist.html", context)
-
+                # print("Form Errors:", form.errors) # Prints any error with a form submission
         # Setup Context for the frontend
         context['filter_watchlist'] = watchlists[0]
         context['movie_list'] = Movie.objects.filter(watchlistentry__watchlist=watchlists[0])

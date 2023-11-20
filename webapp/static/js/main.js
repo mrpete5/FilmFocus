@@ -779,5 +779,17 @@ $(document).ready(function () {
 			popup.innerHTML = data;
 		}
 	}
-});
 
+	document.querySelectorAll('.watchlist_el_link').forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default behavior of the link
+            // Get the watchlist ID from the data attribute
+            var watchlistId = this.getAttribute('data-watchlist-id');
+			console.log(watchlistId);
+            // Set the value of "watchlist_id" in the hidden form field
+            document.getElementById("hidden-watchlist-id").value = watchlistId;
+            // Trigger the form submission
+            document.getElementById("WL_profile_form").submit();
+        });
+    });
+});
