@@ -81,8 +81,12 @@
 					{% endif %}
 
 					{% for friend in user_profile.friends.all %}
-					<a href="/profile/{{ friend.user }}"><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle;"></a>
-					<h3>@{{ friend.user }}</h3>
+					<div style="display: flex; align-items: center; margin-left: 50px; margin-bottom: 10px;">
+						<a href="/profile/{{ friend.user }}" style="display: flex; align-items: center; text-decoration: none;">
+							<img src="{% static 'img/user.png' %}" class="profile_photo" alt="profile_photo" style="width: 30px;">
+							<h3 style="margin: 0 0 0 5px;">@{{ friend.user }}</h3>
+						</a>
+					</div>
 					{% endfor %}
 				</div>
 
