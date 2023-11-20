@@ -44,7 +44,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h2 class="search_title_container content__title"><b>{{ user }}'s Friend Requests</b></h2>
+                <h2 class="search_title_container content__title"><b>{{ user }}'s Incoming Friend Requests</b></h2>
             </div>
         </div>
         {% for request in in_requests %}
@@ -64,6 +64,29 @@
                     <form method="post" action="{% url 'reject_friend_request' request.from_user.id %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">Reject</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="row">
+            <div class="col-12">
+                <h2 class="search_title_container content__title"><b>{{ user }}'s Outgoing Friend Requests</b></h2>
+            </div>
+        </div>
+        {% for request in out_requests %}
+        <div class="row">
+            <div class="col-12">
+                <div class="profile__wrap">
+                    <div class="profile__photo">
+                        <img src="{% static 'img/user.png' %}" alt="profile_photo" style="width: 80px;">
+                    </div>
+                    <div class="profile__info">
+                        <h3 class="profile__username">@{{ request.from_user }}</h3><br>
+                    </div>
+                    <form method="post" action="{% url 'reject_friend_request' request.from_user.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Remove</button>
                     </form>
                 </div>
             </div>

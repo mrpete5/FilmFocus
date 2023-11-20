@@ -775,6 +775,52 @@ $(document).ready(function () {
 		}
 	}
 
+
+	/*==============================
+	User Search Buttons
+	==============================*/
+	document.querySelectorAll(".add_friend__btn").forEach(x => {
+		x.addEventListener('click', async () => {
+			console.log("gen")
+
+			const url = `/create_friend_request/${x.getAttribute('user_id')}/`;
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'X-CSRFToken': csrfToken
+				}
+			});
+
+			if (response.ok) {
+				const data = await response.text();
+				location.reload();
+			}
+		})
+	})
+	document.querySelectorAll(".remove_friend__btn").forEach(x => {
+		x.addEventListener('click', async () => {
+			console.log("gen")
+
+			const url = `/remove_friend/${x.getAttribute('user_id')}/`;
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'X-CSRFToken': csrfToken
+				}
+			});
+
+			if (response.ok) {
+				const data = await response.text();
+				location.reload();
+			}
+		})
+	})
+
+
 	document.querySelectorAll('.watchlist_el_link').forEach(function(link) {
         link.addEventListener('click', function(event) {
             event.preventDefault(); // Prevent the default behavior of the link

@@ -221,6 +221,8 @@ def searchBar(request):
                 users = User.objects.filter(username__icontains=username)
                 userProfiles = UserProfile.objects.filter(user__in=users)
                 context['searchedUsers'] = userProfiles
+                if user.is_authenticated: 
+                    context['self_profile'] = UserProfile.objects.get(user=request.user)
                 return render(request, 'user_results.html', context)
             else:
                 movies = Movie.objects.filter(title__icontains=query)
@@ -267,7 +269,7 @@ def profile(request, profile_name):
 
     if context['is_self']:
         context['watchlists'] = Watchlist.objects.filter(user=profile.user)
-        context['friend_requests'] = FriendRequest.objects.filter(to_user=request.user)
+        context['friend_requests'] = FriendRequest.objects.filter(to_user__user=request.user)
     else:
         context['watchlists'] = Watchlist.objects.filter(user=profile.user, is_private=False)
 
@@ -287,7 +289,8 @@ def edit_profile_popup(request):
 def friend_requests(request):
     context={}
     if request.user.is_authenticated:
-        context["in_requests"] = FriendRequest.objects.filter(to_user=request.user)
+        context["in_requests"] = FriendRequest.objects.filter(to_user__user=request.user)
+        context["out_requests"] = FriendRequest.objects.filter(from_user__user=request.user)
         return render(request, "friend_requests.html", context)
     
 @login_required
@@ -295,8 +298,9 @@ def friend_requests(request):
 def create_friend_request(request, to_id):
     try:
         if request.user.is_authenticated:
-            friend = User.objects.get(pk=to_id)
-            friend_request = FriendRequest.objects.create(from_user=request.user, to_user=friend)
+            user = UserProfile.objects.get(user=request.user)
+            friend = UserProfile.objects.get(pk=to_id)
+            friend_request = FriendRequest.objects.create(from_user=user, to_user=friend)
             friend_request.save()
             return JsonResponse({'status': 'success', 'message': 'Friend request created'})
     except Exception as e:
@@ -308,13 +312,12 @@ def create_friend_request(request, to_id):
 def accept_friend_request(request, from_id):
     if request.user.is_authenticated:
         user = UserProfile.objects.get(user=request.user)
-        friend = UserProfile.objects.get(user__id=from_id)
+        friend = UserProfile.objects.get(pk=from_id)
 
         user.friends.add(friend)
         friend.friends.add(user)
         
-        friend_user = User.objects.get(pk=from_id)
-        FriendRequest.objects.get(from_user=friend_user, to_user=request.user).delete()
+        FriendRequest.objects.get(from_user=friend, to_user=user).delete()
     return redirect("friend_requests")
 
 # View function for rejecting a friend request
@@ -323,13 +326,12 @@ def accept_friend_request(request, from_id):
 def reject_friend_request(request, from_id):
     if request.user.is_authenticated:
         user = UserProfile.objects.get(user=request.user)
-        friend = UserProfile.objects.get(user__id=from_id)
+        friend = UserProfile.objects.get(pk=from_id)
 
         user.friends.remove(friend)
         friend.friends.remove(user)
         
-        friend_user = User.objects.get(pk=from_id)
-        FriendRequest.objects.get(from_user=friend_user, to_user=request.user).delete()
+        FriendRequest.objects.get(from_user=friend, to_user=user).delete()
     return redirect("friend_requests")
 
 # View function for removing a friend
@@ -339,7 +341,7 @@ def remove_friend(request, friend_id):
     try:
         if request.user.is_authenticated:
             user = UserProfile.objects.get(user=request.user)
-            friend = UserProfile.objects.get(user__id=friend_id)
+            friend = UserProfile.objects.get(pk=friend_id)
 
             user.friends.remove(friend)
             friend.friends.remove(user)
