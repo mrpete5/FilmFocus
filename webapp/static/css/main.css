@@ -234,6 +234,9 @@ ul {
   right: 0;
   background-color: #2b2b31;
   z-index: 101;
+  margin-right: 17px; /* Adjust the margin to match the scrollbar width */
+  /* margin-left: 1px; */  /* Adjust the margin to show popups pink border */
+  /* margin-top: 1px; */ /*Adjust the margin to show popups pink border */
 }
 .header__logo {
   display: flex;
@@ -3964,7 +3967,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .popup.open {
   opacity: 1;
-  border: 1.5px solid #F12D92;
+  /* Removed because it would only show on certain parts of the page (pink border around window on popup open*/
+  /* border: 1.5px solid #F12D92;  */ 
   pointer-events: auto;
 }
 .popup.open button {
