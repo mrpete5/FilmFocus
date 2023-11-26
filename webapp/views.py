@@ -128,7 +128,16 @@ def watchlist(request):
 
         # TODO If no watchlists
         if not watchlists:
-            return redirect('index')
+            # Setup Context for the frontend
+            context['filter_watchlist'] = None
+            context['filter_genre'] = None
+            context['filter_streamer'] = None
+            context['filter_year_begin'] = None
+            context['filter_year_end'] = None
+            context['filter_imdb_begin'] = None
+            context['filter_imdb_end'] = None
+            context['movie_list'] = None
+            return render(request, "watchlist.html", context)
 
         context['watchlists'] = watchlists
 
