@@ -4244,8 +4244,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
   font-size: 13px;
   color: #fff;
@@ -4260,7 +4260,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   margin-right: 40px; /* Ensures the button stays to the left */
   width: 50px;  /* Adjust width as per requirement */
   height: 25px;  /* Adjust height as per requirement */
-  font-size: 12px;  /* Adjust font size as per requirement */
+  font-size: 10px;  /* Adjust font size as per requirement */
   padding: 2px 15px;  /* Adjust padding as per requirement */
 }
 .wlistremove__btn:hover {
