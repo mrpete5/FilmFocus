@@ -31,7 +31,7 @@ from .forms import (
     WatchlistFilterForm,
 )
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth import login, logout, authenticate, get_user_model
+from django.contrib.auth import login, logout, authenticate, get_user_model, password_validation
 import json
 import webapp.password_reset as pass_reset
 from django.utils.http import urlsafe_base64_decode
@@ -62,7 +62,7 @@ def index(request):
             # Redirect to the homepage on successful sign up
             return redirect('index')
         else:
-            messages.error(request, "Watchlist creation failed")               
+            messages.error(request, "Watchlist creation failed")            
     else:
         form = NewWatchlistForm()
         
@@ -119,21 +119,40 @@ def movie_detail(request, movie_slug):
 # View function for the movie watchlists page
 def watchlist(request):
     user = request.user
-    form = WatchlistFilterForm(request.POST or None)
     context = {}
 
     if user.is_authenticated:
         # Get watchlists
         watchlists = Watchlist.objects.filter(user=user)
 
+        # Process new watchlist form that occurs when user doesnt have any watchlists
+        if request.method == 'POST':
+            form = NewWatchlistForm(request.POST or None)
+            if form.is_valid():
+                watchlist_name = form.cleaned_data.get("watchlist_name")
+                create_watchlist(request, watchlist_name)
+
+                # Redirect to watchlist page
+                return redirect("watchlist")
+
         # TODO If no watchlists
         if not watchlists:
-            return redirect('index')
+            # Setup Context for the frontend
+            context['filter_watchlist'] = None
+            context['filter_genre'] = None
+            context['filter_streamer'] = None
+            context['filter_year_begin'] = None
+            context['filter_year_end'] = None
+            context['filter_imdb_begin'] = None
+            context['filter_imdb_end'] = None
+            context['movie_list'] = None
+            return render(request, "watchlist.html", context)
 
         context['watchlists'] = watchlists
 
         # TODO this might be temporary depending on how we want to implement the watchlist page
         if watchlists:
+            form = WatchlistFilterForm(request.POST or None)
             if request.method == 'POST':
                 if form.is_valid():
                     # Get The watchlist Id from the form
@@ -418,7 +437,9 @@ def pwresetconfirm(request, uidb64, token):
                     new_password_2 = form.cleaned_data.get("new_password_2")
 
                     # errors if something is wrong with password inputs
-                    pass_reset.confirm_password(new_password_1, new_password_2)
+                    password_validation.validate_password(new_password_1)
+                    if new_password_1 != new_password_2:
+                        raise Exception("Passwords do not match")
 
                     # otherwise change the password
                     pass_reset.change_password(user, new_password_1)

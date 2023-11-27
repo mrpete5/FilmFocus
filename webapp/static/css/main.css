@@ -235,6 +235,9 @@ ul {
   right: 0;
   background-color: #2b2b31;
   z-index: 101;
+  margin-right: 17px; /* Adjust the margin to match the scrollbar width */
+  /* margin-left: 1px; */  /* Adjust the margin to show popups pink border */
+  /* margin-top: 1px; */ /*Adjust the margin to show popups pink border */
 }
 .header__logo {
   display: flex;
@@ -3965,7 +3968,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .popup.open {
   opacity: 1;
-  border: 1.5px solid #F12D92;
+  /* Removed because it would only show on certain parts of the page (pink border around window on popup open*/
+  /* border: 1.5px solid #F12D92;  */ 
   pointer-events: auto;
 }
 .popup.open button {
@@ -4134,6 +4138,23 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
 }
+/* Add Movie to Watchlist forms, fields, and buttons */
+.wlist_page_form {
+  background-color: #28282d;
+  -webkit-box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* bottom: 50px; move add watchlist button off the bottom */
+  justify-content: center;
+  align-items: center;
+  margin-top: 2.5%;
+  margin-bottom: 2.5%;
+  margin-right: 30%;
+  margin-left: 30%;
+  /* margin-bottom: 250px; */
+}
 .wlist__group {
   /* position: relative; */
   /* margin-bottom: 20px; */
@@ -4241,8 +4262,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
   font-size: 13px;
   color: #fff;
@@ -4257,7 +4278,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   margin-right: 40px; /* Ensures the button stays to the left */
   width: 50px;  /* Adjust width as per requirement */
   height: 25px;  /* Adjust height as per requirement */
-  font-size: 12px;  /* Adjust font size as per requirement */
+  font-size: 10px;  /* Adjust font size as per requirement */
   padding: 2px 15px;  /* Adjust padding as per requirement */
 }
 .wlistremove__btn:hover {

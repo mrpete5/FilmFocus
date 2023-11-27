@@ -599,8 +599,10 @@ $(document).ready(function () {
 			popup.innerHTML = data;
 			const closePopupAlt = popup.querySelector("#closePopupAlt");
 			const closePopup = popup.querySelector("#closePopup");
+			const closePopupAlt2 = popup;
 			const popupLogin = popup.querySelector("#loginPopup");
 			const createWatchlistPopup = popup.querySelector("#wlistbtn")
+			if (closePopupAlt2) close_event_handler2(closePopupAlt2);
 			if (closePopupAlt) close_event_handler(closePopupAlt);
 			if (closePopup) close_event_handler(closePopup);
 			if (popupLogin) popup_login_event_handler(popupLogin);
@@ -617,18 +619,34 @@ $(document).ready(function () {
 		// document.body.style.overflowX = 'hidden';
 		document.body.style.left = '0';
 		document.body.style.right = '0';
+		document.addEventListener("keydown", handleEscapeKey);
 	}
 	function close_popup() {
 		const scrollY = document.body.style.top;
 		document.body.style.position = '';
 		document.body.style.top = '';
 		window.scrollTo(0, parseInt(scrollY || '0') * -1); //restores your page position
+		document.removeEventListener("keydown", handleEscapeKey);
 		popup.classList.remove("open");
 	}
 	function close_event_handler(x) {
 		x.addEventListener("click", ()=> {
 			close_popup();
 		})
+	}
+	function close_event_handler2(x) {
+		x.addEventListener("click", (event)=> {
+			const popupInner = document.querySelector(".popupInner");
+			if (popup.classList.contains("open") && !popupInner.contains(event.target)) {
+				close_popup();
+			}
+		})
+	}
+	function handleEscapeKey(event) {
+		if (event.key === 'Escape') {
+			close_popup();
+			console.log("logging");
+		}
 	}
 	function popup_login_event_handler(x) {
 		x.addEventListener("click", () => {
