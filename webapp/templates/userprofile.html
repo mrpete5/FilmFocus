@@ -42,7 +42,7 @@
 
 	<!-- page title -->
 	{% if user.is_authenticated %}
-
+	
 	<section class="section section--first section--bg" data-bg="{% static 'img/section/section.jpg' %}">
 		<div class="container">
 			<div class="row">
@@ -51,10 +51,16 @@
 						<div class="profile__photo">
 							<img src="{% static 'img/user.png' %}" alt="profile_photo" style="width: 80px;">
 						</div>
-						<div class="profile__info">
-							<h3 class="profile__username">@{{ user_profile.user }}</h3><br>
-							<a href="#0" class="profile__edit">Edit Profile</a>
-						</div>
+						{% if is_self %}
+							<div class="profile__info">
+								<h3 class="profile__username">@{{ user_profile.user }}</h3><br>
+								<a href="#0" class="profile__edit">Edit Profile</a>
+							</div>
+						{% else %}
+							<div class="profile__info">
+								<h3 class="profile__username">@{{ user_profile.user }}</h3><br>
+							</div>
+						{% endif  %}
 						<h3 class="bio_label">Bio</h3>
 						<p class="user_bio">{{ user_profile.biography }}</p>
 						<a href="#0" class="num_friends">{{ user_profile.friends.count }}<br>Friends</a>
