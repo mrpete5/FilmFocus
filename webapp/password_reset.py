@@ -31,11 +31,4 @@ def send_email(request, user):
 def change_password(userIn, passIn):
     userIn.set_password(passIn)
     userIn.save()
-
-# Checks passwords for errors
-def confirm_password(pass1, pass2):
-    if pass1 != pass2:
-        raise Exception("Passwords do not match")
-    if len(pass1) < 8:
-        raise Exception("Password must be at least 8 characters long")
     

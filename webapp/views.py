@@ -31,7 +31,7 @@ from .forms import (
     WatchlistFilterForm,
 )
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth import login, logout, authenticate, get_user_model
+from django.contrib.auth import login, logout, authenticate, get_user_model, password_validation
 import json
 import webapp.password_reset as pass_reset
 from django.utils.http import urlsafe_base64_decode
@@ -411,7 +411,9 @@ def pwresetconfirm(request, uidb64, token):
                     new_password_2 = form.cleaned_data.get("new_password_2")
 
                     # errors if something is wrong with password inputs
-                    pass_reset.confirm_password(new_password_1, new_password_2)
+                    password_validation.validate_password(new_password_1)
+                    if new_password_1 != new_password_2:
+                        raise Exception("Passwords do not match")
 
                     # otherwise change the password
                     pass_reset.change_password(user, new_password_1)
