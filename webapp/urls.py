@@ -30,6 +30,7 @@ urlpatterns = [
     path("watchlist/", views.watchlist, name="watchlist"),
     path("profile/<str:profile_name>", views.profile, name="user_profile"),
     path("edit_profile_popup/", views.edit_profile_popup, name="edit_profile_popup"),
+    path("save_profile/", views.save_profile, name="save_profile"),
     path("friend_requests/", views.friend_requests, name="friend_requests"),
     path("create_friend_request/<int:to_id>/", views.create_friend_request, name="create_friend_request"),
     path("accept_friend_request/<int:from_id>/", views.accept_friend_request, name="accept_friend_request"),
@@ -45,7 +46,7 @@ urlpatterns = [
           name="password_reset"),
     path("password_reset_complete/", auth_views.PasswordResetCompleteView.as_view(),        # Page that comfirms the password has been changed
           name="password_reset_complete"),
-    path("login/", views.login_user, name="login"),         # Leave the different naming schemes as is
+    path("login/", views.login_user, name="login"),
     path("logout/", views.logout_user, name="logout"),
     path("signup/", views.signup, name="signup"),
     path("faq/", views.faq, name="faq"),

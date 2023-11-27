@@ -772,7 +772,12 @@ $(document).ready(function () {
 		if (response.ok) {
 			const data = await response.text();
 			popup.innerHTML = data;
-			//TODO add event handlers to the new HTML here
+			const closePopupAlt = popup.querySelector("#closePopupAlt");
+			const closePopup = popup.querySelector("#closePopup");
+			const savePopup = popup.querySelector("#savePopup");
+			if (closePopupAlt) close_event_handler(closePopupAlt);
+			if (closePopup) close_event_handler(closePopup);
+			if (savePopup) save_event_handler(savePopup);
 		}
 	}
 
@@ -783,6 +788,43 @@ $(document).ready(function () {
 		})
 	})
 
+	function save_event_handler(saveBtn) {
+		saveBtn.addEventListener("click", async ()=> {
+			const bioInput = document.getElementById('bioInput');
+			const bioText = bioInput.value;
+			if (bioText.length > 300) {
+				alert("Bio cannot exceed 300 characters");
+				return;
+			}
+
+			const url = '/save_profile/'
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+			// Send the bio text to the server
+			try {
+				const response = await fetch(url, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRFToken': csrfToken
+					},
+					body: JSON.stringify({ biography: bioText })
+				});
+
+				if (response.ok) {
+					// alert("Bio updated successfully!");
+					request_popup_profile_edit();
+					close_popup();
+					location.reload();
+				} else {
+					alert("An error occurred while saving your bio.");
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert("An error occurred while saving your bio.");
+			}
+		})
+	}
 
 	/*==============================
 	User Search Buttons

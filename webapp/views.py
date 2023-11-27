@@ -275,7 +275,7 @@ def profile(request, profile_name):
 
     return render(request, "userprofile.html", context)
 
-# View fucntion for getting the profile edit popup
+# View function for getting the profile edit popup
 @login_required
 def edit_profile_popup(request):
     context = {}
@@ -283,6 +283,22 @@ def edit_profile_popup(request):
         if request.user.is_authenticated:
             context["user_profile"] = UserProfile.objects.get(user=request.user)
         return render(request, "popup_profile_edit.html", context)
+
+
+# View function for updating profile information
+@login_required
+def save_profile(request):
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)   # Retrieve user profile            
+        data = json.loads(request.body) # Get bio text from request body
+        bio_text = data.get('biography')
+        user_profile.biography = bio_text
+        user_profile.save() # Update the user profile
+
+        return JsonResponse({'status': 'success', 'message': 'Profile saved successfully'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
 
 # View function for friend request page
 @login_required

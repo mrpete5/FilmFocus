@@ -179,12 +179,10 @@ class UserProfile(models.Model):
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     watchlist_name = models.CharField(max_length=100)
-    # user = models.ForeignKey(User, related_name='watchlists', on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
 
     def __str__(self):
         return f"{self.user.username}'s {self.watchlist_name} Watchlist"
@@ -213,12 +211,3 @@ class FriendRequest(models.Model):
 
     def __str__(self):
         return f"{self.from_user.user.username}'s request to {self.to_user.user.username}"
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
