@@ -6,8 +6,8 @@
     <!-- Bio Section -->
     <div class="bio-section">
         <h3>Edit Bio</h3>
-        <textarea id="bioInput" rows="5" cols="40" placeholder="Your bio..."></textarea>
-    </div>
+        <textarea id="bioInput" rows="5" cols="40" placeholder="Enter your bio here...">{% if biography %}{{ biography }}{% endif %}</textarea>
+    </div>    
     <!-- end Bio Section -->
 
     <button id="savePopup" class="save__profile-popup">SAVE</button>

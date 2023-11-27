@@ -300,9 +300,10 @@ def edit_profile_popup(request):
     context = {}
     if request.method == 'GET':
         if request.user.is_authenticated:
-            context["user_profile"] = UserProfile.objects.get(user=request.user)
+            user_profile = UserProfile.objects.get(user=request.user)
+            context["user_profile"] = user_profile
+            context["biography"] = user_profile.biography if user_profile.biography else ""
         return render(request, "popup_profile_edit.html", context)
-
 
 # View function for updating profile information
 @login_required
@@ -317,7 +318,6 @@ def save_profile(request):
         return JsonResponse({'status': 'success', 'message': 'Profile saved successfully'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
-
 
 # View function for friend request page
 @login_required
