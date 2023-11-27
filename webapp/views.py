@@ -128,7 +128,6 @@ def watchlist(request):
         # Process new watchlist form that occurs when user doesnt have any watchlists
         if request.method == 'POST':
             form = NewWatchlistForm(request.POST or None)
-            print(form.is_valid())
             if form.is_valid():
                 watchlist_name = form.cleaned_data.get("watchlist_name")
                 create_watchlist(request, watchlist_name)
