@@ -62,7 +62,7 @@ def index(request):
             # Redirect to the homepage on successful sign up
             return redirect('index')
         else:
-            messages.error(request, "Watchlist creation failed")               
+            messages.error(request, "Watchlist creation failed")            
     else:
         form = NewWatchlistForm()
         
@@ -119,12 +119,22 @@ def movie_detail(request, movie_slug):
 # View function for the movie watchlists page
 def watchlist(request):
     user = request.user
-    form = WatchlistFilterForm(request.POST or None)
     context = {}
 
     if user.is_authenticated:
         # Get watchlists
         watchlists = Watchlist.objects.filter(user=user)
+
+        # Process new watchlist form that occurs when user doesnt have any watchlists
+        if request.method == 'POST':
+            form = NewWatchlistForm(request.POST or None)
+            print(form.is_valid())
+            if form.is_valid():
+                watchlist_name = form.cleaned_data.get("watchlist_name")
+                create_watchlist(request, watchlist_name)
+
+                # Redirect to watchlist page
+                return redirect("watchlist")
 
         # TODO If no watchlists
         if not watchlists:
@@ -143,6 +153,7 @@ def watchlist(request):
 
         # TODO this might be temporary depending on how we want to implement the watchlist page
         if watchlists:
+            form = WatchlistFilterForm(request.POST or None)
             if request.method == 'POST':
                 if form.is_valid():
                     # Get The watchlist Id from the form

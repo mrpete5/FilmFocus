@@ -228,12 +228,13 @@
 					{% endfor %}
 				{% else %}
 					<!-- Create New Watchlist form -->
-					<div class="wlist_page_form">
+					<form class="wlist_page_form" method="post">
+						{% csrf_token %}
 						<div class="wlist__group">
-							<input id="wlistinput" class="wlist__input" placeholder="New Watchlist Name" type="text">
+							<input id="wlistinput" class="wlist__input" name="watchlist_name" placeholder="New Watchlist Name" type="text">
 							<button id="wlistpagebtn" class="wlist_page_btn" type="submit">New Watchlist</button>
 						</div>
-					</div>
+					</form>
 					<!-- end Create New Watchlist form -->
 				{% endif %}
 				<!-- paginator -->
