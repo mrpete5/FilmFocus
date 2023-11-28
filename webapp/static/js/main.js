@@ -790,9 +790,11 @@ $(document).ready(function () {
 		if (response.ok) {
 			const data = await response.text();
 			popup.innerHTML = data;
+			const closePopupAlt2 = popup;
 			const closePopupAlt = popup.querySelector("#closePopupAlt");
 			const closePopup = popup.querySelector("#closePopup");
 			const savePopup = popup.querySelector("#savePopup");
+			if (closePopupAlt2) close_event_handler2(closePopupAlt2);
 			if (closePopupAlt) close_event_handler(closePopupAlt);
 			if (closePopup) close_event_handler(closePopup);
 			if (savePopup) save_event_handler(savePopup);
