@@ -42,14 +42,14 @@
 
 	<!-- page title -->
 	{% if user.is_authenticated %}
-	
+
 	<section class="section section--first section--bg" data-bg="{% static 'img/section/section.jpg' %}">
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
 					<div class="profile__wrap">
 						<div class="profile__photo">
-							<img src="{% static 'img/user.png' %}" alt="profile_photo" style="width: 80px;">
+							<img src="{% static 'img/profile_pics/' %}{{ user_profile.profile_pic }}" alt="profile_photo" style="width: 80px;">
 						</div>
 						{% if is_self %}
 							<div class="profile__info">

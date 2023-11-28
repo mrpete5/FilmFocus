@@ -166,8 +166,8 @@ class UserProfile(models.Model):
     friends = models.ManyToManyField('self', blank=True)
     biography = models.CharField(max_length=300, blank=True)
     PROFILE_PICS_CHOICES = [
-        ('default.jpg', 'Default'),
-        # ('pic1.jpg', 'Picture 1'),
+        ('default.png', 'Default'),
+        ('man_suit.png', 'Man in Suit'),
         # ('pic2.jpg', 'Picture 2'),
     ]
     profile_pic = models.CharField(max_length=100, choices=PROFILE_PICS_CHOICES, default='default.jpg')

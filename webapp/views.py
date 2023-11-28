@@ -309,11 +309,16 @@ def edit_profile_popup(request):
 @login_required
 def save_profile(request):
     try:
-        user_profile = UserProfile.objects.get(user=request.user)   # Retrieve user profile            
-        data = json.loads(request.body) # Get bio text from request body
+        user_profile = UserProfile.objects.get(user=request.user)
+        data = json.loads(request.body)
+
         bio_text = data.get('biography')
+        profile_pic = data.get('profile_pic')
+
         user_profile.biography = bio_text
-        user_profile.save() # Update the user profile
+        if profile_pic:
+            user_profile.profile_pic = profile_pic
+        user_profile.save()
 
         return JsonResponse({'status': 'success', 'message': 'Profile saved successfully'})
     except Exception as e:

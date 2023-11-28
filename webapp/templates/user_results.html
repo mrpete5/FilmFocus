@@ -66,12 +66,10 @@
                                     </a>
                                     <div class="user_card__content">
                                         <h3 class="user_card__title" style="text-align: center;"><a href="{% url 'user_profile' profile_name=user_profile.user %}">@{{ user_profile.user }}</a></h3>
-                                        {% if user.is_authenticated %}
                                         {% if self_profile in user_profile.friends.all %}
-                                        <center><button class="remove_friend__btn" type="button" user_id="{{user_profile.id}}">Remove Friend</button></center>
+                                            <center><button class="remove_friend__btn" type="button" user_id="{{user_profile.id}}">Remove Friend</button></center>
                                         {% else %}
-                                        <center><button class="add_friend__btn" type="button" user_id="{{user_profile.id}}">Add Friend</button></center>
-                                        {% endif %}
+                                            <center><button class="add_friend__btn" type="button" user_id="{{user_profile.id}}">Add Friend</button></center>
                                         {% endif %}
                                     </div>
                                 </div>

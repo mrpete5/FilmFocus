@@ -38,7 +38,7 @@ class Documentation():
         ''' Get the topic of the documentation from the user. '''
         print(f'   Examples: "Django" or "APIs" or "Tests" or "Models"')
         command = input(' > Please enter the topic of the documentation: ')
-        self.topic = command
+        self.topic = command.replace(' ', '_')
         print(f'\n   Your topic: {self.topic}')
         self.fix_output_filename()
         

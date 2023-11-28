@@ -4572,9 +4572,6 @@ User Profile Page
   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
-  /* margin-top: 22.5%; */
-  /* 
-  margin-top: 50px; */
 }
 .close__profile-popup {
   color: #fff;
@@ -4595,15 +4592,35 @@ User Profile Page
   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
-  /* margin-top: 22.5%; */
-  /* 
-  margin-top: 50px; */
 }
 .x__profile-popup {
   color: #fff;
   position: absolute;
   justify-content: right;
   align-items: right;
-  right: 15px;
-  
+  right: 15px;  
+}
+.profile-pic-section {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.profile-pic-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px; /* Adjust the spacing between images */
+}
+.profile-pic-option {
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.profile-pic-option img {
+  width: 60px; /* Adjust thumbnail size */
+  height: 60px;
+  object-fit: cover;
+}
+.profile-pic-option:hover {
+  border-color: #007bff; /* Hover effect */
+}
+.profile-pic-option.selected {
+  border-color: #28a745; /* Highlight for the selected image */
 }

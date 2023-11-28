@@ -796,6 +796,7 @@ $(document).ready(function () {
 			if (closePopupAlt) close_event_handler(closePopupAlt);
 			if (closePopup) close_event_handler(closePopup);
 			if (savePopup) save_event_handler(savePopup);
+			select_profile_pic_event_handler();
 		}
 	}
 
@@ -806,6 +807,16 @@ $(document).ready(function () {
 		})
 	})
 
+	function select_profile_pic_event_handler() {
+		document.querySelectorAll('.profile-pic-option').forEach(item => {
+			item.addEventListener('click', function() {
+				document.querySelectorAll('.profile-pic-option').forEach(div => div.classList.remove('selected'));
+				this.classList.add('selected');
+				document.getElementById('selectedProfilePic').value = this.querySelector('img').src.split('/').pop();
+			});
+		});
+	}
+
 	function save_event_handler(saveBtn) {
 		saveBtn.addEventListener("click", async ()=> {
 			const bioInput = document.getElementById('bioInput');
@@ -814,11 +825,11 @@ $(document).ready(function () {
 				alert("Bio cannot exceed 300 characters");
 				return;
 			}
-
+			const selectedProfilePic = document.getElementById('selectedProfilePic').value;
 			const url = '/save_profile/'
 			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
 
-			// Send the bio text to the server
+			// Send the bio text and profile picture to the server
 			try {
 				const response = await fetch(url, {
 					method: 'POST',
@@ -826,7 +837,7 @@ $(document).ready(function () {
 						'Content-Type': 'application/json',
 						'X-CSRFToken': csrfToken
 					},
-					body: JSON.stringify({ biography: bioText })
+					body: JSON.stringify({ biography: bioText, profile_pic: selectedProfilePic })
 				});
 
 				if (response.ok) {

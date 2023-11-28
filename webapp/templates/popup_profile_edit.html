@@ -1,12 +1,28 @@
+{% load static %}
+
 <div class="popupInner">
     <button id="closePopupAlt" class="x__profile-popup">&#x2715</button>
     <h2>Edit Profile</h2>
 
+    <!-- Profile Picture Section -->
+    <div class="profile-pic-section">
+        <h3>Select Profile Picture</h3>
+        <div class="profile-pic-group">
+            {% for pic_choice in user_profile.PROFILE_PICS_CHOICES %}
+                <!-- pic_choice is a tuple, [0]==image link, [1]==description -->
+                <div class="profile-pic-option {% if user_profile.profile_pic == pic_choice.0 %}selected{% endif %}">
+                    <img src="{% static 'img/profile_pics/' %}{{ pic_choice.0 }}" alt="{{ pic_choice.1 }}" title="{{ pic_choice.1 }}">
+                </div>
+            {% endfor %}
+        </div>
+        <input type="hidden" id="selectedProfilePic" name="profile_pic" value="{{ user_profile.profile_pic }}">
+    </div>
+    <!-- end Profile Picture Section -->
 
     <!-- Bio Section -->
     <div class="bio-section">
-        <h3>Edit Bio</h3>
-        <textarea id="bioInput" rows="5" cols="40" placeholder="Enter your bio here...">{% if biography %}{{ biography }}{% endif %}</textarea>
+        <h3>Edit Biography</h3>
+        <textarea id="bioInput" rows="3" cols="40" placeholder="Enter your bio here...">{% if biography %}{{ biography }}{% endif %}</textarea>
     </div>    
     <!-- end Bio Section -->
 
