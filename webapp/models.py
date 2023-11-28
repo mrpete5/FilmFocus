@@ -168,7 +168,12 @@ class UserProfile(models.Model):
     PROFILE_PICS_CHOICES = [
         ('default.png', 'Default'),
         ('man_suit.png', 'Man in Suit'),
-        # ('pic2.jpg', 'Picture 2'),
+        ('man_hoodie.png', 'Man in Hoodie'),
+        ('woman_glasses.png', 'Woman with Glasses'),
+        ('woman_suit.png', 'Woman in Suit'),
+        ('girl_bow.png', 'Girl with Bow'),
+        ('boy_smile.png', 'Boy with Smile'),
+        ('man_beard.png', 'Man with Beard'),
     ]
     profile_pic = models.CharField(max_length=100, choices=PROFILE_PICS_CHOICES, default='default.jpg')
     
