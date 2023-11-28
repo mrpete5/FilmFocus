@@ -145,23 +145,28 @@ $(document).ready(function () {
 		dots: false,
 		loop: true,
 		autoplay: false,
-		smartSpeed: 600,
+		smartSpeed: 100,
 		margin: 0,
 		responsive : {
 			0 : {
 				items: 2,
+				slideBy: 2,
 			},
 			576 : {
 				items: 2,
+				slideBy: 2,
 			},
 			768 : {
 				items: 3,
+				slideBy: 3,
 			},
 			992 : {
 				items: 6,
+				slideBy: 6,
 			},
 			1200 : {
 				items: 6,
+				slideBy: 6,
 			},
 		}
 	});
