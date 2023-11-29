@@ -61,7 +61,7 @@
                                 <div class="user_card">
                                     <a href="{% url 'user_profile' profile_name=user_profile.user %}">
                                         <div>
-                                            <center><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 90px;"></center>
+                                            <center><img src="{% static 'img/profile_pics/' %}{{ user_profile.profile_pic }}" class ="profile_photo" alt="profile_photo" style="width: 90px;"></center>
                                         </div>
                                     </a>
                                     <div class="user_card__content">
