@@ -40,6 +40,20 @@
 </head>
 <body class="body">
 
+	<!-- delete watchlist popup -->
+
+    <!-- <div class="popupInner">
+        <button id="closePopupAlt" class="x__popup">&#x2715</button>
+        <h2>Are you sure you want to delete the watchlist tempoary?</h2><br>
+
+
+        <br>
+        <button id="closePopup" class="close__popup">cancel</button>
+    </div> -->
+	
+	<!-- end delete watchlist popup -->
+
+
 	<!-- page title -->
 	<section class="section section--first section--bg" data-bg={% static "img/section/section.jpg" %}>
 		<div class="container">
@@ -184,6 +198,13 @@
 							<!-- filter btn -->
 							<button class="filter__btn" type="submit">apply filter</button>
 							<!-- end filter btn -->
+
+							<!-- delete watchlist button -->
+							{% if watchlists %}
+								<button class="delete-watchlist__btn" type="submit">delete watchlist</button>
+							{% endif %}
+							<!-- end delete watchlist button -->
+							
 						</form>
 						
 					</div>
