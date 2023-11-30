@@ -550,6 +550,19 @@ def create_watchlist(request, watchlist_name):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
 
+
+# View function for getting the delete watchlist confirmation popup
+@login_required
+def delete_watchlist_popup(request, watchlist_id, watchlist_name):
+    context = {}
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            user_profile = UserProfile.objects.get(user=request.user)
+            context["user_profile"] = user_profile
+            context["watchlist_id"] = watchlist_id
+            context["watchlist_name"] = watchlist_name
+        return render(request, "popup_del_wlist.html", context)
+
 @login_required
 @require_POST
 def remove_watchlist(request, watchlist_id):

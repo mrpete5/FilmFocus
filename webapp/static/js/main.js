@@ -781,6 +781,13 @@ $(document).ready(function () {
 	/*==============================
 	Profile Edit Popup Buttons
 	==============================*/
+	document.querySelectorAll(".profile__edit").forEach(x => {
+		x.addEventListener("click", async () => {
+			request_popup_profile_edit();
+			open_popup();
+		})
+	})
+
 	async function request_popup_profile_edit() {
 		const url = "/edit_profile_popup/";
 		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
@@ -806,13 +813,6 @@ $(document).ready(function () {
 			select_profile_pic_event_handler();
 		}
 	}
-
-	document.querySelectorAll(".profile__edit").forEach(x => {
-		x.addEventListener("click", async () => {
-			request_popup_profile_edit()
-			open_popup()
-		})
-	})
 
 	function select_profile_pic_event_handler() {
 		document.querySelectorAll('.profile-pic-option').forEach(item => {
@@ -906,7 +906,6 @@ $(document).ready(function () {
 		})
 	})
 
-
 	document.querySelectorAll('.watchlist_el_link').forEach(function(link) {
         link.addEventListener('click', function(event) {
             event.preventDefault(); // Prevent the default behavior of the link
@@ -919,4 +918,80 @@ $(document).ready(function () {
             document.getElementById("WL_profile_form").submit();
         });
     });
+
+
+	/*==============================
+	Delete Watchlist Popup
+	==============================*/
+	document.getElementById("deleteWatchlistBtn").addEventListener("click", function() {
+		var watchlist_name = document.querySelector("#filter__watchlist input[type='button']").value;
+		var watchlist_id = document.getElementById("hidden-watchlist-id").value;
+		console.log(watchlist_name);
+		console.log(watchlist_id);
+		request_del_wlist_popup(watchlist_name, watchlist_id);
+		open_popup();
+	});
+	
+	async function request_del_wlist_popup(watchlist_name, watchlist_id) {
+		const url = "/delete_watchlist_popup/"+watchlist_id+"/"+watchlist_name+"/";
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'X-CSRFToken': csrfToken
+			}
+		});
+
+		if (response.ok) {
+			const data = await response.text();
+			popup.innerHTML = data;
+			const closePopupAlt2 = popup;
+			const closePopupAlt = popup.querySelector("#closePopupAlt");
+			const closePopup = popup.querySelector("#closePopup");
+			const confirmPopup = popup.querySelector("#confirmPopup");
+			if (closePopupAlt2) close_event_handler2_del_wlist(closePopupAlt2);
+			if (closePopupAlt) close_event_handler(closePopupAlt);
+			if (closePopup) close_event_handler(closePopup);
+			if (confirmPopup) confirm_del_wlist_event_handler(confirmPopup, watchlist_id);
+		}
+	}
+	function close_event_handler2_del_wlist(x) {
+		x.addEventListener("click", (event)=> {
+			const popupInner = document.querySelector(".del-wlist-popupInner"); // uses different popupInner class
+			if (popup.classList.contains("open") && !popupInner.contains(event.target)) {
+				close_popup();
+			}
+		})
+	}
+	function confirm_del_wlist_event_handler(confirmBtn, watchlist_id) {
+		confirmBtn.addEventListener("click", async ()=> {
+
+			const url = '/remove_watchlist/'+watchlist_id+'/';
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+			try {
+				const response = await fetch(url, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRFToken': csrfToken
+					}
+				});
+
+				if (response.ok) {
+					// Load the watchlist page.
+					// Cannot use location.reload() because is maintains the deleted hidden-watchlist-id attribute
+					window.location.href = '/watchlist/'; 
+				} else {
+					alert("An error occurred while deleting your watchlist.");
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert("An error occurred while deleting your watchlist");
+			}
+		})
+	}
+
+
 });

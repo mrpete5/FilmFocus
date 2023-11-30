@@ -45,6 +45,7 @@ FilmFocus Grey: #2b2b31
 29. Search Results
 30. User Profile Page
 31. Edit Profile Popup
+32. Delete Watchlist Button & Popup
 ----------------------------------------*/
 /*==============================
 	Common styles
@@ -2447,34 +2448,6 @@ ul {
   font-weight: 500;
   margin-left: 4px;
 }
-
-.delete-watchlist__btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 48px;
-  width: 150px;
-  margin-left: 30px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
-  background-image: -moz-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
-  background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
-  background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
-  background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
-  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
-  opacity: 0.85;
-  font-size: 13px;
-  color: #fff;
-  text-transform: uppercase;
-  font-weight: 500;
-  letter-spacing: 1px;
-}
-.delete-watchlist__btn:hover {
-  opacity: 1;
-  color: #fff;
-}
-
 @media (min-width: 768px) {
   .filter {
     margin-bottom: 50px;
@@ -4652,4 +4625,102 @@ User Profile Page
 }
 .profile-pic-option.selected {
   border-color: #28a745; /* Highlight for the selected image */
+}
+
+/*==============================
+	Delete Watchlist Button & Popup
+==============================*/
+.del-wlist-popupInner {
+  background-color:#2b2b31;
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  border: 3px solid #F12D92;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  padding: 10px 10px;
+  text-align: center;
+  color: #fff;
+  width: 450px;
+  height: 235px;
+  position: relative;
+  z-index: 103;
+  pointer-events: none;
+}
+.del-wlist-popupInner h2 {
+  margin: 0;
+}
+.del-wlist-popupInner p {
+  margin: 0;
+  border-bottom: .5px solid #F12D92; /* comment this out to remove pink underline below watchlist titles in popup */
+  position: relative;
+}
+.del-wlist-popupInner button {
+  text-align: center;
+}
+
+.delete-watchlist__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  width: 150px;
+  margin-left: 30px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
+  opacity: 0.85;
+  font-size: 13px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.delete-watchlist__btn:hover {
+  opacity: 1;
+  color: #fff;
+}
+.confirm__del-wlist-popup {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 120px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #29A329 0%, #29A329 100%);  /* Lime Green: #32CD32, Dark Lime: #29A329 */
+  background-image: -webkit-linear-gradient(90deg, #29A329 0%, #29A329 100%); /* only using Dark Lime, so no color transition */
+  background-image: -ms-linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  background-image: linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
+  opacity: 0.85;
+}
+.cancel__del-wlist-popup {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 250px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
+  opacity: 0.85;
 }
