@@ -256,7 +256,7 @@ def searchBar(request):
 def searchbar(request, query):
     if request.method == 'GET':
         movies = Movie.objects.filter(title__icontains=query)
-        return render(request, "searchbar.html", {"movies":movies[:2]})
+        return render(request, "searchbar.html", {"movies":movies[:10]}) # Quantity of movies in the searchbar query list
 
 # View function for getting movie watchlist popup
 def popup(request, movie_id):

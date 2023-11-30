@@ -60,7 +60,7 @@ $(document).ready(function () {
 		// Start a new timer to detect when typing stops
 		searchbar_timeout = setTimeout(function () {
 			get_searchbar_queries(searchbar.value)
-		}, 500);
+		}, 100); // timer delay in miliseconds
 	})
 	searchbar.addEventListener('click', function() {get_searchbar_queries(this.value)});
 	searchbar.addEventListener('blur', function(event) {
