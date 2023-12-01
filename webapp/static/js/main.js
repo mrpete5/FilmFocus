@@ -32,22 +32,19 @@ $(document).ready(function () {
 	const searchbar_queries = document.getElementById("searchbar-queries");
 	var searchbar_timeout;
 	async function get_searchbar_queries(input_value) {
-		if (input_value.length >= 3) {
-			const url = "/searchbar/"+input_value;
-			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+		const url = "/searchbar/"+input_value;
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
 
-			const response = await fetch(url, {
-				method: 'GET',
-				headers: {
-					'X-CSRFToken': csrfToken
-				}
-			});
-
-			if (response.ok) {
-				const data = await response.text();
-				searchbar_queries.innerHTML = data;
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'X-CSRFToken': csrfToken
 			}
+		});
 
+		if (response.ok) {
+			const data = await response.text();
+			searchbar_queries.innerHTML = data;
 		}
 	}
 	function clear_searchbar_queries() {
