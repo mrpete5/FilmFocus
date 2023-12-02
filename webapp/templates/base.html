@@ -50,25 +50,22 @@
 									<a href="/watchlist/" class="header__nav-link">Watchlists</a>
 								</li>
 
-								<li>
-									<button class="header__search-btn" type="button">
-										<i class="icon ion-ios-search"></i>
-									</button>
-								</li>
 								<li class="header__nav-item header__nav-item--search">
 									<form action="{% url 'search' %}" method="get">
 										{% csrf_token %}
 										<input id="searchbar" type="text" name="query" placeholder="Search Movies">
-										<button type="submit">Search</button>
+										<!-- <button type="submit">Search</button> -->
+										<button class="header__search-btn" type="submit">
+											<i class="icon ion-ios-search"></i>
+										</button>
 									</form>							
 								</li>
-
 							</ul>
 							<!-- end header nav -->
 
 							<!-- Log In or Log Out -->
 							{% if user.is_authenticated %}
-
+							
 								<div class="header__user_photo">
 									{% if user.profile.profile_pic %}
 									<a><img src="{% static 'img/profile_pics/' %}{{ user_profile.profile_pic }}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 10px;"></a>
