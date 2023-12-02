@@ -50,6 +50,7 @@ class Movie(models.Model):
     now_playing = models.BooleanField(default=False)
     mpa_rating = models.CharField(max_length=20, null=True, blank=True)
     streaming_providers = models.ManyToManyField('StreamingProvider', blank=True, related_name='movies')
+    top_streaming_providers = models.ManyToManyField('StreamingProvider', blank=True, related_name='top_movies')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     recommended_movie_data = models.JSONField(default=list, blank=True)
     letterboxd_rating = models.FloatField(null=True, blank=True)
@@ -155,6 +156,7 @@ class StreamingProvider(models.Model):
     name = models.CharField(max_length=255)
     logo_path = models.CharField(max_length=255, null=True, blank=True)
     provider_id = models.IntegerField(unique=True)
+    ranking = models.IntegerField(default=1000)  # Lower numbers indicate higher preference
 
     def __str__(self):
         return self.name

@@ -231,6 +231,21 @@
 												<span class="card__rate">
 													<img src="{% static 'img/logos/imdb-logo.svg' %}" alt="IMDb" style="width: 30px; vertical-align: middle; margin-right: 5px;">
 													{{ movie.imdb_rating }}
+													
+													<!-- Streaming Provider Images -->
+													{% if movie.top_streaming_providers.all %}
+															<div class="provider-list">
+																<ul style="list-style-type: none; padding: 0; margin: 0;">
+																	{% for provider in movie.top_streaming_providers.all %}
+																		<li style="margin-bottom: 10px;">
+																			<img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" class="provider-logo">
+																		</li>
+																	{% endfor %}
+																</ul>
+															</div>
+													{% endif %}
+													<!-- end Streaming Provider Images -->
+
 												</span>
 											</div>
 										</div>

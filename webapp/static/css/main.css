@@ -4757,3 +4757,20 @@ User Profile Page
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
 }
+
+
+
+/*==============================
+	Streaming Providers in Movie Cards
+==============================*/
+.provider-list {
+  display: flex;
+  flex-wrap: wrap; /* This allows items to wrap onto the next line if needed */
+  justify-content: space-around; /* This evenly distributes space between items */
+  align-items: center; /* This vertically centers items in the container */
+}
+
+.provider-logo {
+  /* width: 10px; Set your desired width */
+  height: auto; /* Maintains the aspect ratio */
+}

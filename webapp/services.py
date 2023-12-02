@@ -738,6 +738,62 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=10):
                     print(f"An error occurred: {str(e)}")
 
 
+def get_streaming_providers(movie_id, count):
+    """
+    Get the top streaming providers for a given movie, based on a predefined order of preference.
+
+    :param movie_id: The ID of the movie for which to get the streaming providers.
+    :param count: The number of top providers to return.
+    :return: A list of top streaming providers for the movie.
+    """
+    # Retrieve the movie object from the database using its ID.
+    movie = Movie.objects.get(id=movie_id)
+
+    # Get and sort the streaming providers associated with the movie by their ranking.
+    # Providers with lower ranking values (indicating higher preference) are placed first.
+    providers = movie.streaming_providers.all().order_by('ranking')
+
+    # Return the top 'count' providers.
+    return providers[:count]
+
+
+def update_streaming_providers(test_limit=None):
+    """
+    Update the top streaming providers for movies in the database.
+
+    :param test_limit: An optional parameter to limit the number of movies processed. 
+                       Useful for testing purposes. If None, processes all movies.
+    """
+
+    # test_limit = None   # Test mode, quantity of test cases
+
+    # Fetch all movies, limit them if test_limit is provided
+    if test_limit:
+        all_movies = Movie.objects.all()[:test_limit]
+    else:
+        all_movies = Movie.objects.all()
+
+    # Number of top providers to keep
+    top_provider_count = 2  # Adjust as needed
+    count = len(all_movies) # Number of movies processed
+    for i, movie in enumerate(all_movies):
+        # Get top streaming providers for each movie
+        top_providers = get_streaming_providers(movie.id, top_provider_count)
+
+        # Update the movie's top streaming providers
+        movie.top_streaming_providers.set(top_providers)
+        movie.save()  # Save the changes to the database
+
+        if test_limit:
+            # For testing: Print the movie title and its updated top providers
+            print(f"Movie: {movie.title}, Top Providers: {[provider.name for provider in top_providers]}")
+        else:
+            if (i%100 == 0):
+                print(f"Top streaming providers processed: {i}/{count}")
+
+    print("Completed updating top streaming providers.")
+
+
 # Clear all movies from the database
 def clear_movie_database():
     deleted_count, _ = Movie.objects.all().delete()
@@ -753,9 +809,10 @@ def handle_test_for_ban(start_date, end_date):
 # Handle the test display page and manage the movie database
 def handle_test_display_page(settings):
     # 20 movies per page
+    # update_streaming_providers(test_limit=10) # Uncomment to update the top streaming providers
 
     # popular_pages is the main method for getting a mass amount of new movies
-    popular_pages = 5          # Number of popular pages from 1 to x with 20 results each, TMDb
+    popular_pages = 10          # Number of popular pages from 1 to x with 20 results each, TMDb
     now_playing_pages = 10      # Number of now playing pages from 1 to x with 20 results each, TMDb
     fetch_movies_count = 10     # Number of individual movies returned to testdisplay, testdisplay/
     fetch_discover_count = 5    # Number of discover pages from 1 to x with 20 results each, TMDb

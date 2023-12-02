@@ -1,57 +1,82 @@
-<h1>Movies List</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies List</title>
+    <!-- Add any additional head elements here -->
+</head>
+<body>
+    <h1>Movies List</h1>
 
-<table border="1">
-    <thead>
-        <tr>
-            <th width="100px">Title</th>
-            <th width="100px">Release Year</th>
-            <th width="300px">Overview</th>
-            <th width="150px">Poster</th>
-            <th width="100px">Runtime (mins)</th>
-            <th width="100px">Tagline</th>
-            <th width="100px">Genres</th>
-            <th width="100px">IMDb Rating</th>
-            <th width="100px">Rotten Tomatoes</th>
-            <th width="100px">Metacritic</th>
-            <th width="100px">Director</th>
-            <th width="100px">Box Office</th>
-            <th width="400px">Trailer</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for movie in movies %}
-        <tr>
-            <td>{{ movie.title }}</td>
-            <td>{{ movie.release_year }}</td>
-            <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">{{ movie.overview }}</td>
-            <td>
-                {% if movie.poster_path %}
-                <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster" width="150">
-                {% else %}
-                No poster available
-                {% endif %}
-            </td>
-            <td>{{ movie.runtime }}</td>
-            <td>{{ movie.tagline }}</td>
-            <td>
-                {% for genre in movie.genres.all %}
-                {{ genre.name }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </td>
-            <td>{{ movie.imdb_rating }}</td>
-            <td>{{ movie.rotten_tomatoes_rating }}</td>
-            <td>{{ movie.metacritic_rating }}</td>
-            <td>{{ movie.director }}</td>
-            <td>{{ movie.domestic_box_office }}</td>
-            <td>
-                {% if movie.trailer_key %}
-                <!-- Embed the YouTube trailer using iframe -->
-                <iframe width="400" height="224" src="https://www.youtube.com/embed/{{ movie.trailer_key }}" frameborder="0" allowfullscreen></iframe>
-                {% else %}
-                No trailer available
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <table border="1">
+        <thead>
+            <tr>
+                <th width="100px">Title</th>
+                <th width="100px">Release Year</th>
+                <th width="300px">Overview</th>
+                <th width="150px">Poster</th>
+                <th width="100px">Runtime (mins)</th>
+                <th width="100px">Tagline</th>
+                <th width="100px">Genres</th>
+                <th width="100px">IMDb Rating</th>
+                <th width="200px">Top Streaming Providers</th>
+                <!-- <th width="100px">Rotten Tomatoes</th> -->
+                <!-- <th width="100px">Metacritic</th> -->
+                <!-- <th width="100px">Director</th> -->
+                <th width="100px">Box Office</th>
+                <th width="400px">Trailer</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for movie in movies %}
+            <tr>
+                <td>{{ movie.title }}</td>
+                <td>{{ movie.release_year }}</td>
+                <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">{{ movie.overview }}</td>
+                <td>
+                    {% if movie.poster_path %}
+                    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster" width="150">
+                    {% else %}
+                    No poster available
+                    {% endif %}
+                </td>
+                <td>{{ movie.runtime }}</td>
+                <td>{{ movie.tagline }}</td>
+                <td>
+                    {% for genre in movie.genres.all %}
+                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ movie.imdb_rating }}</td>
+                <td>
+                    {% if movie.top_streaming_providers.all %}
+                        <ul style="list-style-type: none; padding: 0; margin: 0;">
+                            {% for provider in movie.top_streaming_providers.all %}
+                                <li style="margin-bottom: 10px;">
+                                    <img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" width="50">
+                                    <!-- <span>{{ provider.name }}</span> -->
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        Not available
+                    {% endif %}
+                </td>
+                <!-- <td>{{ movie.rotten_tomatoes_rating }}</td>
+                <td>{{ movie.metacritic_rating }}</td>
+                <td>{{ movie.director }}</td> -->
+                <td>{{ movie.domestic_box_office }}</td>
+                <td>
+                    {% if movie.trailer_key %}
+                    <iframe width="400" height="224" src="https://www.youtube.com/embed/{{ movie.trailer_key }}" frameborder="0" allowfullscreen></iframe>
+                    {% else %}
+                    No trailer available
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
