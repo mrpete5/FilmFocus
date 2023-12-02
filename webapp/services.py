@@ -753,10 +753,13 @@ def handle_test_for_ban(start_date, end_date):
 # Handle the test display page and manage the movie database
 def handle_test_display_page(settings):
     # 20 movies per page
-    popular_pages = 5           # Number of popular pages from 1 to x with 20 results each, TMDb
+
+    # popular_pages is the main method for getting a mass amount of new movies
+    popular_pages = 5          # Number of popular pages from 1 to x with 20 results each, TMDb
     now_playing_pages = 10      # Number of now playing pages from 1 to x with 20 results each, TMDb
     fetch_movies_count = 10     # Number of individual movies returned to testdisplay, testdisplay/
     fetch_discover_count = 5    # Number of discover pages from 1 to x with 20 results each, TMDb
+    tmdb_id_value = 11          # Initialized value
     
     # Diplay the starting time of the test display page
     now_time = time.time()
@@ -787,6 +790,14 @@ def handle_test_display_page(settings):
 
         if settings[6]:
             timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
+        
+        if settings[7]:
+            search_term = settings[8]
+            search_and_fetch_movie_by_title(search_term)                            # Search for a movie by its title and fetch its details
+            tmdb_id_value = 11                                                      # Initialized value for searching
+            tmdb_id_value = 387570
+            search_and_fetch_movie_by_id(tmdb_id_value)
+
     else: # test_mode == False
         ''' Test mode (OFF). '''
         
@@ -810,19 +821,36 @@ def handle_test_display_page(settings):
 
         if settings[6]:
             update_letterboxd_ratings()
-    
+        
+        if settings[7]:
+            search_term = settings[8]
+            search_and_fetch_movie_by_title(search_term)                            # Search for a movie by its title and fetch its details
+            tmdb_id_value = 11                                                      # Initialized value for searching
+            tmdb_id_value = 387570
+            search_and_fetch_movie_by_id(tmdb_id_value)
+
+
     # Prints which settings are set
     print(f"==========================")
-    flags = ['erase_movie_db', 
-             'init_movie_db', 
-             'get_now_playing', 
-             'update_streaming', 
-             'update_recs',
-             'get_discover_movies', 
-             'update_letterboxd_ratings',
-             ]
+    flags = [   'erase_movie_db',                               # flags[0]
+                'init_movie_db',                                # flags[1]  
+                'get_now_playing',                              # flags[2]
+                'update_streaming',                             # flags[3]
+                'update_recs',                                  # flags[4]
+                'get_discover_movies',                          # flags[5]      
+                'update_letterboxd_ratings',                    # flags[6]
+                'get_specific_movie_by_search',                 # flags[7]
+                'search_term',                                  # flags[8]
+    ]
+
+    flags.append(f'{tmdb_id_value}')                            # flags[9], This will add the item at the end of the list
+    settings.append('tmdb_id_value')
+    # flags[9] = 'tmdb_id_value'                                # alternative choices
+    # settings[9] = 'tmdb_id_value'
+
     for index, flag in enumerate(flags):
         print(f"{flag} = {settings[index]}")
+    # print(f"tmdb_id_value = '{tmdb_id_value}'")
     print(f"==========================\n")  
 
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/

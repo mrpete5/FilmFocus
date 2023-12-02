@@ -623,16 +623,26 @@ def testdisplay(request):
     update_recs = False                   # Updates all movie recommendations from TMDB, takes a while
     get_discover_movies = False           # Fetches all discover movies from TMDB, takes a while
     update_letterboxd = False             # Updates all movie letterboxd info from webscraper, takes a while
-    
+
+
+    # Search for a specific movie from tmdb database with tmdb_id and data 
+    #   from the master list found at FilmFocus\webapp\data\tmdb_master_movie_list.json
+    get_specific_movie_by_search = False                                # Attempt to search for a specific movie based on the movie tmdb_id.
+    # search_and_fetch_movie_by_id(settings[tmdb_id_to_search_and_fetch]) # Alternative method, Attempt to search for a specific movie based on the movie tmdb_id.
+    search_term = "Brewster's Millions"                                                   # Initialized a hardcoded string
+
+
     # Add all tests into settings list
-    settings = [erase_movie_db,         # USE WITH CAUTION
-                init_movie_db,
-                get_now_playing,        
-                update_streaming,       # Takes a while
-                update_recs,            # Takes a while
-                get_discover_movies,    # Takes a while
-                update_letterboxd,      # Takes a while
+    settings = [erase_movie_db,                     #  USE WITH CAUTION, settings[0],
+                init_movie_db,                      # settings[1], Can take a while based on settings/quantities
+                get_now_playing,                    # settings[2], Can take a while based on settings/quantities
+                update_streaming,                   # settings[3], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
+                update_recs,                        # settings[4], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
+                get_discover_movies,                # settings[5], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
+                update_letterboxd,                  # settings[6], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
+                get_specific_movie_by_search,       # settings[7], Should be very fast but may be unsuccessful
+                search_term,                        # settings[8], Passing a blank string for initialization purposes
                 ]
-  
+
     movies_to_display = handle_test_display_page(settings)
     return render(request, "testdisplay.html", {"movies": movies_to_display})
