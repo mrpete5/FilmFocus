@@ -67,10 +67,11 @@
 							{% if user.is_authenticated %}
 							
 								<div class="header__user_photo">
-									{% if user.profile.profile_pic %}
+									{% if user_profile.profile_pic %}
 									<a><img src="{% static 'img/profile_pics/' %}{{ user_profile.profile_pic }}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 10px;"></a>
 									{% else %}
-									<a><img src="{% static 'img/profile_pics/default.png' %}" class ="profile_photo" alt="default_profile_pic" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 10px;"></a>
+										<!-- TODO: Fix. This else statement is not working yet so it's commented out -->
+										<!-- <a><img src="{% static 'img/profile_pics/default.png' %}" class ="profile_photo" alt="default_profile_pic" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 10px;"></a> -->
 									{% endif %}
 								</div>
 
