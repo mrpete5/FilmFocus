@@ -41,7 +41,8 @@ class Movie(models.Model):
     tagline = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField('Genre', blank=True, related_name='movies')
     trailer_key = models.CharField(max_length=255, null=True, blank=True)
-    imdb_rating = models.CharField(max_length=10, null=True, blank=True)
+    imdb_rating = models.CharField(max_length=10, null=True, blank=True)        # A string with the IMDb rating ("7.4/10"), original API form, use for displaying rating out of 10
+    imdb_rating_num = models.FloatField(null=True, blank=True)                  # A float with the IMDb rating (7.4), use this for filtering by IMDb rating
     tmdb_popularity = models.CharField(max_length=10, null=True, blank=True)
     rotten_tomatoes_rating = models.CharField(max_length=10, null=True, blank=True)
     metacritic_rating = models.CharField(max_length=10, null=True, blank=True)
