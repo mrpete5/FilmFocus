@@ -452,13 +452,13 @@ def get_movies_for_index():
     
     # Order movies by tmdb_popularity in descending order, exclude the new movies, and take the top 100
     top_100_popular_movies = Movie.objects.exclude(id__in=[movie.id for movie in new_movies]).order_by(F('tmdb_popularity').desc(nulls_last=True))[:100]
-    # Randomly select 6 movies from the top 100
-    popular_movies = random.sample(list(top_100_popular_movies), min(6, len(top_100_popular_movies)))
+    # Randomly select 24 movies from the top 100
+    popular_movies = random.sample(list(top_100_popular_movies), min(24, len(top_100_popular_movies)))
 
-    # Fetch the top 60 movies based on imdb_rating
-    top_60_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('-imdb_rating')[:60]
-    # Randomly select 6 movies from the top 60
-    top_rated_movies = random.sample(list(top_60_movies), min(6, len(top_60_movies)))
+    # Fetch the top 120 movies based on imdb_rating
+    top_120_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('-imdb_rating')[:120]
+    # Randomly select 24 movies from the top 60
+    top_rated_movies = random.sample(list(top_120_movies), min(24, len(top_120_movies)))
     
     # Fetch 120 random movies for "More Movies", excluding the ones already selected in new_movies, popular_movies, and top_rated_movies
     more_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies] + [movie.id for movie in top_rated_movies]).order_by('?')[:120]
@@ -810,6 +810,10 @@ def handle_test_for_ban(start_date, end_date):
 def handle_test_display_page(settings):
     # 20 movies per page
     # update_streaming_providers(test_limit=10) # Uncomment to update the top streaming providers
+
+    the_Greasy_Strangler = 320413 # The Greasy Strangler
+    search_and_fetch_movie_by_title("The Greasy Strangler")
+    # search_and_fetch_movie_by_id(the_Greasy_Strangler)
 
     # popular_pages is the main method for getting a mass amount of new movies
     popular_pages = 10          # Number of popular pages from 1 to x with 20 results each, TMDb
