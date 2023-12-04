@@ -1,14 +1,23 @@
 {% if movies %}
     <div class="container">
         {% for movie in movies %}
-            <a class="row searchbar-query" href="{% url 'movie_detail' movie_slug=movie.slug %}">
-                <div class="card__cover col-2">
-                    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+            <a class="row searchbar-query" href="{% url 'movie_detail' movie_slug=movie.slug %}" style="text-decoration: none; color: white; display: flex; align-items: center; margin-bottom: 10px;">
+                <!-- Movie Poster Column -->
+                <div class="col-md-2" style="flex: 0 0 auto; width: 100px;">
+                    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}" style="width:70%; height:auto;">
                 </div>
-                <div class="card__content">
-                    {{ movie.title }} ({{ movie.release_year }}) - IMDB: {{ movie.imdb_rating }}
+
+                <!-- Movie Info Column -->
+                <div class="col-md-10" style="flex: 1;">
+                    <div>
+                        {{ movie.title }} ({{ movie.release_year }}) 
+                        <br>IMDb: {{ movie.imdb_rating }}
+                    </div>
                 </div>
             </a>
+
+            <!-- Pink Line Separator -->
+            <div style="height: 2px; background-color: pink; width: 100%;"></div>
         {% endfor %}
     </div>
 {% endif %}
