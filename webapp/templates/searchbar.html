@@ -10,13 +10,21 @@
                 <!-- Movie Info Column -->
                 <div class="col-md-10" style="flex: 1;">
                     <div>
-                        {{ movie.title }} ({{ movie.release_year }}) - IMDb: {{ movie.imdb_rating }}                    
+                        {{ movie.title }} ({{ movie.release_year }}) - IMDb: {{ movie.imdb_rating }}
+                        <div class="streaming-providers">
+                            {% for provider in movie.top_streaming_providers.all %}
+                                {% if provider.image_url %}
+                                    <img src="{{ provider.image_url }}" alt="{{ provider.name }}" style="width: 30px; height: auto; margin-right: 5px;">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                               
                     </div>
                 </div>
             </a>
 
             <!-- Pink Line Separator -->
-            <div style="height: 4px; background-color: rgb(212, 26, 172); width: 100%; margin-bottom: 7px;"></div>
+            <!-- <div style="height: 4px; background-color: rgb(212, 26, 172); width: 100%; margin-bottom: 0px;"></div> -->
         {% endfor %}
     </div>
 {% endif %}

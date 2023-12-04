@@ -4759,7 +4759,6 @@ User Profile Page
 }
 
 
-
 /*==============================
 	Streaming Providers in Movie Cards
 ==============================*/
@@ -4774,3 +4773,32 @@ User Profile Page
   /* width: 10px; Set your desired width */
   height: auto; /* Maintains the aspect ratio */
 }
+
+
+
+/*==============================
+	Streaming Providers in Search Results
+==============================*/
+/* Style for movie entries */
+.searchbar-query {
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Space between entries */
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid pink; /* Pink line separator */
+}
+.searchbar-query:hover {
+  background-color: #ff55a5; /* FilmFocus Pink: #ff55a5 */
+  color: white; /* Change text color on hover */
+}
+
+/* Work in Progress, Mark */
+
+/* Style for streaming provider images */
+/* .streaming-providers img {
+  width: 30px;
+  height: auto;
+  margin-right: 5px; Space between images */
