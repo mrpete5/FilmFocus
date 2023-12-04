@@ -812,7 +812,8 @@ def handle_test_display_page(settings):
     # update_streaming_providers(test_limit=10) # Uncomment to update the top streaming providers
 
     the_Greasy_Strangler = 320413 # The Greasy Strangler
-    search_and_fetch_movie_by_title("The Greasy Strangler")
+    # search_and_fetch_movie_by_title("The Greasy Strangler")
+    # search_and_fetch_movie_by_id(840430) # Get the movie 840430== "The Holderovers"
     # search_and_fetch_movie_by_id(the_Greasy_Strangler)
 
     # popular_pages is the main method for getting a mass amount of new movies

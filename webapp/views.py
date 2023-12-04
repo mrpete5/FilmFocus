@@ -623,13 +623,13 @@ def testdisplay(request):
     update_recs = False                   # Updates all movie recommendations from TMDB, takes a while
     get_discover_movies = False           # Fetches all discover movies from TMDB, takes a while
     update_letterboxd = False             # Updates all movie letterboxd info from webscraper, takes a while
-
+    get_specific_movie_by_search = False   # Fetches a specific movie 
+    search_term = "Fight Club"            # If (get_specific_movie_by_search): Name of specific movie search   
 
     # Search for a specific movie from tmdb database with tmdb_id and data 
     #   from the master list found at FilmFocus\webapp\data\tmdb_master_movie_list.json
-    get_specific_movie_by_search = False                                # Attempt to search for a specific movie based on the movie tmdb_id.
+    # Attempt to search for a specific movie based on the movie tmdb_id or movie title.
     # search_and_fetch_movie_by_id(settings[tmdb_id_to_search_and_fetch]) # Alternative method, Attempt to search for a specific movie based on the movie tmdb_id.
-    search_term = "Brewster's Millions"                                                   # Initialized a hardcoded string
 
 
     # Add all tests into settings list

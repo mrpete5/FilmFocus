@@ -1,7 +1,7 @@
 {% if movies %}
     <div class="container">
         {% for movie in movies %}
-            <a class="row searchbar-query" href="{% url 'movie_detail' movie_slug=movie.slug %}" style="text-decoration: none; color: white; display: flex; align-items: center; margin-bottom: 10px;">
+            <a class="row searchbar-query search-result-item" href="{% url 'movie_detail' movie_slug=movie.slug %}" style="text-decoration: none; color: white; display: flex; align-items: center; margin-bottom: 10px;">
                 <!-- Movie Poster Column -->
                 <div class="col-md-2" style="flex: 0 0 auto; width: 100px;">
                     <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}" style="width:70%; height:auto;">
