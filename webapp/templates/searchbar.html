@@ -10,14 +10,13 @@
                 <!-- Movie Info Column -->
                 <div class="col-md-10" style="flex: 1;">
                     <div>
-                        {{ movie.title }} ({{ movie.release_year }}) 
-                        <br>IMDb: {{ movie.imdb_rating }}
+                        {{ movie.title }} ({{ movie.release_year }}) - IMDb: {{ movie.imdb_rating }}                    
                     </div>
                 </div>
             </a>
 
             <!-- Pink Line Separator -->
-            <div style="height: 2px; background-color: pink; width: 100%;"></div>
+            <div style="height: 4px; background-color: rgb(212, 26, 172); width: 100%; margin-bottom: 7px;"></div>
         {% endfor %}
     </div>
 {% endif %}
