@@ -623,7 +623,7 @@ def testdisplay(request):
     update_recs = False                   # Updates all movie recommendations from TMDB, takes a while
     get_discover_movies = False           # Fetches all discover movies from TMDB, takes a while
     update_letterboxd = False             # Updates all movie letterboxd info from webscraper, takes a while
-    get_specific_movie_by_search = False   # Fetches a specific movie 
+    get_specific_movie_by_search = False  # Fetches a specific movie 
     search_term = "Fight Club"            # If (get_specific_movie_by_search): Name of specific movie search   
 
     # Search for a specific movie from tmdb database with tmdb_id and data 
@@ -641,7 +641,7 @@ def testdisplay(request):
                 get_discover_movies,                # settings[5], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
                 update_letterboxd,                  # settings[6], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
                 get_specific_movie_by_search,       # settings[7], Should be very fast but may be unsuccessful
-                search_term,                        # settings[8], Passing a blank string for initialization purposes
+                search_term,                        # settings[8], Passing a string for initialization purposes
                 ]
 
     movies_to_display = handle_test_display_page(settings)
