@@ -10,7 +10,8 @@
                 <!-- Movie Info Column -->
                 <div class="col-md-10" style="flex: 1;">
                     <div>
-                        {{ movie.title }} ({{ movie.release_year }}) - IMDb: {{ movie.imdb_rating }}
+                        {{ movie.title }} ({{ movie.release_year }})
+                        <!-- {{ movie.title }} ({{ movie.release_year }}) - IMDb: {{ movie.imdb_rating }} -->
                         <div class="streaming-providers">
                             {% for provider in movie.top_streaming_providers.all %}
                                 {% if provider.image_url %}
