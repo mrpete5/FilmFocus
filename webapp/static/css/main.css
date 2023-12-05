@@ -4785,14 +4785,16 @@ User Profile Page
   color: white;
   display: flex;
   align-items: center;
-  margin-bottom: 10px; /* Space between entries */
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid pink; /* Pink line separator */
+  /* margin-bottom: 10px; Space between entries */
+  /* padding-top: 10px;
+  padding-bottom: 10px; */
+  border-bottom: 3px solid pink; /* Pink line separator */
   opacity: 100%;
 }
 .searchbar-query:hover {
   background-color: #ff55a5; /* FilmFocus Pink: #ff55a5 */
+  /* background-color: #ff76b7 ;   Lighter Pink: #ff76b7  */
+  /* background-color: #ff087d ;     Darker Pink: #ff087d  */
   opacity: 80%;
   color: white; /* Change text color on hover */
 }

@@ -4,17 +4,29 @@ p## Python Shell Functions
 # Switch to True to run
 
 from webapp.models import Movie
-total_count = 0
+
+# Count total movies
+total_movie_count = Movie.objects.count()
+print(f"Total number of movies: {total_movie_count}")
+
+# Initialize counters
+running_total_count = 0
 success_running_count = 0
-for movie in Movie.objects.all():
+
+# Process each movie
+for movie in Movie.objects.iterator():
     if movie.imdb_rating and '/' in movie.imdb_rating:
         try:
+            # Extract and convert rating
             rating_value = movie.imdb_rating.split('/')[0]
             movie.imdb_rating_num = float(rating_value)
             movie.save()
             success_running_count += 1
         except ValueError:
+            # Handle conversion error
             print(f"Failed to convert rating for: {movie.title}")
-        total_count += 1
-    success_rate = success_running_count / total_count
-    print(f"Success rate of converting imdb_ratings to imdb_rating_num: {success_running_count}/{total_count} = {success_rate}")
+        running_total_count += 1
+
+# Calculate success rate
+success_rate = success_running_count / total_movie_count
+print(f"Success rate of converting imdb_ratings to imdb_rating_num: {success_running_count}/{total_movie_count} = {success_rate:.2f}")
