@@ -255,7 +255,7 @@ def searchBar(request):
 # View function for getting asynchronous search results in real time
 def searchbar(request, query):
     if request.method == 'GET':
-        movies = Movie.objects.filter(title__icontains=query)[:4] # Quantity of movies in the searchbar query list
+        movies = Movie.objects.filter(title__icontains=query)[:5] # Quantity of movies in the searchbar query list
         return render(request, "searchbar.html", {"movies":movies})
 
 # View function for getting movie watchlist popup
