@@ -4785,10 +4785,10 @@ User Profile Page
   color: white;
   display: flex;
   align-items: center;
-  /* margin-bottom: 10px; Space between entries */
-  /* padding-top: 10px;
-  padding-bottom: 10px; */
-  border-bottom: 3px solid pink; /* Pink line separator */
+  margin: 0; /* Remove any default margin */
+  padding: 0; /* Remove any default padding */
+  border-top: none; /* Remove top border */
+  border-bottom: none; /* Remove bottom border */
   opacity: 100%;
 }
 .searchbar-query:hover {
@@ -4798,11 +4798,3 @@ User Profile Page
   opacity: 80%;
   color: white; /* Change text color on hover */
 }
-
-/* Work in Progress, Mark */
-
-/* Style for streaming provider images */
-/* .streaming-providers img {
-  width: 30px;
-  height: auto;
-  margin-right: 5px; Space between images */

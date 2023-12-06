@@ -4,7 +4,9 @@
             <a class="row searchbar-query search-result-item" href="{% url 'movie_detail' movie_slug=movie.slug %}" style="text-decoration: none; color: white; display: flex; align-items: center; margin-bottom: 10px;">
                 <!-- Movie Poster Column -->
                 <div class="col-md-2" style="flex: 0 0 auto; width: 100px;">
-                    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}" style="width:70%; height:auto;">
+                    {% if movie.poster_path %}
+                        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}" style="width:70%; height:auto;">
+                    {% endif %}
                 </div>
 
                 <!-- Movie Info Column -->
@@ -25,7 +27,7 @@
             </a>
 
             <!-- Pink Line Separator -->
-            <!-- <div style="height: 4px; background-color: rgb(212, 26, 172); width: 100%; margin-bottom: 0px;"></div> -->
+            <div style="height: 4px; background-color: rgb(212, 26, 172); width: 100%; margin-top: -10px;"></div>
         {% endfor %}
     </div>
 {% endif %}
