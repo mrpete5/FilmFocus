@@ -4770,14 +4770,14 @@ User Profile Page
 }
 
 .provider-logo {
-  /* width: 10px; Set your desired width */
+  width: 10px; /* Set your desired width */
   height: auto; /* Maintains the aspect ratio */
 }
 
 
 
 /*==============================
-	Streaming Providers in Search Results
+  Search Results
 ==============================*/
 /* Style for movie entries */
 .searchbar-query {

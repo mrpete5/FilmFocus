@@ -774,7 +774,7 @@ def update_streaming_providers(test_limit=None):
         all_movies = Movie.objects.all()
 
     # Number of top providers to keep
-    top_provider_count = 2  # Adjust as needed
+    top_provider_count = 1  # Adjust as needed
     count = len(all_movies) # Number of movies processed
     for i, movie in enumerate(all_movies):
         # Get top streaming providers for each movie
