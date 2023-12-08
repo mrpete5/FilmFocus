@@ -32,7 +32,7 @@ Visit http://127.0.0.1:8000/ to access FilmFocus. Create an account to start man
 ## License
 
 ## Contact
-filmfocusku.gmail.com
+filmfocusku@gmail.com
 
 ## Acknowledgements
 Data provided by TMDb and OMDb
