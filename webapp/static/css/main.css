@@ -2570,8 +2570,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   text-align: center;
   -webkit-border-radius: 4px;
   border-radius: 4px;
+  opacity: 0.85;
 }
 .paginator__item:hover a {
+  opacity: 1;
   color: #fff;
 }
 .paginator__item--prev,
