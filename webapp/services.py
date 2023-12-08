@@ -447,18 +447,18 @@ def fetch_now_playing_movies(start_page=1, end_page=5):
 def get_movies_for_index():
     # Fetch movies that are marked as now_playing
     now_playing_movies = Movie.objects.filter(now_playing=True)
-    # Fetch 16 random movies from the now_playing movies for "New Movies"
-    new_movies = random.sample(list(now_playing_movies), min(16, len(now_playing_movies)))
+    # Fetch 24 random movies from the now_playing movies for "New Movies"
+    new_movies = random.sample(list(now_playing_movies), min(24, len(now_playing_movies)))
     
     # Order movies by tmdb_popularity in descending order, exclude the new movies, and take the top 100
     top_100_popular_movies = Movie.objects.exclude(id__in=[movie.id for movie in new_movies]).order_by(F('tmdb_popularity').desc(nulls_last=True))[:100]
     # Randomly select 24 movies from the top 100
     popular_movies = random.sample(list(top_100_popular_movies), min(24, len(top_100_popular_movies)))
 
-    # Fetch the top 120 movies based on imdb_rating
-    top_120_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('-imdb_rating')[:120]
-    # Randomly select 24 movies from the top 60
-    top_rated_movies = random.sample(list(top_120_movies), min(24, len(top_120_movies)))
+    # Fetch the top 200 movies based on imdb_rating
+    top_200_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('-imdb_rating')[:200]
+    # Randomly select 24 movies from the top 200
+    top_rated_movies = random.sample(list(top_200_movies), min(24, len(top_200_movies)))
     
     # Fetch 120 random movies for "More Movies", excluding the ones already selected in new_movies, popular_movies, and top_rated_movies
     more_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies] + [movie.id for movie in top_rated_movies]).order_by('?')[:120]
