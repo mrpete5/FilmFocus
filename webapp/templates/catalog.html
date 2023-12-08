@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load my_filters %}
 {% block content %}
 
 
@@ -187,7 +188,31 @@
 							<button class="filter__btn" type="submit">apply filter</button>
 							<!-- end filter btn -->
 						</form>
-								
+						
+                        <!-- paginator -->
+                            <ul class="paginator">
+                                        
+                                {% if page_obj.has_previous %}
+                                    <li class="paginator__item paginator__item--prev">
+                                        <a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
+                                    </li>
+                                    <!-- <a href="?page=1">&laquo; first</a> -->
+                                {% endif %}
+
+                                <li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
+                                <!-- <li class="paginator__item"><a href="#">{{ page_obj.number }}</a></li>
+                                <li class="paginator__item"><a href="#">3</a></li> -->
+
+                                {% if page_obj.has_next %}
+                                    <li class="paginator__item paginator__item--next">
+                                        <a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
+                                    </li>
+                                    <!-- <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a> -->
+                                {% endif %}
+
+                            </ul>
+                        <!-- end paginator -->
+
 					</div>
 				</div>
 			</div>
@@ -200,8 +225,8 @@
     <div class="container">
         <div class="row">
 
-            {% for movie in full_catalog %}
-                          
+            {% for movie in page_obj %}
+
                 <!-- card -->
                 <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
                     <div class="card">
@@ -246,21 +271,72 @@
                 <!-- end card -->
             {% endfor %}
 
-            <!-- paginator -->
-            <!-- <div class="col-12">
-                <ul class="paginator">
-                    <li class="paginator__item paginator__item--prev">
-                        <a href="#"><i class="icon ion-ios-arrow-back"></i></a>
-                    </li>
-                    <li class="paginator__item"><a href="#">1</a></li>
-                    <li class="paginator__item paginator__item--active"><a href="#">2</a></li>
-                    <li class="paginator__item"><a href="#">3</a></li>
-                    <li class="paginator__item"><a href="#">4</a></li>
-                    <li class="paginator__item paginator__item--next">
-                        <a href="#"><i class="icon ion-ios-arrow-forward"></i></a>
-                    </li>
-                </ul>
+
+<!-- 
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+            
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
             </div> -->
+
+            <!-- footer paginator -->
+                <ul class="paginator">
+                                
+                    {% if page_obj.has_previous %}
+                        <li class="paginator__item paginator__item--prev">
+                            <a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
+                        </li>
+                        <!-- <a href="?page=1">&laquo; first</a> -->
+                    {% endif %}
+
+                    <li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
+                    <!-- <li class="paginator__item"><a href="#">{{ page_obj.number }}</a></li>
+                    <li class="paginator__item"><a href="#">3</a></li> -->
+
+                    {% if page_obj.has_next %}
+                        <li class="paginator__item paginator__item--next">
+                            <a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
+                        </li>
+                        <!-- <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a> -->
+                    {% endif %}
+
+                </ul>
+            <!-- end footer paginator -->
+
+            <!-- section btn -->
+            <div class="col-12">
+                <a href="#" id="topOfPageBtn" class="section__btn">Top of Page</a>
+            </div>
+            <!-- end section btn -->
+
+
+            <!-- paginator -->
+                <!-- <div class="col-12">
+                    <ul class="paginator">
+                        <li class="paginator__item paginator__item--prev">
+                            <a href="#"><i class="icon ion-ios-arrow-back"></i></a>
+                        </li>
+                        <li class="paginator__item paginator__item--active"><a href="#">1</a></li>
+                        <li class="paginator__item"><a href="#">2</a></li>
+                        <li class="paginator__item"><a href="#">3</a></li>
+                        <li class="paginator__item"><a href="#">4</a></li>
+                        <li class="paginator__item paginator__item--next">
+                            <a href="#"><i class="icon ion-ios-arrow-forward"></i></a>
+                        </li>
+                    </ul>
+                </div> -->
             <!-- end paginator -->
         </div>
     </div>

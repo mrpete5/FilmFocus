@@ -69,10 +69,27 @@ def index(request):
     context['watchlist_form'] = form
     return render(request, 'index.html', context)
 
+# View function for the catalog page
+from django.core.paginator import Paginator, EmptyPage
+from .services import get_all_movies_catalog
+
+# View function for the catalog page
 def catalog(request):
     context = get_all_movies_catalog()
-    return render(request, 'catalog.html', context)
-                  
+    page_number = request.GET.get('page', 1)  # Get the page number from the request
+    paginator = Paginator(context['full_catalog'], 120)  # 120 movies per page
+
+    try:
+        page_obj = paginator.page(page_number)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)  # If page is out of range, deliver last page
+
+    return render(request, 'catalog.html', {'page_obj': page_obj})
+
+
+
+
+
 
 # View function for the movie details page
 def movie_detail(request, movie_slug):

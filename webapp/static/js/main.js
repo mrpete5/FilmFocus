@@ -996,4 +996,25 @@ $(document).ready(function () {
 	}
 
 
+	/*==============================
+	Scroll to Top of Page
+	==============================*/
+	document.addEventListener('DOMContentLoaded', (event) => {
+		const topOfPageBtn = document.getElementById('topOfPageBtn');
+		if (topOfPageBtn) {
+			topOfPageBtn.addEventListener('click', smoothScrollToTop);
+		}
+	});
+	
+	function smoothScrollToTop(e) {
+		e.preventDefault();
+		console.log("Scrolling to top"); // For debugging
+		window.scrollTo({
+            top: 0, // Scroll to top of the page
+            behavior: 'smooth' // Smooth scroll
+		});
+	}
+	
+	
+
 });
