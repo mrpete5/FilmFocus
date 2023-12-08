@@ -29,6 +29,7 @@ urlpatterns = [
     path("delete_watchlist_popup/<int:watchlist_id>/<str:watchlist_name>/", views.delete_watchlist_popup, name="delete_watchlist_popup"),
     path('remove_watchlist/<int:watchlist_id>/', views.remove_watchlist, name='remove_watchlist'),
     path("watchlist/", views.watchlist, name="watchlist"),
+    path("catalog/", views.catalog, name="catalog"),
     path("profile/<str:profile_name>", views.profile, name="user_profile"),
     path("edit_profile_popup/", views.edit_profile_popup, name="edit_profile_popup"),
     path("save_profile/", views.save_profile, name="save_profile"),

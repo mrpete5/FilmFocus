@@ -918,3 +918,16 @@ def handle_test_display_page(settings):
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/
     return items
 
+
+
+def get_all_movies_catalog():
+    # TODO: add support for filtering movies
+    # all_movies = Movie.objects.all
+
+    limited_movies = Movie.objects.all()[:120]  # Only gets 120 (multiple of 6) for catalog.html to display
+    return {
+        'full_catalog': limited_movies,
+        # 'filtered_movies': filtered_movies,
+        # 'top_rated_movies': top_rated_movies,
+        # 'more_movies': more_movies,
+    }

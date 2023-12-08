@@ -69,6 +69,10 @@ def index(request):
     context['watchlist_form'] = form
     return render(request, 'index.html', context)
 
+def catalog(request):
+    context = get_all_movies_catalog()
+    return render(request, 'catalog.html', context)
+                  
 
 # View function for the movie details page
 def movie_detail(request, movie_slug):
