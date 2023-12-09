@@ -1504,6 +1504,9 @@ ul {
   -webkit-text-fill-color: transparent;
   color: #ff5860;
 }
+.card__streamer {
+  margin-left: 10px;
+}
 .card__list {
   display: none;
 }

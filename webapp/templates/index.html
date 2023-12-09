@@ -180,17 +180,19 @@
 												{{ movie.imdb_rating }}
 
 												<!-- Streaming Provider Images -->
-												{% if movie.top_streaming_providers.all %}
-												<div class="provider-list">
-													<ul style="list-style-type: none; padding: 0; margin: 0;">
-														{% for provider in movie.top_streaming_providers.all %}
-															<li style="margin-bottom: 10px;">
-																<img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" class="provider-logo">
-															</li>
-														{% endfor %}
-													</ul>
-												</div>
-												{% endif %}
+												<span class="card__streamer">
+													{% if movie.top_streaming_providers.all %}
+													<div class="provider-list">
+														<ul style="list-style-type: none; padding: 0; margin: 0;">
+															{% for provider in movie.top_streaming_providers.all %}
+																<li style="margin-bottom: 10px;">
+																	<img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" class="provider-logo">
+																</li>
+															{% endfor %}
+														</ul>
+													</div>
+													{% endif %}
+												</span>
 												<!-- end Streaming Provider Images -->
 
 											</span>
@@ -248,17 +250,19 @@
 													{{ movie.imdb_rating }}
 													
 													<!-- Streaming Provider Images -->
-													{% if movie.top_streaming_providers.all %}
-															<div class="provider-list">
-																<ul style="list-style-type: none; padding: 0; margin: 0;">
-																	{% for provider in movie.top_streaming_providers.all %}
-																		<li style="margin-bottom: 10px;">
-																			<img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" class="provider-logo">
-																		</li>
-																	{% endfor %}
-																</ul>
-															</div>
-													{% endif %}
+													<span class="card__streamer">
+														{% if movie.top_streaming_providers.all %}
+																<div class="provider-list">
+																	<ul style="list-style-type: none; padding: 0; margin: 0;">
+																		{% for provider in movie.top_streaming_providers.all %}
+																			<li style="margin-bottom: 10px;">
+																				<img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" class="provider-logo">
+																			</li>
+																		{% endfor %}
+																	</ul>
+																</div>
+														{% endif %}
+													</span>
 													<!-- end Streaming Provider Images -->
 
 												</span>

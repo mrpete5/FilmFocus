@@ -925,15 +925,21 @@ $(document).ready(function () {
 	/*==============================
 	Delete Watchlist Popup
 	==============================*/
-	document.getElementById("deleteWatchlistBtn").addEventListener("click", function() {
-		var watchlist_name = document.querySelector("#filter__watchlist input[type='button']").value;
-		var watchlist_id = document.getElementById("hidden-watchlist-id").value;
-		console.log(watchlist_name);
-		console.log(watchlist_id);
-		request_del_wlist_popup(watchlist_name, watchlist_id);
-		open_popup();
-	});
-	
+    // Check if the element exists
+    var deleteBtn = document.getElementById("deleteWatchlistBtn");
+    
+    if (deleteBtn) {
+        // If the element exists, add the event listener
+        deleteBtn.addEventListener("click", function() {
+            var watchlist_name = document.querySelector("#filter__watchlist input[type='button']").value;
+            var watchlist_id = document.getElementById("hidden-watchlist-id").value;
+            console.log(watchlist_name);
+            console.log(watchlist_id);
+            request_del_wlist_popup(watchlist_name, watchlist_id);
+            open_popup();
+        });
+    }
+
 	async function request_del_wlist_popup(watchlist_name, watchlist_id) {
 		const url = "/delete_watchlist_popup/"+watchlist_id+"/"+watchlist_name+"/";
 		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
@@ -1015,6 +1021,6 @@ $(document).ready(function () {
 		});
 	}
 	
-	
+
 
 });
