@@ -580,7 +580,7 @@ def update_movie_recommendations():
         needed = 20 - len(movie.recommended_movie_data)
 
         # Query for recent movies in database
-        recent_movies = Movie.objects.order_by('-date_entered')[:needed*2]
+        recent_movies = Movie.objects.order_by('-created_at')[:needed*2]
         
         for r_movie in recent_movies:
             if len(movie.recommended_movie_data) >= 20:
@@ -757,6 +757,35 @@ def get_streaming_providers(movie_id, count):
     return providers[:count]
 
 
+# Creates the imdb_rating_num value from imdb_rating
+def process_movie_imdb_ratings():
+    # Count total movies
+    total_movie_count = Movie.objects.count()
+    print(f"Total number of movies: {total_movie_count}")
+
+    # Initialize counters
+    running_total_count = 0
+    success_running_count = 0
+
+    # Process each movie
+    for movie in Movie.objects.iterator():
+        if movie.imdb_rating and '/' in movie.imdb_rating:
+            try:
+                # Extract and convert rating
+                rating_value = movie.imdb_rating.split('/')[0]
+                movie.imdb_rating_num = float(rating_value)
+                movie.save()
+                success_running_count += 1
+            except ValueError:
+                # Handle conversion error
+                print(f"Failed to convert rating for: {movie.title}")
+            running_total_count += 1
+
+    # Calculate success rate
+    success_rate = success_running_count / total_movie_count
+    print(f"Success rate of converting imdb_ratings to imdb_rating_num: {success_running_count}/{total_movie_count} = {success_rate:.2f}")
+
+
 def update_streaming_providers(test_limit=None):
     """
     Update the top streaming providers for movies in the database.
@@ -835,68 +864,51 @@ def handle_test_display_page(settings):
     now_time_readable = datetime.datetime.fromtimestamp(now_time).strftime('%H:%M:%S')
     print(f'Starting test display page at {now_time_readable}\n')
         
-    test_mode = True
-    if test_mode: # test_mode == True
-        ''' Test mode (ON). Tests the times and data for the various functions. '''
-        
-        if settings[0]:
-            timer(function_name='clear_movie_database', fetch_func=clear_movie_database, args={})
+    if settings[0]:
+        timer(function_name='clear_movie_database', fetch_func=clear_movie_database, args={})
 
-        if settings[1]:
+    if settings[1]:
+        timer(function_name='fetch_popular_movies', fetch_func=fetch_popular_movies, args={'start_page': 1, 'end_page': popular_pages})
+        timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages })
+        timer(function_name="process_movie_imdb_ratings", fetch_func=process_movie_imdb_ratings, args={})
+    elif settings[2]:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
+        timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages})
+    
+    if settings[3]:
+        timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
+    
+    if settings[4]:
+        timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
+    
+    if settings[5]:
+        timer(function_name='fetch_tmdb_discover_movies', fetch_func=fetch_tmdb_discover_movies, args={'start_page': 1, 'end_page': fetch_discover_count})
+
+    if settings[6]:
+        timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
+    
+    if settings[7]:
+        search_term = settings[8]
+        search_and_fetch_movie_by_title(search_term)                            # Search for a movie by its title and fetch its details
+        tmdb_id_value = 11                                                      # Initialized value for searching
+        tmdb_id_value = 387570
+        search_and_fetch_movie_by_id(tmdb_id_value)
+    
+    if settings[9]:
+        """ Performs all operations to update movie data in our database, without deleting anything. """
+        """ Updates all movie ratings, streaming providers, and recommendations. """
+        get_movies = True
+        get_updates = True
+
+        if get_movies:
             timer(function_name='fetch_popular_movies', fetch_func=fetch_popular_movies, args={'start_page': 1, 'end_page': popular_pages})
             timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages })
-        elif settings[2]:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
-            timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages})
-        
-        if settings[3]:
-            timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
-        
-        if settings[4]:
-            timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
-        
-        if settings[5]:
             timer(function_name='fetch_tmdb_discover_movies', fetch_func=fetch_tmdb_discover_movies, args={'start_page': 1, 'end_page': fetch_discover_count})
 
-        if settings[6]:
+        if get_updates:
+            timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
+            timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
             timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
-        
-        if settings[7]:
-            search_term = settings[8]
-            search_and_fetch_movie_by_title(search_term)                            # Search for a movie by its title and fetch its details
-            tmdb_id_value = 11                                                      # Initialized value for searching
-            tmdb_id_value = 387570
-            search_and_fetch_movie_by_id(tmdb_id_value)
-
-    else: # test_mode == False
-        ''' Test mode (OFF). '''
-        
-        if settings[0]:
-            clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
-
-        if settings[1]:
-            fetch_popular_movies(1, end_page=popular_pages)
-            fetch_now_playing_movies(1, end_page=now_playing_pages)  # Fetch now playing movies after initializing the database
-        elif settings[2]:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
-            fetch_now_playing_movies(1, end_page=now_playing_pages)
-        
-        if settings[3]:
-            update_streaming_providers()
-        
-        if settings[4]:
-            update_movie_recommendations()
-        
-        if settings[5]:
-            fetch_tmdb_discover_movies(1, end_page=fetch_discover_count)
-
-        if settings[6]:
-            update_letterboxd_ratings()
-        
-        if settings[7]:
-            search_term = settings[8]
-            search_and_fetch_movie_by_title(search_term)                            # Search for a movie by its title and fetch its details
-            tmdb_id_value = 11                                                      # Initialized value for searching
-            tmdb_id_value = 387570
-            search_and_fetch_movie_by_id(tmdb_id_value)
+            timer(function_name="process_movie_imdb_ratings", fetch_func=process_movie_imdb_ratings, args={})
 
 
     # Prints which settings are set

@@ -637,15 +637,17 @@ def testforban(request):
 # Test page that handles data fetch calls and displays movies
 def testdisplay(request):
     # Always set these flags as False before committing changes
-    erase_movie_db = False                # USE WITH CAUTION, erases all movie database contents
-    init_movie_db = False                 # Performs Popular fetch from TMDB 
-    get_now_playing = False               # Performs Now Playing fetch from TMDB
-    update_streaming = False              # Updates all movie streaming providers from TMDB, takes a while
-    update_recs = False                   # Updates all movie recommendations from TMDB, takes a while
-    get_discover_movies = False           # Fetches all discover movies from TMDB, takes a while
-    update_letterboxd = False             # Updates all movie letterboxd info from webscraper, takes a while
-    get_specific_movie_by_search = False  # Fetches a specific movie 
-    search_term = "Fight Club"            # If (get_specific_movie_by_search): Name of specific movie search   
+    erase_movie_db = False                  # USE WITH CAUTION, erases all movie database contents
+    init_movie_db = False                   # Performs Popular fetch from TMDB 
+    get_now_playing = False                 # Performs Now Playing fetch from TMDB
+    update_streaming = False                # Updates all movie streaming providers from TMDB, takes a while
+    update_recs = False                     # Updates all movie recommendations from TMDB, takes a while
+    get_discover_movies = False             # Fetches all discover movies from TMDB, takes a while
+    update_letterboxd = False               # Updates all movie letterboxd info from webscraper, takes a while
+    get_specific_movie_by_search = False    # Fetches a specific movie 
+    search_term = "Fight Club"              # If (get_specific_movie_by_search): Name of specific movie search
+    update_all_db_movie_entries = False     # Updates all movie entries (ratings, streaming, recommendations)
+       
 
     # Search for a specific movie from tmdb database with tmdb_id and data 
     #   from the master list found at FilmFocus\webapp\data\tmdb_master_movie_list.json
@@ -663,6 +665,7 @@ def testdisplay(request):
                 update_letterboxd,                  # settings[6], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
                 get_specific_movie_by_search,       # settings[7], Should be very fast but may be unsuccessful
                 search_term,                        # settings[8], Passing a string for initialization purposes
+                update_all_db_movie_entries,        # settings[9], Takes a while, performs updates on all movies in db (ratings, streaming, recs)
                 ]
 
     movies_to_display = handle_test_display_page(settings)
