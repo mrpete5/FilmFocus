@@ -237,6 +237,12 @@
                                     <i class="icon ion-ios-play"></i>
                                 </a> -->
                             </div>
+
+							<!-- add to watchlist, plus button & popup -->
+							<a href="#0" class="card__add" movie_id="{{ movie.id }}">
+								<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+							</a>
+							<!-- end add to watchlist -->
                         </a>
                         <div class="card__content">
                             <h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
