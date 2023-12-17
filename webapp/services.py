@@ -459,6 +459,8 @@ def get_movies_for_index():
     top_200_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('-imdb_rating')[:200]
     # Randomly select 24 movies from the top 200
     top_rated_movies = random.sample(list(top_200_movies), min(24, len(top_200_movies)))
+    # Sorts the selected 24 movies by their imdb_rating, with None values at the end
+    top_rated_movies.sort(key=lambda movie: (movie.imdb_rating is not None, movie.imdb_rating), reverse=True)
     
     # Fetch 120 random movies for "More Movies", excluding the ones already selected in new_movies, popular_movies, and top_rated_movies
     more_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies] + [movie.id for movie in top_rated_movies]).order_by('?')[:120]
@@ -469,6 +471,9 @@ def get_movies_for_index():
         'top_rated_movies': top_rated_movies,
         'more_movies': more_movies,
     }
+
+
+
 
 
 # Update the streaming providers for all movies in the Movie database
