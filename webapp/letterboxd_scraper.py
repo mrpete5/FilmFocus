@@ -1,7 +1,25 @@
-# letterboxd_scraper.py
-# Description: Scrapes letterboxd.com for Rating Information
-#
-# Author: John Zheng
+"""
+letterboxd_scraper.py
+
+Description:
+    This script is designed to scrape the movie rating information from letterboxd.com. It retrieves details such as histogram counts and weights of ratings, and calculates the weighted average rating for a given movie. The script uses requests to fetch data from web pages and BeautifulSoup for HTML parsing.
+
+    Caching functionality is included to minimize redundant network requests during development and testing. The script converts movie titles to a format compatible with Letterboxd's URL structure and handles direct requests to fetch rating data. It's capable of handling timeouts and retries for robustness.
+
+Usage:
+    Call the `get_rating(movie_name, year)` function with the movie name and release year to retrieve the rating information.
+
+Author: John Zheng
+
+Note: 
+    This script is for educational purposes. Ensure compliance with Letterboxd's terms of service regarding web scraping and automated data retrieval.
+
+Dependencies:
+    - requests: For making HTTP requests.
+    - BeautifulSoup: For parsing HTML content.
+    - os: For file path and directory handling.
+    - csv: For reading and writing cached data.
+"""
 
 import requests
 from bs4 import BeautifulSoup
