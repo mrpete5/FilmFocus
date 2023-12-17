@@ -31,6 +31,7 @@ import time
 class Movie(models.Model):
     """Model representing individual movies in the database."""
     created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=255)
     tmdb_id = models.IntegerField(unique=True, null=True, db_index=True)
     imdb_id = models.CharField(max_length=20, unique=False, null=True, blank=True)

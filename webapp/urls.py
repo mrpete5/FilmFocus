@@ -23,6 +23,7 @@ urlpatterns = [
     # Pay attention to the different naming schemes
     path("", views.index, name="index"),
     path('movie/<slug:movie_slug>/', views.movie_detail, name='movie_detail'),
+    path('refresh_movie/<int:tmdb_id>/', views.refresh_movie_data, name='refresh_movie_data'),
     path('add_to_watchlist/<int:watchlist_id>/<int:movie_id>/', views.add_to_watchlist, name='add_to_watchlist'),
     path('remove_from_watchlist/<int:watchlist_id>/<int:movie_id>/', views.remove_from_watchlist, name='remove_from_watchlist'),
     path('create_watchlist/<str:watchlist_name>/', views.create_watchlist, name='create_watchlist'),

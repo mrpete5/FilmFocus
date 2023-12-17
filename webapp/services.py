@@ -824,6 +824,130 @@ def update_streaming_providers(test_limit=None):
 
     print("Completed updating top streaming providers.")
 
+
+def get_refreshed_movie_data(movie_tmdb_id):
+    movie, created = Movie.objects.get_or_create(tmdb_id=movie_tmdb_id)
+    
+    if created:
+        print(f"New movie created with tmdb_id: {movie_tmdb_id}")
+    else:
+        print(f"Updating existing movie with tmdb_id: {movie_tmdb_id}")
+
+    # Make an API call to fetch more details about the movie from TMDB
+    movie_details = fetch_movie_details_from_tmdb(movie.tmdb_id)
+
+    print(f"\nRefreshed movie data: {movie.title} (tmdb_id: {movie.tmdb_id})")
+    formatted_last_updated = movie.last_updated.strftime('%Y-%m-%d %H:%M:%S')
+    print(f"Last updated: {formatted_last_updated}")
+    print(f"Before IMDb ratings: {movie.imdb_rating}")
+    print(f"Before Letterboxd ratings: {movie.letterboxd_rating}/5")
+    print(f"Before Rotten Tomatoes ratings: {movie.rotten_tomatoes_rating}")
+    print(f"Before Metacritic ratings: {movie.metacritic_rating}\n")
+
+   # Check if the movie is adult content
+    if movie_details.get('adult'):
+        return
+
+    # Update movie details
+    movie.title = movie_details.get('title')
+    movie.imdb_id = movie_details.get('imdb_id')
+    movie.overview = movie_details.get('overview')
+    movie.poster_path = movie_details.get('poster_path')
+    # release_date = movie_details.get('release_date')
+    movie.release_year = int(movie_details.get('release_date', '').split('-')[0]) if movie_details.get('release_date') else None
+    movie.runtime = movie_details.get('runtime')
+    movie.tagline = movie_details.get('tagline')
+    movie.trailer_key = fetch_movie_trailer_key(movie_details.get('videos', {}).get('results', []))
+    movie.now_playing = movie.release_year in [2023, 2024]
+    
+    # Verify now_playing is either 2023 or 2024
+    movie.now_playing = True
+    if movie.release_year not in [2023, 2024]:
+        movie.now_playing = False
+
+    # Extract the video results and fetch the trailer key
+    videos = movie_details.get('videos', {}).get('results', [])
+    movie.trailer_key = fetch_movie_trailer_key(videos)    
+
+    # Save the updated movie
+    movie.save()
+
+    # Extract recommendations
+    recommendations = movie_details.get('recommendations', {}).get('results', [])
+    recommended_movie_data = []
+    for rec in recommendations:
+        rec_popularity = rec.get('popularity', 0)  # Default to 0 if popularity is not present
+        if rec_popularity > 3:
+            recommended_movie_data.append({
+                'tmdb_id': rec.get('id'),
+                'title': rec.get('title'),
+                'tmdb_popularity': rec_popularity  # Store the tmdb_popularity here
+            })
+
+    movie.recommended_movie_data = recommended_movie_data
+
+    # Make an API call to fetch more details about the movie from OMDB    
+    omdb_data = fetch_movie_data_from_omdb(movie.imdb_id)
+    movie.imdb_rating = omdb_data.get('imdb_rating')
+    movie.rotten_tomatoes_rating = omdb_data.get('rotten_tomatoes_rating')
+    movie.metacritic_rating = omdb_data.get('metacritic_rating')
+    movie.director = omdb_data.get('director')
+    movie.domestic_box_office = omdb_data.get('domestic_box_office')
+    movie.mpa_rating = omdb_data.get('mpa_rating')
+    movie.save()
+
+    # Extract genres
+    genres = movie_details.get('genres', [])        
+    # Associate the movie with its genres from TMDB
+    for genre_data in genres:
+        genre, created = Genre.objects.get_or_create(name=genre_data['name'])
+        movie.genres.add(genre)
+    
+    # Extract the streaming data
+    streaming_data = movie_details.get('watch/providers', {}).get('results', {}).get('US', {}).get('flatrate', [])
+
+    allowed_providers = filtered_providers
+    # If allowed_providers is None or empty, allow all providers
+    if not allowed_providers:
+        allowed_providers = [provider_data['provider_name'] for provider_data in streaming_data]
+
+    # Loop through the streaming data and update the movie's streaming providers
+    for provider_data in streaming_data:
+        # Check if the provider is in the allowed list
+        if provider_data['provider_name'] in allowed_providers:
+            provider, created = StreamingProvider.objects.get_or_create(
+                provider_id=provider_data['provider_id'],
+                defaults={
+                    'name': provider_data['provider_name'],
+                    'logo_path': provider_data['logo_path'],
+                }
+            )
+            movie.streaming_providers.add(provider)
+
+    # Fetch Letterboxd ratings data
+    try:
+        rating_data = lbd_scrape.get_rating(movie.title, movie.release_year)
+        if rating_data:
+            if isinstance(rating_data, dict):
+                movie.letterboxd_rating = rating_data['Weighted Average']
+            elif isinstance(rating_data, list): 
+                movie.letterboxd_rating = rating_data[0]
+    except Exception as e:
+        print(f"Failure: {e}")
+
+    # Save refreshed movie data in the Movie database
+    movie.save()
+
+    # Print refreshed movie data
+    formatted_last_updated = movie.last_updated.strftime('%Y-%m-%d %H:%M:%S')
+    print(f'\nRefreshed movie data: {movie.title} (tmdb_id: {movie.tmdb_id})')
+    print(f"Last updated: {formatted_last_updated}")
+    print(f"After IMDb ratings: {movie.imdb_rating}")
+    print(f"After Letterboxd ratings: {movie.letterboxd_rating}/5")
+    print(f"After Rotten Tomatoes ratings: {movie.rotten_tomatoes_rating}")
+    print(f"After Metacritic ratings: {movie.metacritic_rating}\n")
+
+
 # Get all the movies for the catalog page
 def get_all_movies_catalog():
     # TODO: add support for filtering movies

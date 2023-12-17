@@ -625,10 +625,20 @@ def remove_from_watchlist(request, watchlist_id, movie_id):
         return JsonResponse({'status': 'error', 'message': str(e)})
 
 
+# View function for getting refreshed movie data for a specific movie
+def refresh_movie_data(request, tmdb_id):
+    try:
+        get_refreshed_movie_data(tmdb_id)
+
+        return JsonResponse({'status': 'success', 'message': 'Movie data updated.'})
+    except Movie.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Movie not found.'})
+
+
 # Test page that displays posters for potential movie banning
 def testforban(request):
-    start_date = "2023-12-01"  # Range of movies to display
-    end_date = "2024-01-31"
+    start_date = "2023-11-01"  # Range of movies to display
+    end_date = "2024-06-01"
 
     movies_to_display = handle_test_for_ban(start_date, end_date)
     return render(request, "testforban.html", {"movies": movies_to_display})

@@ -69,7 +69,7 @@
 								</a>
 								<!-- streaming providers -->
 								<div class="details__wrap">
-									
+
 									{% if movie.streaming_providers.all %}
 									<div class="details__devices">
 										<span class="details__devices-title">Available to stream at:</span>
@@ -87,7 +87,8 @@
 
 								<!-- refresh movie data button -->
 								<br>
-								<button class="refresh-movie-data__btn"  id="refreshMovieDataBtn">refresh movie data</button>
+								<!-- <button class="refresh-movie-data__btn"  id="refreshMovieDataBtn">refresh movie data</button> -->
+								<button class="refresh-movie-data__btn" id="refreshMovieDataBtn" data-movie-tmdb_id="{{ movie.tmdb_id }}">Refresh Movie Data</button>	
 								<!-- end  refresh movie data button --> 
 
 							</div>
@@ -177,8 +178,21 @@
 			</div>
 		</div>
 		<!-- end details content -->
+
+
+		<!-- hidden form information -->
+		<!-- <button id="refreshMovieDataBtn" data-movie-id="{{ movie.id }}">Refresh Movie Data</button>	 -->
+
+		<input type="hidden" name="movie_id" id="hidden-movie-id" value="{{ filter_watchlist.id }}">
+		<input type="hidden" name="tmdb_id" id="hidden-tmdb-id" value="{{ filter_year_begin|default:'1900' }}">
+		<!-- <input type="hidden" name="year_end" id="hidden-year-end" value="{{ filter_year_end|default:'2023' }}">
+		<input type="hidden" name="imdb_begin" id="hidden-imdb-begin" value="{{ filter_imdb_begin|default:'0.0' }}">
+		<input type="hidden" name="imdb_end" id="hidden-imdb-end" value="{{ filter_imdb_end|default:'10.0' }}"> -->
+		<!-- end hidden form infromation -->
+
 	</section>
 	<!-- end details -->
+
 
 	<!-- content -->
 	<section class="content">

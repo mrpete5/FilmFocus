@@ -1020,7 +1020,35 @@ $(document).ready(function () {
             behavior: 'smooth' // Smooth scroll
 		});
 	}
+
+
+	/*==============================
+	Refresh Movie Data on Details Page
+	==============================*/
+	document.querySelectorAll('.refresh-movie-data__btn').forEach(function(button) {
+		button.addEventListener('click', function() {
+			var movieId = this.getAttribute('data-movie-tmdb_id');
+			$.ajax({
+				url: '/refresh_movie/' + movieId + '/',
+				type: 'GET',
+				success: function(response) {
+					if (response.status === 'success') {
+						location.reload(); // reload the page with the new refreshed movie data contents
+						// alert(response.message);
+					} else {
+						alert(response.message);
+					}
+				},
+				error: function(xhr, status, error) {
+					console.error('Error occurred: ' + error);
+					alert('Error occurred while updating movie data.');
+				}
+			});
+		});
+	});
 	
 
 
+	
 });
+
