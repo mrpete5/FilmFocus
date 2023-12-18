@@ -1,8 +1,13 @@
-
+# This is a script that will get all of the movie details for a movie entry in our model Movie.
+# Inputs: User provides the movie title and release year.
+# Outputs: Script prints all of the movie details for the selected movie entry that we have saved in our database.
+# Author: Mark
+# Created: 12/17/23
+# Last Updated: 12/18/23
+# Recent Modifications: Added this prologue comment block.
 
 import os
 import django
-import argparse
 
 # Set up Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FilmFocus.settings')
