@@ -842,9 +842,16 @@ def get_refreshed_movie_data(movie_tmdb_id):
     print(f"Before IMDb ratings: {movie.imdb_rating}")
     print(f"Before Letterboxd ratings: {movie.letterboxd_rating}/5")
     print(f"Before Rotten Tomatoes ratings: {movie.rotten_tomatoes_rating}")
-    print(f"Before Metacritic ratings: {movie.metacritic_rating}\n")
+    print(f"Before Metacritic ratings: {movie.metacritic_rating}")
 
-   # Check if the movie is adult content
+    # Retrieve and format streaming provider names
+    streaming_providers = movie.streaming_providers.all()
+    provider_names = [provider.name for provider in streaming_providers]
+    providers_string = ", ".join(provider_names)
+    # Print the formatted list of streaming providers
+    print(f"Before Streaming providers: {providers_string}\n")
+
+    # Check if the movie is adult content
     if movie_details.get('adult'):
         return
 
@@ -945,7 +952,14 @@ def get_refreshed_movie_data(movie_tmdb_id):
     print(f"After IMDb ratings: {movie.imdb_rating}")
     print(f"After Letterboxd ratings: {movie.letterboxd_rating}/5")
     print(f"After Rotten Tomatoes ratings: {movie.rotten_tomatoes_rating}")
-    print(f"After Metacritic ratings: {movie.metacritic_rating}\n")
+    print(f"After Metacritic ratings: {movie.metacritic_rating}")
+
+    # Retrieve and format streaming provider names
+    streaming_providers = movie.streaming_providers.all()
+    provider_names = [provider.name for provider in streaming_providers]
+    providers_string = ", ".join(provider_names)
+    # Print the formatted list of streaming providers
+    print(f"After Streaming providers: {providers_string}\n")
 
 
 # Get all the movies for the catalog page

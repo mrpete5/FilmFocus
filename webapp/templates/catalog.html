@@ -199,27 +199,39 @@
 						</form>
 						
                         <!-- paginator -->
-                            <ul class="paginator">
-                                        
-                                {% if page_obj.has_previous %}
-                                    <li class="paginator__item paginator__item--prev">
-                                        <a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
-                                    </li>
-                                    <!-- <a href="?page=1">&laquo; first</a> -->
-                                {% endif %}
+						<ul class="paginator">
 
-                                <li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
-                                <!-- <li class="paginator__item"><a href="#">{{ page_obj.number }}</a></li>
-                                <li class="paginator__item"><a href="#">3</a></li> -->
-
-                                {% if page_obj.has_next %}
-                                    <li class="paginator__item paginator__item--next">
-                                        <a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
-                                    </li>
-                                    <!-- <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a> -->
-                                {% endif %}
-
-                            </ul>
+							<!-- Mega Jump 10 Pages Previous -->
+							{% if page_obj.has_previous %}
+								<li class="paginator__item paginator__item--mega_prev">
+									<a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
+								</li>
+							{% endif %}
+							<!-- end Mega Jump 10 Pages Previous -->
+									
+							{% if page_obj.has_previous %}
+								<li class="paginator__item paginator__item--prev">
+									<a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
+								</li>
+							{% endif %}
+			
+							<li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
+			
+							{% if page_obj.has_next %}
+								<li class="paginator__item paginator__item--next">
+									<a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
+								</li>
+							{% endif %}
+			
+							<!-- Mega Jump 10 Pages Next -->
+							{% if page_obj.has_next %}
+								<li class="paginator__item paginator__item--mega_next">
+									<a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
+								</li>
+							{% endif %}
+							<!-- end Mega Jump 10 Pages Next -->
+			
+						</ul>
                         <!-- end paginator -->
 
 					</div>
@@ -288,49 +300,42 @@
                 <!-- end card -->
             {% endfor %}
 
-
-<!-- 
-            <div class="pagination">
-                <span class="step-links">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                    {% endif %}
-            
-                    <span class="current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                    </span>
-            
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">next</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                    {% endif %}
-                </span>
-            </div> -->
-
             <!-- footer paginator -->
-                <ul class="paginator">
-                                
-                    {% if page_obj.has_previous %}
-                        <li class="paginator__item paginator__item--prev">
-                            <a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
-                        </li>
-                        <!-- <a href="?page=1">&laquo; first</a> -->
-                    {% endif %}
+			<ul class="paginator">
 
-                    <li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
-                    <!-- <li class="paginator__item"><a href="#">{{ page_obj.number }}</a></li>
-                    <li class="paginator__item"><a href="#">3</a></li> -->
+				<!-- Mega Jump 10 Pages Previous -->
+				{% if page_obj.has_previous %}
+					<li class="paginator__item paginator__item--mega_prev">
+						<a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
+					</li>
+				{% endif %}
+				<!-- end Mega Jump 10 Pages Previous -->
+						
+				{% if page_obj.has_previous %}
+					<li class="paginator__item paginator__item--prev">
+						<a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
+					</li>
+				{% endif %}
 
-                    {% if page_obj.has_next %}
-                        <li class="paginator__item paginator__item--next">
-                            <a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
-                        </li>
-                        <!-- <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a> -->
-                    {% endif %}
+				<li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
 
-                </ul>
+				{% if page_obj.has_next %}
+					<li class="paginator__item paginator__item--next">
+						<a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
+					</li>
+				{% endif %}
+
+				<!-- Mega Jump 10 Pages Next -->
+				{% if page_obj.has_next %}
+					<li class="paginator__item paginator__item--mega_next">
+						<a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
+					</li>
+				{% endif %}
+				<!-- end Mega Jump 10 Pages Next -->
+
+			</ul>
             <!-- end footer paginator -->
+
 
             <!-- section btn -->
             <div class="col-12">
@@ -338,7 +343,8 @@
             </div>
             <!-- end section btn -->
 
-
+			
+			<!-- Paginator version with numerical page values -->
             <!-- paginator -->
                 <!-- <div class="col-12">
                     <ul class="paginator">
@@ -355,6 +361,7 @@
                     </ul>
                 </div> -->
             <!-- end paginator -->
+
         </div>
     </div>
 </div>
