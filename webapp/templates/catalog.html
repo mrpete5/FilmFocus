@@ -36,7 +36,16 @@
 	<meta name="description" content="">
 	<meta name="keywords" content="">
 	<meta name="author" content="Dmitry Volkov">
-	<title>FilmFocus – Your Watchlist, Your Way</title>
+
+	<!-- tab title -->
+	{% if page_obj.number == 1 %}
+		<title>Catalog | FilmFocus</title>
+	{% else %}
+		<!-- <title>FilmFocus – Your Watchlist, Your Way</title> -->
+		<!-- <title>Page {{ page_obj.number }} | FilmFocus</title> option what says "Page # | FilmFocus" -->
+		<title>{{ page_obj.number }} | FilmFocus</title>
+	{% endif %}
+	<!-- end tab title -->
 
 </head>
 <body class="body">
