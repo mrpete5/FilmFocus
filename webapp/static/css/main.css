@@ -1351,10 +1351,13 @@ ul {
 .card__cover img {
   width: 100%;
 }
-.card__cover:hover img {
+
+/* Removing this class of hover over img designs. */
+/* .card__cover:hover img {
   border: 1.5px solid #F12D92;
   opacity: 0.9;
-}
+} */
+
 .card__cover:before {
   content: '';
   position: absolute;
