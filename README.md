@@ -36,3 +36,9 @@ filmfocusku@gmail.com
 
 ## Acknowledgements
 Data provided by TMDb and OMDb
+
+## FilmFocus Preview
+![project_pics__catalog_page](https://github.com/mrpete5/FilmFocus/assets/15926744/2b2b5cf1-f85d-4edb-ab8f-e4884b08500a)
+
+
+
