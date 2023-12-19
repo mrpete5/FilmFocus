@@ -60,7 +60,7 @@ class Movie(models.Model):
 
     # String variables for hover over item instructions
     str_addToWatchlist = str("Add Movie to Your Watchlists")
-    str_performTheWhateverTask = str("Do the thing that you do when I edit this")
+    str_refreshMovieData = str("Retrieve the Newest Movie Data")
 
     # Movie release date in a printable format
     # To run this code, use "{{ movie.formatted_release_date }}" to execute the printable release date
