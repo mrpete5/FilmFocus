@@ -116,8 +116,8 @@
 												<a>{{ genre.name }}</a>
 											{% endfor %}
 										</li>
-										<li><span title="{{ movie.release_year }}">Release year: {{ movie.release_year }}</span></li>
-										<li><span title="{{ movie.runtime }}">Running time: {{ movie.runtime }} min</span></li>
+										<li><span title="{{ movie.formatted_release_date }}">Release year: {{ movie.release_year }}</span></li>
+										<li><span title="{{ movie.readable_form_runtime }}">Running time: {{ movie.runtime }} min</span></li>
 										
 										{% if movie.imdb_rating %}
 											<li>

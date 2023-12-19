@@ -26,7 +26,7 @@ from django.urls import reverse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Semaphore
 import time
-
+import datetime
 
 class Movie(models.Model):
     """Model representing individual movies in the database."""
@@ -57,6 +57,29 @@ class Movie(models.Model):
     recommended_movie_data = models.JSONField(default=list, blank=True)
     letterboxd_rating = models.FloatField(null=True, blank=True)
     # letterboxd_histogram_weights = JSONField(null=True, blank=True) # TODO: Add histogram weights or remove this line
+
+    # Movie release date in a printable format
+    # To run this code, use "{{ movie.formatted_release_date }}" to execute the printable release date
+    release_date = models.DateField(null=True, blank=True)
+    def formatted_release_date(self):
+        if self.release_date:
+            return self.release_date.strftime("%B %d, %Y")  # Example format: "August 8, 2023"
+        else:
+            return "Unknown"
+        
+    # readable_form_runtime = models.CharField(max_length=50)
+    @property
+    def readable_form_runtime(self):
+        if self.runtime is None:
+            return None
+        hours = self.runtime // 60
+        minutes = self.runtime % 60
+        if hours > 0 and minutes > 0:
+            return f"{hours} hour{'s' if hours > 1 else ''} and {minutes} minute{'s' if minutes > 1 else ''}"
+        elif hours > 0:
+            return f"{hours} hour{'s' if hours > 1 else ''}"
+        else:
+            return f"{minutes} minute{'s' if minutes > 1 else ''}"
 
     # This method can be used to generate a unique slug for a movie
     def get_absolute_url(self):
