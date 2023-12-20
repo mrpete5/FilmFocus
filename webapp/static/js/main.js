@@ -1047,6 +1047,22 @@ $(document).ready(function () {
 		});
 	});
 	
+	/*==============================
+	Toggle Switch
+	==============================*/
+
+	document.getElementById('toggle').addEventListener('change', function(event) {
+		if (event.target.checked) {
+		  console.log('Toggle switched on');
+		  // Add your code here for when toggle is on
+		} else {
+		  console.log('Toggle switched off');
+		  // Add your code here for when toggle is off
+		}
+	  });
+	  
+
+
 
 
 	

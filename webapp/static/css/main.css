@@ -4940,3 +4940,56 @@ User Profile Page
   opacity: 1;
   color: #fff;
 }
+
+
+/*==============================
+  Watchlist Privacy Toggle
+==============================*/
+.toggle-button {
+  position: relative;
+  width: 60px; /* Adjust size as needed */
+  height: 30px; /* Adjust size as needed */
+}
+
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-label {
+  position: absolute;
+  cursor: pointer;
+  background-color: grey; /* Secondary Color */ /* FilmFocus Pink Watchlist is Public */
+  /* background-color: white; Secondary Color FilmFocus Pink Watchlist is Public */
+
+  height: 100%;
+  width: 100%;
+  border-radius: 15px;
+  transition: background-color 0.2s;
+}
+
+.toggle-label::after {
+  content: "";
+  position: absolute;
+  width: 26px; /* Adjust size as needed */
+  height: 26px; /* Adjust size as needed */
+  left: 2px;
+  bottom: 2px;
+  background-color: #FF55A5;    /* FilmFocus Pink Watchlist is Public */
+  transition: 0.2s;
+  border-radius: 50%;
+}
+
+.toggle-input:checked + .toggle-label {
+  background-color: limegreen;  /* Primary Color limegreen Watchlist is Public */
+}
+
+.toggle-input:checked + .toggle-label::after {
+  transform: translateX(30px);
+}
+
+/* [FilmFocus Color Codes]
+
+FilmFocus Pink: #FF55A5
+FilmFocus Grey: #2B2B31 */
