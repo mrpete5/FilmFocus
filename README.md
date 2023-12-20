@@ -40,5 +40,7 @@ Data provided by TMDb and OMDb
 ## FilmFocus Preview
 ![project_pics__catalog_page](https://github.com/mrpete5/FilmFocus/assets/15926744/2b2b5cf1-f85d-4edb-ab8f-e4884b08500a)
 
+![Screenshot 2023-12-19 215733](https://github.com/mrpete5/FilmFocus/assets/15926744/332bbea2-0b13-420e-aea6-e9a4af4c6d70)
 
+![image](https://github.com/mrpete5/FilmFocus/assets/15926744/31f3d9aa-22a6-4e9a-b768-becd78b735f6)
 
