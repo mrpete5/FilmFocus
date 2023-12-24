@@ -216,6 +216,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
         title=movie_details.get('title'),
         overview=overview,
         poster_path=poster_path,
+        release_date=release_date,
         release_year=release_year,
         runtime=movie_details.get('runtime'),
         tagline=movie_details.get('tagline'),
