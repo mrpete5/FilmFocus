@@ -74,10 +74,14 @@
 									<div class="card__cover">
 										<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 									</div>
+								</a>
+
+								<span title="Add Movie to Your Watchlist">
 									<a href="#0" class="card__add" movie_id="{{ movie.id }}">
 										<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 									</a>
-								</a>
+								</span>
+								
 								<div class="card__content">
 									<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 									<span class="card__category">
@@ -124,10 +128,14 @@
 											<div class="card__cover">
 												<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 											</div>
+										</a>
+										
+										<span title="Add Movie to Your Watchlist">
 											<a href="#0" class="card__add" movie_id="{{ movie.id }}">
 												<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 											</a>
-										</a>
+										</span>
+
 										<div class="card__content">
 											<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
@@ -164,10 +172,14 @@
 											<div class="card__cover">
 												<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 											</div>
+										</a>
+
+										<span title="Add Movie to Your Watchlist">
 											<a href="#0" class="card__add" movie_id="{{ movie.id }}">
 												<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 											</a>
-										</a>
+										</span>
+										
 										<div class="card__content">
 											<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
@@ -234,10 +246,14 @@
 												<div class="card__cover">
 													<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 												</div>
+											</a>
+
+											<span title="Add Movie to Your Watchlist">
 												<a href="#0" class="card__add" movie_id="{{ movie.id }}">
 													<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 												</a>
-											</a>
+											</span>
+
 											<div class="card__content">
 												<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 												<span class="card__category">

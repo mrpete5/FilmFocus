@@ -65,7 +65,7 @@
 									<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 								</div>
 
-								<span title="{{ movie.str_addToWatchlist }}">
+								<span title="Add Movie to Your Watchlist">
 									<a href="#0" class="card__add" movie_id="{{ movie.id }}">
 										<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 									</a>
@@ -91,7 +91,7 @@
 								<!-- end streaming providers -->
 
 								<!-- Refresh movie data button -->
-								<span title="{{ movie.str_refreshMovieData }}">
+								<span title="Retrieve the Newest Movie Data">
 									<button class="refresh-movie-data__btn" id="refreshMovieDataBtn" data-movie-tmdb_id="{{ movie.tmdb_id }}">Refresh Movie Data</button>	
 								</span>
 								<!-- end  Refresh movie data button --> 

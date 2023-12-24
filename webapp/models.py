@@ -58,10 +58,6 @@ class Movie(models.Model):
     letterboxd_rating = models.FloatField(null=True, blank=True)
     # letterboxd_histogram_weights = JSONField(null=True, blank=True) # TODO: Add histogram weights or remove this line
 
-    # String variables for hover over item instructions
-    str_addToWatchlist = str("Add Movie to Your Watchlists")
-    str_refreshMovieData = str("Retrieve the Newest Movie Data")
-
     # Movie release date in a printable format
     # To run this code, use "{{ movie.formatted_release_date }}" to execute the printable release date
     release_date = models.DateField(null=True, blank=True)
