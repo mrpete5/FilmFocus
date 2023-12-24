@@ -12,21 +12,27 @@ import os
 import django
 import concurrent.futures
 from dotenv import load_dotenv
-from webapp.models import Movie
 from tmdbv3api import TMDb, Movie as TMDbMovie
 from datetime import datetime
+
+# Load environment variables first
+load_dotenv()
 
 # Set up Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FilmFocus.settings')
 django.setup()
-# Load environment variables
 
-load_dotenv()
-OMDB_API_KEY = os.environ["OMDB_API_KEY"]               # limited to 100,000 calls/day
-TMDB_API_KEY_STRING = os.environ["TMDB_API_KEY_STRING"] # limited to around 50 calls/second
+# Import the Movie model after setting up Django
+from webapp.models import Movie
+
+# Your API keys (ensure these are set in your .env file)
+OMDB_API_KEY = os.environ.get("OMDB_API_KEY")               # limited to 100,000 calls/day
+# TMDB_API_KEY_STRING = os.environ.get("TMDB_API_KEY_STRING") # limited to around 50 calls/second
+TMDB_API_KEY_STRING = "f958ac9e78a958932e6def76077a2292"
+
 # Initialize TMDb
 tmdb = TMDb()
-tmdb.api_key = 'YOUR_TMDB_API_KEY'  # Replace with your actual API key
+tmdb.api_key = TMDB_API_KEY_STRING  # Use your actual API key from environment variables
 tmdb_movie = TMDbMovie()
 
 def update_movie(movie_id):
@@ -39,6 +45,7 @@ def update_movie(movie_id):
                 movie.save()
                 return True
     except Exception as e:
+        print(f"Error updating movie {movie_id}: {e}")
         return False
 
 movie_ids = list(Movie.objects.values_list('id', flat=True))
@@ -51,40 +58,10 @@ def print_progress_bar(completed, total):
     filled_length = int(round(bar_length * completed / float(total)))
     bar = '=' * filled_length + '>' + ' ' * (bar_length - filled_length)
     print(f"\rProgress: [{bar}] {percentage:.2f}%", end='')
+    
 
 with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
     futures = [executor.submit(update_movie, movie_id) for movie_id in movie_ids]
     for future in concurrent.futures.as_completed(futures):
         completed += 1
         print_progress_bar(completed, total_movies)
-
-
-
-
-
-
-
-
-# import os
-# import django
-# from webapp.models import Movie
-
-# # Set up Django environment
-# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FilmFocus.settings')
-# django.setup()
-
-# # Function to refresh movie data
-# def get_refreshed_movie_data(movie_tmdb_id):
-#     # ... (your existing function code) ...
-
-# # Iterate over all movies
-# movie_ids = Movie.objects.values_list('tmdb_id', flat=True)
-# total_movies = len(movie_ids)
-# completed = 0
-
-# for movie_id in movie_ids:
-#     get_refreshed_movie_data(movie_id)
-#     completed += 1
-#     print(f"Processed {completed} of {total_movies} movies")
-
-# print("All movies have been updated.")
