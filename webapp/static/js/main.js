@@ -1021,6 +1021,14 @@ $(document).ready(function () {
 		});
 	}
 
+	/*==============================
+	Top of Page Button
+	==============================*/
+	document.querySelectorAll('.top-of-page__btn').forEach(function(button) {
+		button.addEventListener('click', function() {
+			location.reload(); 	// It just reloads the page since appropriate
+		});
+	});
 
 	/*==============================
 	Refresh Movie Data on Details Page
