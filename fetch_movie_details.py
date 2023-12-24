@@ -21,7 +21,7 @@ def get_movie_details(title, release_year):
     if movie:
         print(f"\nTitle: {movie.title}")
         print(f"Release Year: {movie.release_year}")
-        print(f"TMDB ID: {movie.tmdb_id}")
+        print(f"TMDb ID: {movie.tmdb_id}")
         print(f"IMDb ID: {movie.imdb_id}")
         print(f"Overview: {movie.overview}")
         print(f"Poster Path: {movie.poster_path}")
