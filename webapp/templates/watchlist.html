@@ -215,6 +215,15 @@
 									</a> -->
 								</div>
 							</a>
+
+							<!-- add to watchlist, plus button & popup -->
+							<span title="Add Movie to Your Watchlist">
+								<a href="#0" class="card__add" movie_id="{{ movie.id }}">
+									<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+								</a>
+							</span>			
+							<!-- end add to watchlist -->
+
 							<div class="card__content">
 								<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 								<span class="card__category">
