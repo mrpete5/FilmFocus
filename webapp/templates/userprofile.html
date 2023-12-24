@@ -98,30 +98,26 @@
 
                 <div class="prof_divider"></div>
 				<div class="watchlist_block">
-	
-					<div class="toggle-button">
-						<input type="checkbox" id="toggle" class="toggle-input">
-						<label for="toggle" class="toggle-label"></label>
-					</div>
-					
-					
+						
 					<h3 class="wlist_block_title">Watchlists</h3>
 
-					
-
 					<ul>
-						<center>
-						{% for watchlist in watchlists %}
 						
+						{% for watchlist in watchlists %}
+						<center>
 							<a href="#" class="watchlist_el_link" data-watchlist-id="{{ watchlist.id }}">
 								<li class="watchlist_element" watchlist_id="{{ watchlist.id }}">{{ watchlist.watchlist_name }}</li>
 						  	</a>	
-											
-					
+									
+							<!-- Work in Progress: watchlist privacy toggle -->
+							<!-- <div class="toggle-button">
+								<input type="checkbox" id="toggle" class="toggle-input">
+								<label for="toggle" class="toggle-label"></label>
+							</div> -->
 			
-
-						{% endfor %}
 						</center>
+						{% endfor %}
+						
 					</ul>
 				</div>
 			</div>
