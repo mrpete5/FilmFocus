@@ -988,10 +988,8 @@ def handle_test_display_page(settings):
     # 20 movies per page
     # update_streaming_providers(test_limit=10) # Uncomment to update the top streaming providers
 
-    the_Greasy_Strangler = 320413 # The Greasy Strangler
     # search_and_fetch_movie_by_title("The Greasy Strangler")
-    # search_and_fetch_movie_by_id(840430) # Get the movie 840430== "The Holderovers"
-    # search_and_fetch_movie_by_id(the_Greasy_Strangler)
+    # search_and_fetch_movie_by_id(775517)
 
     # popular_pages is the main method for getting a mass amount of new movies
     popular_pages = 10          # Number of popular pages from 1 to x with 20 results each, TMDb
@@ -1029,10 +1027,8 @@ def handle_test_display_page(settings):
     
     if settings[7]:
         search_term = settings[8]
-        search_and_fetch_movie_by_title(search_term)                            # Search for a movie by its title and fetch its details
-        tmdb_id_value = 11                                                      # Initialized value for searching
-        tmdb_id_value = 387570
-        search_and_fetch_movie_by_id(tmdb_id_value)
+        search_and_fetch_movie_by_title(search_term)        # Search for a movie by its title and fetch its details
+        search_and_fetch_movie_by_id(tmdb_id_value)         # Search for a movie by its tmdb_id and fetch its details
     
     if settings[9]:
         """ Performs all operations to update movie data in our database, without deleting anything. """
@@ -1067,12 +1063,10 @@ def handle_test_display_page(settings):
 
     flags.append(f'{tmdb_id_value}')                            # flags[9], This will add the item at the end of the list
     settings.append('tmdb_id_value')
-    # flags[9] = 'tmdb_id_value'                                # alternative choices
-    # settings[9] = 'tmdb_id_value'
 
     for index, flag in enumerate(flags):
         print(f"{flag} = {settings[index]}")
-    # print(f"tmdb_id_value = '{tmdb_id_value}'")
+
     print(f"==========================\n")  
 
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/
