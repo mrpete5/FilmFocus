@@ -58,7 +58,7 @@
 								<li class="header__nav-item header__nav-item--search">
 									<form action="{% url 'search' %}" method="get">
 										{% csrf_token %}
-										<input id="searchbar" type="text" name="query" placeholder="Search Movies">
+										<input id="searchbar" type="text" name="query" maxlength="50" placeholder="Search Movies">
 										<!-- <button type="submit">Search</button> -->
 										<button class="header__search-btn" type="submit">
 											<i class="icon ion-ios-search"></i>

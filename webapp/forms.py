@@ -11,6 +11,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .models import Watchlist 
+from django.core.validators import MaxLengthValidator
+
 
 
 
@@ -32,14 +34,18 @@ class NewUserForm(UserCreationForm):
         super(NewUserForm, self).__init__(*args, **kwargs)
         
         # Use widgets on built in authentication fields
-        username_attrs = {'class':'sign__input', 'placeholder': 'Username'} 
+        username_attrs = {'class':'sign__input', 'placeholder': 'Username'}
+        self.fields['username'].max_length = 30 # added to try and limit character length
         self.fields['username'].widget.attrs=username_attrs
-        
+        self.fields['username'].validators.append(MaxLengthValidator(limit_value=25)) # added to try and limit character length
+
         password1_attrs = {'class':'sign__input', 'placeholder': 'Password', 'type': 'password', 'id':'id_password'}
         self.fields['password1'].widget.attrs=password1_attrs
+        self.fields['password1'].validators.append(MaxLengthValidator(limit_value=30)) # added to try and limit character length
 
         password2_attrs = {'class':'sign__input', 'placeholder': 'Confirm Password', 'type': 'password', 'id':'id_confirmationPassword'}
         self.fields['password2'].widget.attrs=password2_attrs
+        self.fields['password2'].validators.append(MaxLengthValidator(limit_value=30)) # added to try and limit character length
         
 
 class CustomAuthForm(AuthenticationForm):
@@ -60,9 +66,11 @@ class CustomAuthForm(AuthenticationForm):
         # Use widgets on built in authentication fields
         username_attrs = {'class':'sign__input', 'placeholder': 'Username'} 
         self.fields['username'].widget.attrs=username_attrs
+        self.fields['username'].validators.append(MaxLengthValidator(limit_value=25)) # added to try and limit character length
         
         password_attrs = {'class':'sign__input', 'placeholder': 'Password', 'type': 'password', 'id':'id_password'}
-        self.fields['password'].widget.attrs=password_attrs    
+        self.fields['password'].widget.attrs=password_attrs  
+        self.fields['password'].validators.append(MaxLengthValidator(limit_value=30)) # added to try and limit character length  
         
 
 class NewWatchlistForm(forms.Form):
@@ -91,11 +99,11 @@ class NewWatchlistForm(forms.Form):
         # self.fields['watchlist_name'].widget.attrs=watchlist_name_attrs
 
 class PasswordResetForm(forms.Form):
-    username = forms.CharField(label="Username", max_length=254)
+    username = forms.CharField(label="Username", max_length=25) # changed to try and limit character length
 
 class PasswordResetConfirmForm(forms.Form):
-    new_password_1 = forms.CharField(label="New Password", max_length=254)
-    new_password_2 = forms.CharField(label="Confirm Password", max_length=254)
+    new_password_1 = forms.CharField(label="New Password", max_length=30) # changed to try and limit character length
+    new_password_2 = forms.CharField(label="Confirm Password", max_length=30) # changed to try and limit character length
 
 class WatchlistFilterForm(forms.Form):
     watchlist_id = forms.IntegerField(label="Wishlist ID")

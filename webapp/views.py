@@ -189,26 +189,25 @@ def watchlist(request):
 
                     # Fitler for Genre
                     genre = Genre.objects.filter(name=form.cleaned_data["genre"]).first()
-                    if genre:
+                    if genre is not None:
                         movie_list = movie_list.filter(genres=genre)
 
                     # Filter for Streaming Providers
                     streamer = StreamingProvider.objects.filter(name=form.cleaned_data["streaming_provider"]).first()
-                    if streamer:
+                    if streamer is not None:
                         movie_list = movie_list.filter(streaming_providers=streamer)
 
                     # Filter for release year
                     year_begin = form.cleaned_data["year_begin"]
                     year_end = form.cleaned_data["year_end"]
-                    if year_begin and year_end:
+                    if year_begin is not None and year_end is not None:
                         movie_list = movie_list.filter(release_year__range=(year_begin, year_end))
 
                     # Filte for IMDB rating
                     imdb_begin = form.cleaned_data["imdb_begin"]
                     imdb_end = form.cleaned_data["imdb_end"]
-                    # TODO imdb rating is a ChatField in the movie model and you can't range it
-                    # if imdb_begin and imdb_end:
-                    #     movie_list = movie_list.filter(imdb_rating__range=(imdb_begin, imdb_end))
+                    if imdb_begin is not None and imdb_end is not None:
+                        movie_list = movie_list.filter(imdb_rating_num__range=(imdb_begin, imdb_end))
                     
                     # Setup Context for the frontend
                     context['filter_watchlist'] = watchlist
