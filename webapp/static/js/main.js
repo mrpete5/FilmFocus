@@ -485,7 +485,7 @@ $(document).ready(function () {
 			noUiSlider.create(firstSlider, {
 				range: {
 					'min': 1900,
-					'max': 2023
+					'max': 2024
 				},
 				step: 1,
 				connect: true,
