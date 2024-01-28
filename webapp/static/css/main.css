@@ -2241,6 +2241,8 @@ ul {
 ==============================*/
 .catalog {
   padding: 0 0 20px;
+  min-height: 50vh;
+
 }
 @media (min-width: 768px) {
   .catalog {
@@ -4449,6 +4451,7 @@ Search Results
   margin-left: 35%;
   -webkit-text-stroke-width: 0.5px;
   -webkit-text-stroke-color: red;
+  min-height: 55.5vh;
 }
 .search_title_container{
   margin-top: 50px;
