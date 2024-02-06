@@ -1026,7 +1026,8 @@ $(document).ready(function () {
 	==============================*/
 	document.querySelectorAll('.top-of-page__btn').forEach(function(button) {
 		button.addEventListener('click', function() {
-			location.reload(); 	// It just reloads the page since appropriate
+			document.body.scrollTop = 0; // safari
+    		document.documentElement.scrollTop = 0; // etc (firefox, chrome)
 		});
 	});
 
