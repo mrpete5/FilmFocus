@@ -962,10 +962,28 @@ def get_refreshed_movie_data(movie_tmdb_id):
     # Print the formatted list of streaming providers
     print(f"After Streaming providers: {providers_string}\n")
 
+# Performs filtering to the movies list
+def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end):
+    # Fitler for Genre
+    if genre is not None:
+        movies = movies.filter(genres=genre)
+
+    # Filter for Streaming Providers
+    if streamer is not None:
+        movies = movies.filter(streaming_providers=streamer)
+
+    # Filter for release year
+    if year_begin is not None and year_end is not None:
+        movies = movies.filter(release_year__range=(year_begin, year_end))
+
+    # Filte for IMDB rating
+    if imdb_begin is not None and imdb_end is not None:
+        movies = movies.filter(imdb_rating_num__range=(imdb_begin, imdb_end))
+
+    return movies        
 
 # Get all the movies for the catalog page
 def get_all_movies_catalog():
-    # TODO: add support for filtering movies
     all_movies = Movie.objects.all()  # Fetch all movies
     return {
         'full_catalog': all_movies,

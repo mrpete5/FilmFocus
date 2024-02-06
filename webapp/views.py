@@ -29,6 +29,7 @@ from .forms import (
     PasswordResetForm,
     PasswordResetConfirmForm,
     WatchlistFilterForm,
+    CatalogFilterForm,
 )
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import login, logout, authenticate, get_user_model, password_validation
@@ -75,7 +76,57 @@ from .services import get_all_movies_catalog
 
 # View function for the catalog page
 def catalog(request):
-    context = get_all_movies_catalog()
+    context = {}
+    context['full_catalog'] = Movie.objects.all()
+    context["genres"] = Genre.objects.all()
+    context["streamers"] = StreamingProvider.objects.all()
+
+    form = CatalogFilterForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            # Get filter items for context
+            context['filter_genre'] = Genre.objects.filter(name=form.cleaned_data.get("genre")).first()
+            context['filter_streamer'] = StreamingProvider.objects.filter(name=form.cleaned_data.get("streaming_provider")).first()
+            context['filter_year_begin'] = form.cleaned_data.get("year_begin")
+            context['filter_year_end'] = form.cleaned_data.get("year_end")
+            context['filter_imdb_begin'] = form.cleaned_data["imdb_begin"]
+            context['filter_imdb_end'] = form.cleaned_data["imdb_end"]
+
+            # Apply filter
+            context['full_catalog'] = filter_movies(context['full_catalog'],
+                context['filter_genre'],
+                context['filter_streamer'],
+                context['filter_year_begin'],
+                context['filter_year_end'],
+                context['filter_imdb_begin'],
+                context['filter_imdb_end'])
+            
+            paginator = Paginator(context['full_catalog'], 120)  # 120 movies per page
+            try:
+                page_obj = paginator.page(1)
+            except EmptyPage:
+                page_obj = paginator.page(paginator.num_pages)  # If page is out of range, deliver last page
+            context["page_obj"] = page_obj
+
+            return render(request, 'catalog.html', context)
+
+    # Get The filter items 
+    context['filter_genre'] = Genre.objects.filter(name=request.GET.get('genre')).first()
+    context['filter_streamer'] = StreamingProvider.objects.filter(name=request.GET.get("streaming_provider")).first()
+    context['filter_year_begin'] = request.GET.get('year_begin')
+    context['filter_year_end'] = request.GET.get('year_end')
+    context['filter_imdb_begin'] = request.GET.get('imdb_begin')
+    context['filter_imdb_end'] = request.GET.get('imdb_end')
+
+    # Apply filter
+    context['full_catalog'] = filter_movies(context['full_catalog'],
+        context['filter_genre'],
+        context['filter_streamer'],
+        context['filter_year_begin'],
+        context['filter_year_end'],
+        context['filter_imdb_begin'],
+        context['filter_imdb_end'])
+
     page_number = request.GET.get('page', 1)  # Get the page number from the request
     paginator = Paginator(context['full_catalog'], 120)  # 120 movies per page
 
@@ -84,10 +135,8 @@ def catalog(request):
     except EmptyPage:
         page_obj = paginator.page(paginator.num_pages)  # If page is out of range, deliver last page
 
-    return render(request, 'catalog.html', {'page_obj': page_obj})
-
-
-
+    context["page_obj"] = page_obj
+    return render(request, 'catalog.html', context)
 
 
 
@@ -176,8 +225,14 @@ def watchlist(request):
             form = WatchlistFilterForm(request.POST or None)
             if request.method == 'POST':
                 if form.is_valid():
-                    # Get The watchlist Id from the form
+                    # Get The filter items 
                     watchlist_id = form.cleaned_data.get("watchlist_id")
+                    genre = Genre.objects.filter(name=form.cleaned_data.get("genre")).first()
+                    streamer = StreamingProvider.objects.filter(name=form.cleaned_data.get("streaming_provider")).first()
+                    year_begin = form.cleaned_data.get("year_begin")
+                    year_end = form.cleaned_data.get("year_end")
+                    imdb_begin = form.cleaned_data["imdb_begin"]
+                    imdb_end = form.cleaned_data["imdb_end"]
 
                     # Get Selected Watchlist and Associated Movies in the Watchlist
                     watchlist = Watchlist.objects.get(pk=watchlist_id)
@@ -187,28 +242,9 @@ def watchlist(request):
                     context["genres"] = Genre.objects.all().filter(movies__in=movie_list).distinct()
                     context["streamers"] = StreamingProvider.objects.all().filter(movies__in=movie_list).distinct()
 
-                    # Fitler for Genre
-                    genre = Genre.objects.filter(name=form.cleaned_data["genre"]).first()
-                    if genre is not None:
-                        movie_list = movie_list.filter(genres=genre)
+                    # Apply filter
+                    movie_list = filter_movies(movie_list, genre, streamer, year_begin, year_end, imdb_begin, imdb_end)
 
-                    # Filter for Streaming Providers
-                    streamer = StreamingProvider.objects.filter(name=form.cleaned_data["streaming_provider"]).first()
-                    if streamer is not None:
-                        movie_list = movie_list.filter(streaming_providers=streamer)
-
-                    # Filter for release year
-                    year_begin = form.cleaned_data["year_begin"]
-                    year_end = form.cleaned_data["year_end"]
-                    if year_begin is not None and year_end is not None:
-                        movie_list = movie_list.filter(release_year__range=(year_begin, year_end))
-
-                    # Filte for IMDB rating
-                    imdb_begin = form.cleaned_data["imdb_begin"]
-                    imdb_end = form.cleaned_data["imdb_end"]
-                    if imdb_begin is not None and imdb_end is not None:
-                        movie_list = movie_list.filter(imdb_rating_num__range=(imdb_begin, imdb_end))
-                    
                     # Setup Context for the frontend
                     context['filter_watchlist'] = watchlist
                     context['filter_genre'] = genre

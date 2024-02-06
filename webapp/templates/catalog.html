@@ -77,22 +77,6 @@
 						<form class="filter__items" id="watchlist-form" method="POST">
 							{% csrf_token %}
 
-                            <!-- watchlist filter item -->
-							<!-- <div class="filter__item" id="filter__watchlist">
-								<span class="filter__item-label">WATCHLIST:</span>
-								
-								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-watchlist" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<input type="button" value="{{ filter_watchlist.watchlist_name }}">
-									<span></span>
-								</div>
-									<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-quality">
-											{% for watchlist in watchlists %}
-												<li class="watchlist-dropdown-option" watchlist_id="{{watchlist.id}}">{{ watchlist.watchlist_name }}</li>
-											{% endfor %}
-									</ul>
-							</div> -->
-							<!-- end watchlist filter item -->
-
 							<!-- genre filter -->
 							<div class="filter__item" id="filter__genre">
 								<span class="filter__item-label">GENRE:</span>
@@ -211,7 +195,7 @@
 									
 							{% if page_obj.has_previous %}
 								<li class="paginator__item paginator__item--prev">
-									<a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
+									<a href="?page={{ page_obj.previous_page_number }}&genre={{ filter_genre.name }}&streaming_provider={{ filter_streamer.name }}&year_begin={{ filter_year_begin|default:'1900' }}&year_end={{ filter_year_end|default:'2023' }}&imdb_begin={{ filter_imdb_begin|default:'0.0' }}&imdb_end={{ filter_imdb_end|default:'10.0' }}"><i class="icon ion-ios-arrow-back"></i></a>
 								</li>
 							{% endif %}
 			
@@ -219,7 +203,7 @@
 			
 							{% if page_obj.has_next %}
 								<li class="paginator__item paginator__item--next">
-									<a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
+									<a href="?page={{ page_obj.next_page_number }}&genre={{ filter_genre.name }}&streaming_provider={{ filter_streamer.name }}&year_begin={{ filter_year_begin|default:'1900' }}&year_end={{ filter_year_end|default:'2023' }}&imdb_begin={{ filter_imdb_begin|default:'0.0' }}&imdb_end={{ filter_imdb_end|default:'10.0' }}"><i class="icon ion-ios-arrow-forward"></i></a>
 								</li>
 							{% endif %}
 			
