@@ -79,7 +79,7 @@ def catalog(request):
     context = {}
     context['full_catalog'] = Movie.objects.all()
     context["genres"] = Genre.objects.all()
-    context["streamers"] = StreamingProvider.objects.all()
+    context["streamers"] = filtered_providers
 
     form = CatalogFilterForm(request.POST or None)
     if request.method == 'POST':
