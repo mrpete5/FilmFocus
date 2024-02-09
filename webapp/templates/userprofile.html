@@ -49,12 +49,18 @@
 				<div class="col-12">
 					<div class="profile__wrap">
 						<div class="profile__photo">
-							<img src="{% static 'img/user.png' %}" alt="profile_photo" style="width: 80px;">
+							<img src="{% static 'img/profile_pics/' %}{{ user_profile.profile_pic }}" alt="profile_photo" style="width: 80px;">
 						</div>
-						<div class="profile__info">
-							<h3 class="profile__username">@{{ user.username }}</h3><br>
-							<a href="#editProfileModal" class="profile__edit" data-toggle="modal">Edit Profile</a>
-						</div>
+						{% if is_self %}
+							<div class="profile__info">
+								<h3 class="profile__username">@{{ user_profile.user }}</h3><br>
+								<a href="#0" class="profile__edit">Edit Profile</a>
+							</div>
+						{% else %}
+							<div class="profile__info">
+								<h3 class="profile__username">@{{ user_profile.user }}</h3><br>
+							</div>
+						{% endif  %}
 						<h3 class="bio_label">Bio</h3>
 						<p class="user_bio">{{ user_profile.biography }}</p>
 						<a href="#0" class="num_friends">{{ user_profile.friends.count }}<br>Friends</a>
@@ -70,21 +76,48 @@
 	<div class="prof_catalog">
 		<div class="container">
 			<div class="row">
+
 				<div class="friends_block">
 					<h3 class="friends_block_title">Friends</h3>
-					<a href="/profile/"><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle;"></a>
-					<h3>Traizen McKown<br> @traizen</h3>
+					
+					{% if friend_requests %}
+					<div style="display: flex; align-items: center; margin-left: 70px; margin-bottom: 15px;">
+						<a href="/friend_requests/">Pending Requests ({{ friend_requests.count }})</a>
+					</div>
+					{% endif %}
+
+					{% for friend in user_profile.friends.all %}
+					<div style="display: flex; align-items: center; margin-left: 50px; margin-bottom: 10px;">
+						<a href="/profile/{{ friend.user }}" style="display: flex; align-items: center; text-decoration: none;">
+							<img src="{% static 'img/user.png' %}" class="profile_photo" alt="profile_photo" style="width: 30px;">
+							<h3 style="margin: 0 0 0 5px;">@{{ friend.user }}</h3>
+						</a>
+					</div>
+					{% endfor %}
 				</div>
 
                 <div class="prof_divider"></div>
 				<div class="watchlist_block">
+						
 					<h3 class="wlist_block_title">Watchlists</h3>
+
 					<ul>
-						<center>
+						
 						{% for watchlist in watchlists %}
-						<a href="/watchlist/" class="watchlist_el_link"><li class="watchlist_element"watchlist_id="{{watchlist.id}}">{{ watchlist.watchlist_name }}</li></a>
-						{% endfor %}
+						<center>
+							<a href="#" class="watchlist_el_link" data-watchlist-id="{{ watchlist.id }}">
+								<li class="watchlist_element" watchlist_id="{{ watchlist.id }}">{{ watchlist.watchlist_name }}</li>
+						  	</a>	
+									
+							<!-- Work in Progress: watchlist privacy toggle -->
+							<!-- <div class="toggle-button">
+								<input type="checkbox" id="toggle" class="toggle-input">
+								<label for="toggle" class="toggle-label"></label>
+							</div> -->
+			
 						</center>
+						{% endfor %}
+						
 					</ul>
 				</div>
 			</div>
@@ -93,7 +126,17 @@
 	<!-- end catalog -->
 
 	{% endif %}
-
+	<form id="WL_profile_form" action="/watchlist/" method="POST" style="display: none;">
+		{% csrf_token %}
+		<!-- Include your hidden form fields here -->
+		<input type="hidden" name="watchlist_id" id="hidden-watchlist-id" value="{{ filter_watchlist.id }}">
+		<input type="hidden" name="genre" id="hidden-watchlist-id" value="None">
+		<input type="hidden" name="streaming_provider" id="hidden-watchlist-id" value="None">
+		<input type="hidden" name="year_begin" id="hidden-year-begin" value="{{ filter_year_begin|default:'1900' }}">
+		<input type="hidden" name="year_end" id="hidden-year-end" value="{{ filter_year_end|default:'2023' }}">
+		<input type="hidden" name="imdb_begin" id="hidden-imdb-begin" value="{{ filter_imdb_begin|default:'0.0' }}">
+		<input type="hidden" name="imdb_end" id="hidden-imdb-end" value="{{ filter_imdb_end|default:'10.0' }}">
+	</form>
 	<!-- JS -->
 	<script src={% static "js/jquery-3.3.1.min.js" %}></script>
 	<script src={% static "js/bootstrap.bundle.min.js" %}></script>

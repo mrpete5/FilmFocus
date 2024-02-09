@@ -1,0 +1,376 @@
+{% extends "base.html" %}
+{% load static %}
+{% load my_filters %}
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet"> 
+
+	<!-- CSS -->
+	<link rel="stylesheet" href={% static "css/bootstrap-reboot.min.css" %}>
+	<link rel="stylesheet" href={% static "css/bootstrap-grid.min.css" %}>
+	<link rel="stylesheet" href={% static "css/owl.carousel.min.css" %}>
+	<link rel="stylesheet" href={% static "css/jquery.mCustomScrollbar.min.css" %}>
+	<link rel="stylesheet" href={% static "css/nouislider.min.css" %}>
+	<link rel="stylesheet" href={% static "css/ionicons.min.css" %}>
+	<link rel="stylesheet" href={% static "css/plyr.css" %}>
+	<link rel="stylesheet" href={% static "css/photoswipe.css" %}>
+	<link rel="stylesheet" href={% static "css/default-skin.css" %}>
+	<link rel="stylesheet" href={% static "css/main.css" %}>
+
+	<!-- Favicons -->
+	<link rel="icon" type="image/png" href={% static "icon/favicon-32x32.png" %} %} sizes="32x32">
+	<link rel="apple-touch-icon" href={% static "icon/favicon-32x32.png" %} %}>
+	<link rel="apple-touch-icon" sizes="72x72" href={% static "icon/apple-touch-icon-72x72.png" %} %}>
+	<link rel="apple-touch-icon" sizes="114x114" href={% static "icon/apple-touch-icon-114x114.png" %} %}>
+	<link rel="apple-touch-icon" sizes="144x144" href={% static "icon/apple-touch-icon-144x144.png" %} %}>
+
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="author" content="Dmitry Volkov">
+
+	<!-- tab title -->
+	{% if page_obj.number == 1 %}
+		<title>Catalog | FilmFocus</title>
+	{% else %}
+		<!-- <title>FilmFocus – Your Watchlist, Your Way</title> -->
+		<!-- <title>Page {{ page_obj.number }} | FilmFocus</title> option what says "Page # | FilmFocus" -->
+		<title>{{ page_obj.number }} | FilmFocus</title>
+	{% endif %}
+	<!-- end tab title -->
+
+</head>
+<body class="body">
+
+	<!-- page title -->
+	<section class="section section--first section--bg" data-bg={% static "img/section/section.jpg" %}>
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="section__wrap">
+						<!-- section title -->
+						<h2 class="section__title">CATALOG</h2>
+						<!-- end section title -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end page title -->
+
+
+	<!-- filter -->
+	<div class="filter">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="filter__content">
+						<form class="filter__items" id="watchlist-form" method="POST">
+							{% csrf_token %}
+
+							<!-- genre filter -->
+							<div class="filter__item" id="filter__genre">
+								<span class="filter__item-label">GENRE:</span>
+
+								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-genre" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<input type="button" value="{{ filter_genre.name|default:'All' }}">
+									<input type="hidden" name="genre" value="{{ filter_genre.name|default:'All' }}">
+									<span></span>
+								</div>
+
+								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-genre">
+									<li>All</li>
+									{% for genre in genres %}
+										<li>{{ genre }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+							<!-- end genre filter-->
+
+							<!-- streaming provider filter item -->
+							<div class="filter__item" id="filter__streamer">
+								<span class="filter__item-label">WHERE TO WATCH:</span>
+
+								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-streamer" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<input type="button" value="{{ filter_streamer.name|default:'All' }}">
+									<input type="hidden" name="streaming_provider" value="{{ filter_streamer.name|default:'All' }}">
+									<span></span>
+								</div>
+
+								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-streamer">
+									<li>All</li>
+									{% for provider in streamers %}
+										<li>{{ provider }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+							<!-- end filter item -->
+
+							<!-- rating filter item -->
+							<div class="filter__item" id="filter__rate">
+								<span class="filter__item-label">IMBd:</span>
+
+								<div class="filter__item-btn dropdown-toggle" role="button" id="filter-rate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<div class="filter__range">
+										<div id="filter__imbd-start"></div>
+										<div id="filter__imbd-end"></div>
+									</div>
+									<span></span>
+								</div>
+
+								<div class="filter__item-menu filter__item-menu--range dropdown-menu" aria-labelledby="filter-rate">
+									<div id="filter__imbd"></div>
+								</div>
+							</div>
+							<!-- end rating filter item -->
+
+							<!-- year filter item -->
+							<div class="filter__item" id="filter__year">
+								<span class="filter__item-label">RELEASE YEAR:</span>
+
+								<div class="filter__item-btn dropdown-toggle" role="button" id="filter-year" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<div class="filter__range">
+										<div id="filter__years-start">{{ filter_year_begin|default:'1900' }}</div>
+										<div id="filter__years-end">{{ filter_year_end|default:'2024' }}</div>
+									</div>
+									<span></span>
+								</div>
+
+								<div class="filter__item-menu filter__item-menu--range dropdown-menu" aria-labelledby="filter-year">
+									<div id="filter__years"></div>
+								</div>
+							</div>
+							<!-- end year filter item -->
+
+							<!-- runtime filter item -->
+							<!-- <div class="filter__item" id="filter__runtime">
+								<span class="filter__item-label">RUNTIME:</span>
+
+								<div class="filter__item-btn dropdown-toggle" role="button" id="filter-runtime" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<div class="filter__range">
+										<div id="filter__time-start"></div>
+										<div id="filter__time-end"></div>
+									</div>
+									<span></span>
+								</div>
+
+								<div class="filter__item-menu filter__item-menu--range dropdown-menu" aria-labelledby="filter-runtime">
+									<div id="filter__time"></div>
+								</div>
+							</div> -->
+							<!-- end runtime filter item -->
+
+							<!-- hidden form information -->
+							<input type="hidden" name="watchlist_id" id="hidden-watchlist-id" value="{{ filter_watchlist.id }}">
+							<input type="hidden" name="year_begin" id="hidden-year-begin" value="{{ filter_year_begin|default:'1900' }}">
+							<input type="hidden" name="year_end" id="hidden-year-end" value="{{ filter_year_end|default:'2024' }}">
+							<input type="hidden" name="imdb_begin" id="hidden-imdb-begin" value="{{ filter_imdb_begin|default:'0.0' }}">
+							<input type="hidden" name="imdb_end" id="hidden-imdb-end" value="{{ filter_imdb_end|default:'10.0' }}">
+							<!-- end hidden form infromation -->
+
+							<!-- filter btn -->
+							<button class="filter__btn" type="submit">apply filter</button>
+							<!-- end filter btn -->
+						</form>
+						
+                        <!-- paginator -->
+						<ul class="paginator">
+
+							<!-- Mega Jump 10 Pages Previous -->
+							<!-- {% if page_obj.has_previous %}
+								<li class="paginator__item paginator__item--mega_prev">
+									<a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
+								</li>
+							{% endif %} -->
+							<!-- end Mega Jump 10 Pages Previous -->
+									
+							{% if page_obj.has_previous %}
+								<li class="paginator__item paginator__item--prev">
+									<a href="?page={{ page_obj.previous_page_number }}&genre={{ filter_genre.name }}&streaming_provider={{ filter_streamer.name }}&year_begin={{ filter_year_begin|default:'1900' }}&year_end={{ filter_year_end|default:'2024' }}&imdb_begin={{ filter_imdb_begin|default:'0.0' }}&imdb_end={{ filter_imdb_end|default:'10.0' }}"><i class="icon ion-ios-arrow-back"></i></a>
+								</li>
+							{% endif %}
+			
+							<li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
+			
+							{% if page_obj.has_next %}
+								<li class="paginator__item paginator__item--next">
+									<a href="?page={{ page_obj.next_page_number }}&genre={{ filter_genre.name }}&streaming_provider={{ filter_streamer.name }}&year_begin={{ filter_year_begin|default:'1900' }}&year_end={{ filter_year_end|default:'2024' }}&imdb_begin={{ filter_imdb_begin|default:'0.0' }}&imdb_end={{ filter_imdb_end|default:'10.0' }}"><i class="icon ion-ios-arrow-forward"></i></a>
+								</li>
+							{% endif %}
+			
+							<!-- Mega Jump 10 Pages Next -->
+							<!-- {% if page_obj.has_next %}
+								<li class="paginator__item paginator__item--mega_next">
+									<a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
+								</li>
+							{% endif %} -->
+							<!-- end Mega Jump 10 Pages Next -->
+			
+						</ul>
+                        <!-- end paginator -->
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end filter -->
+
+<!-- catalog -->
+<div class="catalog">
+    <div class="container">
+        <div class="row">
+
+            {% for movie in page_obj %}
+
+                <!-- card -->
+                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                    <div class="card">
+                        <a href="{% url 'movie_detail' movie_slug=movie.slug %}">
+                            <div class="card__cover">
+                                <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+                                <!-- <a href="#" class="card__play">
+                                    <i class="icon ion-ios-play"></i>
+                                </a> -->
+                            </div>
+                        </a>
+						
+						<!-- add to watchlist, plus button & popup -->
+						<span title="Add Movie to Your Watchlist">
+							<a href="#0" class="card__add" movie_id="{{ movie.id }}">
+								<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+							</a>
+						</span>
+						<!-- end add to watchlist -->
+
+                        <div class="card__content">
+                            <h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
+                            <span class="card__category">
+                                {% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
+                                    <a>{{ genre.name }}</a>
+                                {% endfor %}
+                            </span>
+
+                            <span class="card__rate">
+                                <img src="{% static 'img/logos/imdb-logo.svg' %}" alt="IMDb" style="width: 30px; vertical-align: middle; margin-right: 5px;">
+                                {{ movie.imdb_rating }}
+
+                                <!-- Streaming Provider Images -->
+                                <span class="card__streamer">
+                                    {% if movie.top_streaming_providers.all %}
+                                    <div class="provider-list">
+                                        <ul style="list-style-type: none; padding: 0; margin: 0;">
+                                            {% for provider in movie.top_streaming_providers.all %}
+                                                <li style="margin-bottom: 10px;">
+                                                    <img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" class="provider-logo">
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+                                </span>
+                                <!-- end Streaming Provider Images -->
+                                
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            {% endfor %}
+
+            <!-- footer paginator -->
+			<ul class="paginator">
+
+				<!-- Mega Jump 10 Pages Previous -->
+				<!-- {% if page_obj.has_previous %}
+					<li class="paginator__item paginator__item--mega_prev">
+						<a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
+					</li>
+				{% endif %} -->
+				<!-- end Mega Jump 10 Pages Previous -->
+						
+				{% if page_obj.has_previous %}
+					<li class="paginator__item paginator__item--prev">
+						<a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
+					</li>
+				{% endif %}
+
+				<li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
+
+				{% if page_obj.has_next %}
+					<li class="paginator__item paginator__item--next">
+						<a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
+					</li>
+				{% endif %}
+
+				<!-- Mega Jump 10 Pages Next -->
+				<!-- {% if page_obj.has_next %}
+					<li class="paginator__item paginator__item--mega_next">
+						<a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
+					</li>
+				{% endif %} -->
+				<!-- end Mega Jump 10 Pages Next -->
+
+			</ul>
+            <!-- end footer paginator -->
+
+
+            <!-- section btn -->
+            <div class="col-12">
+				<button class="top-of-page__btn" id="topOfPageBtn">Top of Page</button>	
+
+                <!-- <a href="#" id="topOfPageBtn" class="top-of-page__btn">Top of Page</a> -->
+            </div>
+            <!-- end section btn -->
+
+			
+			<!-- Paginator version with numerical page values -->
+            <!-- paginator -->
+                <!-- <div class="col-12">
+                    <ul class="paginator">
+                        <li class="paginator__item paginator__item--prev">
+                            <a href="#"><i class="icon ion-ios-arrow-back"></i></a>
+                        </li>
+                        <li class="paginator__item paginator__item--active"><a href="#">1</a></li>
+                        <li class="paginator__item"><a href="#">2</a></li>
+                        <li class="paginator__item"><a href="#">3</a></li>
+                        <li class="paginator__item"><a href="#">4</a></li>
+                        <li class="paginator__item paginator__item--next">
+                            <a href="#"><i class="icon ion-ios-arrow-forward"></i></a>
+                        </li>
+                    </ul>
+                </div> -->
+            <!-- end paginator -->
+
+        </div>
+    </div>
+</div>
+<!-- end catalog -->
+
+
+	<!-- JS -->
+	<script src={% static "js/jquery-3.3.1.min.js" %}></script>
+	<script src={% static "js/bootstrap.bundle.min.js" %}></script>
+	<script src={% static "js/owl.carousel.min.js" %}></script>
+	<script src={% static "js/jquery.mousewheel.min.js" %}></script>
+	<script src={% static "js/jquery.mCustomScrollbar.min.js" %}></script>
+	<script src={% static "js/wNumb.js" %}></script>
+	<script src={% static "js/nouislider.min.js" %}></script>
+	<script src={% static "js/plyr.min.js" %}></script>
+	<script src={% static "js/jquery.morelines.min.js" %}></script>
+	<script src={% static "js/photoswipe.min.js" %}></script>
+	<script src={% static "js/photoswipe-ui-default.min.js" %}></script>
+	<script src={% static "js/main.js" %}></script>
+</body>
+
+</html>
+
+{% endblock %}

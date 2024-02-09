@@ -32,22 +32,19 @@ $(document).ready(function () {
 	const searchbar_queries = document.getElementById("searchbar-queries");
 	var searchbar_timeout;
 	async function get_searchbar_queries(input_value) {
-		if (input_value.length >= 3) {
-			const url = "/searchbar/"+input_value;
-			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+		const url = "/searchbar/"+input_value;
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
 
-			const response = await fetch(url, {
-				method: 'GET',
-				headers: {
-					'X-CSRFToken': csrfToken
-				}
-			});
-
-			if (response.ok) {
-				const data = await response.text();
-				searchbar_queries.innerHTML = data;
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'X-CSRFToken': csrfToken
 			}
+		});
 
+		if (response.ok) {
+			const data = await response.text();
+			searchbar_queries.innerHTML = data;
 		}
 	}
 	function clear_searchbar_queries() {
@@ -60,7 +57,7 @@ $(document).ready(function () {
 		// Start a new timer to detect when typing stops
 		searchbar_timeout = setTimeout(function () {
 			get_searchbar_queries(searchbar.value)
-		}, 500);
+		}, 100); // timer delay in miliseconds
 	})
 	searchbar.addEventListener('click', function() {get_searchbar_queries(this.value)});
 	searchbar.addEventListener('blur', function(event) {
@@ -107,18 +104,23 @@ $(document).ready(function () {
 		responsive : {
 			0 : {
 				items: 2,
+				slideBy: 2,
 			},
 			576 : {
 				items: 2,
+				slideBy: 2,
 			},
 			768 : {
 				items: 3,
+				slideBy: 3,
 			},
 			992 : {
 				items: 4,
+				slideBy: 4,
 			},
 			1200 : {
 				items: 4,
+				slideBy: 4,
 			},
 		}
 	});
@@ -145,23 +147,28 @@ $(document).ready(function () {
 		dots: false,
 		loop: true,
 		autoplay: false,
-		smartSpeed: 600,
+		smartSpeed: 100,
 		margin: 0,
 		responsive : {
 			0 : {
 				items: 2,
+				slideBy: 2,
 			},
 			576 : {
 				items: 2,
+				slideBy: 2,
 			},
 			768 : {
 				items: 3,
+				slideBy: 3,
 			},
 			992 : {
 				items: 6,
+				slideBy: 6,
 			},
 			1200 : {
 				items: 6,
+				slideBy: 6,
 			},
 		}
 	});
@@ -478,7 +485,7 @@ $(document).ready(function () {
 			noUiSlider.create(firstSlider, {
 				range: {
 					'min': 1900,
-					'max': 2023
+					'max': 2024
 				},
 				step: 1,
 				connect: true,
@@ -599,8 +606,10 @@ $(document).ready(function () {
 			popup.innerHTML = data;
 			const closePopupAlt = popup.querySelector("#closePopupAlt");
 			const closePopup = popup.querySelector("#closePopup");
+			const closePopupAlt2 = popup;
 			const popupLogin = popup.querySelector("#loginPopup");
 			const createWatchlistPopup = popup.querySelector("#wlistbtn")
+			if (closePopupAlt2) close_event_handler2(closePopupAlt2);
 			if (closePopupAlt) close_event_handler(closePopupAlt);
 			if (closePopup) close_event_handler(closePopup);
 			if (popupLogin) popup_login_event_handler(popupLogin);
@@ -617,18 +626,34 @@ $(document).ready(function () {
 		// document.body.style.overflowX = 'hidden';
 		document.body.style.left = '0';
 		document.body.style.right = '0';
+		document.addEventListener("keydown", handleEscapeKey);
 	}
 	function close_popup() {
 		const scrollY = document.body.style.top;
 		document.body.style.position = '';
 		document.body.style.top = '';
 		window.scrollTo(0, parseInt(scrollY || '0') * -1); //restores your page position
+		document.removeEventListener("keydown", handleEscapeKey);
 		popup.classList.remove("open");
 	}
 	function close_event_handler(x) {
 		x.addEventListener("click", ()=> {
 			close_popup();
 		})
+	}
+	function close_event_handler2(x) {
+		x.addEventListener("click", (event)=> {
+			const popupInner = document.querySelector(".popupInner");
+			if (popup.classList.contains("open") && !popupInner.contains(event.target)) {
+				close_popup();
+			}
+		})
+	}
+	function handleEscapeKey(event) {
+		if (event.key === 'Escape') {
+			close_popup();
+			console.log("logging");
+		}
 	}
 	function popup_login_event_handler(x) {
 		x.addEventListener("click", () => {
@@ -655,7 +680,6 @@ $(document).ready(function () {
 				});
 	
 				const data = await response.json();
-				alert(data.message);
 	
 				if (data.status === 'success') {
 					request_popup(popup_movie_id);
@@ -685,7 +709,6 @@ $(document).ready(function () {
 				});
 	
 				const data = await response.json();
-				alert(data.message);
 	
 				if (data.status === 'success') {
 					request_popup(popup_movie_id);
@@ -713,10 +736,7 @@ $(document).ready(function () {
 				const data = await response.json();
 	
 				if (data.status === 'success') {
-					alert(data.message);
 					request_popup(popup_movie_id);
-				} else {
-					alert("Movie already in watchlist");
 				}
 			} catch (error) {
 				console.error(error);
@@ -763,6 +783,13 @@ $(document).ready(function () {
 	/*==============================
 	Profile Edit Popup Buttons
 	==============================*/
+	document.querySelectorAll(".profile__edit").forEach(x => {
+		x.addEventListener("click", async () => {
+			request_popup_profile_edit();
+			open_popup();
+		})
+	})
+
 	async function request_popup_profile_edit() {
 		const url = "/edit_profile_popup/";
 		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
@@ -777,7 +804,276 @@ $(document).ready(function () {
 		if (response.ok) {
 			const data = await response.text();
 			popup.innerHTML = data;
+			const closePopupAlt2 = popup;
+			const closePopupAlt = popup.querySelector("#closePopupAlt");
+			const closePopup = popup.querySelector("#closePopup");
+			const savePopup = popup.querySelector("#savePopup");
+			if (closePopupAlt2) close_event_handler2(closePopupAlt2);
+			if (closePopupAlt) close_event_handler(closePopupAlt);
+			if (closePopup) close_event_handler(closePopup);
+			if (savePopup) save_event_handler(savePopup);
+			select_profile_pic_event_handler();
 		}
 	}
+
+	function select_profile_pic_event_handler() {
+		document.querySelectorAll('.profile-pic-option').forEach(item => {
+			item.addEventListener('click', function() {
+				document.querySelectorAll('.profile-pic-option').forEach(div => div.classList.remove('selected'));
+				this.classList.add('selected');
+				document.getElementById('selectedProfilePic').value = this.querySelector('img').src.split('/').pop();
+			});
+		});
+	}
+
+	function save_event_handler(saveBtn) {
+		saveBtn.addEventListener("click", async ()=> {
+			const bioInput = document.getElementById('bioInput');
+			const bioText = bioInput.value;
+			if (bioText.length > 300) {
+				alert("Bio cannot exceed 300 characters");
+				return;
+			}
+			const selectedProfilePic = document.getElementById('selectedProfilePic').value;
+			const url = '/save_profile/'
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+			// Send the bio text and profile picture to the server
+			try {
+				const response = await fetch(url, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRFToken': csrfToken
+					},
+					body: JSON.stringify({ biography: bioText, profile_pic: selectedProfilePic })
+				});
+
+				if (response.ok) {
+					// alert("Bio updated successfully!");
+					request_popup_profile_edit();
+					close_popup();
+					location.reload();
+				} else {
+					alert("An error occurred while saving your bio.");
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert("An error occurred while saving your bio.");
+			}
+		})
+	}
+
+	/*==============================
+	User Search Buttons
+	==============================*/
+	document.querySelectorAll(".add_friend__btn").forEach(x => {
+		x.addEventListener('click', async () => {
+			console.log("gen")
+
+			const url = `/create_friend_request/${x.getAttribute('user_id')}/`;
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'X-CSRFToken': csrfToken
+				}
+			});
+
+			if (response.ok) {
+				const data = await response.text();
+				location.reload();
+			}
+		})
+	})
+	document.querySelectorAll(".remove_friend__btn").forEach(x => {
+		x.addEventListener('click', async () => {
+			console.log("gen")
+
+			const url = `/remove_friend/${x.getAttribute('user_id')}/`;
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'X-CSRFToken': csrfToken
+				}
+			});
+
+			if (response.ok) {
+				const data = await response.text();
+				location.reload();
+			}
+		})
+	})
+
+	document.querySelectorAll('.watchlist_el_link').forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default behavior of the link
+            // Get the watchlist ID from the data attribute
+            var watchlistId = this.getAttribute('data-watchlist-id');
+			console.log(watchlistId);
+            // Set the value of "watchlist_id" in the hidden form field
+            document.getElementById("hidden-watchlist-id").value = watchlistId;
+            // Trigger the form submission
+            document.getElementById("WL_profile_form").submit();
+        });
+    });
+
+
+	/*==============================
+	Delete Watchlist Popup
+	==============================*/
+    // Check if the element exists
+    var deleteBtn = document.getElementById("deleteWatchlistBtn");
+    
+    if (deleteBtn) {
+        // If the element exists, add the event listener
+        deleteBtn.addEventListener("click", function() {
+            var watchlist_name = document.querySelector("#filter__watchlist input[type='button']").value;
+            var watchlist_id = document.getElementById("hidden-watchlist-id").value;
+            console.log(watchlist_name);
+            console.log(watchlist_id);
+            request_del_wlist_popup(watchlist_name, watchlist_id);
+            open_popup();
+        });
+    }
+
+	async function request_del_wlist_popup(watchlist_name, watchlist_id) {
+		const url = "/delete_watchlist_popup/"+watchlist_id+"/"+watchlist_name+"/";
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'X-CSRFToken': csrfToken
+			}
+		});
+
+		if (response.ok) {
+			const data = await response.text();
+			popup.innerHTML = data;
+			const closePopupAlt2 = popup;
+			const closePopupAlt = popup.querySelector("#closePopupAlt");
+			const closePopup = popup.querySelector("#closePopup");
+			const confirmPopup = popup.querySelector("#confirmPopup");
+			if (closePopupAlt2) close_event_handler2_del_wlist(closePopupAlt2);
+			if (closePopupAlt) close_event_handler(closePopupAlt);
+			if (closePopup) close_event_handler(closePopup);
+			if (confirmPopup) confirm_del_wlist_event_handler(confirmPopup, watchlist_id);
+		}
+	}
+	function close_event_handler2_del_wlist(x) {
+		x.addEventListener("click", (event)=> {
+			const popupInner = document.querySelector(".del-wlist-popupInner"); // uses different popupInner class
+			if (popup.classList.contains("open") && !popupInner.contains(event.target)) {
+				close_popup();
+			}
+		})
+	}
+	function confirm_del_wlist_event_handler(confirmBtn, watchlist_id) {
+		confirmBtn.addEventListener("click", async ()=> {
+
+			const url = '/remove_watchlist/'+watchlist_id+'/';
+			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+			try {
+				const response = await fetch(url, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRFToken': csrfToken
+					}
+				});
+
+				if (response.ok) {
+					// Load the watchlist page.
+					// Cannot use location.reload() because is maintains the deleted hidden-watchlist-id attribute
+					window.location.href = '/watchlist/'; 
+				} else {
+					alert("An error occurred while deleting your watchlist.");
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert("An error occurred while deleting your watchlist");
+			}
+		})
+	}
+
+
+	/*==============================
+	Scroll to Top of Page
+	==============================*/
+	document.addEventListener('DOMContentLoaded', (event) => {
+		const topOfPageBtn = document.getElementById('topOfPageBtn');
+		if (topOfPageBtn) {
+			topOfPageBtn.addEventListener('click', smoothScrollToTop);
+		}
+	});
+	
+	function smoothScrollToTop(e) {
+		e.preventDefault();
+		console.log("Scrolling to top"); // For debugging
+		window.scrollTo({
+            top: 0, // Scroll to top of the page
+            behavior: 'smooth' // Smooth scroll
+		});
+	}
+
+	/*==============================
+	Top of Page Button
+	==============================*/
+	document.querySelectorAll('.top-of-page__btn').forEach(function(button) {
+		button.addEventListener('click', function() {
+			document.body.scrollTop = 0; // safari
+    		document.documentElement.scrollTop = 0; // etc (firefox, chrome)
+		});
+	});
+
+	/*==============================
+	Refresh Movie Data on Details Page
+	==============================*/
+	document.querySelectorAll('.refresh-movie-data__btn').forEach(function(button) {
+		button.addEventListener('click', function() {
+			var movieId = this.getAttribute('data-movie-tmdb_id');
+			$.ajax({
+				url: '/refresh_movie/' + movieId + '/',
+				type: 'GET',
+				success: function(response) {
+					if (response.status === 'success') {
+						location.reload(); // reload the page with the new refreshed movie data contents
+						// alert(response.message);
+					} else {
+						alert(response.message);
+					}
+				},
+				error: function(xhr, status, error) {
+					console.error('Error occurred: ' + error);
+					alert('Error occurred while updating movie data.');
+				}
+			});
+		});
+	});
+	
+	/*==============================
+	Toggle Switch
+	==============================*/
+
+	document.getElementById('toggle').addEventListener('change', function(event) {
+		if (event.target.checked) {
+		  console.log('Toggle switched on');
+		  // Add your code here for when toggle is on
+		} else {
+		  console.log('Toggle switched off');
+		  // Add your code here for when toggle is off
+		}
+	  });
+	  
+
+
+
+
+	
 });
 

@@ -1,14 +1,33 @@
 {% if movies %}
-<div class="container">
-{% for movie in movies %}
-<a class="row searchbar-query" href="{% url 'movie_detail' movie_slug=movie.slug %}">
-    <div class="card__cover col-2">
-        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+    <div class="container">
+        {% for movie in movies %}
+            <a class="row searchbar-query search-result-item" href="{% url 'movie_detail' movie_slug=movie.slug %}" style="text-decoration: none; color: white; display: flex; align-items: center; margin-bottom: 10px;">
+                <!-- Movie Poster Column -->
+                <div class="col-md-2" style="flex: 0 0 auto; width: 100px;">
+                    {% if movie.poster_path %}
+                        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}" style="width:70%; height:auto;">
+                    {% endif %}
+                </div>
+
+                <!-- Movie Info Column -->
+                <div class="col-md-10" style="flex: 1;">
+                    <div>
+                        {{ movie.title }} ({{ movie.release_year }})
+                        <!-- {{ movie.title }} ({{ movie.release_year }}) - IMDb: {{ movie.imdb_rating }} -->
+                        <div class="streaming-providers">
+                            {% for provider in movie.top_streaming_providers.all %}
+                                {% if provider.image_url %}
+                                    <img src="{{ provider.image_url }}" alt="{{ provider.name }}" style="width: 30px; height: auto; margin-right: 5px;">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                               
+                    </div>
+                </div>
+            </a>
+
+            <!-- Pink Line Separator -->
+            <div style="height: 2px; background-color: rgb(212, 26, 172); width: 100%; margin-top: 0x; margin-bottom: 8px;"></div>
+        {% endfor %}
     </div>
-    <div class="card__content">
-        {{movie.title}}
-    </div>
-</a>
-{% endfor %}
-</div>
 {% endif %}

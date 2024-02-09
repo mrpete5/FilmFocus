@@ -22,7 +22,9 @@
 	<link rel="stylesheet" href={% static "css/main.css" %}>
 
 	<link rel="icon" href="{% static 'img/logos/FilmFocusBook.png' %}" type="image/x-icon">
-    <title>{% block title %}FilmFocus - Your Watchlist, Your Way{% endblock %}</title>
+    <!-- <title>{% block title %}FilmFocus - Your Watchlist, Your Way{% endblock %}</title> -->
+	<!-- Commenting out the block for the title. Want to be able to personalize the block in movie details and others. -->
+	<!-- Pages should have their own title section, and the default should be "FilmFocus - Your Watchlist, Your Way" -->
 </head>
 <body>
     <!-- header -->
@@ -45,42 +47,55 @@
 								<li class="header__nav-item">
 									<a href="/" class="header__nav-link">Home</a>
 								</li>
+								<li class="header__nav-item">
+									<a href="/catalog/" class="header__nav-link">Catalog</a>
+								</li>
 								<!-- If user logged in goes to users Watchlists page, else goes to Log In page -->
 								<li class="header__nav-item">
 									<a href="/watchlist/" class="header__nav-link">Watchlists</a>
 								</li>
 
-								<li>
-									<button class="header__search-btn" type="button">
-										<i class="icon ion-ios-search"></i>
-									</button>
-								</li>
 								<li class="header__nav-item header__nav-item--search">
 									<form action="{% url 'search' %}" method="get">
 										{% csrf_token %}
-										<input id="searchbar" type="text" name="query" placeholder="Search Movies">
-										<button type="submit">Search</button>
+										<input id="searchbar" type="text" name="query" maxlength="50" placeholder="Search Movies">
+										<!-- <button type="submit">Search</button> -->
+										<button class="header__search-btn" type="submit">
+											<i class="icon ion-ios-search"></i>
+										</button>
 									</form>							
 								</li>
-
 							</ul>
 							<!-- end header nav -->
 
 							<!-- Log In or Log Out -->
 							{% if user.is_authenticated %}
-
+							
 								<div class="header__user_photo">
-									<a href="/profile/{{ user.username }}"><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 10px;"></a>
+									{% if user_profile.profile_pic %}
+										
+										<!-- Welcome user message -->
+										<div class="header__user_welcome">
+											<a href="/profile/{{ user.username }}"><img src="{% static 'img/profile_pics/' %}{{ user_profile.profile_pic }}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 5px;"></a>
+											<a href="/profile/{{ user.username }}"><span class="username">{{ user.username }}</span></a>
+										</div>
+										<!-- end Welcome user message -->
+
+									{% else %}
+										<!-- TODO: Fix. This else statement is not working yet so it's commented out -->
+										<!-- <a><img src="{% static 'img/profile_pics/default.png' %}" class ="profile_photo" alt="default_profile_pic" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 10px;"></a> -->
+									
+
+										<!-- Welcome user message -->
+										<div class="header__user_welcome">
+											<a href="/profile/{{ user.username }}"><span class="username">{{ user.username }}</span></a>
+										</div>
+										<!-- end Welcome user message -->
+									
+
+									{% endif %}
 								</div>
 
-								<!-- Welcome user message -->
-								<div class="header__user_welcome">
-									<a href="/profile/{{ user.username }}"><span class="welcome-text">Hello,</span></a>
-									<a href="/profile/{{ user.username }}"><span class="username">{{ user.username }}!</span></a>
-								</div>
-
-
-								<!-- end Welcome user message -->
 
 								<!-- Log out header auth -->
 								<div class="header__auth">

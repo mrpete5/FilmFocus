@@ -55,21 +55,21 @@
                         <div class="row">
                             {% if searchedUsers %}
                             
-                            {% for user in searchedUsers %}
+                            {% for user_profile in searchedUsers %}
                             <!-- card -->
                             <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
                                 <div class="user_card">
-                                    <a href="{% url 'user_profile' profile_name=user.user %}">
+                                    <a href="{% url 'user_profile' profile_name=user_profile.user %}">
                                         <div>
-                                            <center><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 90px;"></center>
+                                            <center><img src="{% static 'img/profile_pics/' %}{{ user_profile.profile_pic }}" class ="profile_photo" alt="profile_photo" style="width: 90px;"></center>
                                         </div>
                                     </a>
                                     <div class="user_card__content">
-                                        <h3 class="user_card__title" style="text-align: center;"><a href="{% url 'user_profile' profile_name=user.user %}">@{{ user.user }}</a></h3>
-                                        {% if user_profile in friend_profile.friends %}
-                                        <center><button class="add_friend__btn" type="button">Add Friend</button></center>
+                                        <h3 class="user_card__title" style="text-align: center;"><a href="{% url 'user_profile' profile_name=user_profile.user %}">@{{ user_profile.user }}</a></h3>
+                                        {% if self_profile in user_profile.friends.all %}
+                                            <center><button class="remove_friend__btn" type="button" user_id="{{user_profile.id}}">Remove Friend</button></center>
                                         {% else %}
-                                        <center><button class="remove_friend__btn" type="button">Remove Friend</button></center>
+                                            <center><button class="add_friend__btn" type="button" user_id="{{user_profile.id}}">Add Friend</button></center>
                                         {% endif %}
                                     </div>
                                 </div>

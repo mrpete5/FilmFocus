@@ -29,9 +29,10 @@ from .forms import (
     PasswordResetForm,
     PasswordResetConfirmForm,
     WatchlistFilterForm,
+    CatalogFilterForm,
 )
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth import login, logout, authenticate, get_user_model
+from django.contrib.auth import login, logout, authenticate, get_user_model, password_validation
 import json
 import webapp.password_reset as pass_reset
 from django.utils.http import urlsafe_base64_decode
@@ -62,12 +63,81 @@ def index(request):
             # Redirect to the homepage on successful sign up
             return redirect('index')
         else:
-            messages.error(request, "Watchlist creation failed")               
+            messages.error(request, "Watchlist creation failed")            
     else:
         form = NewWatchlistForm()
         
     context['watchlist_form'] = form
     return render(request, 'index.html', context)
+
+# View function for the catalog page
+from django.core.paginator import Paginator, EmptyPage
+from .services import get_all_movies_catalog
+
+# View function for the catalog page
+def catalog(request):
+    context = {}
+    context['full_catalog'] = Movie.objects.all()
+    context["genres"] = Genre.objects.all()
+    context["streamers"] = StreamingProvider.objects.all()
+
+    form = CatalogFilterForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            # Get filter items for context
+            context['filter_genre'] = Genre.objects.filter(name=form.cleaned_data.get("genre")).first()
+            context['filter_streamer'] = StreamingProvider.objects.filter(name=form.cleaned_data.get("streaming_provider")).first()
+            context['filter_year_begin'] = form.cleaned_data.get("year_begin")
+            context['filter_year_end'] = form.cleaned_data.get("year_end")
+            context['filter_imdb_begin'] = form.cleaned_data["imdb_begin"]
+            context['filter_imdb_end'] = form.cleaned_data["imdb_end"]
+
+            # Apply filter
+            context['full_catalog'] = filter_movies(context['full_catalog'],
+                context['filter_genre'],
+                context['filter_streamer'],
+                context['filter_year_begin'],
+                context['filter_year_end'],
+                context['filter_imdb_begin'],
+                context['filter_imdb_end'])
+            
+            paginator = Paginator(context['full_catalog'], 120)  # 120 movies per page
+            try:
+                page_obj = paginator.page(1)
+            except EmptyPage:
+                page_obj = paginator.page(paginator.num_pages)  # If page is out of range, deliver last page
+            context["page_obj"] = page_obj
+
+            return render(request, 'catalog.html', context)
+
+    # Get The filter items 
+    context['filter_genre'] = Genre.objects.filter(name=request.GET.get('genre')).first()
+    context['filter_streamer'] = StreamingProvider.objects.filter(name=request.GET.get("streaming_provider")).first()
+    context['filter_year_begin'] = request.GET.get('year_begin')
+    context['filter_year_end'] = request.GET.get('year_end')
+    context['filter_imdb_begin'] = request.GET.get('imdb_begin')
+    context['filter_imdb_end'] = request.GET.get('imdb_end')
+
+    # Apply filter
+    context['full_catalog'] = filter_movies(context['full_catalog'],
+        context['filter_genre'],
+        context['filter_streamer'],
+        context['filter_year_begin'],
+        context['filter_year_end'],
+        context['filter_imdb_begin'],
+        context['filter_imdb_end'])
+
+    page_number = request.GET.get('page', 1)  # Get the page number from the request
+    paginator = Paginator(context['full_catalog'], 120)  # 120 movies per page
+
+    try:
+        page_obj = paginator.page(page_number)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)  # If page is out of range, deliver last page
+
+    context["page_obj"] = page_obj
+    return render(request, 'catalog.html', context)
+
 
 
 # View function for the movie details page
@@ -119,25 +189,50 @@ def movie_detail(request, movie_slug):
 # View function for the movie watchlists page
 def watchlist(request):
     user = request.user
-    form = WatchlistFilterForm(request.POST or None)
     context = {}
 
     if user.is_authenticated:
         # Get watchlists
         watchlists = Watchlist.objects.filter(user=user)
 
+        # Process new watchlist form that occurs when user doesnt have any watchlists
+        if request.method == 'POST':
+            form = NewWatchlistForm(request.POST or None)
+            if form.is_valid():
+                watchlist_name = form.cleaned_data.get("watchlist_name")
+                create_watchlist(request, watchlist_name)
+
+                # Redirect to watchlist page
+                return redirect("watchlist")
+
         # TODO If no watchlists
         if not watchlists:
-            return redirect('index')
+            # Setup Context for the frontend
+            context['filter_watchlist'] = None
+            context['filter_genre'] = None
+            context['filter_streamer'] = None
+            context['filter_year_begin'] = None
+            context['filter_year_end'] = None
+            context['filter_imdb_begin'] = None
+            context['filter_imdb_end'] = None
+            context['movie_list'] = None
+            return render(request, "watchlist.html", context)
 
         context['watchlists'] = watchlists
 
         # TODO this might be temporary depending on how we want to implement the watchlist page
         if watchlists:
+            form = WatchlistFilterForm(request.POST or None)
             if request.method == 'POST':
                 if form.is_valid():
-                    # Get The watchlist Id from the form
+                    # Get The filter items 
                     watchlist_id = form.cleaned_data.get("watchlist_id")
+                    genre = Genre.objects.filter(name=form.cleaned_data.get("genre")).first()
+                    streamer = StreamingProvider.objects.filter(name=form.cleaned_data.get("streaming_provider")).first()
+                    year_begin = form.cleaned_data.get("year_begin")
+                    year_end = form.cleaned_data.get("year_end")
+                    imdb_begin = form.cleaned_data["imdb_begin"]
+                    imdb_end = form.cleaned_data["imdb_end"]
 
                     # Get Selected Watchlist and Associated Movies in the Watchlist
                     watchlist = Watchlist.objects.get(pk=watchlist_id)
@@ -147,29 +242,9 @@ def watchlist(request):
                     context["genres"] = Genre.objects.all().filter(movies__in=movie_list).distinct()
                     context["streamers"] = StreamingProvider.objects.all().filter(movies__in=movie_list).distinct()
 
-                    # Fitler for Genre
-                    genre = Genre.objects.filter(name=form.cleaned_data["genre"]).first()
-                    if genre:
-                        movie_list = movie_list.filter(genres=genre)
+                    # Apply filter
+                    movie_list = filter_movies(movie_list, genre, streamer, year_begin, year_end, imdb_begin, imdb_end)
 
-                    # Filter for Streaming Providers
-                    streamer = StreamingProvider.objects.filter(name=form.cleaned_data["streaming_provider"]).first()
-                    if streamer:
-                        movie_list = movie_list.filter(streaming_providers=streamer)
-
-                    # Filter for release year
-                    year_begin = form.cleaned_data["year_begin"]
-                    year_end = form.cleaned_data["year_end"]
-                    if year_begin and year_end:
-                        movie_list = movie_list.filter(release_year__range=(year_begin, year_end))
-
-                    # Filte for IMDB rating
-                    imdb_begin = form.cleaned_data["imdb_begin"]
-                    imdb_end = form.cleaned_data["imdb_end"]
-                    # TODO imdb rating is a ChatField in the movie model and you can't range it
-                    # if imdb_begin and imdb_end:
-                    #     movie_list = movie_list.filter(imdb_rating__range=(imdb_begin, imdb_end))
-                    
                     # Setup Context for the frontend
                     context['filter_watchlist'] = watchlist
                     context['filter_genre'] = genre
@@ -180,7 +255,7 @@ def watchlist(request):
                     context['filter_imdb_end'] = imdb_end
                     context['movie_list'] = movie_list
                     return render(request, "watchlist.html", context)
-
+                # print("Form Errors:", form.errors) # Prints any error with a form submission
         # Setup Context for the frontend
         context['filter_watchlist'] = watchlists[0]
         context['movie_list'] = Movie.objects.filter(watchlistentry__watchlist=watchlists[0])
@@ -221,6 +296,8 @@ def searchBar(request):
                 users = User.objects.filter(username__icontains=username)
                 userProfiles = UserProfile.objects.filter(user__in=users)
                 context['searchedUsers'] = userProfiles
+                if user.is_authenticated: 
+                    context['self_profile'] = UserProfile.objects.get(user=request.user)
                 return render(request, 'user_results.html', context)
             else:
                 movies = Movie.objects.filter(title__icontains=query)
@@ -234,8 +311,8 @@ def searchBar(request):
 # View function for getting asynchronous search results in real time
 def searchbar(request, query):
     if request.method == 'GET':
-        movies = Movie.objects.filter(title__icontains=query)
-        return render(request, "searchbar.html", {"movies":movies[:2]})
+        movies = Movie.objects.filter(title__icontains=query)[:5] # Quantity of movies in the searchbar query list
+        return render(request, "searchbar.html", {"movies":movies})
 
 # View function for getting movie watchlist popup
 def popup(request, movie_id):
@@ -257,61 +334,116 @@ def profile(request, profile_name):
     context = {}
     profile = UserProfile.objects.get(user__username=profile_name)
 
-    context['user_profile'] = profile
-    context['watchlists'] = Watchlist.objects.filter(user=profile.user)
-
     user = request.user
     if user.is_authenticated:
-        context['is_self'] = user == profile.user
+        context['is_self'] = (user == profile.user)
+    else:
+        context['is_self'] = False
+
+    context['user_profile'] = profile
+
+    if context['is_self']:
+        context['watchlists'] = Watchlist.objects.filter(user=profile.user)
+        context['friend_requests'] = FriendRequest.objects.filter(to_user__user=request.user)
+    else:
+        context['watchlists'] = Watchlist.objects.filter(user=profile.user, is_private=False)
+
     return render(request, "userprofile.html", context)
 
-# View fucntion for getting the profile edit popup
+# View function for getting the profile edit popup
 @login_required
 def edit_profile_popup(request):
     context = {}
     if request.method == 'GET':
         if request.user.is_authenticated:
-            context["user_profile"] = UserProfile.objects.get(user=request.user)
+            user_profile = UserProfile.objects.get(user=request.user)
+            context["user_profile"] = user_profile
+            context["biography"] = user_profile.biography if user_profile.biography else ""
         return render(request, "popup_profile_edit.html", context)
+
+# View function for updating profile information
+@login_required
+def save_profile(request):
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)
+        data = json.loads(request.body)
+
+        bio_text = data.get('biography')
+        profile_pic = data.get('profile_pic')
+
+        user_profile.biography = bio_text
+        if profile_pic:
+            user_profile.profile_pic = profile_pic
+        user_profile.save()
+
+        return JsonResponse({'status': 'success', 'message': 'Profile saved successfully'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
 
 # View function for friend request page
 @login_required
 def friend_requests(request):
     context={}
     if request.user.is_authenticated:
-        context["in_requests"] = FriendRequest.objects.filter(to_user=request.user)
+        context["in_requests"] = FriendRequest.objects.filter(to_user__user=request.user)
+        context["out_requests"] = FriendRequest.objects.filter(from_user__user=request.user)
         return render(request, "friend_requests.html", context)
+    
+@login_required
+@require_POST
+def create_friend_request(request, to_id):
+    try:
+        if request.user.is_authenticated:
+            user = UserProfile.objects.get(user=request.user)
+            friend = UserProfile.objects.get(pk=to_id)
+            friend_request = FriendRequest.objects.create(from_user=user, to_user=friend)
+            friend_request.save()
+            return JsonResponse({'status': 'success', 'message': 'Friend request created'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
     
 # View function for accepting a friend request
 @login_required
 @require_POST
-def friend_accept(request, from_id):
+def accept_friend_request(request, from_id):
     if request.user.is_authenticated:
         user = UserProfile.objects.get(user=request.user)
-        friend = UserProfile.objects.get(user__id=from_id)
+        friend = UserProfile.objects.get(pk=from_id)
 
         user.friends.add(friend)
         friend.friends.add(user)
         
-        friend_user = User.objects.get(pk=from_id)
-        FriendRequest.objects.get(from_user=friend_user, to_user=request.user).delete()
+        FriendRequest.objects.get(from_user=friend, to_user=user).delete()
     return redirect("friend_requests")
 
 # View function for rejecting a friend request
 @login_required
 @require_POST
-def friend_reject(request, from_id):
+def reject_friend_request(request, from_id):
     if request.user.is_authenticated:
         user = UserProfile.objects.get(user=request.user)
-        friend = UserProfile.objects.get(user__id=from_id)
+        friend = UserProfile.objects.get(pk=from_id)
 
         user.friends.remove(friend)
         friend.friends.remove(user)
         
-        friend_user = User.objects.get(pk=from_id)
-        FriendRequest.objects.get(from_user=friend_user, to_user=request.user).delete()
+        FriendRequest.objects.get(from_user=friend, to_user=user).delete()
     return redirect("friend_requests")
 
+# View function for removing a friend
+@login_required
+@require_POST
+def remove_friend(request, friend_id):
+    try:
+        if request.user.is_authenticated:
+            user = UserProfile.objects.get(user=request.user)
+            friend = UserProfile.objects.get(pk=friend_id)
+
+            user.friends.remove(friend)
+            friend.friends.remove(user)
+            return JsonResponse({'status': 'success', 'message': 'Friend removed'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
 
 # View function for the 404 error page
 def four04(request):
@@ -366,7 +498,9 @@ def pwresetconfirm(request, uidb64, token):
                     new_password_2 = form.cleaned_data.get("new_password_2")
 
                     # errors if something is wrong with password inputs
-                    pass_reset.confirm_password(new_password_1, new_password_2)
+                    password_validation.validate_password(new_password_1)
+                    if new_password_1 != new_password_2:
+                        raise Exception("Passwords do not match")
 
                     # otherwise change the password
                     pass_reset.change_password(user, new_password_1)
@@ -472,6 +606,19 @@ def create_watchlist(request, watchlist_name):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
 
+
+# View function for getting the delete watchlist confirmation popup
+@login_required
+def delete_watchlist_popup(request, watchlist_id, watchlist_name):
+    context = {}
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            user_profile = UserProfile.objects.get(user=request.user)
+            context["user_profile"] = user_profile
+            context["watchlist_id"] = watchlist_id
+            context["watchlist_name"] = watchlist_name
+        return render(request, "popup_del_wlist.html", context)
+
 @login_required
 @require_POST
 def remove_watchlist(request, watchlist_id):
@@ -513,10 +660,20 @@ def remove_from_watchlist(request, watchlist_id, movie_id):
         return JsonResponse({'status': 'error', 'message': str(e)})
 
 
+# View function for getting refreshed movie data for a specific movie
+def refresh_movie_data(request, tmdb_id):
+    try:
+        get_refreshed_movie_data(tmdb_id)
+
+        return JsonResponse({'status': 'success', 'message': 'Movie data updated.'})
+    except Movie.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Movie not found.'})
+
+
 # Test page that displays posters for potential movie banning
 def testforban(request):
-    start_date = "2023-10-01"  # Range of movies to display
-    end_date = "2023-12-30"
+    start_date = "2023-11-01"  # Range of movies to display
+    end_date = "2024-06-01"
 
     movies_to_display = handle_test_for_ban(start_date, end_date)
     return render(request, "testforban.html", {"movies": movies_to_display})
@@ -525,23 +682,36 @@ def testforban(request):
 # Test page that handles data fetch calls and displays movies
 def testdisplay(request):
     # Always set these flags as False before committing changes
-    erase_movie_db = False                # USE WITH CAUTION, erases all movie database contents
-    init_movie_db = False                 # Performs Popular fetch from TMDB 
-    get_now_playing = False               # Performs Now Playing fetch from TMDB
-    update_streaming = False              # Updates all movie streaming providers from TMDB, takes a while
-    update_recs = False                   # Updates all movie recommendations from TMDB, takes a while
-    get_discover_movies = False           # Fetches all discover movies from TMDB, takes a while
-    update_letterboxd = False             # Updates all movie letterboxd info from webscraper, takes a while
-    
+    erase_movie_db = False                  # USE WITH CAUTION, erases all movie database contents
+    init_movie_db = False                   # Performs Popular fetch from TMDB 
+    get_now_playing = False                 # Performs Now Playing fetch from TMDB
+    update_streaming = False                # Updates all movie streaming providers from TMDB, takes a while
+    update_recs = False                     # Updates all movie recommendations from TMDB, takes a while
+    get_discover_movies = False             # Fetches all discover movies from TMDB, takes a while
+    update_letterboxd = False               # Updates all movie letterboxd info from webscraper, takes a while
+    get_specific_movie_by_search = False    # Fetches a specific movie 
+    search_term = "Fight Club"              # If (get_specific_movie_by_search): Name of specific movie search
+    update_all_db_movie_entries = False     # Updates all movie entries (ratings, streaming, recommendations)
+       
+
+    # Search for a specific movie from tmdb database with tmdb_id and data 
+    #   from the master list found at FilmFocus\webapp\data\tmdb_master_movie_list.json
+    # Attempt to search for a specific movie based on the movie tmdb_id or movie title.
+    # search_and_fetch_movie_by_id(settings[tmdb_id_to_search_and_fetch]) # Alternative method, Attempt to search for a specific movie based on the movie tmdb_id.
+
+
     # Add all tests into settings list
-    settings = [erase_movie_db,         # USE WITH CAUTION
-                init_movie_db,
-                get_now_playing,        
-                update_streaming,       # Takes a while
-                update_recs,            # Takes a while
-                get_discover_movies,    # Takes a while
-                update_letterboxd,      # Takes a while
+    settings = [erase_movie_db,                     #  USE WITH CAUTION, settings[0],
+                init_movie_db,                      # settings[1], Can take a while based on settings/quantities
+                get_now_playing,                    # settings[2], Can take a while based on settings/quantities
+                update_streaming,                   # settings[3], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
+                update_recs,                        # settings[4], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
+                get_discover_movies,                # settings[5], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
+                update_letterboxd,                  # settings[6], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
+                get_specific_movie_by_search,       # settings[7], Should be very fast but may be unsuccessful
+                search_term,                        # settings[8], Passing a string for initialization purposes
+                update_all_db_movie_entries,        # settings[9], Takes a while, performs updates on all movies in db (ratings, streaming, recs)
                 ]
-  
+
     movies_to_display = handle_test_display_page(settings)
     return render(request, "testdisplay.html", {"movies": movies_to_display})

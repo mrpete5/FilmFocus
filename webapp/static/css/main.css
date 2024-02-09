@@ -44,6 +44,8 @@ FilmFocus Grey: #2b2b31
 28. Add Movie Popup
 29. Search Results
 30. User Profile Page
+31. Edit Profile Popup
+32. Delete Watchlist Button & Popup
 ----------------------------------------*/
 /*==============================
 	Common styles
@@ -234,6 +236,9 @@ ul {
   right: 0;
   background-color: #2b2b31;
   z-index: 101;
+  margin-right: 17px; /* Adjust the margin to match the scrollbar width */
+  /* margin-left: 1px; */  /* Adjust the margin to show popups pink border */
+  /* margin-top: 1px; */ /*Adjust the margin to show popups pink border */
 }
 .header__logo {
   display: flex;
@@ -241,7 +246,8 @@ ul {
   align-items: center;
   height: 70px;
   padding: 0 15px;
-  background-color: #28282d;
+  /* background-color: #28282d;  This line should be commented out. */
+                    /* It is the background color behind the FilmFocus logo in the header top left. Do not want as of now. */
   width: 140px;
 }
 .header__logo img {
@@ -337,13 +343,13 @@ ul {
   height: 60px;
   position: relative;
 }
-.header__nav-item--search input[type="text"] {
+.header__nav-item--search input[type="text"] {  /* SEARCH BAR */
   position: relative;
-  height: 60px;
-  width: 100%;
+  height: 35px;
+  width: 120%;
   background-color: #28282d;
   border: none;
-  padding: 0 60px 0 15px;
+  padding: 0 35px 0 15px;
   font-size: 15px;
   color: #fff;
   font-family: 'Open Sans', sans-serif;
@@ -351,10 +357,10 @@ ul {
 .header__nav-item--search button {
   position: absolute;
   height: 40px;
-  width: 90px;
+  /* width: 90px; */
   top: 10px;
-  right: 15px;
-  -webkit-border-radius: 4px;
+  right: -18%;
+  /* -webkit-border-radius: 4px;
   border-radius: 4px;
   background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
@@ -367,7 +373,7 @@ ul {
   color: #fff;
   text-transform: uppercase;
   font-weight: 500;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.6px; */
 }
 .header__nav-item--search button:hover {
   color: #fff;
@@ -551,7 +557,9 @@ ul {
 .header__sign-in:hover {
   opacity: 1;
 }
-
+.header__user_photo{
+  margin-left: 6%;
+}
 /*---- Welcome User in header section ---------*/
 .header__user_welcome {
   /* Displays the 'Welcome, username?' when logged in */
@@ -1343,10 +1351,13 @@ ul {
 .card__cover img {
   width: 100%;
 }
-.card__cover:hover img {
+
+/* Removing this class of hover over img designs. */
+/* .card__cover:hover img {
   border: 1.5px solid #F12D92;
   opacity: 0.9;
-}
+} */
+
 .card__cover:before {
   content: '';
   position: absolute;
@@ -1497,6 +1508,9 @@ ul {
   -webkit-text-fill-color: transparent;
   color: #ff5860;
 }
+.card__streamer {
+  margin-left: 10px;
+}
 .card__list {
   display: none;
 }
@@ -1558,7 +1572,7 @@ ul {
   margin-top: 15px;
 }
 .card--details .card__meta {
-  margin-top: 15px;
+  /* margin-top: 15px;    Commented out. Do not want this margin on the details page near the tagline.  */ 
   display: block;
   font-size: 15px;
   line-height: 24px;
@@ -1966,7 +1980,7 @@ ul {
 }
 .how__number {
   font-size: 50px;
-  line-height: 100%;
+  line-height: 115%;
   font-weight: 700;
   margin-bottom: 10px;
   display: inline-block;
@@ -2227,6 +2241,8 @@ ul {
 ==============================*/
 .catalog {
   padding: 0 0 20px;
+  min-height: 50vh;
+
 }
 @media (min-width: 768px) {
   .catalog {
@@ -2390,6 +2406,7 @@ ul {
   padding: 20px 0;
 }
 .filter__btn {
+  margin-right: 25px;       /* this margin was added between the apply filter and the paginator section on catalog */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2548,7 +2565,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   -webkit-border-radius: 4px;
   border-radius: 4px;
   height: 50px;
-  width: 290px;
+  /* width: 290px; */
+  width: auto;
 }
 .paginator__item {
   margin: 0;
@@ -2563,8 +2581,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   text-align: center;
   -webkit-border-radius: 4px;
   border-radius: 4px;
+  opacity: 0.85;
 }
 .paginator__item:hover a {
+  opacity: 1;
   color: #fff;
 }
 .paginator__item--prev,
@@ -2576,9 +2596,35 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   -moz-transition: 0.4s ease;
   transition: 0.4s ease;
 }
-.paginator__item--prev a,
+.paginator__item--prev a {
+  /* margin-right: 20px; */
+  color: #fff;
+  cursor: default;
+  font-weight: 500;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+}
 .paginator__item--next a {
-  font-size: 18px;
+  /* margin-left: 20px; */
+  color: #fff;
+  cursor: default;
+  font-weight: 500;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+}
+.paginator__item--prev a:hover {
+    color: #fff;
+}
+.paginator__item--next a:hover {
+  color: #fff;
 }
 .paginator__item--active a {
   color: #fff;
@@ -2594,9 +2640,78 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .paginator__item--active a:hover {
   color: #fff;
 }
+
+.pagination__current{
+  color: #fff;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.pagination__step-links{
+  color: #fff;
+}
+.paginator__page_count{
+  color: #fff;
+  margin-left: 20px; 
+  margin-right: 20px;
+}
+
+/* Mega jump movies next or previous 10 pages */
+.paginator__item--mega_prev {
+  margin-right: 5px;
+  /* margin-left: 20px; */
+  display: block;
+  position: relative;
+  height: 50px;
+  -webkit-transition: 0.4s ease;
+  -moz-transition: 0.4s ease;
+  transition: 0.4s ease;
+}
+.paginator__item--mega_next {
+  margin-left: 5px;
+  display: block;
+  position: relative;
+  height: 50px;
+  -webkit-transition: 0.4s ease;
+  -moz-transition: 0.4s ease;
+  transition: 0.4s ease;
+}
+.paginator__item--mega_prev a {
+  /* margin-right: 20px; */
+  color: #fff;
+  cursor: default;
+  font-weight: 500;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+}
+.paginator__item--mega_next a {
+  /* margin-left: 20px; */
+  color: #fff;
+  cursor: default;
+  font-weight: 500;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+}
+.paginator__item--mega_prev a:hover {
+    color: #fff;
+}
+.paginator__item--mega_next a:hover {
+  color: #fff;
+}
+
+
 @media (min-width: 360px) {
   .paginator {
-    width: 300px;
+    /* width: 300px; */
+    width: auto;  
+
   }
 }
 @media (min-width: 768px) {
@@ -3964,7 +4079,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .popup.open {
   opacity: 1;
-  border: 1.5px solid #F12D92;
+  /* Removed because it would only show on certain parts of the page (pink border around window on popup open*/
+  /* border: 1.5px solid #F12D92;  */ 
   pointer-events: auto;
 }
 .popup.open button {
@@ -4133,6 +4249,54 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
 }
+/* Add Movie to Watchlist forms, fields, and buttons */
+.wlist_page_form {
+  background-color: #28282d;
+  -webkit-box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* bottom: 50px; move add watchlist button off the bottom */
+  justify-content: center;
+  align-items: center;
+  margin-top: 2.5%;
+  margin-bottom: 2.5%;
+  margin-right: 30%;
+  margin-left: 30%;
+  /* margin-bottom: 250px; */
+}
+.wlist_page_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 55%;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+  font-size: 13px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin: 0px auto 0;
+
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  bottom: 0px; 
+  left: 0px;
+  /* height: 40px; */
+  /* width: 80px; */
+  opacity: 0.85;
+}
 .wlist__group {
   /* position: relative; */
   /* margin-bottom: 20px; */
@@ -4175,7 +4339,12 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 
 .wlist__input {
-  background-color: #2b2b31;
+  /* background-color: #2b2b31; original version*/
+  /* background-color: #6a6a6e; */
+  background-color: #55555a;
+
+  /* 55555a, 6a6a6e, 2b2b31  */
+
   border: none;
   height: 50px;
   position: relative;
@@ -4240,8 +4409,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
   font-size: 13px;
   color: #fff;
@@ -4256,7 +4425,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   margin-right: 40px; /* Ensures the button stays to the left */
   width: 50px;  /* Adjust width as per requirement */
   height: 25px;  /* Adjust height as per requirement */
-  font-size: 12px;  /* Adjust font size as per requirement */
+  font-size: 10px;  /* Adjust font size as per requirement */
   padding: 2px 15px;  /* Adjust padding as per requirement */
 }
 .wlistremove__btn:hover {
@@ -4282,6 +4451,7 @@ Search Results
   margin-left: 35%;
   -webkit-text-stroke-width: 0.5px;
   -webkit-text-stroke-color: red;
+  min-height: 55.5vh;
 }
 .search_title_container{
   margin-top: 50px;
@@ -4526,4 +4696,334 @@ User Profile Page
   -o-text-overflow: clip;
   text-overflow: clip;
   word-wrap: break-word;
+}
+
+/*==============================
+	Edit Profile Popup
+==============================*/
+.save__profile-popup {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 135px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #32CD32 0%, #29A329 100%);  /* Lime Green: #32CD32, Dark Lime: #29A329 */
+  background-image: -webkit-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  background-image: -ms-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  background-image: linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+}
+.close__profile-popup {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 235px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+}
+.x__profile-popup {
+  color: #fff;
+  position: absolute;
+  justify-content: right;
+  align-items: right;
+  right: 15px;  
+}
+.profile-pic-section {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.profile-pic-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px; /* Adjust the spacing between images */
+  margin-top: -5px;
+}
+.profile-pic-option {
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.profile-pic-option img {
+  width: 50px; /* Adjust thumbnail size */
+  height: 50px;
+  object-fit: cover;
+}
+.profile-pic-option:hover {
+  border-color: #007bff; /* Hover effect */
+}
+.profile-pic-option.selected {
+  border-color: #28a745; /* Highlight for the selected image */
+}
+
+/*==============================
+	Delete Watchlist Button & Popup
+==============================*/
+.del-wlist-popupInner {
+  background-color:#2b2b31;
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  border: 3px solid #F12D92;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  padding: 10px 10px;
+  text-align: center;
+  color: #fff;
+  width: 450px;
+  height: 235px;
+  position: relative;
+  z-index: 103;
+  pointer-events: none;
+}
+.del-wlist-popupInner h2 {
+  margin: 0;
+}
+.del-wlist-popupInner p {
+  margin: 0;
+  border-bottom: .5px solid #F12D92; /* comment this out to remove pink underline below watchlist titles in popup */
+  position: relative;
+}
+.del-wlist-popupInner button {
+  text-align: center;
+}
+
+.delete-watchlist__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  width: 150px;
+  margin-left: 30px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
+  opacity: 0.85;
+  font-size: 13px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.delete-watchlist__btn:hover {
+  opacity: 1;
+  color: #fff;
+}
+.confirm__del-wlist-popup {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 120px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #29A329 0%, #29A329 100%);  /* Lime Green: #32CD32, Dark Lime: #29A329 */
+  background-image: -webkit-linear-gradient(90deg, #29A329 0%, #29A329 100%); /* only using Dark Lime, so no color transition */
+  background-image: -ms-linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  background-image: linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
+  opacity: 0.85;
+}
+.cancel__del-wlist-popup {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 250px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
+  opacity: 0.85;
+}
+
+
+/*==============================
+	Streaming Providers in Movie Cards
+==============================*/
+.provider-list {
+  display: flex;
+  flex-wrap: wrap; /* This allows items to wrap onto the next line if needed */
+  justify-content: space-around; /* This evenly distributes space between items */
+  align-items: center; /* This vertically centers items in the container */
+}
+
+.provider-logo {
+  width: 40px; /* Set your desired width */
+  height: auto; /* Maintains the aspect ratio */
+}
+
+
+
+/*==============================
+  Search Results
+==============================*/
+/* Style for movie entries */
+.searchbar-query {
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  margin: 0; /* Remove any default margin */
+  padding: 0; /* Remove any default padding */
+  border-top: none; /* Remove top border */
+  border-bottom: none; /* Remove bottom border */
+  opacity: 100%;
+}
+.searchbar-query:hover {
+  background-color: #ff55a5; /* FilmFocus Pink: #ff55a5 */
+  /* background-color: #ff76b7 ;   Lighter Pink: #ff76b7  */
+  /* background-color: #ff087d ;     Darker Pink: #ff087d  */
+  opacity: 80%;
+  color: white; /* Change text color on hover */
+}
+
+/*==============================
+  Refresh Movie Data on Details Page
+==============================*/
+.refresh-movie-data__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  width: 190px;
+  /* margin-left: 10px; */
+  /* margin-top: 10px; */
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #29A329 0%, #29A329 100%);  /* Lime Green: #32CD32, Dark Lime: #29A329 */
+  background-image: -webkit-linear-gradient(90deg, #29A329 0%, #29A329 100%); /* only using Dark Lime, so no color transition */
+  background-image: -ms-linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  background-image: linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
+  opacity: 0.85;
+  font-size: 13px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.refresh-movie-data__btn:hover {
+  opacity: 1;
+  color: #fff;
+}
+
+
+/*==============================
+  Watchlist Privacy Toggle
+==============================*/
+.toggle-button {
+  position: relative;
+  width: 60px; /* Adjust size as needed */
+  height: 30px; /* Adjust size as needed */
+}
+
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-label {
+  position: absolute;
+  cursor: pointer;
+  background-color: grey; /* Secondary Color */ /* FilmFocus Pink Watchlist is Public */
+  /* background-color: white; Secondary Color FilmFocus Pink Watchlist is Public */
+
+  height: 100%;
+  width: 100%;
+  border-radius: 15px;
+  transition: background-color 0.2s;
+}
+
+.toggle-label::after {
+  content: "";
+  position: absolute;
+  width: 26px; /* Adjust size as needed */
+  height: 26px; /* Adjust size as needed */
+  left: 2px;
+  bottom: 2px;
+  background-color: #FF55A5;    /* FilmFocus Pink Watchlist is Public */
+  transition: 0.2s;
+  border-radius: 50%;
+}
+
+.toggle-input:checked + .toggle-label {
+  background-color: limegreen;  /* Primary Color limegreen Watchlist is Public */
+}
+
+.toggle-input:checked + .toggle-label::after {
+  transform: translateX(30px);
+}
+
+/* [FilmFocus Color Codes]
+
+FilmFocus Pink: #FF55A5
+FilmFocus Grey: #2B2B31 */
+
+/*==============================
+  Top of Page Button
+==============================*/
+.top-of-page__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 160px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+  font-size: 13px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin: 10px auto 15px;
+  position: relative;
+}
+.top-of-page__btn:hover {
+  opacity: 1;
+  color: #fff;
 }

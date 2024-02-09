@@ -26,11 +26,12 @@ from django.urls import reverse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Semaphore
 import time
-
+import datetime
 
 class Movie(models.Model):
     """Model representing individual movies in the database."""
     created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=255)
     tmdb_id = models.IntegerField(unique=True, null=True, db_index=True)
     imdb_id = models.CharField(max_length=20, unique=False, null=True, blank=True)
@@ -41,7 +42,8 @@ class Movie(models.Model):
     tagline = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField('Genre', blank=True, related_name='movies')
     trailer_key = models.CharField(max_length=255, null=True, blank=True)
-    imdb_rating = models.CharField(max_length=10, null=True, blank=True)
+    imdb_rating = models.CharField(max_length=10, null=True, blank=True)        # A string with the IMDb rating ("7.4/10"), original API form, use for displaying rating out of 10
+    imdb_rating_num = models.FloatField(null=True, blank=True)                  # A float with the IMDb rating (7.4), use this for filtering by IMDb rating
     tmdb_popularity = models.CharField(max_length=10, null=True, blank=True)
     rotten_tomatoes_rating = models.CharField(max_length=10, null=True, blank=True)
     metacritic_rating = models.CharField(max_length=10, null=True, blank=True)
@@ -50,10 +52,34 @@ class Movie(models.Model):
     now_playing = models.BooleanField(default=False)
     mpa_rating = models.CharField(max_length=20, null=True, blank=True)
     streaming_providers = models.ManyToManyField('StreamingProvider', blank=True, related_name='movies')
+    top_streaming_providers = models.ManyToManyField('StreamingProvider', blank=True, related_name='top_movies')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     recommended_movie_data = models.JSONField(default=list, blank=True)
     letterboxd_rating = models.FloatField(null=True, blank=True)
     # letterboxd_histogram_weights = JSONField(null=True, blank=True) # TODO: Add histogram weights or remove this line
+
+    # Movie release date in a printable format
+    # To run this code, use "{{ movie.formatted_release_date }}" to execute the printable release date
+    release_date = models.DateField(null=True, blank=True)
+    def formatted_release_date(self):
+        if self.release_date:
+            return self.release_date.strftime("%B %d, %Y")  # Example format: "August 8, 2023"
+        else:
+            return "Unknown"
+        
+    # readable_form_runtime = models.CharField(max_length=50)
+    @property
+    def readable_form_runtime(self):
+        if self.runtime is None:
+            return None
+        hours = self.runtime // 60
+        minutes = self.runtime % 60
+        if hours > 0 and minutes > 0:
+            return f"{hours} hour{'s' if hours > 1 else ''} and {minutes} minute{'s' if minutes > 1 else ''}"
+        elif hours > 0:
+            return f"{hours} hour{'s' if hours > 1 else ''}"
+        else:
+            return f"{minutes} minute{'s' if minutes > 1 else ''}"
 
     # This method can be used to generate a unique slug for a movie
     def get_absolute_url(self):
@@ -155,6 +181,7 @@ class StreamingProvider(models.Model):
     name = models.CharField(max_length=255)
     logo_path = models.CharField(max_length=255, null=True, blank=True)
     provider_id = models.IntegerField(unique=True)
+    ranking = models.IntegerField(default=1000)  # Lower numbers indicate higher preference
 
     def __str__(self):
         return self.name
@@ -166,9 +193,14 @@ class UserProfile(models.Model):
     friends = models.ManyToManyField('self', blank=True)
     biography = models.CharField(max_length=300, blank=True)
     PROFILE_PICS_CHOICES = [
-        ('default.jpg', 'Default'),
-        # ('pic1.jpg', 'Picture 1'),
-        # ('pic2.jpg', 'Picture 2'),
+        ('default.png', 'Default'),
+        ('man_suit.png', 'Man in Suit'),
+        ('man_hoodie.png', 'Man in Hoodie'),
+        ('woman_glasses.png', 'Woman with Glasses'),
+        ('woman_suit.png', 'Woman in Suit'),
+        ('girl_bow.png', 'Girl with Bow'),
+        ('boy_smile.png', 'Boy with Smile'),
+        ('man_beard.png', 'Man with Beard'),
     ]
     profile_pic = models.CharField(max_length=100, choices=PROFILE_PICS_CHOICES, default='default.jpg')
     
@@ -179,12 +211,10 @@ class UserProfile(models.Model):
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     watchlist_name = models.CharField(max_length=100)
-    # user = models.ForeignKey(User, related_name='watchlists', on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
 
     def __str__(self):
         return f"{self.user.username}'s {self.watchlist_name} Watchlist"
@@ -204,21 +234,12 @@ class WatchlistEntry(models.Model):
         return f"{self.movie.title} in {self.watchlist.watchlist_name}"
 
 class FriendRequest(models.Model):
-    from_user = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE)
-    to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
+    from_user = models.ForeignKey(UserProfile, related_name='from_user', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(UserProfile, related_name='to_user', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         unique_together = ('to_user', 'from_user')
 
     def __str__(self):
-        return f"{self.from_user.username}'s request to {self.to_user.username}"
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+        return f"{self.from_user.user.username}'s request to {self.to_user.user.username}"

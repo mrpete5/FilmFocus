@@ -1,6 +1,5 @@
 Disney Plus
 Netflix
-fuboTV
 Max
 Amazon Prime Video
 Hulu
@@ -11,6 +10,5 @@ Showtime
 AMC+
 Shudder
 Apple TV Plus
-MUBI
 Freeform
 Criterion Channel

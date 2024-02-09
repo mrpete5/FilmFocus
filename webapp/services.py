@@ -216,6 +216,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
         title=movie_details.get('title'),
         overview=overview,
         poster_path=poster_path,
+        release_date=release_date,
         release_year=release_year,
         runtime=movie_details.get('runtime'),
         tagline=movie_details.get('tagline'),
@@ -447,21 +448,23 @@ def fetch_now_playing_movies(start_page=1, end_page=5):
 def get_movies_for_index():
     # Fetch movies that are marked as now_playing
     now_playing_movies = Movie.objects.filter(now_playing=True)
-    # Fetch 16 random movies from the now_playing movies for "New Movies"
-    new_movies = random.sample(list(now_playing_movies), min(16, len(now_playing_movies)))
+    # Fetch 24 random movies from the now_playing movies for "New Movies"
+    new_movies = random.sample(list(now_playing_movies), min(24, len(now_playing_movies)))
     
     # Order movies by tmdb_popularity in descending order, exclude the new movies, and take the top 100
     top_100_popular_movies = Movie.objects.exclude(id__in=[movie.id for movie in new_movies]).order_by(F('tmdb_popularity').desc(nulls_last=True))[:100]
-    # Randomly select 6 movies from the top 100
-    popular_movies = random.sample(list(top_100_popular_movies), min(6, len(top_100_popular_movies)))
+    # Randomly select 24 movies from the top 100
+    popular_movies = random.sample(list(top_100_popular_movies), min(24, len(top_100_popular_movies)))
 
-    # Fetch the top 60 movies based on imdb_rating
-    top_60_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('-imdb_rating')[:60]
-    # Randomly select 6 movies from the top 60
-    top_rated_movies = random.sample(list(top_60_movies), min(6, len(top_60_movies)))
+    # Fetch the top 200 movies based on imdb_rating
+    top_200_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('-imdb_rating')[:200]
+    # Randomly select 30 movies from the top 200
+    top_rated_movies = random.sample(list(top_200_movies), min(30, len(top_200_movies)))
+    # Sorts the selected 30 movies by their imdb_rating, with None values at the end
+    top_rated_movies.sort(key=lambda movie: (movie.imdb_rating is not None, movie.imdb_rating), reverse=True)
     
-    # Fetch 30 random movies for "More Movies", excluding the ones already selected in new_movies, popular_movies, and top_rated_movies
-    more_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies] + [movie.id for movie in top_rated_movies]).order_by('?')[:30]
+    # Fetch 120 random movies for "More Movies", excluding the ones already selected in new_movies, popular_movies, and top_rated_movies
+    more_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies] + [movie.id for movie in top_rated_movies]).order_by('?')[:120]
     
     return {
         'new_movies': new_movies,
@@ -580,7 +583,7 @@ def update_movie_recommendations():
         needed = 20 - len(movie.recommended_movie_data)
 
         # Query for recent movies in database
-        recent_movies = Movie.objects.order_by('-date_entered')[:needed*2]
+        recent_movies = Movie.objects.order_by('-created_at')[:needed*2]
         
         for r_movie in recent_movies:
             if len(movie.recommended_movie_data) >= 20:
@@ -738,6 +741,254 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=10):
                     print(f"An error occurred: {str(e)}")
 
 
+def get_streaming_providers(movie_id, count):
+    """
+    Get the top streaming providers for a given movie, based on a predefined order of preference.
+
+    :param movie_id: The ID of the movie for which to get the streaming providers.
+    :param count: The number of top providers to return.
+    :return: A list of top streaming providers for the movie.
+    """
+    # Retrieve the movie object from the database using its ID.
+    movie = Movie.objects.get(id=movie_id)
+
+    # Get and sort the streaming providers associated with the movie by their ranking.
+    # Providers with lower ranking values (indicating higher preference) are placed first.
+    providers = movie.streaming_providers.all().order_by('ranking')
+
+    # Return the top 'count' providers.
+    return providers[:count]
+
+
+# Creates the imdb_rating_num value from imdb_rating
+def process_movie_imdb_ratings():
+    # Count total movies
+    total_movie_count = Movie.objects.count()
+    print(f"Total number of movies: {total_movie_count}")
+
+    # Initialize counters
+    running_total_count = 0
+    success_running_count = 0
+
+    # Process each movie
+    for movie in Movie.objects.iterator():
+        if movie.imdb_rating and '/' in movie.imdb_rating:
+            try:
+                # Extract and convert rating
+                rating_value = movie.imdb_rating.split('/')[0]
+                movie.imdb_rating_num = float(rating_value)
+                movie.save()
+                success_running_count += 1
+            except ValueError:
+                # Handle conversion error
+                print(f"Failed to convert rating for: {movie.title}")
+            running_total_count += 1
+
+    # Calculate success rate
+    success_rate = success_running_count / total_movie_count
+    print(f"Success rate of converting imdb_ratings to imdb_rating_num: {success_running_count}/{total_movie_count} = {success_rate:.2f}")
+
+
+def update_streaming_providers(test_limit=None):
+    """
+    Update the top streaming providers for movies in the database.
+
+    :param test_limit: An optional parameter to limit the number of movies processed. 
+                       Useful for testing purposes. If None, processes all movies.
+    """
+
+    # test_limit = None   # Test mode, quantity of test cases
+
+    # Fetch all movies, limit them if test_limit is provided
+    if test_limit:
+        all_movies = Movie.objects.all()[:test_limit]
+    else:
+        all_movies = Movie.objects.all()
+
+    # Number of top providers to keep
+    top_provider_count = 1  # Adjust as needed
+    count = len(all_movies) # Number of movies processed
+    for i, movie in enumerate(all_movies):
+        # Get top streaming providers for each movie
+        top_providers = get_streaming_providers(movie.id, top_provider_count)
+
+        # Update the movie's top streaming providers
+        movie.top_streaming_providers.set(top_providers)
+        movie.save()  # Save the changes to the database
+
+        if test_limit:
+            # For testing: Print the movie title and its updated top providers
+            print(f"Movie: {movie.title}, Top Providers: {[provider.name for provider in top_providers]}")
+        else:
+            if (i%100 == 0):
+                print(f"Top streaming providers processed: {i}/{count}")
+
+    print("Completed updating top streaming providers.")
+
+
+def get_refreshed_movie_data(movie_tmdb_id):
+    movie, created = Movie.objects.get_or_create(tmdb_id=movie_tmdb_id)
+    
+    if created:
+        print(f"New movie created with tmdb_id: {movie_tmdb_id}")
+    else:
+        print(f"Updating existing movie with tmdb_id: {movie_tmdb_id}")
+
+    # Make an API call to fetch more details about the movie from TMDB
+    movie_details = fetch_movie_details_from_tmdb(movie.tmdb_id)
+
+    print(f"\nRefreshed movie data: {movie.title} (tmdb_id: {movie.tmdb_id})")
+    formatted_last_updated = movie.last_updated.strftime('%Y-%m-%d %H:%M:%S')
+    print(f"Last updated: {formatted_last_updated}")
+    print(f"Before IMDb ratings: {movie.imdb_rating}")
+    print(f"Before Letterboxd ratings: {movie.letterboxd_rating}/5")
+    print(f"Before Rotten Tomatoes ratings: {movie.rotten_tomatoes_rating}")
+    print(f"Before Metacritic ratings: {movie.metacritic_rating}")
+
+    # Retrieve and format streaming provider names
+    streaming_providers = movie.streaming_providers.all()
+    provider_names = [provider.name for provider in streaming_providers]
+    providers_string = ", ".join(provider_names)
+    # Print the formatted list of streaming providers
+    print(f"Before Streaming providers: {providers_string}\n")
+
+    # Check if the movie is adult content
+    if movie_details.get('adult'):
+        return
+
+    # Update movie details
+    movie.title = movie_details.get('title')
+    movie.imdb_id = movie_details.get('imdb_id')
+    movie.overview = movie_details.get('overview')
+    movie.poster_path = movie_details.get('poster_path')
+    # release_date = movie_details.get('release_date')
+    movie.release_year = int(movie_details.get('release_date', '').split('-')[0]) if movie_details.get('release_date') else None
+    movie.runtime = movie_details.get('runtime')
+    movie.tagline = movie_details.get('tagline')
+    movie.trailer_key = fetch_movie_trailer_key(movie_details.get('videos', {}).get('results', []))
+    movie.now_playing = movie.release_year in [2023, 2024]
+    
+    # Verify now_playing is either 2023 or 2024
+    movie.now_playing = True
+    if movie.release_year not in [2023, 2024]:
+        movie.now_playing = False
+
+    # Extract the video results and fetch the trailer key
+    videos = movie_details.get('videos', {}).get('results', [])
+    movie.trailer_key = fetch_movie_trailer_key(videos)    
+
+    # Save the updated movie
+    movie.save()
+
+    # Extract recommendations
+    recommendations = movie_details.get('recommendations', {}).get('results', [])
+    recommended_movie_data = []
+    for rec in recommendations:
+        rec_popularity = rec.get('popularity', 0)  # Default to 0 if popularity is not present
+        if rec_popularity > 3:
+            recommended_movie_data.append({
+                'tmdb_id': rec.get('id'),
+                'title': rec.get('title'),
+                'tmdb_popularity': rec_popularity  # Store the tmdb_popularity here
+            })
+
+    movie.recommended_movie_data = recommended_movie_data
+
+    # Make an API call to fetch more details about the movie from OMDB    
+    omdb_data = fetch_movie_data_from_omdb(movie.imdb_id)
+    movie.imdb_rating = omdb_data.get('imdb_rating')
+    movie.rotten_tomatoes_rating = omdb_data.get('rotten_tomatoes_rating')
+    movie.metacritic_rating = omdb_data.get('metacritic_rating')
+    movie.director = omdb_data.get('director')
+    movie.domestic_box_office = omdb_data.get('domestic_box_office')
+    movie.mpa_rating = omdb_data.get('mpa_rating')
+    movie.save()
+
+    # Extract genres
+    genres = movie_details.get('genres', [])        
+    # Associate the movie with its genres from TMDB
+    for genre_data in genres:
+        genre, created = Genre.objects.get_or_create(name=genre_data['name'])
+        movie.genres.add(genre)
+    
+    # Extract the streaming data
+    streaming_data = movie_details.get('watch/providers', {}).get('results', {}).get('US', {}).get('flatrate', [])
+
+    allowed_providers = filtered_providers
+    # If allowed_providers is None or empty, allow all providers
+    if not allowed_providers:
+        allowed_providers = [provider_data['provider_name'] for provider_data in streaming_data]
+
+    # Loop through the streaming data and update the movie's streaming providers
+    for provider_data in streaming_data:
+        # Check if the provider is in the allowed list
+        if provider_data['provider_name'] in allowed_providers:
+            provider, created = StreamingProvider.objects.get_or_create(
+                provider_id=provider_data['provider_id'],
+                defaults={
+                    'name': provider_data['provider_name'],
+                    'logo_path': provider_data['logo_path'],
+                }
+            )
+            movie.streaming_providers.add(provider)
+
+    # Fetch Letterboxd ratings data
+    try:
+        rating_data = lbd_scrape.get_rating(movie.title, movie.release_year)
+        if rating_data:
+            if isinstance(rating_data, dict):
+                movie.letterboxd_rating = rating_data['Weighted Average']
+            elif isinstance(rating_data, list): 
+                movie.letterboxd_rating = rating_data[0]
+    except Exception as e:
+        print(f"Failure: {e}")
+
+    # Save refreshed movie data in the Movie database
+    movie.save()
+
+    # Print refreshed movie data
+    formatted_last_updated = movie.last_updated.strftime('%Y-%m-%d %H:%M:%S')
+    print(f'\nRefreshed movie data: {movie.title} (tmdb_id: {movie.tmdb_id})')
+    print(f"Last updated: {formatted_last_updated}")
+    print(f"After IMDb ratings: {movie.imdb_rating}")
+    print(f"After Letterboxd ratings: {movie.letterboxd_rating}/5")
+    print(f"After Rotten Tomatoes ratings: {movie.rotten_tomatoes_rating}")
+    print(f"After Metacritic ratings: {movie.metacritic_rating}")
+
+    # Retrieve and format streaming provider names
+    streaming_providers = movie.streaming_providers.all()
+    provider_names = [provider.name for provider in streaming_providers]
+    providers_string = ", ".join(provider_names)
+    # Print the formatted list of streaming providers
+    print(f"After Streaming providers: {providers_string}\n")
+
+# Performs filtering to the movies list
+def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end):
+    # Fitler for Genre
+    if genre is not None:
+        movies = movies.filter(genres=genre)
+
+    # Filter for Streaming Providers
+    if streamer is not None:
+        movies = movies.filter(streaming_providers=streamer)
+
+    # Filter for release year
+    if year_begin is not None and year_end is not None:
+        movies = movies.filter(release_year__range=(year_begin, year_end))
+
+    # Filte for IMDB rating
+    if imdb_begin is not None and imdb_end is not None:
+        movies = movies.filter(imdb_rating_num__range=(imdb_begin, imdb_end))
+
+    return movies        
+
+# Get all the movies for the catalog page
+def get_all_movies_catalog():
+    all_movies = Movie.objects.all()  # Fetch all movies
+    return {
+        'full_catalog': all_movies,
+    }
+
 # Clear all movies from the database
 def clear_movie_database():
     deleted_count, _ = Movie.objects.all().delete()
@@ -753,76 +1004,87 @@ def handle_test_for_ban(start_date, end_date):
 # Handle the test display page and manage the movie database
 def handle_test_display_page(settings):
     # 20 movies per page
-    popular_pages = 5           # Number of popular pages from 1 to x with 20 results each, TMDb
+    # update_streaming_providers(test_limit=10) # Uncomment to update the top streaming providers
+
+    # search_and_fetch_movie_by_title("The Greasy Strangler")
+    # search_and_fetch_movie_by_id(775517)
+
+    # popular_pages is the main method for getting a mass amount of new movies
+    popular_pages = 10          # Number of popular pages from 1 to x with 20 results each, TMDb
     now_playing_pages = 10      # Number of now playing pages from 1 to x with 20 results each, TMDb
     fetch_movies_count = 10     # Number of individual movies returned to testdisplay, testdisplay/
     fetch_discover_count = 5    # Number of discover pages from 1 to x with 20 results each, TMDb
+    tmdb_id_value = 11          # Initialized value
     
     # Diplay the starting time of the test display page
     now_time = time.time()
     now_time_readable = datetime.datetime.fromtimestamp(now_time).strftime('%H:%M:%S')
     print(f'Starting test display page at {now_time_readable}\n')
         
-    test_mode = True
-    if test_mode: # test_mode == True
-        ''' Test mode (ON). Tests the times and data for the various functions. '''
-        
-        if settings[0]:
-            timer(function_name='clear_movie_database', fetch_func=clear_movie_database, args={})
+    if settings[0]:
+        timer(function_name='clear_movie_database', fetch_func=clear_movie_database, args={})
 
-        if settings[1]:
+    if settings[1]:
+        timer(function_name='fetch_popular_movies', fetch_func=fetch_popular_movies, args={'start_page': 1, 'end_page': popular_pages})
+        timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages })
+        timer(function_name="process_movie_imdb_ratings", fetch_func=process_movie_imdb_ratings, args={})
+    elif settings[2]:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
+        timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages})
+    
+    if settings[3]:
+        timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
+    
+    if settings[4]:
+        timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
+    
+    if settings[5]:
+        timer(function_name='fetch_tmdb_discover_movies', fetch_func=fetch_tmdb_discover_movies, args={'start_page': 1, 'end_page': fetch_discover_count})
+
+    if settings[6]:
+        timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
+    
+    if settings[7]:
+        search_term = settings[8]
+        search_and_fetch_movie_by_title(search_term)        # Search for a movie by its title and fetch its details
+        search_and_fetch_movie_by_id(tmdb_id_value)         # Search for a movie by its tmdb_id and fetch its details
+    
+    if settings[9]:
+        """ Performs all operations to update movie data in our database, without deleting anything. """
+        """ Updates all movie ratings, streaming providers, and recommendations. """
+        get_movies = True
+        get_updates = True
+
+        if get_movies:
             timer(function_name='fetch_popular_movies', fetch_func=fetch_popular_movies, args={'start_page': 1, 'end_page': popular_pages})
             timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages })
-        elif settings[2]:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
-            timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages})
-        
-        if settings[3]:
-            timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
-        
-        if settings[4]:
-            timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
-        
-        if settings[5]:
             timer(function_name='fetch_tmdb_discover_movies', fetch_func=fetch_tmdb_discover_movies, args={'start_page': 1, 'end_page': fetch_discover_count})
 
-        if settings[6]:
+        if get_updates:
+            timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
+            timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
             timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
-    else: # test_mode == False
-        ''' Test mode (OFF). '''
-        
-        if settings[0]:
-            clear_movie_database()  # deletes all entries in the movie database, USE WITH CAUTION
+            timer(function_name="process_movie_imdb_ratings", fetch_func=process_movie_imdb_ratings, args={})
 
-        if settings[1]:
-            fetch_popular_movies(1, end_page=popular_pages)
-            fetch_now_playing_movies(1, end_page=now_playing_pages)  # Fetch now playing movies after initializing the database
-        elif settings[2]:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
-            fetch_now_playing_movies(1, end_page=now_playing_pages)
-        
-        if settings[3]:
-            update_streaming_providers()
-        
-        if settings[4]:
-            update_movie_recommendations()
-        
-        if settings[5]:
-            fetch_tmdb_discover_movies(1, end_page=fetch_discover_count)
 
-        if settings[6]:
-            update_letterboxd_ratings()
-    
     # Prints which settings are set
     print(f"==========================")
-    flags = ['erase_movie_db', 
-             'init_movie_db', 
-             'get_now_playing', 
-             'update_streaming', 
-             'update_recs',
-             'get_discover_movies', 
-             'update_letterboxd_ratings',
-             ]
+    flags = [   'erase_movie_db',                               # flags[0]
+                'init_movie_db',                                # flags[1]  
+                'get_now_playing',                              # flags[2]
+                'update_streaming',                             # flags[3]
+                'update_recs',                                  # flags[4]
+                'get_discover_movies',                          # flags[5]      
+                'update_letterboxd_ratings',                    # flags[6]
+                'get_specific_movie_by_search',                 # flags[7]
+                'search_term',                                  # flags[8]
+    ]
+
+    flags.append(f'{tmdb_id_value}')                            # flags[9], This will add the item at the end of the list
+    settings.append('tmdb_id_value')
+
     for index, flag in enumerate(flags):
         print(f"{flag} = {settings[index]}")
+
     print(f"==========================\n")  
 
     items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/

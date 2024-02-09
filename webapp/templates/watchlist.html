@@ -144,7 +144,7 @@
 								<div class="filter__item-btn dropdown-toggle" role="button" id="filter-year" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<div class="filter__range">
 										<div id="filter__years-start">{{ filter_year_begin|default:'1900' }}</div>
-										<div id="filter__years-end">{{ filter_year_end|default:'2023' }}</div>
+										<div id="filter__years-end">{{ filter_year_end|default:'2024' }}</div>
 									</div>
 									<span></span>
 								</div>
@@ -176,7 +176,7 @@
 							<!-- hidden form information -->
 							<input type="hidden" name="watchlist_id" id="hidden-watchlist-id" value="{{ filter_watchlist.id }}">
 							<input type="hidden" name="year_begin" id="hidden-year-begin" value="{{ filter_year_begin|default:'1900' }}">
-							<input type="hidden" name="year_end" id="hidden-year-end" value="{{ filter_year_end|default:'2023' }}">
+							<input type="hidden" name="year_end" id="hidden-year-end" value="{{ filter_year_end|default:'2024' }}">
 							<input type="hidden" name="imdb_begin" id="hidden-imdb-begin" value="{{ filter_imdb_begin|default:'0.0' }}">
 							<input type="hidden" name="imdb_end" id="hidden-imdb-end" value="{{ filter_imdb_end|default:'10.0' }}">
 							<!-- end hidden form infromation -->
@@ -186,6 +186,11 @@
 							<!-- end filter btn -->
 						</form>
 						
+							<!-- delete watchlist button -->
+							{% if watchlists %}
+								<button class="delete-watchlist__btn"  id="deleteWatchlistBtn">delete watchlist</button>
+							{% endif %}
+							<!-- end delete watchlist button --> 			
 					</div>
 				</div>
 			</div>
@@ -197,35 +202,73 @@
 	<div class="catalog">
 		<div class="container">
 			<div class="row">
-				{% for movie in movie_list %}
-				<!-- card -->
-				<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-					<div class="card">
-						<a href="{% url 'movie_detail' movie_slug=movie.slug %}">
-							<div class="card__cover">
-								<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
-								<!-- <a href="#" class="card__play">
-									<i class="icon ion-ios-play"></i>
-								</a> -->
+				{% if watchlists %}
+					{% for movie in movie_list %}
+					<!-- card -->
+					<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+						<div class="card">
+							<a href="{% url 'movie_detail' movie_slug=movie.slug %}">
+								<div class="card__cover">
+									<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+									<!-- <a href="#" class="card__play">
+										<i class="icon ion-ios-play"></i>
+									</a> -->
+								</div>
+							</a>
+
+							<!-- add to watchlist, plus button & popup -->
+							<span title="Add Movie to Your Watchlist">
+								<a href="#0" class="card__add" movie_id="{{ movie.id }}">
+									<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+								</a>
+							</span>			
+							<!-- end add to watchlist -->
+
+							<div class="card__content">
+								<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
+								<span class="card__category">
+									{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
+										<a>{{ genre.name }}</a>
+									{% endfor %}
+								</span>
+
+								<span class="card__rate">
+									<img src="{% static 'img/logos/imdb-logo.svg' %}" alt="IMDb" style="width: 30px; vertical-align: middle; margin-right: 5px;">
+									{{ movie.imdb_rating }}
+
+									<!-- Streaming Provider Images -->
+									<span class="card__streamer">
+										{% if movie.top_streaming_providers.all %}
+										<div class="provider-list">
+											<ul style="list-style-type: none; padding: 0; margin: 0;">
+												{% for provider in movie.top_streaming_providers.all %}
+													<li style="margin-bottom: 10px;">
+														<img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" class="provider-logo">
+													</li>
+												{% endfor %}
+											</ul>
+										</div>
+										{% endif %}
+									</span>
+									<!-- end Streaming Provider Images -->
+									
+								</span>
 							</div>
-						</a>
-						<div class="card__content">
-							<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
-							<span class="card__category">
-								{% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
-									<a>{{ genre.name }}</a>
-								{% endfor %}
-							</span>
-							<span class="card__rate">
-								<img src="{% static 'img/logos/imdb-logo.svg' %}" alt="IMDb" style="width: 30px; vertical-align: middle; margin-right: 5px;">
-								{{ movie.imdb_rating }}
-							</span>
 						</div>
 					</div>
-				</div>
-				<!-- end card -->
-				{% endfor %}
-
+					<!-- end card -->
+					{% endfor %}
+				{% else %}
+					<!-- Create New Watchlist form -->
+					<form class="wlist_page_form" method="post">
+						{% csrf_token %}
+						<div class="wlist__group">
+							<input id="wlistinput" class="wlist__input" name="watchlist_name" placeholder="New Watchlist Name" type="text" maxlength="30">
+							<button id="wlistpagebtn" class="wlist_page_btn" type="submit">New Watchlist</button>
+						</div>
+					</form>
+					<!-- end Create New Watchlist form -->
+				{% endif %}
 				<!-- paginator -->
 				<!-- <div class="col-12">
 					<ul class="paginator">
