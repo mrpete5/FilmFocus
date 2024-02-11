@@ -1071,9 +1071,42 @@ $(document).ready(function () {
 	  });
 	  
 
-
-
-
 	
 });
 
+	/*==============================
+	Secret Code
+	==============================*/
+	let keys = {
+		37: "Left",
+		38: "Up",
+		39: "Right",
+		40: "Down",
+		65: "A",
+		66: "B"
+	};
+
+	let secret_code = ["Up", "Up", "Down", "Down", "Left", "Right", "Left", "Right", "B", "A"];
+
+	document.addEventListener("keydown", checkForSecret, false);
+	let keyCount = 0;
+	function checkForSecret(event) {
+		let keyPressed = keys[event.keyCode];
+		console.log(keyPressed);
+		if(keyPressed === secret_code[keyCount]) {
+			keyCount++;
+			console.log(keyCount);
+			if(keyCount === secret_code.length) {
+				console.log("huh");
+				secret_code_activated();
+				keyCount = 0;
+			}
+		}
+		else{
+			keyCount = 0;
+		}
+	}
+
+	function secret_code_activated() {
+		alert("Secret");
+	}
