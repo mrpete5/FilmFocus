@@ -1386,6 +1386,9 @@ ul {
 .card__cover:hover .card__add {
   opacity: 1;
 }
+.card__cover:hover .card__rating {
+  opacity: 1;
+}
 .card__add {
   position: absolute;
   display: flex;
@@ -1425,6 +1428,47 @@ ul {
   border-radius: 50%;
 }
 .card__add:hover {
+  color: #fff;
+}
+
+.card__rating {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  border: 1px solid #fff;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  top: 32px;  /* Adjust as needed */
+  left: 173px; /* Adjust as needed */
+  right: auto;  /* Adjust as needed */
+  bottom: auto;  /* Adjust as needed */
+  margin: -30px 0 0 -30px;
+  z-index: 2;
+  font-size: 30px;
+  color: #fff;
+  -webkit-transition: 0.4s ease;
+  -moz-transition: 0.4s ease;
+  transition: 0.4s ease;
+  opacity: 1;
+}
+.card__rating i {
+  margin: 2px 0 0 3px;
+}
+.card__rating img {
+  width: 25px;  /* Adjust width as needed */
+  height: 25px;  /* Adjust height as needed */
+  opacity: 0.5;  /* Initial opacity (50%) */
+}
+.card__rating:hover img {
+  opacity: 1;  /* Opacity during hover (100%) */
+  border: 2px solid #5EF209;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+.card__rating:hover {
   color: #fff;
 }
 .card__content {
@@ -1732,6 +1776,30 @@ ul {
     opacity: 0.5;  /* Initial opacity (50%) */
   }
   .card--big .card__add:hover img {
+    opacity: 1;  /* Opacity during hover (100%) */
+  }
+  .card--big .card__rating {
+    width: 30px;
+    height: 30px;
+    margin: -40px 0 0 -40px;
+    font-size: 44px;
+    border: 1px solid #fff;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    top: 73px;  /* Adjust as needed */
+    left: 43px; /* Adjust as needed */
+    right: auto;  /* Adjust as needed */
+    bottom: auto;  /* Adjust as needed */
+  }
+  .card--big .card__rating i {
+    margin: 2px 0 0 5px;
+  }
+  .card--big .card__rating img {
+    width: 30px;  /* Adjust width as needed */
+    height: 30px;  /* Adjust height as needed */
+    opacity: 0.5;  /* Initial opacity (50%) */
+  }
+  .card--big .card__rating:hover img {
     opacity: 1;  /* Opacity during hover (100%) */
   }
   .card--big .card__title {

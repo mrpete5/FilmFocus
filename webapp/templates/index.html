@@ -136,6 +136,12 @@
 											</a>
 										</span>
 
+										<span title="Add Rating">
+											<a href="#0" class="card__rating" movie_id="{{ movie.id }}">
+												<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+											</a>
+										</span>
+
 										<div class="card__content">
 											<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 											<span class="card__category">
@@ -162,7 +168,7 @@
 													{% endif %}
 												</span>
 												<!-- end Streaming Provider Images -->
-												
+
 											</span>
 										</div>
 									</div>
