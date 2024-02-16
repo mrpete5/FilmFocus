@@ -1,0 +1,22 @@
+{% load static %}
+
+{% if user.is_authenticated %}
+    <div class="popupInner">
+        <button id="closePopupAlt" class="x__popup">&#x2715</button>
+        <h2>Add a Rating</h2><br>
+
+        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" style="width: 20%; height: auto;" alt="{{ movie.title }}">
+        <br>
+        {{ movie.title }} ({{ movie.release_year }})
+        <br>
+        <button id="savePopup" class="save__rating-popup">SAVE</button>
+        <button id="closePopup" class="close__rating-popup">CLOSE</button>
+    </div>
+{% else %}
+    <div class="popupInner">
+        <button id="closePopupAlt" class="x__popup">&#x2715</button>
+        <h2>Log In to Add a Rating</h2><br>
+        <button id="loginPopup" class="login__popup">LOG IN</button><br>
+        <button id="closePopup" class="close__popup">CLOSE</button>
+    </div>
+{% endif %}

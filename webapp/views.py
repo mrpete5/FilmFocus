@@ -324,6 +324,12 @@ def popup(request, movie_id):
         context["movie_in_watchlists"] = Watchlist.objects.filter(entries__movie=context["movie"]).distinct()
         return render(request, "popup.html", context)
 
+# View function for getting user movie rating popup
+def popup_rating(request, movie_id):
+    context = {}
+    if request.method == 'GET':
+        context["movie"] = Movie.objects.get(pk=movie_id)
+        return render(request, "popup_rating.html", context)
 
 # View function for the about page
 def about(request):

@@ -1055,24 +1055,51 @@ $(document).ready(function () {
 			});
 		});
 	});
-	
-	/*==============================
-	Toggle Switch
-	==============================*/
 
-	document.getElementById('toggle').addEventListener('change', function(event) {
-		if (event.target.checked) {
-		  console.log('Toggle switched on');
-		  // Add your code here for when toggle is on
-		} else {
-		  console.log('Toggle switched off');
-		  // Add your code here for when toggle is off
+
+	/*==============================
+	Add a User Movie Rating Popup
+	==============================*/
+	document.querySelectorAll(".card__rating").forEach(x => {
+		x.addEventListener("click", async () => {
+			request_rating_popup(x.getAttribute("movie_id"));
+			open_popup();
+		})
+	})
+
+	async function request_rating_popup(rating_movie_id) {
+
+		const url = "/popup_rating/"+rating_movie_id;
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'X-CSRFToken': csrfToken
+			}
+		});
+
+		if (response.ok) {
+			const data = await response.text();
+			popup.innerHTML = data;
+			const closePopupAlt = popup.querySelector("#closePopupAlt");
+			const closePopup = popup.querySelector("#closePopup");
+			const closePopupAlt2 = popup;
+			const popupLogin = popup.querySelector("#loginPopup");
+			const savePopup = popup.querySelector("#savePopup");
+			if (closePopupAlt2) close_event_handler2(closePopupAlt2);
+			if (closePopupAlt) close_event_handler(closePopupAlt);
+			if (closePopup) close_event_handler(closePopup);
+			if (popupLogin) popup_login_event_handler(popupLogin);
+			if (savePopup) save_event_handler(savePopup);
+			// save_movie_rating();
+			// reset_movie_rating();
 		}
-	  });
-	  
+	}
 
 	
 });
+
 
 	/*==============================
 	Secret Code
