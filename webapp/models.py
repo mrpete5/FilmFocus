@@ -23,6 +23,7 @@ from django.utils.module_loading import import_string
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Semaphore
 import time
@@ -243,3 +244,13 @@ class FriendRequest(models.Model):
 
     def __str__(self):
         return f"{self.from_user.user.username}'s request to {self.to_user.user.username}"
+
+class MovieRating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    movie = models.ForeignKey('Movie', on_delete=models.CASCADE)
+    user_rating = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    has_watched = models.BooleanField(default=False)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s rating of {self.movie.title}"
