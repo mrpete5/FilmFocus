@@ -1,7 +1,7 @@
 {% load static %}
 
 {% if user.is_authenticated %}
-    <div class="popupInner">
+    <div class="rating-popupInner">
         <button id="closePopupAlt" class="x__popup">&#x2715</button>
         <h2>Add a Rating</h2><br>
 
@@ -13,7 +13,7 @@
         <button id="closePopup" class="close__rating-popup">CLOSE</button>
     </div>
 {% else %}
-    <div class="popupInner">
+    <div class="rating-popupInner">
         <button id="closePopupAlt" class="x__popup">&#x2715</button>
         <h2>Log In to Add a Rating</h2><br>
         <button id="loginPopup" class="login__popup">LOG IN</button><br>
