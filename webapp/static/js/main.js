@@ -1087,17 +1087,25 @@ $(document).ready(function () {
 			const closePopupAlt2 = popup;
 			const popupLogin = popup.querySelector("#loginPopup");
 			const savePopup = popup.querySelector("#savePopup");
+			const resetPopup = popup.querySelector("#resetPopup");
 			if (closePopupAlt2) close_event_handler2(closePopupAlt2);
 			if (closePopupAlt) close_event_handler(closePopupAlt);
 			if (closePopup) close_event_handler(closePopup);
 			if (popupLogin) popup_login_event_handler(popupLogin);
-			if (savePopup) save_event_handler(savePopup);
-			// save_movie_rating();
-			// reset_movie_rating();
+			if (savePopup) save_rating_event_handler(savePopup);
+			if (resetPopup) reset_rating_event_handler(resetPopup);
+
 		}
 	}
 
+	function save_rating_event_handler(savePopup){
+		// Save the rating
+	}
 	
+	function reset_rating_event_handler(resetPopup){
+		// Delete the rating
+	}
+
 });
 
 
