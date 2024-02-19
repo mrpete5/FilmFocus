@@ -203,7 +203,7 @@ class UserProfile(models.Model):
         ('boy_smile.png', 'Boy with Smile'),
         ('man_beard.png', 'Man with Beard'),
     ]
-    profile_pic = models.CharField(max_length=100, choices=PROFILE_PICS_CHOICES, default='default.jpg')
+    profile_pic = models.CharField(max_length=100, choices=PROFILE_PICS_CHOICES, default='default.png')
     
     def __str__(self):
         return f"{self.user.username}"

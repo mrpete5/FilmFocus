@@ -37,6 +37,7 @@ import json
 import webapp.password_reset as pass_reset
 from django.utils.http import urlsafe_base64_decode
 from .services import *
+from django.contrib.auth.models import User
 
 
 # Constants
@@ -580,6 +581,7 @@ def signup(request):
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
+            UserProfile.objects.create(user=user) # Create UserProfile instance for the new user
             login(request, user)
             username = form.cleaned_data.get('username')
             messages.success(request, f"You created a new account for {username}!")
