@@ -475,21 +475,20 @@ def get_movies_for_index():
 
 
 # Update the streaming providers for all movies in the Movie database
-def update_streaming_providers():
-    # Fetch all movies from your database
-    movies = Movie.objects.all()
-    total_num_movies = movies.count()
+def update_streaming_providers(test_limit=None):    
+    # test_limit = 10   # Test mode, quantity of test cases
+
+    # Fetch all movies, limit them if test_limit is provided
+    if test_limit:
+        movies = Movie.objects.all()[:test_limit]
+    else:
+        movies = Movie.objects.all()
 
     # Print the number of movies in the database
     print(f'Total movies in database: {movies.count()}')
 
     for index, movie in enumerate(movies, start=1):
         # Define the TMDB API endpoint and parameters
-        
-        # Create a loading progress bar
-        title = 'Updating Streaming Providers'
-        progress_bar_iteration(title, index, total_num_movies)
-        
         url = f"https://api.themoviedb.org/3/movie/{movie.tmdb_id}?language=en-US&append_to_response=watch/providers"
         headers = {
             "accept": "application/json",
@@ -515,6 +514,14 @@ def update_streaming_providers():
                     }
                 )
                 movie.streaming_providers.add(provider)
+
+        providers = movie.streaming_providers.all()     # Get the current streaming providers for the movie
+        sorted_providers = sorted(providers, key=lambda x: x.ranking)   # Sort the providers based on their ranking
+
+        if sorted_providers:
+            top_provider = sorted_providers[0] # Get the top ranked provider
+            movie.top_streaming_providers.clear()
+            movie.top_streaming_providers.add(top_provider)
 
         # Print a message every 100 movies updated
         if index % 100 == 0:
@@ -741,25 +748,6 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=10):
                     print(f"An error occurred: {str(e)}")
 
 
-def get_streaming_providers(movie_id, count):
-    """
-    Get the top streaming providers for a given movie, based on a predefined order of preference.
-
-    :param movie_id: The ID of the movie for which to get the streaming providers.
-    :param count: The number of top providers to return.
-    :return: A list of top streaming providers for the movie.
-    """
-    # Retrieve the movie object from the database using its ID.
-    movie = Movie.objects.get(id=movie_id)
-
-    # Get and sort the streaming providers associated with the movie by their ranking.
-    # Providers with lower ranking values (indicating higher preference) are placed first.
-    providers = movie.streaming_providers.all().order_by('ranking')
-
-    # Return the top 'count' providers.
-    return providers[:count]
-
-
 # Creates the imdb_rating_num value from imdb_rating
 def process_movie_imdb_ratings():
     # Count total movies
@@ -787,43 +775,6 @@ def process_movie_imdb_ratings():
     # Calculate success rate
     success_rate = success_running_count / total_movie_count
     print(f"Success rate of converting imdb_ratings to imdb_rating_num: {success_running_count}/{total_movie_count} = {success_rate:.2f}")
-
-
-def update_streaming_providers(test_limit=None):
-    """
-    Update the top streaming providers for movies in the database.
-
-    :param test_limit: An optional parameter to limit the number of movies processed. 
-                       Useful for testing purposes. If None, processes all movies.
-    """
-
-    # test_limit = None   # Test mode, quantity of test cases
-
-    # Fetch all movies, limit them if test_limit is provided
-    if test_limit:
-        all_movies = Movie.objects.all()[:test_limit]
-    else:
-        all_movies = Movie.objects.all()
-
-    # Number of top providers to keep
-    top_provider_count = 1  # Adjust as needed
-    count = len(all_movies) # Number of movies processed
-    for i, movie in enumerate(all_movies):
-        # Get top streaming providers for each movie
-        top_providers = get_streaming_providers(movie.id, top_provider_count)
-
-        # Update the movie's top streaming providers
-        movie.top_streaming_providers.set(top_providers)
-        movie.save()  # Save the changes to the database
-
-        if test_limit:
-            # For testing: Print the movie title and its updated top providers
-            print(f"Movie: {movie.title}, Top Providers: {[provider.name for provider in top_providers]}")
-        else:
-            if (i%100 == 0):
-                print(f"Top streaming providers processed: {i}/{count}")
-
-    print("Completed updating top streaming providers.")
 
 
 def get_refreshed_movie_data(movie_tmdb_id):
@@ -978,7 +929,7 @@ def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imd
 
     # Filte for IMDB rating
     if imdb_begin is not None and imdb_end is not None:
-        movies = Movie.objects.filter(Q(imdb_rating_num__range=(imdb_begin, imdb_end)) | Q(imdb_rating_num=None))
+        movies = movies.filter(Q(imdb_rating_num__range=(imdb_begin, imdb_end)) | Q(imdb_rating_num=None))
 
     return movies        
 
@@ -1027,7 +978,6 @@ def handle_test_display_page(settings):
     if settings[1]:
         timer(function_name='fetch_popular_movies', fetch_func=fetch_popular_movies, args={'start_page': 1, 'end_page': popular_pages})
         timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages })
-        timer(function_name="process_movie_imdb_ratings", fetch_func=process_movie_imdb_ratings, args={})
     elif settings[2]:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
         timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages})
     
@@ -1064,6 +1014,9 @@ def handle_test_display_page(settings):
             timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
             timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
             timer(function_name="process_movie_imdb_ratings", fetch_func=process_movie_imdb_ratings, args={})
+
+    if settings[1] or settings[2] or settings[5]:
+        timer(function_name="process_movie_imdb_ratings", fetch_func=process_movie_imdb_ratings, args={})
 
 
     # Prints which settings are set

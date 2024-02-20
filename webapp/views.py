@@ -456,6 +456,35 @@ def remove_friend(request, friend_id):
 def four04(request):
     return render(request, "404.html")
 
+# View function to create a movie rating
+# TODO: have to check if rating already in database
+@login_required
+@require_POST
+def create_rating(request, movie_id, rating) :
+    if request.user.is_authenticated:
+        user = request.user
+        movie = Movie.objects.get(pk=movie_id)
+
+        movie_rating = MovieRating.objects.create(user=user, movie=movie, user_rating=rating, has_watched=True)
+        movie_rating.save()
+
+        return JsonResponse({"message": "movie rating created"})
+    return JsonResponse({'error': 'illegal request'}, status=405)
+
+# View function to remove a movie rating
+@login_required
+@require_POST
+def remove_rating(request, movie_id) :
+    if request.user.is_authenticated:
+        user = request.user
+        movie = Movie.objects.get(pk=movie_id)
+        
+        MovieRating.objects.get(user=user, movie=movie).delete()
+
+        return JsonResponse({"message": "movie rating removed"})
+    return JsonResponse({'error': 'illegal request'}, status=405)
+
+
 # View function for the password reset page
 def pwreset(request):
     form = PasswordResetForm(request.POST or None)
