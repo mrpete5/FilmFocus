@@ -72,22 +72,24 @@
 							{% if user.is_authenticated %}
 							
 								<div class="header__user_photo">
-									{% if user.profile_pic %}
+									{% if user_profile.profile_pic %}
 										
 										<!-- Welcome user message -->
 										<div class="header__user_welcome">
-											<a href="/profile/{{ user.username }}"><img src="{% static 'img/profile_pics/' %}{{ user.profile_pic }}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 5px;"></a>
+											<a href="/profile/{{ user.username }}"><img src="{% static 'img/profile_pics/' %}{{ user_profile.profile_pic }}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 5px;"></a>
 											<a href="/profile/{{ user.username }}"><span class="username">{{ user.username }}</span></a>
 										</div>
 										<!-- end Welcome user message -->
 
 									{% else %}
+										
 										<!-- Welcome user message -->
 										<div class="header__user_welcome">
 											<a><img src="{% static 'img/profile_pics/default.png' %}" class ="profile_photo" alt="default_profile_pic" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 5px;"></a>
 											<a href="/profile/{{ user.username }}"><span class="username">{{ user.username }}</span></a>
 										</div>
 										<!-- end Welcome user message -->
+									
 									{% endif %}
 								</div>
 
