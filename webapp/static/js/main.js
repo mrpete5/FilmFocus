@@ -1067,6 +1067,13 @@ $(document).ready(function () {
 		})
 	})
 
+	document.querySelectorAll(".card__rating__new_release").forEach(x => {
+		x.addEventListener("click", async () => {
+			request_rating_popup(x.getAttribute("movie_id"));
+			open_popup();
+		})
+	})
+
 	async function request_rating_popup(rating_movie_id) {
 
 		const url = "/popup_rating/"+rating_movie_id;
