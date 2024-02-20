@@ -1090,7 +1090,6 @@ $(document).ready(function () {
 			const popupLogin = popup.querySelector("#loginPopup");
 			const savePopup = popup.querySelector("#savePopup");
 			const resetPopup = popup.querySelector("#resetPopup");
-			if (closePopupAlt2) close_event_handler2(closePopupAlt2);
 			if (closePopupAlt2) close_event_handler2_rating(closePopupAlt2);
 			if (closePopupAlt) close_event_handler(closePopupAlt);
 			if (closePopup) close_event_handler(closePopup);
