@@ -224,6 +224,12 @@
 							</span>			
 							<!-- end add to watchlist -->
 
+							<span title="Add Rating">
+								<a href="#0" class="card__rating" movie_id="{{ movie.id }}">
+									<img src="{% static 'img/logos/StarButton.png' %}" alt="Rating">
+								</a>
+							</span>
+
 							<div class="card__content">
 								<h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
 								<span class="card__category">

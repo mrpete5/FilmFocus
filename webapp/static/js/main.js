@@ -1060,20 +1060,15 @@ $(document).ready(function () {
 	/*==============================
 	Add a User Movie Rating Popup
 	==============================*/
-	document.querySelectorAll(".card__rating").forEach(x => {
-		x.addEventListener("click", async () => {
-			request_rating_popup(x.getAttribute("movie_id"));
-			open_popup();
-		})
-	})
-
-	document.querySelectorAll(".card__rating__new_release").forEach(x => {
-		x.addEventListener("click", async () => {
-			request_rating_popup(x.getAttribute("movie_id"));
-			open_popup();
-		})
-	})
-
+	["", "2", "3", "__large"].forEach(suffix => {
+		document.querySelectorAll(`.card__rating${suffix}`).forEach(x => {
+			x.addEventListener("click", async () => {
+				request_rating_popup(x.getAttribute("movie_id"));
+				open_popup();
+			});
+		});
+	});
+	
 	async function request_rating_popup(rating_movie_id) {
 
 		const url = "/popup_rating/"+rating_movie_id;

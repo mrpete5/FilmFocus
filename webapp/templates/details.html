@@ -70,6 +70,12 @@
 										<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
 									</a>
 								</span>
+
+								<span title="Add Rating">
+									<a href="#0" class="card__rating__large" movie_id="{{ movie.id }}">
+										<img src="{% static 'img/logos/StarButton.png' %}" alt="Rating">
+									</a>
+								</span>
 								
 								<!-- streaming providers -->
 								<div class="details__wrap">
@@ -229,6 +235,12 @@
 							<span title="Add Movie to Your Watchlist">
 								<a href="#0" class="card__add" movie_id="{{ movie.id }}">
 									<img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+								</a>
+							</span>
+
+							<span title="Add Rating">
+								<a href="#0" class="card__rating" movie_id="{{ movie.id }}">
+									<img src="{% static 'img/logos/StarButton.png' %}" alt="Rating">
 								</a>
 							</span>
 
