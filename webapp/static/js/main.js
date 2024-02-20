@@ -1091,6 +1091,7 @@ $(document).ready(function () {
 			const savePopup = popup.querySelector("#savePopup");
 			const resetPopup = popup.querySelector("#resetPopup");
 			if (closePopupAlt2) close_event_handler2(closePopupAlt2);
+			if (closePopupAlt2) close_event_handler2_rating(closePopupAlt2);
 			if (closePopupAlt) close_event_handler(closePopupAlt);
 			if (closePopup) close_event_handler(closePopup);
 			if (popupLogin) popup_login_event_handler(popupLogin);
@@ -1107,7 +1108,14 @@ $(document).ready(function () {
 	function reset_rating_event_handler(resetPopup){
 		// Delete the rating
 	}
-
+	function close_event_handler2_rating(x) {
+		x.addEventListener("click", (event)=> {
+			const popupInner = document.querySelector(".rating-popupInner"); // uses different popupInner class
+			if (popup.classList.contains("open") && !popupInner.contains(event.target)) {
+				close_popup();
+			}
+		})
+	}
 });
 
 
