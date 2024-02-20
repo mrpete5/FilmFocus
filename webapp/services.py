@@ -978,7 +978,7 @@ def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imd
 
     # Filte for IMDB rating
     if imdb_begin is not None and imdb_end is not None:
-        movies = Movie.objects.filter(Q(imdb_rating_num__range=(imdb_begin, imdb_end)) | Q(imdb_rating_num=None))
+        movies = movies.filter(Q(imdb_rating_num__range=(imdb_begin, imdb_end)) | Q(imdb_rating_num=None))
 
     return movies        
 
