@@ -8,7 +8,18 @@
         <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" style="width: 20%; height: auto;" alt="{{ movie.title }}">
         <br>
         {{ movie.title }} ({{ movie.release_year }})
+        <br><br>
+
+        <!-- Input field for rating -->
+        <label for="rating">Rating (1-10):</label>
+        <input type="number" id="rating" name="rating" min="1" max="10">
         <br>
+
+        <!-- Checkbox for indicating if the movie has been watched
+        <input type="checkbox" id="watched" name="watched">
+        <label for="watched">Watched</label>
+        <br> -->
+
         <button id="savePopup" class="save__rating-popup">SAVE</button>
         <button id="resetPopup" class="reset__rating-popup">RESET</button>
         <button id="closePopup" class="close__rating-popup">CLOSE</button>
