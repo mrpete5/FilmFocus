@@ -329,7 +329,19 @@ def popup(request, movie_id):
 def popup_rating(request, movie_id):
     context = {}
     if request.method == 'GET':
-        context["movie"] = Movie.objects.get(pk=movie_id)
+        movie = Movie.objects.get(pk=movie_id)
+        context["movie"] = movie
+        context["rating_exists"] = False
+        context["user_rating"] = None
+        if request.user.is_authenticated:
+            user = request.user
+
+            # check and update already existing entry
+            query = MovieRating.objects.filter(user=user, movie=movie)
+            context["rating_exists"] = query.exists()
+            if context["rating_exists"]:
+                context["user_rating"] = query.first().user_rating
+
         return render(request, "popup_rating.html", context)
 
 # View function for the about page
@@ -473,7 +485,9 @@ def create_rating(request, movie_id, rating) :
         # check and update already existing entry
         query = MovieRating.objects.filter(user=user, movie=movie)
         if query.exists():
-            query.first().user_rating = rating
+            movie_rating = query.first()
+            movie_rating.user_rating = rating
+            movie_rating.save()
             return JsonResponse({"message": "movie rating updated"})
 
         # otherwise create new entry
