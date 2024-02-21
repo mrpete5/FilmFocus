@@ -457,17 +457,28 @@ def four04(request):
     return render(request, "404.html")
 
 # View function to create a movie rating
-# TODO: have to check if rating already in database
+# TODO: utilize has_watched
 @login_required
 @require_POST
 def create_rating(request, movie_id, rating) :
     if request.user.is_authenticated:
+        # check bounds
+        if rating > 10 or rating < 0:
+            return JsonResponse({'error': 'out of bounds'}, status=405)
+
+        # get user and movie objects
         user = request.user
         movie = Movie.objects.get(pk=movie_id)
 
+        # check and update already existing entry
+        query = MovieRating.objects.filter(user=user, movie=movie)
+        if query.exists():
+            query.first().user_rating = rating
+            return JsonResponse({"message": "movie rating updated"})
+
+        # otherwise create new entry
         movie_rating = MovieRating.objects.create(user=user, movie=movie, user_rating=rating, has_watched=True)
         movie_rating.save()
-
         return JsonResponse({"message": "movie rating created"})
     return JsonResponse({'error': 'illegal request'}, status=405)
 
@@ -476,10 +487,15 @@ def create_rating(request, movie_id, rating) :
 @require_POST
 def remove_rating(request, movie_id) :
     if request.user.is_authenticated:
+        # get user and movie object
         user = request.user
         movie = Movie.objects.get(pk=movie_id)
         
-        MovieRating.objects.get(user=user, movie=movie).delete()
+        # delete if movie rating exists
+        movie_ratings = MovieRating.objects.filter(user=user, movie=movie)
+        if not movie_ratings.exists():
+            return JsonResponse({'error': 'rating does not exist'}, status=405)
+        movie_ratings.delete()
 
         return JsonResponse({"message": "movie rating removed"})
     return JsonResponse({'error': 'illegal request'}, status=405)
