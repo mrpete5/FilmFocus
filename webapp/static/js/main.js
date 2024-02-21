@@ -1094,19 +1094,72 @@ $(document).ready(function () {
 			if (closePopupAlt) close_event_handler(closePopupAlt);
 			if (closePopup) close_event_handler(closePopup);
 			if (popupLogin) popup_login_event_handler(popupLogin);
-			if (savePopup) save_rating_event_handler(savePopup);
-			if (resetPopup) reset_rating_event_handler(resetPopup);
+			if (savePopup) save_rating_event_handler(savePopup, rating_movie_id);
+			if (resetPopup) reset_rating_event_handler(resetPopup, rating_movie_id);
 
 		}
 	}
 
-	function save_rating_event_handler(savePopup){
-		// Save the rating
+	// Create the movie rating entry
+	function save_rating_event_handler(savePopup, movie_id){
+		// get authentication
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		savePopup.addEventListener("click", async ()=> {
+			// get the rating number
+			var movie_rating = document.querySelector("#rating").value
+
+			// make request
+			$.ajax({
+				url: '/create_rating/' + movie_id + '/' + movie_rating + '/',
+				type: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrfToken
+				},
+				success: function(response) {
+					if (response.status === 'success') {
+						// TODO: refresh the popup or something
+						alert(response.message);
+					} else {
+						alert(response.message);
+					}
+				},
+				error: function(xhr, status, error) {
+					console.error('Error occurred: ' + error);
+				}
+			});
+		});
 	}
 	
-	function reset_rating_event_handler(resetPopup){
-		// Delete the rating
+	// Delete the rating entry
+	function reset_rating_event_handler(resetPopup, movie_id){
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		// make request
+		resetPopup.addEventListener("click", async ()=> {
+			$.ajax({
+				url: '/remove_rating/' + movie_id + '/',
+				type: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrfToken
+				},
+				success: function(response) {
+					if (response.status === 'success') {
+						// TODO: refresh the popup or something
+						alert(response.message);
+					} else {
+						alert(response.message);
+					}
+				},
+				error: function(xhr, status, error) {
+					console.error('Error occurred: ' + error);
+				}
+			});
+		});
 	}
+
 	function close_event_handler2_rating(x) {
 		x.addEventListener("click", (event)=> {
 			const popupInner = document.querySelector(".rating-popupInner"); // uses different popupInner class
