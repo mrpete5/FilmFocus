@@ -61,4 +61,5 @@ urlpatterns = [
     path("searchbar/<str:query>", views.searchbar, name="searchbar"),
     path("popup/<int:movie_id>", views.popup, name="popup"),
     path("popup_rating/<int:movie_id>", views.popup_rating, name="popup_rating"),
+    path("rating/<str:profile_name>/", views.rating, name="user_rating"),
 ]

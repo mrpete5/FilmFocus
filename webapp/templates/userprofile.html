@@ -64,7 +64,7 @@
 						<h3 class="bio_label">Bio</h3>
 						<p class="user_bio">{{ user_profile.biography }}</p>
 						<!-- <a href="#0" class="num_friends">{{ user_profile.friends.count }}<br>Friends</a> -->
-						<a href="#0" class="num_ratings">{{ movie_ratings_count }}<br>Movie Ratings</a>
+						<a href="/rating/{{ user_profile.user }}/" class="num_ratings">{{ movie_ratings_count }}<br>Movie Ratings</a>
 						<a href="#0" class="num_watchlists">{{ watchlists.count }}<br>Watchlists</a>
 					</div>
 				</div>

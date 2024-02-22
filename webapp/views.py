@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse, Http404
 from django.contrib import messages
-from .models import Movie, Watchlist, WatchlistEntry, UserProfile
+from .models import Movie, Watchlist, WatchlistEntry, UserProfile, MovieRating
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import (
     NewUserForm,
@@ -729,12 +729,20 @@ def remove_from_watchlist(request, watchlist_id, movie_id):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
 
+# View function for user movie ratings
+def rating(request, profile_name):
+    context = {}
+    user = get_object_or_404(User, username=profile_name)
+    movie_ratings = MovieRating.objects.filter(user=user).select_related('movie')
+    movie_rating_dict = {rating.movie: rating.user_rating for rating in movie_ratings}
+    context['user_name'] = profile_name
+    context['movie_ratings'] = movie_rating_dict
+    return render(request, 'rating.html', context)
 
 # View function for getting refreshed movie data for a specific movie
 def refresh_movie_data(request, tmdb_id):
     try:
         get_refreshed_movie_data(tmdb_id)
-
         return JsonResponse({'status': 'success', 'message': 'Movie data updated.'})
     except Movie.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Movie not found.'})
