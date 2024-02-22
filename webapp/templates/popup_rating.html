@@ -21,14 +21,18 @@
         <br> -->
         
         {% if rating_exists %}
-            Previous Rating: {{ user_rating }}
+            Recorded Rating: {{ user_rating }}
         {% endif %}
 
-        <button id="savePopup" class="save__rating-popup">SAVE</button>
+        
         {% if rating_exists %}
+            <button id="savePopup" class="save__rating-popup">SAVE</button>
             <button id="resetPopup" class="reset__rating-popup">DELETE</button>
+            <button id="closePopup" class="close__rating-popup">CLOSE</button>
+        {% else %}
+            <button id="savePopup" class="save2__rating-popup">SAVE</button>
+            <button id="closePopup" class="close2__rating-popup">CLOSE</button>
         {% endif %}
-        <button id="closePopup" class="close__rating-popup">CLOSE</button>
     </div>
 {% else %}
     <div class="rating-popupInner">
