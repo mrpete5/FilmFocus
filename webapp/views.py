@@ -479,7 +479,7 @@ def create_rating(request, movie_id, rating) :
     if request.user.is_authenticated:
         # check bounds
         if rating > 10 or rating < 0:
-            return JsonResponse({'error': 'out of bounds'}, status=405)
+            return JsonResponse({'status': 'error', 'error': 'out of bounds'}, status=405)
 
         # get user and movie objects
         user = request.user
@@ -491,13 +491,13 @@ def create_rating(request, movie_id, rating) :
             movie_rating = query.first()
             movie_rating.user_rating = rating
             movie_rating.save()
-            return JsonResponse({"message": "movie rating updated"})
+            return JsonResponse({'status': 'success', "message": "movie rating updated"})
 
         # otherwise create new entry
         movie_rating = MovieRating.objects.create(user=user, movie=movie, user_rating=rating, has_watched=True)
         movie_rating.save()
-        return JsonResponse({"message": "movie rating created"})
-    return JsonResponse({'error': 'illegal request'}, status=405)
+        return JsonResponse({'status': 'success', "message": "movie rating created"})
+    return JsonResponse({'status': 'error', 'error': 'illegal request'}, status=405)
 
 # View function to remove a movie rating
 @login_required
@@ -511,11 +511,11 @@ def remove_rating(request, movie_id) :
         # delete if movie rating exists
         movie_ratings = MovieRating.objects.filter(user=user, movie=movie)
         if not movie_ratings.exists():
-            return JsonResponse({'error': 'rating does not exist'}, status=405)
+            return JsonResponse({'status': 'error', 'error': 'rating does not exist'}, status=405)
         movie_ratings.delete()
 
-        return JsonResponse({"message": "movie rating removed"})
-    return JsonResponse({'error': 'illegal request'}, status=405)
+        return JsonResponse({'status': 'success', "message": "movie rating removed"})
+    return JsonResponse({'status': 'error', 'error': 'illegal request'}, status=405)
 
 
 # View function for the password reset page

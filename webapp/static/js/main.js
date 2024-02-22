@@ -1120,7 +1120,10 @@ $(document).ready(function () {
 				success: function(response) {
 					if (response.status === 'success') {
 						// TODO: refresh the popup or something
-						alert(response.message);
+						// alert(response.message);
+						close_popup();
+						// request_rating_popup(rating_movie_id);
+						// open_popup();
 					} else {
 						alert(response.message);
 					}
@@ -1148,7 +1151,10 @@ $(document).ready(function () {
 				success: function(response) {
 					if (response.status === 'success') {
 						// TODO: refresh the popup or something
-						alert(response.message);
+						// alert(response.message);
+						close_popup();
+						// request_rating_popup(rating_movie_id);
+						// open_popup();
 					} else {
 						alert(response.message);
 					}
