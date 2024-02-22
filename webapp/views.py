@@ -364,10 +364,13 @@ def profile(request, profile_name):
     if context['is_self']:
         context['watchlists'] = Watchlist.objects.filter(user=profile.user)
         context['friend_requests'] = FriendRequest.objects.filter(to_user__user=request.user)
+        context['movie_ratings_count'] = MovieRating.objects.filter(user=user).count()
     else:
         context['watchlists'] = Watchlist.objects.filter(user=profile.user, is_private=False)
+        context['movie_ratings_count'] = MovieRating.objects.filter(user=profile.user).count()
 
     return render(request, "userprofile.html", context)
+
 
 # View function for getting the profile edit popup
 @login_required

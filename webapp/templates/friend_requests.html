@@ -59,11 +59,11 @@
                     </div>
                     <form method="post" action="{% url 'accept_friend_request' request.from_user.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-success">Accept</button>
+                        <button type="submit" class="accept_friend_button">Accept</button>
                     </form>
                     <form method="post" action="{% url 'reject_friend_request' request.from_user.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Reject</button>
+                        <button type="submit" class="reject_friend_button">Reject</button>
                     </form>
                 </div>
             </div>
@@ -82,11 +82,11 @@
                         <img src="{% static 'img/profile_pics/default.png' %}" alt="profile_photo" style="width: 80px;">
                     </div>
                     <div class="profile__info">
-                        <h3 class="profile__username">@{{ request.from_user }}</h3><br>
+                        <h3 class="profile__username">@{{ request.to_user }}</h3><br>
                     </div>
                     <form method="post" action="{% url 'reject_friend_request' request.from_user.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Remove</button>
+                        <button type="submit" class="remove_friend_button">Remove</button>
                     </form>
                 </div>
             </div>

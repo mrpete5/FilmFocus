@@ -4729,6 +4729,7 @@ User Profile Page
 ==============================*/
 .profile__wrap {
   margin-left: 100px;
+  margin-bottom: 10px;
   position: sticky;
   display: flex;
   flex-direction: row;  
@@ -4843,7 +4844,6 @@ User Profile Page
   width: 250px;
   margin-bottom: 0;
 }
-
 .num_friends{
   color: #fff;
   text-align: center;
@@ -4853,12 +4853,23 @@ User Profile Page
   top: 15px;
   width: 200px;
 }
-
 .num_friends:hover {
   opacity: 0.50;
   color: #fff;
 }
-
+.num_ratings{
+  color: #fff;
+  text-align: center;
+  font-size: 1.5em;
+  position: absolute;
+  left: 575px;
+  top: 15px;
+  width: 200px;
+}
+.num_ratings:hover {
+  opacity: 0.50;
+  color: #fff;
+}
 .num_watchlists{
   color: #fff;
   text-align: center;
@@ -4868,12 +4879,10 @@ User Profile Page
   top: 15px;
   width: 200px;
 }
-
 .num_watchlists:hover {
   opacity: 0.50;
   color: #fff;
 }
-
 .watchlist_element {
   position: relative;
   height: 50px;
@@ -5140,7 +5149,6 @@ User Profile Page
   opacity: 0.85;
 }
 
-
 /*==============================
 	Streaming Providers in Movie Cards
 ==============================*/
@@ -5155,7 +5163,6 @@ User Profile Page
   width: 40px; /* Set your desired width */
   height: auto; /* Maintains the aspect ratio */
 }
-
 
 
 /*==============================
@@ -5374,6 +5381,70 @@ FilmFocus Grey: #2B2B31 */
   position: absolute;
   bottom: 10px;
   left: 180px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+}
+
+/*==============================
+	Friend Request Buttons
+==============================*/
+.accept_friend_button {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  margin-top: -20px;
+  margin-left: 220px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #32CD32 0%, #29A329 100%);  /* Lime Green: #32CD32, Dark Lime: #29A329 */
+  background-image: -webkit-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  background-image: -ms-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  background-image: linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+}
+.reject_friend_button {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  margin-top: -20px;
+  margin-left: 300px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+}
+.remove_friend_button {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  margin-top: -20px;
+  margin-left: 220px;
   height: 40px;
   width: 80px;
   -webkit-border-radius: 4px;
