@@ -927,24 +927,26 @@ def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imd
     if year_begin is not None and year_end is not None:
         movies = movies.filter(release_year__range=(year_begin, year_end))
 
-    # Filte for IMDB rating
+    # Filter for IMDB rating
     if imdb_begin is not None and imdb_end is not None:
         movies = movies.filter(Q(imdb_rating_num__range=(imdb_begin, imdb_end)) | Q(imdb_rating_num=None))
 
     return movies        
 
-# Get all the movies for the catalog page
-def get_all_movies_catalog():
-    all_movies = Movie.objects.all()  # Fetch all movies
-    return {
-        'full_catalog': all_movies,
-    }
+
+def get_logged_in_user_profile_picture(request):
+    """Retrieve the profile picture filename for the logged-in user."""
+    if request.user.is_authenticated:
+        user_profile = UserProfile.objects.get(user=request.user)
+        return user_profile.profile_pic
+    else:
+        return None
+
 
 # Clear all movies from the database
 def clear_movie_database():
     deleted_count, _ = Movie.objects.all().delete()
     print(f"{deleted_count} movies deleted from the database.")
-
 
 # Handle the test for ban page to easily find bannable movies
 def handle_test_for_ban(start_date, end_date):

@@ -72,11 +72,11 @@
 							{% if user.is_authenticated %}
 							
 								<div class="header__user_photo">
-									{% if user.profile_pic %}
+									{% if logged_in_user_profile_picture %}
 										
 										<!-- Welcome user message -->
 										<div class="header__user_welcome">
-											<a href="/profile/{{ user.username }}"><img src="{% static 'img/profile_pics/' %}{{ user_profile.profile_pic }}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 5px;"></a>
+											<a href="/profile/{{ user.username }}"><img src="{% static 'img/profile_pics/' %}{{ logged_in_user_profile_picture }}" class ="profile_photo" alt="profile_photo" style="width: 30px; vertical-align: middle; margin-left: 15px; margin-right: 5px;"></a>
 											<a href="/profile/{{ user.username }}"><span class="username">{{ user.username }}</span></a>
 										</div>
 										<!-- end Welcome user message -->

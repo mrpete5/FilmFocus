@@ -38,6 +38,8 @@ import webapp.password_reset as pass_reset
 from django.utils.http import urlsafe_base64_decode
 from .services import *
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage
+
 
 
 # Constants
@@ -51,6 +53,7 @@ def index(request):
     context = get_movies_for_index()
     user = request.user
     if user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
         context['watchlists'] = Watchlist.objects.filter(user=user)
             
     if request.method == 'POST':
@@ -71,9 +74,6 @@ def index(request):
     context['watchlist_form'] = form
     return render(request, 'index.html', context)
 
-# View function for the catalog page
-from django.core.paginator import Paginator, EmptyPage
-from .services import get_all_movies_catalog
 
 # View function for the catalog page
 def catalog(request):
@@ -81,6 +81,10 @@ def catalog(request):
     context['full_catalog'] = Movie.objects.all()
     context["genres"] = Genre.objects.all()
     context["streamers"] = filtered_providers
+
+    user = request.user
+    if user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
 
     form = CatalogFilterForm(request.POST or None)
     if request.method == 'POST':
@@ -140,7 +144,6 @@ def catalog(request):
     return render(request, 'catalog.html', context)
 
 
-
 # View function for the movie details page
 def movie_detail(request, movie_slug):
     ''' Handles the movie details pages where more information for a movie is all displayed. '''
@@ -179,6 +182,9 @@ def movie_detail(request, movie_slug):
         'recommended_movies': recommended_movies
     }
 
+    if request.user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
+
     context['watchlist_form'] = form
 
     user = request.user
@@ -193,6 +199,7 @@ def watchlist(request):
     context = {}
 
     if user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
         # Get watchlists
         watchlists = Watchlist.objects.filter(user=user)
 
@@ -270,6 +277,7 @@ def searchBar(request):
     context = {}
     user = request.user
     if user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
         context['watchlists'] = Watchlist.objects.filter(user=user)
             
     if request.method == 'POST':
@@ -346,7 +354,11 @@ def popup_rating(request, movie_id):
 
 # View function for the about page
 def about(request):
-    return render(request, "about.html")
+    context = {}
+    user = request.user
+    if user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
+    return render(request, "about.html", context)
 
 # View function for the user profile page
 def profile(request, profile_name):
@@ -355,6 +367,7 @@ def profile(request, profile_name):
 
     user = request.user
     if user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
         context['is_self'] = (user == profile.user)
     else:
         context['is_self'] = False
@@ -407,6 +420,7 @@ def save_profile(request):
 def friend_requests(request):
     context={}
     if request.user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
         context["in_requests"] = FriendRequest.objects.filter(to_user__user=request.user)
         context["out_requests"] = FriendRequest.objects.filter(from_user__user=request.user)
         return render(request, "friend_requests.html", context)
@@ -469,7 +483,11 @@ def remove_friend(request, friend_id):
 
 # View function for the 404 error page
 def four04(request):
-    return render(request, "404.html")
+    context = {}
+    user = request.user
+    if user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
+    return render(request, "404.html", context)
 
 # View function to create a movie rating
 # TODO: utilize has_watched
@@ -732,6 +750,10 @@ def remove_from_watchlist(request, watchlist_id, movie_id):
 # View function for user movie ratings
 def rating(request, profile_name):
     context = {}
+    user = request.user
+    if user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
+
     user = get_object_or_404(User, username=profile_name)
     movie_ratings = MovieRating.objects.filter(user=user).select_related('movie')
     movie_rating_dict = {rating.movie: rating.user_rating for rating in movie_ratings}
