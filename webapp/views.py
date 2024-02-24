@@ -194,12 +194,15 @@ def movie_detail(request, movie_slug):
     return render(request, 'details.html', context)
 
 # View function for the movie watchlists page
-def watchlist(request):
+def watchlist(request, profile_name):
     user = request.user
     context = {}
+    profile = UserProfile.objects.get(user__username=profile_name)
+    context['is_self'] = False
 
     if user.is_authenticated:
         context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
+        context['is_self'] = (user == profile.user)
         # Get watchlists
         watchlists = Watchlist.objects.filter(user=user)
 

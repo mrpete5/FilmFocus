@@ -933,14 +933,15 @@ $(document).ready(function () {
         deleteBtn.addEventListener("click", function() {
             var watchlist_name = document.querySelector("#filter__watchlist input[type='button']").value;
             var watchlist_id = document.getElementById("hidden-watchlist-id").value;
+			var username = document.getElementById("hidden-username").value;
             console.log(watchlist_name);
             console.log(watchlist_id);
-            request_del_wlist_popup(watchlist_name, watchlist_id);
+            request_del_wlist_popup(watchlist_name, watchlist_id, username);
             open_popup();
         });
     }
 
-	async function request_del_wlist_popup(watchlist_name, watchlist_id) {
+	async function request_del_wlist_popup(watchlist_name, watchlist_id, username) {
 		const url = "/delete_watchlist_popup/"+watchlist_id+"/"+watchlist_name+"/";
 		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
 
@@ -961,7 +962,7 @@ $(document).ready(function () {
 			if (closePopupAlt2) close_event_handler2_del_wlist(closePopupAlt2);
 			if (closePopupAlt) close_event_handler(closePopupAlt);
 			if (closePopup) close_event_handler(closePopup);
-			if (confirmPopup) confirm_del_wlist_event_handler(confirmPopup, watchlist_id);
+			if (confirmPopup) confirm_del_wlist_event_handler(confirmPopup, watchlist_id, username);
 		}
 	}
 	function close_event_handler2_del_wlist(x) {
@@ -972,7 +973,7 @@ $(document).ready(function () {
 			}
 		})
 	}
-	function confirm_del_wlist_event_handler(confirmBtn, watchlist_id) {
+	function confirm_del_wlist_event_handler(confirmBtn, watchlist_id, username) {
 		confirmBtn.addEventListener("click", async ()=> {
 
 			const url = '/remove_watchlist/'+watchlist_id+'/';
@@ -990,7 +991,7 @@ $(document).ready(function () {
 				if (response.ok) {
 					// Load the watchlist page.
 					// Cannot use location.reload() because is maintains the deleted hidden-watchlist-id attribute
-					window.location.href = '/watchlist/'; 
+					window.location.href = '/watchlist/'+username+'/'; 
 				} else {
 					alert("An error occurred while deleting your watchlist.");
 				}

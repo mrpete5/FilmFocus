@@ -179,6 +179,7 @@
 							<input type="hidden" name="year_end" id="hidden-year-end" value="{{ filter_year_end|default:'2024' }}">
 							<input type="hidden" name="imdb_begin" id="hidden-imdb-begin" value="{{ filter_imdb_begin|default:'0.0' }}">
 							<input type="hidden" name="imdb_end" id="hidden-imdb-end" value="{{ filter_imdb_end|default:'10.0' }}">
+							<input type="hidden" name="username" id="hidden-username" value="{{ user.username }}">
 							<!-- end hidden form infromation -->
 
 							<!-- filter btn -->
@@ -186,11 +187,14 @@
 							<!-- end filter btn -->
 						</form>
 						
+						{% if is_self %}
 							<!-- delete watchlist button -->
 							{% if watchlists %}
 								<button class="delete-watchlist__btn"  id="deleteWatchlistBtn">delete watchlist</button>
 							{% endif %}
-							<!-- end delete watchlist button --> 			
+							<!-- end delete watchlist button --> 	
+						{% endif %}	
+
 					</div>
 				</div>
 			</div>
