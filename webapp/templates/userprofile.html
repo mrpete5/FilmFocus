@@ -107,25 +107,50 @@
 						{% for watchlist in watchlists %}
 						<center>
 							<a href="#" class="watchlist_el_link" data-watchlist-id="{{ watchlist.id }}">
-								<li class="watchlist_element" watchlist_id="{{ watchlist.id }}">{{ watchlist.watchlist_name }}</li>
+								<li class="watchlist_element" watchlist_id="{{ watchlist.id }}">{{ watchlist.watchlist_name }}</li> 
 						  	</a>	
-									
+
 							<!-- Work in Progress: watchlist privacy toggle -->
 							<!-- <div class="toggle-button">
 								<input type="checkbox" id="toggle" class="toggle-input">
 								<label for="toggle" class="toggle-label"></label>
 							</div> -->
-			
-						</center>
+						</center>	
 						{% endfor %}
 						
 					</ul>
 				</div>
+				{% if is_self %}
+				<div class = "toggle_block">
+					{% for watchlist in watchlists %}
+					<ul>
+					<label class="switch"  watchlist_id="{{ watchlist.id }}">
+						<input type="checkbox">
+						<span class="slider round"></span>
+					</label>
+					</ul>
+					{% endfor %}
+				</div>
+				{% endif %}
 			</div>
 		</div>
 	</div>
 	<!-- end catalog -->
 
+	<!-- Work In Progress Prettier Toggles
+	<label class="switch">
+		<input type="checkbox">
+		<span class="slider round"><img class="slider image" src="{% static 'img/logos/FilmFocusCrosshair_v2.png' %}" alt="Toggle Image"></span>
+	</label>
+	<label class="switch">
+		<input type="checkbox">
+		<img class="slider image" src="{% static 'img/logos/FilmFocusCrosshair_v2.png' %}" alt="Toggle Image">
+	</label>
+	<label class="switch">
+		<input type="checkbox">
+		<span class="slider round"></span>
+	</label>
+	-->
 	{% endif %}
 	<form id="WL_profile_form" action="/watchlist/{{ user_profile.user }}/" method="POST" style="display: none;">
 		{% csrf_token %}
