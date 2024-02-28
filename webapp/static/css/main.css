@@ -5598,3 +5598,75 @@ input:checked + .switch {
 input:checked + .switch .slider-image {
   transform: translateX(26px); /* Move the slider image to the right when toggled on */
 }
+
+
+/*==============================
+	Select Movie Popup
+==============================*/
+.select-movie-popupInner {
+  background-color:#2b2b31;
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  border: 3px solid #F12D92;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  padding: 10px 10px;
+  text-align: center;
+  color: #fff;
+  width: 650px;
+  height: 460px;
+  position: relative;
+  z-index: 103;
+  pointer-events: none;
+}
+.select-movie-popupInner h2 {
+  margin: 0;
+}
+.select-movie-popupInner p {
+  margin: 0;
+  border-bottom: .5px solid #F12D92; /* comment this out to remove pink underline below watchlist titles in popup */
+  position: relative;
+}
+.select-movie-popupInner button {
+  text-align: center;
+}
+.reselect__select-movie-popup {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 235px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #32CD32 0%, #29A329 100%);  /* Lime Green: #32CD32, Dark Lime: #29A329 */
+  background-image: -webkit-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  background-image: -ms-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  background-image: linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+}
+.close__select-movie-popup {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 325px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  opacity: 0.85;
+}

@@ -1175,6 +1175,70 @@ $(document).ready(function () {
 			}
 		})
 	}
+
+
+	/*==============================
+	Select a Movie Popup
+	==============================*/
+    var selectMovieBtn = document.getElementById("tempSelectMovieBtn");
+    
+    if (selectMovieBtn) {
+        selectMovieBtn.addEventListener("click", function() {
+            var watchlist_id = document.getElementById("hidden-watchlist-id").value;
+            console.log(watchlist_id);
+            request_select_movie_popup(watchlist_id);
+            open_popup();
+        });
+    }
+
+	async function request_select_movie_popup(watchlist_id) {
+
+		const url = "/popup_select_movie/"+watchlist_id+"/";
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'X-CSRFToken': csrfToken
+			}
+		});
+
+		if (response.ok) {
+			const data = await response.text();
+			popup.innerHTML = data;
+			const closePopupAlt = popup.querySelector("#closePopupAlt");
+			const closePopup = popup.querySelector("#closePopup");
+			const closePopupAlt2 = popup;
+			const reselectPopup = popup.querySelector("#reselectPopup");
+			if (closePopupAlt2) close_event_handler2_select(closePopupAlt2);
+			if (closePopupAlt) close_event_handler(closePopupAlt);
+			if (closePopup) close_event_handler(closePopup);
+			if (reselectPopup) reselect_movie(reselectPopup, watchlist_id);
+		}
+	}
+
+	function reselect_movie(x, watchlist_id) {
+		x.addEventListener("click", (event)=> {
+			const popupInner = document.querySelector(".select-movie-popupInner"); // uses different popupInner class
+			// if conditional is different than others, we do want popupInner.contains(event.target)
+			if (popup.classList.contains("open") && popupInner.contains(event.target)) {
+				console.log(watchlist_id);
+				close_popup();
+				request_select_movie_popup(watchlist_id);
+				open_popup();
+			}
+		})
+	}
+	
+	function close_event_handler2_select(x) {
+		x.addEventListener("click", (event)=> {
+			const popupInner = document.querySelector(".select-movie-popupInner"); // uses different popupInner class
+			if (popup.classList.contains("open") && !popupInner.contains(event.target)) {
+				close_popup();
+			}
+		})
+	}
+
 });
 
 

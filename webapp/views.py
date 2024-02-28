@@ -355,6 +355,19 @@ def popup_rating(request, movie_id):
 
         return render(request, "popup_rating.html", context)
 
+
+# View function for the random movie selection popup
+def popup_select_movie(request, watchlist_id):
+    context = {}
+    if request.method == 'GET':
+        watchlist = Watchlist.objects.get(user=request.user, pk=watchlist_id)
+        watchlist_entries = list(WatchlistEntry.objects.filter(watchlist=watchlist).order_by('?'))[:3]  # Randomize order and slice to include only the first three entries
+        movies = [entry.movie for entry in watchlist_entries]
+        context['movies'] = movies
+
+    return render(request, "popup_select_movie.html", context)
+
+
 # View function for the about page
 def about(request):
     context = {}
