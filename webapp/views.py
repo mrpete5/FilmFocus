@@ -780,7 +780,7 @@ def rating(request, profile_name):
     context['movie_ratings'] = movie_rating_dict
     return render(request, 'rating.html', context)
 
-# View function for the about page
+# View function for the directors pages
 def director(request, director_name):
     context = {}
     user = request.user
