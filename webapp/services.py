@@ -800,8 +800,12 @@ def process_movie_imdb_ratings():
     running_total_count = 0
     success_running_count = 0
 
+    title = 'Processing imdb ratings'
+    index = 0
     # Process each movie
-    for movie in Movie.objects.iterator():
+    for movie in Movie.objects.iterator():  
+        index += 1
+        progress_bar_iteration(title, index, total_movie_count)
         if movie.imdb_rating and '/' in movie.imdb_rating:
             try:
                 # Extract and convert rating
