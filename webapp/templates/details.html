@@ -117,9 +117,12 @@
 									{% endif %}
 
 									<ul class="card__meta">
-										<li>{% if movie.director %}
+										<li>
+											{% if movie.director %}
 											<span>Directed by:</span>
-												{{ movie.director }}
+												{% for director_slug, director_name in directors_pairs %}
+													<a href="{% url 'director' director_name=director_slug %}">{{ director_name }}</a>
+												{% endfor %}
 											{% endif %}
 										</li>
 										<li><span>Genre:</span>

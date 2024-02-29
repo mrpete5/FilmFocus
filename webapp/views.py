@@ -151,7 +151,6 @@ def movie_detail(request, movie_slug):
     movie = get_object_or_404(Movie, slug=movie_slug)
     
     # Fetch recommended movies
-    # TODO: Implement this function to fetch Similar & Recommended from
     recommended_movies = movie.get_recommended_movies(RECOMMENDED_MOVIES_COUNT)
     rt_rating = None
     # Parse the Rotten Tomatoes rating to an integer
@@ -190,6 +189,10 @@ def movie_detail(request, movie_slug):
     user = request.user
     if user.is_authenticated:
         context['watchlists'] = Watchlist.objects.filter(user=user)
+
+    context['director_slugs'] = get_director_slugs(movie.director)
+    context['director_names'] = get_director_names(movie.director)
+    context['directors_pairs'] = zip(context['director_slugs'], context['director_names'])
 
     return render(request, 'details.html', context)
 
@@ -776,6 +779,20 @@ def rating(request, profile_name):
     context['user_name'] = profile_name
     context['movie_ratings'] = movie_rating_dict
     return render(request, 'rating.html', context)
+
+# View function for the about page
+def director(request, director_name):
+    context = {}
+    user = request.user
+    if user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
+
+    director_name = director_name.replace("-", " ")
+    context['director_name'] = director_name
+    context['movies'] = get_movies_by_director(director_name)
+
+    return render(request, "director.html", context)
+
 
 # View function for getting refreshed movie data for a specific movie
 def refresh_movie_data(request, tmdb_id):

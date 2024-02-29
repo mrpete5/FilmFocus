@@ -970,6 +970,32 @@ def get_refreshed_movie_data(movie_tmdb_id):
     print(f"After Streaming providers: {providers_string}\n")
 
 
+def get_director_slugs(director_str):
+    temp_list = []
+    director_slug_list = []
+    if director_str:
+        temp_list = director_str.split(',')
+        for director in temp_list:
+            director = director.strip()
+            director = director.replace(' ', '-')
+            director_str = str(director)
+            director_slug_list.append(director_str)
+    return director_slug_list
+
+def get_director_names(director_str):
+    director_list = []
+    if director_str:
+        temp_list = director_str.split(',')
+        for director in temp_list:
+            director = director.strip().replace(',', '')
+            director_list.append(director)
+    return director_list
+
+def get_movies_by_director(director_name):
+    # Query for movies containing the director's name
+    movies = Movie.objects.filter(director__icontains=director_name).order_by('release_year')
+    return movies
+
 # Performs filtering to the movies list
 def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end):
     # Fitler for Genre
