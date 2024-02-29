@@ -807,7 +807,8 @@ def testdisplay(request):
     update_letterboxd = False               # Updates all movie letterboxd info from webscraper, takes a while
     get_specific_movie_by_search = False    # Fetches a specific movie 
     search_term = "Fight Club"              # If (get_specific_movie_by_search): Name of specific movie search
-    update_all_db_movie_entries = False     # Updates all movie entries (ratings, streaming, recommendations)
+    update_omdb_movie_ratings = False       # Updates all movie IMDb, RT, and Metacritic ratings, takes a while
+    update_all_db_movie_entries = False     # Updates all movie entries (letterboxd, streaming, recommendations)
        
 
     # Search for a specific movie from tmdb database with tmdb_id and data 
@@ -820,13 +821,14 @@ def testdisplay(request):
     settings = [erase_movie_db,                     #  USE WITH CAUTION, settings[0],
                 init_movie_db,                      # settings[1], Can take a while based on settings/quantities
                 get_now_playing,                    # settings[2], Can take a while based on settings/quantities
-                update_streaming,                   # settings[3], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
-                update_recs,                        # settings[4], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
-                get_discover_movies,                # settings[5], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
-                update_letterboxd,                  # settings[6], Takes a while, performed on entire FilmFocus movie database around 10 thousand movies
+                update_streaming,                   # settings[3], Takes a while, performed on entire movie database
+                update_recs,                        # settings[4], Takes a while, performed on entire movie database
+                get_discover_movies,                # settings[5], Takes a while, performed on entire movie database
+                update_letterboxd,                  # settings[6], performed on entire movie database
                 get_specific_movie_by_search,       # settings[7], Should be very fast but may be unsuccessful
                 search_term,                        # settings[8], Passing a string for initialization purposes
-                update_all_db_movie_entries,        # settings[9], Takes a while, performs updates on all movies in db (ratings, streaming, recs)
+                update_omdb_movie_ratings,          # settings[9], Takes a while, performed on entire movie database
+                update_all_db_movie_entries,        # settings[10], Takes a while, performs updates on all movies in db (ratings, streaming, recs)
                 ]
 
     movies_to_display = handle_test_display_page(settings)

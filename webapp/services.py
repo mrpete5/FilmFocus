@@ -531,6 +531,45 @@ def update_streaming_providers(test_limit=None):
                 print(f'Updated streaming providers for {index}/{len(movies)} movies')
 
 
+# Helper function for update_omdb_movie_ratings()
+def fetch_and_update_omdb_movie_ratings(movie):
+    # Fetch additional data about the movie from OMDB
+    omdb_data = fetch_movie_data_from_omdb(movie.imdb_id)
+
+    # Update the movie ratings if available
+    if omdb_data.get('imdb_rating'):
+        movie.imdb_rating = omdb_data['imdb_rating']
+    if omdb_data.get('rotten_tomatoes_rating'):
+        movie.rotten_tomatoes_rating = omdb_data['rotten_tomatoes_rating']
+    if omdb_data.get('metacritic_rating'):
+        movie.metacritic_rating = omdb_data['metacritic_rating']
+    
+    movie.save()
+
+# Update the IMDB, RT, and Metacritic ratings for all movies in the Movie database
+def update_omdb_movie_ratings(test_limit=None):
+    # test_limit = 40   # Test mode, quantity of test cases
+    if test_limit:
+        movies = Movie.objects.all()[:test_limit]
+    else:
+        movies = Movie.objects.all()
+
+    total_movies = len(movies)
+    print(f'Total movies in database: {total_movies}')
+
+    # Limit the number of concurrent requests to 20
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        # Submit fetch_and_update_omdb_movie_ratings for each movie to the executor
+        futures = [executor.submit(fetch_and_update_omdb_movie_ratings, movie) for movie in movies]
+
+        for index, future in enumerate(concurrent.futures.as_completed(futures), start=1):
+            future.result()  # Wait for the result, but ignore it
+            
+            # Print progress at regular intervals
+            if index % 100 == 0 or index == total_movies:
+                print(f'Updated omdb ratings for {index}/{total_movies} movies')
+
+
 # Updates the movie recommendations for all movies in the Movie database
 def update_movie_recommendations():
     # Get all movies from your database
@@ -1015,6 +1054,9 @@ def handle_test_display_page(settings):
         search_and_fetch_movie_by_id(tmdb_id_value)         # Search for a movie by its tmdb_id and fetch its details
     
     if settings[9]:
+        timer(function_name='update_omdb_movie_ratings', fetch_func=update_omdb_movie_ratings, args={})
+    
+    if settings[10]:
         """ Performs all operations to update movie data in our database, without deleting anything. """
         """ Updates all movie ratings, streaming providers, and recommendations. """
         get_movies = True
@@ -1031,7 +1073,7 @@ def handle_test_display_page(settings):
             timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
             timer(function_name="process_movie_imdb_ratings", fetch_func=process_movie_imdb_ratings, args={})
 
-    if settings[1] or settings[2] or settings[5]:
+    if settings[1] or settings[2] or settings[5] or settings[9]:
         timer(function_name="process_movie_imdb_ratings", fetch_func=process_movie_imdb_ratings, args={})
 
 
@@ -1044,11 +1086,12 @@ def handle_test_display_page(settings):
                 'update_recs',                                  # flags[4]
                 'get_discover_movies',                          # flags[5]      
                 'update_letterboxd_ratings',                    # flags[6]
-                'get_specific_movie_by_search',                 # flags[7]
-                'search_term',                                  # flags[8]
+                'update_omdb_movie_ratings',                    # flags[7]
+                'get_specific_movie_by_search',                 # flags[8]
+                'search_term',                                  # flags[9]
     ]
 
-    flags.append(f'{tmdb_id_value}')                            # flags[9], This will add the item at the end of the list
+    flags.append(f'{tmdb_id_value}')                            # flags[10], This will add the item at the end of the list
     settings.append('tmdb_id_value')
 
     for index, flag in enumerate(flags):
