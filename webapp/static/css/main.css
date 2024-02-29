@@ -5670,3 +5670,7 @@ input:checked + .switch .slider-image {
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
 }
+.provider-logo__select-movie-popup {
+  width: 30px;
+  height: auto;
+}
