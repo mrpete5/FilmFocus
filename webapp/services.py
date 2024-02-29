@@ -23,6 +23,7 @@ import random
 import requests
 import json
 import webapp.letterboxd_scraper as lbd_scrape
+import concurrent.futures
 from webapp.models import *
 from dotenv import load_dotenv
 from django.db.models import F, Max
@@ -474,58 +475,60 @@ def get_movies_for_index():
     }
 
 
+# Helper function for update_streaming_providers()
+def fetch_movie_streaming_data(movie, index):
+    url = f"https://api.themoviedb.org/3/movie/{movie.tmdb_id}?language=en-US&append_to_response=watch/providers"
+    headers = {
+        "accept": "application/json",
+        'Authorization': TMDB_API_KEY_STRING,
+    }
+    response = requests.get(url, headers=headers)
+    response_data = response.json()
+    return movie, response_data, index
+
 # Update the streaming providers for all movies in the Movie database
-def update_streaming_providers(test_limit=None):    
-    # test_limit = 10   # Test mode, quantity of test cases
-
-    # Fetch all movies, limit them if test_limit is provided
+def update_streaming_providers(test_limit=None):
+    # test_limit = 40   # Test mode, quantity of test cases
     if test_limit:
-        movies = Movie.objects.all()[:test_limit]
+        movies = list(Movie.objects.all()[:test_limit])
     else:
-        movies = Movie.objects.all()
+        movies = list(Movie.objects.all())
 
-    # Print the number of movies in the database
-    print(f'Total movies in database: {movies.count()}')
+    print(f'Total movies in database: {len(movies)}')
 
-    for index, movie in enumerate(movies, start=1):
-        # Define the TMDB API endpoint and parameters
-        url = f"https://api.themoviedb.org/3/movie/{movie.tmdb_id}?language=en-US&append_to_response=watch/providers"
-        headers = {
-            "accept": "application/json",
-            'Authorization': TMDB_API_KEY_STRING,
-        }
-        # Fetch movie details and streaming providers from TMDB
-        response = requests.get(url, headers=headers)
-        response_data = response.json()
-        streaming_data = response_data.get('watch/providers', {}).get('results', {}).get('US', {}).get('flatrate', [])
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:  # Limit to 20 threads
+        futures = [executor.submit(fetch_movie_streaming_data, movie, index) for index, movie in enumerate(movies)]
 
-        # Clear existing streaming providers for the movie
-        movie.streaming_providers.clear()
+        for future in concurrent.futures.as_completed(futures):
+            movie, response_data, index = future.result()  # Unpack the results
 
-        # Update streaming providers based on the fetched data
-        for provider_data in streaming_data:
-            # Check if the provider is in the filtered_providers list
-            if provider_data['provider_name'] in filtered_providers:
-                provider, created = StreamingProvider.objects.get_or_create(
-                    provider_id=provider_data['provider_id'],
-                    defaults={
-                        'name': provider_data['provider_name'],
-                        'logo_path': provider_data['logo_path'],
-                    }
-                )
-                movie.streaming_providers.add(provider)
+            streaming_data = response_data.get('watch/providers', {}).get('results', {}).get('US', {}).get('flatrate', [])
 
-        providers = movie.streaming_providers.all()     # Get the current streaming providers for the movie
-        sorted_providers = sorted(providers, key=lambda x: x.ranking)   # Sort the providers based on their ranking
-
-        if sorted_providers:
-            top_provider = sorted_providers[0] # Get the top ranked provider
+            movie.streaming_providers.clear()
             movie.top_streaming_providers.clear()
-            movie.top_streaming_providers.add(top_provider)
 
-        # Print a message every 100 movies updated
-        if index % 100 == 0:
-            print(f'Updated streaming providers for {index}/{movies.count()} movies')
+            # Update streaming providers based on the fetched data
+            for provider_data in streaming_data:
+                if provider_data['provider_name'] in filtered_providers:
+                    # print(f"{movie.title}: {provider_data['provider_name']}") # TODO: remove, for testing
+                    provider, created = StreamingProvider.objects.get_or_create(
+                        provider_id=provider_data['provider_id'],
+                        defaults={
+                            'name': provider_data['provider_name'],
+                            'logo_path': provider_data['logo_path'],
+                        }
+                    )
+                    movie.streaming_providers.add(provider)
+
+            providers = movie.streaming_providers.all()
+            sorted_providers = sorted(providers, key=lambda x: x.ranking)
+
+            if sorted_providers:
+                top_provider = sorted_providers[0]
+                movie.top_streaming_providers.add(top_provider)
+
+            if index % 100 == 0:
+                print(f'Updated streaming providers for {index}/{len(movies)} movies')
 
 
 # Updates the movie recommendations for all movies in the Movie database
@@ -864,7 +867,9 @@ def get_refreshed_movie_data(movie_tmdb_id):
     
     # Extract the streaming data
     streaming_data = movie_details.get('watch/providers', {}).get('results', {}).get('US', {}).get('flatrate', [])
-
+    # print(f"{movie.title}: {streaming_data}")  # TODO: remove, for testing
+    movie.streaming_providers.clear()
+    movie.top_streaming_providers.clear()
     allowed_providers = filtered_providers
     # If allowed_providers is None or empty, allow all providers
     if not allowed_providers:
@@ -874,6 +879,7 @@ def get_refreshed_movie_data(movie_tmdb_id):
     for provider_data in streaming_data:
         # Check if the provider is in the allowed list
         if provider_data['provider_name'] in allowed_providers:
+            # print(f"{movie.title}: {provider_data['provider_name']}") # TODO: remove, for testing
             provider, created = StreamingProvider.objects.get_or_create(
                 provider_id=provider_data['provider_id'],
                 defaults={
@@ -882,6 +888,13 @@ def get_refreshed_movie_data(movie_tmdb_id):
                 }
             )
             movie.streaming_providers.add(provider)
+
+    providers = movie.streaming_providers.all()
+    sorted_providers = sorted(providers, key=lambda x: x.ranking)
+
+    if sorted_providers:
+        top_provider = sorted_providers[0]
+        movie.top_streaming_providers.add(top_provider)
 
     # Fetch Letterboxd ratings data
     try:
@@ -912,6 +925,7 @@ def get_refreshed_movie_data(movie_tmdb_id):
     providers_string = ", ".join(provider_names)
     # Print the formatted list of streaming providers
     print(f"After Streaming providers: {providers_string}\n")
+
 
 # Performs filtering to the movies list
 def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end):
