@@ -75,8 +75,8 @@
                                     <div class="card__content">
                                         <h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
                                         {% if rating %}
-                                        <span class="card__rate">
-                                            <p>User Rating: {{ rating }}</p>
+                                        <span class="card__category">
+                                            <a><h3>User Rating: {{ rating }}</h3></a>
                                         </span>
                                         {% else %}
                                         <span class="card__rate">
