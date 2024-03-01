@@ -771,6 +771,24 @@ def remove_from_watchlist(request, watchlist_id, movie_id):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
 
+@login_required
+@require_POST
+def toggle_watchlist_privacy(request, watchlist_id):
+    try:
+        watchlist = Watchlist.objects.get(pk=watchlist_id, user=request.user)
+        print(watchlist.is_private)
+        if(watchlist.is_private == True):
+            watchlist.is_private = False
+            print("in cond 1")
+            responseString = "Privacy changed to public"
+        elif(watchlist.is_private == False):
+            watchlist.is_private = True
+            print("in cond 2")
+            responseString = "Privacy changed to private"
+        watchlist.save()
+        return JsonResponse({'status': 'success', 'message': responseString})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
 # View function for user movie ratings
 def rating(request, profile_name):
     context = {}
