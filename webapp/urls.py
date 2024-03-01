@@ -64,4 +64,5 @@ urlpatterns = [
     path("popup_select_movie/<int:watchlist_id>/", views.popup_select_movie, name="popup_select_movie"),
     path("rating/<str:profile_name>/", views.rating, name="user_rating"),
     path('director/<str:director_name>/', views.director, name='director'),
+    path('actor/<str:actor_name>/', views.actor, name='actor'),
 ]

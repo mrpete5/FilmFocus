@@ -246,6 +246,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
     movie.rotten_tomatoes_rating = omdb_data.get('rotten_tomatoes_rating')
     movie.metacritic_rating = omdb_data.get('metacritic_rating')
     movie.director = omdb_data.get('director')
+    movie.actors = omdb_data.get('actors')
     movie.domestic_box_office = omdb_data.get('domestic_box_office')
     movie.mpa_rating = omdb_data.get('mpa_rating')
     movie.save()
@@ -320,6 +321,7 @@ def fetch_movie_data_from_omdb(imdb_id):
             movie_data['metacritic_rating'] = rating['Value']
 
     movie_data['director'] = data.get('Director')
+    movie_data['actors'] = data.get('Actors')
     movie_data['domestic_box_office'] = data.get('BoxOffice')
     movie_data['mpa_rating'] = data.get('Rated')
     return movie_data
@@ -897,6 +899,7 @@ def get_refreshed_movie_data(movie_tmdb_id):
     movie.rotten_tomatoes_rating = omdb_data.get('rotten_tomatoes_rating')
     movie.metacritic_rating = omdb_data.get('metacritic_rating')
     movie.director = omdb_data.get('director')
+    movie.actors = omdb_data.get('actors')
     movie.domestic_box_office = omdb_data.get('domestic_box_office')
     movie.mpa_rating = omdb_data.get('mpa_rating')
     movie.save()
@@ -970,30 +973,34 @@ def get_refreshed_movie_data(movie_tmdb_id):
     print(f"After Streaming providers: {providers_string}\n")
 
 
-def get_director_slugs(director_str):
-    director_slug_list = []
-    if director_str:
-        temp_list = director_str.split(',')
-        for director in temp_list:
-            director = director.strip().replace(' ', '-')
-            director_str = str(director)
-            director_slug_list.append(director_str)
-    return director_slug_list
+def get_person_slugs(person_name):
+    slug_list = []
+    if person_name:
+        temp_list = person_name.split(',')
+        for person in temp_list:
+            person = person.strip().replace(' ', '-')
+            person_str = str(person)
+            slug_list.append(person_str)
+    return slug_list
 
-def get_director_names(director_str):
-    director_list = []
-    if director_str:
-        temp_list = director_str.split(',')
-        for director in temp_list:
-            director = director.strip().replace(',', '')
-            director_list.append(director)
-    return director_list
+def get_person_names(person_name):
+    name_list = []
+    if person_name:
+        temp_list = person_name.split(',')
+        for person in temp_list:
+            person = person.strip().replace(',', '')
+            name_list.append(person)
+    return name_list
 
 def get_movies_by_director(director_name):
     # Query for movies containing the director's name
     movies = Movie.objects.filter(director__icontains=director_name).order_by('release_year')
     return movies
 
+def get_movies_by_actor(actor_name):
+    # Query for movies containing the director's name
+    movies = Movie.objects.filter(actors__icontains=actor_name).order_by('release_year')
+    return movies
 
 # Performs filtering to the movies list
 def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end):

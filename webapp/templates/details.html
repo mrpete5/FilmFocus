@@ -125,6 +125,14 @@
 												{% endfor %}
 											{% endif %}
 										</li>
+										<li>
+											{% if movie.actors %}
+											<span>Starring:</span>
+												{% for actor_slug, actor_name in actors_pairs %}
+													<a href="{% url 'actor' actor_name=actor_slug %}">{{ actor_name }}</a>
+												{% endfor %}
+											{% endif %}
+										</li>
 										<li><span>Genre:</span>
 											{% for genre in movie.genres.all %}
 												<a>{{ genre.name }}</a>

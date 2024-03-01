@@ -190,9 +190,13 @@ def movie_detail(request, movie_slug):
     if user.is_authenticated:
         context['watchlists'] = Watchlist.objects.filter(user=user)
 
-    context['director_slugs'] = get_director_slugs(movie.director)
-    context['director_names'] = get_director_names(movie.director)
+    context['director_slugs'] = get_person_slugs(movie.director)
+    context['director_names'] = get_person_names(movie.director)
     context['directors_pairs'] = zip(context['director_slugs'], context['director_names'])
+
+    context['actor_slugs'] = get_person_slugs(movie.actors)
+    context['actor_names'] = get_person_names(movie.actors)
+    context['actors_pairs'] = zip(context['actor_slugs'], context['actor_names'])
 
     return render(request, 'details.html', context)
 
@@ -792,6 +796,19 @@ def director(request, director_name):
     context['movies'] = get_movies_by_director(director_name)
 
     return render(request, "director.html", context)
+
+# View function for the actors pages
+def actor(request, actor_name):
+    context = {}
+    user = request.user
+    if user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
+
+    actor_name = actor_name.replace("-", " ")
+    context['actor_name'] = actor_name
+    context['movies'] = get_movies_by_actor(actor_name)
+
+    return render(request, "actor.html", context)
 
 
 # View function for getting refreshed movie data for a specific movie
