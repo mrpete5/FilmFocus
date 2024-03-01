@@ -1180,7 +1180,7 @@ $(document).ready(function () {
 	/*==============================
 	Select a Movie Popup
 	==============================*/
-    var selectMovieBtn = document.getElementById("tempSelectMovieBtn");
+    var selectMovieBtn = document.getElementById("watchlistSelectMovieBtn");
     
     if (selectMovieBtn) {
         selectMovieBtn.addEventListener("click", function() {

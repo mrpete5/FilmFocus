@@ -2679,7 +2679,7 @@ ul {
   justify-content: center;
   align-items: center;
   height: 48px;
-  width: 140px;
+  width: 120px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
   background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
@@ -2749,7 +2749,8 @@ ul {
   }
   .filter__item {
     margin-bottom: 0;
-    margin-right: 50px;
+    /* margin-right: 50px; */
+    margin-right: 30px;
   }
   .filter__item-menu {
     margin-top: 10px;
@@ -2760,7 +2761,8 @@ ul {
 }
 @media (min-width: 1200px) {
   .filter__item {
-    margin-right: 60px;
+    /* margin-right: 60px; */
+    margin-right: 30px;
   }
 }
 /* range slider */
@@ -5161,7 +5163,32 @@ User Profile Page
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
 }
-
+.watchlist-select-movie__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  width: 140px;
+  margin-left: 30px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #29A329 0%, #29A329 100%);  /* Lime Green: #32CD32, Dark Lime: #29A329 */
+  background-image: -webkit-linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  background-image: -ms-linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  background-image: linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
+  opacity: 0.85;
+  font-size: 13px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.watchlist-select-movie__btn:hover {
+  opacity: 1;
+  color: #fff;
+}
 /*==============================
 	Streaming Providers in Movie Cards
 ==============================*/
@@ -5642,10 +5669,10 @@ input:checked + .switch .slider-image {
   width: 80px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
-  background-image: -moz-linear-gradient(90deg, #32CD32 0%, #29A329 100%);  /* Lime Green: #32CD32, Dark Lime: #29A329 */
-  background-image: -webkit-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
-  background-image: -ms-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
-  background-image: linear-gradient(90deg, #32CD32 0%, #29A329 100%);
+  background-image: -moz-linear-gradient(90deg, #29A329 0%, #29A329 100%);  /* Lime Green: #32CD32, Dark Lime: #29A329 */
+  background-image: -webkit-linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  background-image: -ms-linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  background-image: linear-gradient(90deg, #29A329 0%, #29A329 100%);
   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
@@ -5673,4 +5700,35 @@ input:checked + .switch .slider-image {
 .provider-logo__select-movie-popup {
   width: 30px;
   height: auto;
+}
+
+/*==============================
+  Catalog Select a Movie Popup
+==============================*/
+.catalog-select-movie__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  width: 140px;
+  margin-left: 10px;
+  margin-right: 10px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #29A329 0%, #29A329 100%);  /* Lime Green: #32CD32, Dark Lime: #29A329 */
+  background-image: -webkit-linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  background-image: -ms-linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  background-image: linear-gradient(90deg, #29A329 0%, #29A329 100%);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
+  opacity: 0.85;
+  font-size: 13px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.catalog-select-movie__btn:hover {
+  opacity: 1;
+  color: #fff;
 }
