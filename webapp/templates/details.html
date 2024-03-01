@@ -135,7 +135,7 @@
 										</li>
 										<li><span>Genre:</span>
 											{% for genre in movie.genres.all %}
-												<a>{{ genre.name }}</a>
+												{{ genre.name }}{% if not forloop.last %}, {% endif %}
 											{% endfor %}
 										</li>
 										<li><span title="{{ movie.formatted_release_date }}">Release year: {{ movie.release_year }}</span></li>
