@@ -214,8 +214,10 @@ def watchlist(request, profile_name):
         # Get watchlists
         if context['is_self']:
             watchlists = Watchlist.objects.filter(user=user)
+            context['username'] = user.username
         else:
-            watchlists = Watchlist.objects.filter(user=profile.user)
+            watchlists = Watchlist.objects.filter(user=profile.user, is_private=False)
+            context['username'] = profile_name
 
         # Process new watchlist form that occurs when user doesnt have any watchlists
         if request.method == 'POST':
