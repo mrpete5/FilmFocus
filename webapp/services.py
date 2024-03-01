@@ -978,7 +978,7 @@ def get_person_slugs(person_name):
     if person_name:
         temp_list = person_name.split(',')
         for person in temp_list:
-            person = person.strip().replace(' ', '-')
+            person = person.strip().replace('-', '--').replace(' ', '-')
             person_str = str(person)
             slug_list.append(person_str)
     return slug_list

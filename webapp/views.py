@@ -34,6 +34,7 @@ from .forms import (
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import login, logout, authenticate, get_user_model, password_validation
 import json
+import re
 import webapp.password_reset as pass_reset
 from django.utils.http import urlsafe_base64_decode
 from .services import *
@@ -791,7 +792,10 @@ def director(request, director_name):
     if user.is_authenticated:
         context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
 
-    director_name = director_name.replace("-", " ")
+    director_name = re.sub(r'(?<!-)-(?!-)', ' ', director_name)   # Handles single hypen into space
+    if "--" in director_name:
+        director_name = director_name.replace("--", "-")          # Handles double hypen into single hyphen
+        
     context['director_name'] = director_name
     context['movies'] = get_movies_by_director(director_name)
 
@@ -804,7 +808,10 @@ def actor(request, actor_name):
     if user.is_authenticated:
         context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
 
-    actor_name = actor_name.replace("-", " ")
+    actor_name = re.sub(r'(?<!-)-(?!-)', ' ', actor_name)   # Handles single hypen into space
+    if "--" in actor_name:
+        actor_name = actor_name.replace("--", "-")          # Handles double hypen into single hyphen
+    
     context['actor_name'] = actor_name
     context['movies'] = get_movies_by_actor(actor_name)
 
