@@ -212,7 +212,10 @@ def watchlist(request, profile_name):
         context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
         context['is_self'] = (user == profile.user)
         # Get watchlists
-        watchlists = Watchlist.objects.filter(user=user)
+        if context['is_self']:
+            watchlists = Watchlist.objects.filter(user=user)
+        else:
+            watchlists = Watchlist.objects.filter(user=profile.user)
 
         # Process new watchlist form that occurs when user doesnt have any watchlists
         if request.method == 'POST':
