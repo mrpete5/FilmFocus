@@ -360,7 +360,18 @@ def fetch_popular_movies(start_page=1, end_page=5):
     # Semaphore to limit the number of concurrent API fetches
     semaphore = Semaphore(fetches_per_second)
 
-    def fetch_movie(movie_id):
+    def fetch_movie(movie_data):
+        movie_id = movie_data["id"]
+        tmdb_popularity = movie_data["popularity"]
+
+        # Check if the movie already exists in the database
+        movie = Movie.objects.filter(tmdb_id=movie_id).first()
+        
+        # If the movie exists, update its tmdb_popularity attribute
+        if movie:
+            movie.tmdb_popularity = tmdb_popularity
+            movie.save()
+
         with semaphore:
             # Ensure we don't make more than 10 requests per second
             time.sleep(1/fetches_per_second)  # sleep 100ms
@@ -383,7 +394,7 @@ def fetch_popular_movies(start_page=1, end_page=5):
 
         # Use a thread pool to process movies in parallel
         with ThreadPoolExecutor() as executor:
-            futures = [executor.submit(fetch_movie, movie["id"]) for movie in results]
+            futures = [executor.submit(fetch_movie, movie) for movie in results]
             for future in as_completed(futures):
                 try:
                     # If the function returns a result, it will be available as future.result()
@@ -454,10 +465,10 @@ def get_movies_for_index():
     # Fetch 24 random movies from the now_playing movies for "New Movies"
     new_movies = random.sample(list(now_playing_movies), min(24, len(now_playing_movies)))
     
-    # Order movies by tmdb_popularity in descending order, exclude the new movies, and take the top 100
-    top_100_popular_movies = Movie.objects.exclude(id__in=[movie.id for movie in new_movies]).order_by(F('tmdb_popularity').desc(nulls_last=True))[:100]
-    # Randomly select 24 movies from the top 100
-    popular_movies = random.sample(list(top_100_popular_movies), min(24, len(top_100_popular_movies)))
+    # Order movies by tmdb_popularity in descending order, exclude the new movies, and take the top 200
+    top_200_popular_movies = Movie.objects.exclude(id__in=[movie.id for movie in new_movies]).order_by(F('tmdb_popularity').desc(nulls_last=True))[:200]
+    # Randomly select 24 movies from the top 200
+    popular_movies = random.sample(list(top_200_popular_movies), min(24, len(top_200_popular_movies)))
 
     # Fetch the top 200 movies based on imdb_rating
     top_200_movies = Movie.objects.all().exclude(id__in=[movie.id for movie in new_movies] + [movie.id for movie in popular_movies]).order_by('-imdb_rating')[:200]

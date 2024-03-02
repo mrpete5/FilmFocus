@@ -791,7 +791,7 @@ ul {
 }
 .home__title {
   color: #fff;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   font-weight: 300;
   font-size: 28px;
   margin: 0;
