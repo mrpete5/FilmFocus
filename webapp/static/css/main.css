@@ -4338,7 +4338,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   left: 0;
   bottom: 0;
   transition: all 0.3s ease-in-out;
-  z-index: 100;
+  z-index: 110;   /* larger value than z-index in header classes makes this show up on top */ 
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -5641,9 +5641,9 @@ input:checked + .toggle .switch-image {
   text-align: center;
   color: #fff;
   width: 650px;
-  height: 460px;
+  height: 500px;
   position: relative;
-  z-index: 103;
+  z-index: 110;
   pointer-events: none;
 }
 .select-movie-popupInner h2 {
