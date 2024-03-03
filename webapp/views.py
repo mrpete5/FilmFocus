@@ -852,8 +852,8 @@ def refresh_movie_data(request, tmdb_id):
 
 # Test page that displays posters for potential movie banning
 def testforban(request):
-    start_date = "2023-11-01"  # Range of movies to display
-    end_date = "2024-06-01"
+    start_date = "2023-01-01"  # Range of movies to display
+    end_date = "2024-12-31"
 
     movies_to_display = handle_test_for_ban(start_date, end_date)
     return render(request, "testforban.html", {"movies": movies_to_display})

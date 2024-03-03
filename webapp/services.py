@@ -122,7 +122,7 @@ def progress_bar(title, current, total, bar_length=100):
 
 # Progress bar handler, if wait is iteration-based    
 def progress_bar_iteration(title, current, num_iterations):
-    progress_bar(title, current, num_iterations, bar_length=100)
+    progress_bar(title, current, num_iterations, bar_length=80)
     
 # Progress bar handler, if wait is time-based    
 def progress_bar_time(title, wait_seconds):
@@ -247,7 +247,6 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
     movie.metacritic_rating = omdb_data.get('metacritic_rating')
     movie.director = omdb_data.get('director')
     movie.actors = omdb_data.get('actors')
-    movie.domestic_box_office = omdb_data.get('domestic_box_office')
     movie.mpa_rating = omdb_data.get('mpa_rating')
     movie.save()
 
@@ -322,7 +321,6 @@ def fetch_movie_data_from_omdb(imdb_id):
 
     movie_data['director'] = data.get('Director')
     movie_data['actors'] = data.get('Actors')
-    movie_data['domestic_box_office'] = data.get('BoxOffice')
     movie_data['mpa_rating'] = data.get('Rated')
     return movie_data
 
@@ -431,11 +429,11 @@ def fetch_now_playing_movies(start_page=1, end_page=5):
             title = movie.get('title')
             # Process each movie using the process_movie_search function
             process_movie_search(tmdb_id, title, now_playing=True)
-
+    
+    title = 'Fetching now playing movies'
     for page_num in range(start_page, end_page + 1):
         index = (page_num + 1) * 20
         # Create a loading progress bar
-        title = 'Fetching now playing movies'
         progress_bar_iteration(title, index, total_num_movies)
         
         url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page_num}"
@@ -803,39 +801,6 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=10):
                     print(f"An error occurred: {str(e)}")
 
 
-# Creates the imdb_rating_num value from imdb_rating
-def process_movie_imdb_ratings():
-    # Count total movies
-    total_movie_count = Movie.objects.count()
-    print(f"Total number of movies: {total_movie_count}")
-
-    # Initialize counters
-    running_total_count = 0
-    success_running_count = 0
-
-    title = 'Processing imdb ratings'
-    index = 0
-    # Process each movie
-    for movie in Movie.objects.iterator():  
-        index += 1
-        progress_bar_iteration(title, index, total_movie_count)
-        if movie.imdb_rating and '/' in movie.imdb_rating:
-            try:
-                # Extract and convert rating
-                rating_value = movie.imdb_rating.split('/')[0]
-                movie.imdb_rating_num = float(rating_value)
-                movie.save()
-                success_running_count += 1
-            except ValueError:
-                # Handle conversion error
-                print(f"Failed to convert rating for: {movie.title}")
-            running_total_count += 1
-
-    # Calculate success rate
-    success_rate = success_running_count / total_movie_count
-    print(f"Success rate of converting imdb_ratings to imdb_rating_num: {success_running_count}/{total_movie_count} = {success_rate:.2f}")
-
-
 def get_refreshed_movie_data(movie_tmdb_id):
     movie, created = Movie.objects.get_or_create(tmdb_id=movie_tmdb_id)
     
@@ -911,7 +876,6 @@ def get_refreshed_movie_data(movie_tmdb_id):
     movie.metacritic_rating = omdb_data.get('metacritic_rating')
     movie.director = omdb_data.get('director')
     movie.actors = omdb_data.get('actors')
-    movie.domestic_box_office = omdb_data.get('domestic_box_office')
     movie.mpa_rating = omdb_data.get('mpa_rating')
     movie.save()
 
@@ -1043,9 +1007,25 @@ def get_logged_in_user_profile_picture(request):
         return None
 
 
-# Clear all movies from the database
+# Clear all movies from the database except for those in watchlist entries and movie ratings
 def clear_movie_database():
-    deleted_count, _ = Movie.objects.all().delete()
+    # Get all the titles and tmdb_ids of movies used in watchlist entries
+    watchlist_movies = WatchlistEntry.objects.values_list('movie__title', 'movie__tmdb_id')
+    
+    # Get all the titles and tmdb_ids of movies with ratings
+    rated_movies = MovieRating.objects.values_list('movie__title', 'movie__tmdb_id')
+    
+    # Combine the two sets of saved movies
+    saved_movies = set(watchlist_movies) | set(rated_movies)
+
+    # Query for movies to delete, excluding the saved ones
+    movies_to_delete = Movie.objects.exclude(
+        models.Q(title__in=[movie[0] for movie in saved_movies]) &
+        models.Q(tmdb_id__in=[movie[1] for movie in saved_movies])
+    )
+
+    # Delete the movies
+    deleted_count, _ = movies_to_delete.delete()
     print(f"{deleted_count} movies deleted from the database.")
 
 # Handle the test for ban page to easily find bannable movies
@@ -1118,11 +1098,6 @@ def handle_test_display_page(settings):
             timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
             timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
             timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
-            timer(function_name="process_movie_imdb_ratings", fetch_func=process_movie_imdb_ratings, args={})
-
-    if settings[1] or settings[2] or settings[5] or settings[9]:
-        timer(function_name="process_movie_imdb_ratings", fetch_func=process_movie_imdb_ratings, args={})
-
 
     # Prints which settings are set
     print(f"==========================")
