@@ -34,6 +34,7 @@ class Movie(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=255)
+    shortened_title = models.CharField(max_length=49, blank=True)  # max_length according to 46 characters limit + "..."
     tmdb_id = models.IntegerField(unique=True, null=True, db_index=True)
     imdb_id = models.CharField(max_length=20, unique=False, null=True, blank=True)
     overview = models.TextField(null=True, blank=True)
@@ -148,8 +149,30 @@ class Movie(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = self.get_slug()
+
+        if not self.shortened_title:
+            self.shortened_title = self.truncate_title(self.title)
+
+        if self.imdb_rating and '/' in self.imdb_rating:
+            try:
+                rating_value = self.imdb_rating.split('/')[0]
+                self.imdb_rating_num = float(rating_value)
+            except ValueError:
+                print(f"Failed to convert rating for: {self.title}")
+
         super().save(*args, **kwargs)
 
+    def truncate_title(self, title, limit=46):
+        if len(title) <= limit:
+            return title
+        else:
+            # Find the last space within the limit
+            last_space_index = title[:limit].rfind(' ')
+            if last_space_index == -1:  # No space found within the limit
+                return title[:limit] + '...'
+            else:
+                return title[:last_space_index] + '...'
+            
     # Converts a normal string into a URL slug
     def get_slug(self):
         base_slug = f"{slugify(self.title)}-{self.release_year}"
