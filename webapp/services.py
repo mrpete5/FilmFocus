@@ -956,6 +956,9 @@ def get_refreshed_movie_data(movie_tmdb_id):
 
 
 def get_person_slugs(person_name):
+    if person_name == "N/A":
+        return []
+
     slug_list = []
     if person_name:
         temp_list = person_name.split(',')
@@ -966,6 +969,9 @@ def get_person_slugs(person_name):
     return slug_list
 
 def get_person_names(person_name):
+    if person_name == "N/A":
+        return []
+    
     name_list = []
     if person_name:
         temp_list = person_name.split(',')
