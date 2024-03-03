@@ -277,6 +277,13 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
             )
             movie.streaming_providers.add(provider)
 
+    providers = movie.streaming_providers.all()
+    sorted_providers = sorted(providers, key=lambda x: x.ranking)
+
+    if sorted_providers:
+        top_provider = sorted_providers[0]
+        movie.top_streaming_providers.add(top_provider)
+
     # Fetch Letterboxd ratings data
     try:
         rating_data = lbd_scrape.get_rating(movie.title, movie.release_year)
