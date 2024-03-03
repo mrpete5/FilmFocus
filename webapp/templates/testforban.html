@@ -5,61 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies List</title>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%; /* Adjust container width as needed */
+            margin: 0 auto; /* Center the container horizontally */
+        }
         .movies-container {
             display: flex;
             flex-wrap: wrap;
             gap: 4px; /* Adjust gap between items */
             margin-bottom: 6px;
-            /* margin-left: 10%; Adjust left margin */
-            /* margin-right: 10%; Adjust right margin */
         }
         .movie-card {
-            flex: 1 1 calc(12% - 8px); /* 5 items per row, adjust for gap */
+            flex: 1 1 calc(16.666% - 8px); /* 6 items per row, adjust for gap */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
             background-color: #fff;
+            margin-bottom: 10px;
+            position: relative;
         }
         .movie-card img {
             width: 100%;
             display: block;
         }
         .movie-card-content {
-            padding: 4px;
+            padding: 10px;
         }
         .movie-card-title {
             font-size: 1em;
-            margin-bottom: 6px;
+            margin-bottom: 3px;
         }
-        .movie-card-overview {
-            font-size: 1em;
-            color: #555;
+        .movie-card-rating {
+            font-size: 1em; /* Same size as title */
+            color: #888;
+        }
+        .no-poster {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            padding-top: 5px;
+        }
+        .checkbox-label {
+            margin-right: 5px;
+        }
+        .blank-space {
+            flex: 1 1 calc(16.666% - 8px);
+        }
+        #save-button {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-<h1>Movies List</h1>
+<div class="container">
+    <h1>Movies List</h1>
 
-<div class="movies-container">
-    {% for movie in movies %}
-    <div class="movie-card">
-        <a href="{% url 'movie_detail' movie.slug %}">
-            {% if movie.poster_path %}
-                <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster">
-            {% else %}
-                <div class="no-poster">No poster available</div>
-            {% endif %}  
-        </a>
-    
-        <div class="movie-card-content">
-            <div class="movie-card-title">{{ movie.title }}</div>
+    <form id="movies-form">
+        <div class="movies-container">
+            {% for movie in movies %}
+            <div class="movie-card">
+                <a href="{% url 'movie_detail' movie.slug %}">
+                    {% if movie.poster_path %}
+                        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster">
+                    {% else %}
+                        <div class="no-poster">No poster available</div>
+                    {% endif %}  
+                </a>
+            
+                <div class="movie-card-content">
+                    <div class="checkbox-container">
+                        <input type="checkbox" name="title" value="{{ movie.title }}" class="movie-checkbox">
+                        <label class="checkbox-label">Ban</label>
+                    </div>
+                    <div class="movie-card-title">{{ movie.title }}</div>
+                    <div class="movie-card-rating">IMDb Rating: {{ movie.imdb_rating }}</div>
+                </div>
+            
+            </div>
+            {% endfor %}
+            <div class="blank-space"></div> <!-- Blank space on the right -->
         </div>
-    
-    </div>
-    {% endfor %}
-    
+
+        <button type="button" id="save-button">Save</button>
+    </form>
 </div>
+
+<script>
+    document.getElementById('save-button').addEventListener('click', function() {
+        const form = document.getElementById('movies-form');
+        const checkboxes = form.querySelectorAll('.movie-checkbox:checked');
+        const titles = Array.from(checkboxes).map(checkbox => checkbox.value);
+
+        // Convert titles to a string with one title per row
+        const titlesText = titles.join('\n');
+
+        // Create a blob with the text content
+        const blob = new Blob([titlesText], { type: 'text/plain' });
+
+        // Create a temporary anchor element to trigger the download
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'movies_to_ban.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+</script>
 
 </body>
 </html>
