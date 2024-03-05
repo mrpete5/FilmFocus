@@ -1192,8 +1192,14 @@ $(document).ready(function () {
     }
 
 	async function request_select_movie_popup(watchlist_id) {
+		var genre = document.getElementById("filter_genre_input").value;
+		var provider = document.getElementById("filter_streamer_input").value;
+		var year_begin = document.getElementById("hidden-year-begin").value;
+		var year_end = document.getElementById("hidden-year-end").value;
+		var imdb_begin = document.getElementById("hidden-imdb-begin").value;
+		var imdb_end = document.getElementById("hidden-imdb-end").value;
 
-		const url = "/popup_select_movie/"+watchlist_id+"/";
+		const url = "/popup_select_movie/"+watchlist_id+"/?genre="+genre+"&streaming_provider="+provider+"&year_begin="+year_begin+"&year_end="+year_end+"&imdb_begin="+imdb_begin+"&imdb_end="+imdb_end;
 		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
 
 		const response = await fetch(url, {

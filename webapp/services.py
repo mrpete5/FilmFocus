@@ -1006,7 +1006,7 @@ def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imd
 
     # Filter for IMDB rating
     if imdb_begin is not None and imdb_end is not None:
-        if imdb_begin != 0.0 or imdb_end != 10.0:
+        if float(imdb_begin) != 0.0 or float(imdb_end) != 10.0:
             movies = movies.filter(imdb_rating_num__isnull=False, imdb_rating_num__range=(imdb_begin, imdb_end))
         else:
             movies = movies.filter(Q(imdb_rating_num__range=(imdb_begin, imdb_end)) | Q(imdb_rating_num=None))

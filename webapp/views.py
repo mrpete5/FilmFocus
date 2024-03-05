@@ -376,8 +376,17 @@ def popup_select_movie(request, watchlist_id):
     context = {}
     if request.method == 'GET':
         watchlist = Watchlist.objects.get(user=request.user, pk=watchlist_id)
-        watchlist_entries = list(WatchlistEntry.objects.filter(watchlist=watchlist).order_by('?'))[:3]  # Randomize order and slice to include only the first three entries
-        movies = [entry.movie for entry in watchlist_entries]
+        movies = Movie.objects.filter(watchlistentry__watchlist=watchlist)
+
+        genre = Genre.objects.filter(name=request.GET.get('genre')).first()
+        streamer = StreamingProvider.objects.filter(name=request.GET.get("streaming_provider")).first()
+        year_begin = request.GET.get('year_begin')
+        year_end = request.GET.get('year_end')
+        imdb_begin = request.GET.get('imdb_begin')
+        imdb_end = request.GET.get('imdb_end')
+
+        movies = filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end).order_by('?')[:3]
+
         context['movies'] = movies
 
     return render(request, "popup_select_movie.html", context)
