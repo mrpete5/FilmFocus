@@ -48,6 +48,7 @@ FimFocus Red: #C11C1C
 30. User Profile Page
 31. Edit Profile Popup
 32. Delete Watchlist Button & Popup
+33. Watchlist Privacy Toggle
 ----------------------------------------*/
 /*==============================
 	Common styles
@@ -4767,6 +4768,7 @@ User Profile Page
   background-repeat:repeat-y;
   left: 47%;
   right: 45%;
+  min-height: 50vh;
   margin: 0 auto;
 }
 
