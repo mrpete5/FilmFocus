@@ -1243,12 +1243,9 @@ $(document).ready(function () {
 
 	// Add event listener to each toggle checkbox
 	toggleCheckboxes.forEach(function(toggleCheckbox) {
-		toggleCheckbox.addEventListener('change', async () =>  {
+		toggleCheckbox.addEventListener('click', async () =>  {
 			// Get the watchlist ID from the checkbox
 			const watchlist_id = toggleCheckbox.getAttribute('watchlist_id')
-			console.log('toggled')
-			// Get the switch status (checked or not checked)
-			const switchStatus = toggleCheckbox.checked;
 			const url = `/toggle_watchlist_privacy/${watchlist_id}/`;
 			const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
 
@@ -1263,24 +1260,24 @@ $(document).ready(function () {
 				const data = await response.json();
 	
 				if (data.status === 'success') {
-					console.log("Should have worked");
+					// console.log("Should have worked");
 				}
 			} catch (error) {
 				console.error(error);
 			}
-
-			// Perform action based on switch status
-			if (switchStatus) {
-				// If switch is toggled on
-				console.log(`Watchlist ${watchlist_id} toggled ON`);
-				// Add your logic for when the switch is toggled on
-			} else {
-				// If switch is toggled off
-				console.log(`Watchlist ${watchlist_id} toggled OFF`);
-				// Add your logic for when the switch is toggled off
-			}
 		});
 	});
+
+	$('.toggle_checkbox').on('click', function() {
+		if ($(this).hasClass('on')) {
+		   $(this).removeClass('on');
+		//    console.log(`Watchlist toggled to private`);
+		   
+		} else {
+		   $(this).addClass('on');
+		//    console.log(`Watchlist toggled to public`);
+		}
+	  });
 });
 
 

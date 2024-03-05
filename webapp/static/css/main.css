@@ -10,6 +10,8 @@ Primary use:	FlixGo Template
 
 FilmFocus Pink: #ff55a5
 FilmFocus Grey: #2b2b31
+FilmFocus Green: #29A329
+FimFocus Red: #C11C1C
 ----------------------------------------*/
 /*----------------------------------------
 [Table of contents]
@@ -5541,92 +5543,66 @@ FilmFocus Grey: #2B2B31 */
 	Toggle Switch
 ==============================*/
 
-/* The switch - the box around the slider */
-.toggle {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-  background-color: #ccc; /* Default background color */
-  border-radius: 34px; /* Rounded border */
-}
-
-/* Hide default HTML checkbox */
-.toggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The slider */
-.switch {
-  position: absolute;
+.toggle_checkbox {
+  background-color: red; /* Color of locked background */
+  border-radius: 34px;  
+  box-shadow: 0 1px 1px 0 rgba(255,255,255,.4), 0 1px 0 0 rgba(0,0,0,0.10) inset;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: green;
-  -webkit-transition: .4s;
-  transition: .4s;
+  width: 60px;
+  height: 35px;
+  top: 0px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  position: relative;
+  transition: all .25s linear;
 }
-
-.switch:before {
-  position: absolute;
-  content: "";
+.toggle_checkbox .switch {
+  color: #818283;
+  color: #2b2b31;  /* Color of crosshair when locked */
+  background: #efefef; /* Color of slider itself */
+  border-radius: 50%;
+  line-height: 26px;
+  text-align: center;
+  text-decoration: none;
   height: 26px;
   width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15), 0 1px 1px 0 rgba(255,255,255,.8) inset;
+  transition: all 0.3s cubic-bezier(0.43, 1.3, 0.86, 1);
 }
-
-input:checked + .switch {
-  background-color: red;
+.toggle_checkbox .switch span{
+    text-shadow: 0 1px 1px rgba(255,255,255,.7), 0 0 1px rgba(0,0,0,.3);       
 }
-
-input:focus + .switch {
-  box-shadow: 0 0 1px #2196F3;
+.toggle_checkbox .switch:before, 
+.toggle_checkbox .switch:after {
+  color: #FFF;
+  content: "\1F512";
+  font-family: fontAwesome;
+  font-size: 12px;
+  font-weight: 400;
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  -webkit-font-smoothing: antialiased;
+  position: absolute;
 }
-
-input:checked + .switch:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+.toggle_checkbox .switch:before {
+  right: -20px;
+  color: #2b2b31;
+  opacity: 1;
 }
-
-/* Rounded sliders */
-.switch.round {
-  border-radius: 34px;
+.toggle_checkbox .switch:after {
+  content: "\f09c";
+  left: -20px;
+  color: #2b2b31;
 }
-
-.switch.round:before {
-  border-radius: 50%;
+.toggle_checkbox.on {
+  background: #00dc00; /* Color of unlocked background */
 }
-
-/* The slider */
-.switch.image {
-    position: absolute;
-    top: 4px; /* Adjust top position as needed */
-    left: 4px; /* Adjust left position as needed */
-    width: 26px; /* Adjust width as needed */
-    height: 26px; /* Adjust height as needed */
-    background-color: white; /* Background color for the image */
-    border-radius: 50%; /* Rounded shape */
-    transition: transform 0.4s; /* Transition for smooth movement */
+.toggle_checkbox.on .switch {
+  left: 30px;
+  color: #2b2b31; /* Color of the crosshair when it is on */
 }
-
-input:checked + .toggle {
-  background-color: #2196F3; /* Background color for when the switch is toggled on */
-}
-
-input:checked + .toggle .switch-image {
-  transform: translateX(26px); /* Move the slider image to the right when toggled on */
-}
-
-
 /*==============================
 	Select Movie Popup
 ==============================*/
