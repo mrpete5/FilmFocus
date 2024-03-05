@@ -11,7 +11,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<!-- Font -->
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet"> 
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 	<!-- CSS -->
 	<link rel="stylesheet" href={% static "css/bootstrap-reboot.min.css" %}>
@@ -124,10 +125,11 @@
 				<div class="toggle_block">
 					{% for watchlist in watchlists %}
 					<ul>
-						<label class="toggle">
-							<input type="checkbox" class="toggle_checkbox" watchlist_id="{{ watchlist.id }}">
-							<span class="switch round"></span>
-						</label>
+						<div class='toggle_checkbox {% if not watchlist.is_private %}on{% endif %}' watchlist_id="{{ watchlist.id }}" title="Toggle watchlist privacy">
+							<div class='switch'>
+							  <span class='fa-solid fa-crosshairs'></span>
+						   </div>
+						 </div>
 					</ul>
 					{% endfor %}
 				</div>

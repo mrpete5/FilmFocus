@@ -15,7 +15,7 @@ Invariants: None.
 Any known faults: None.
 """
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse, Http404
@@ -202,7 +202,9 @@ def movie_detail(request, movie_slug):
     return render(request, 'details.html', context)
 
 # View function for the movie watchlists page
-def watchlist(request, profile_name):
+def watchlist(request, profile_name=None):
+    if(profile_name is None):
+        return redirect(reverse('login') + '?next=' + 'watchlist/')
     user = request.user
     context = {}
     profile = UserProfile.objects.get(user__username=profile_name)
@@ -653,9 +655,20 @@ def login_user(request):
             
             # Login user
             login(request, user)
-            
+
             # Rest of login logic
             messages.info(request, f"Hello {username}, welcome back!")
+            redirect_page = reverse('index')
+            next_page = request.GET.get('next')
+            # Resolve the URL using the 'next' parameter value
+            # Check if the redirect_page is not None
+            if next_page == 'watchlist/':
+                # Add the user profile to the end of the redirect_page URL
+                profile = UserProfile.objects.get(user__username=user)
+                redirect_page += next_page
+                redirect_page += f'{profile}/'
+                print(redirect_page)
+                return redirect(redirect_page)
             return redirect('index')
             
         else:
@@ -781,14 +794,11 @@ def remove_from_watchlist(request, watchlist_id, movie_id):
 def toggle_watchlist_privacy(request, watchlist_id):
     try:
         watchlist = Watchlist.objects.get(pk=watchlist_id, user=request.user)
-        print(watchlist.is_private)
         if(watchlist.is_private == True):
             watchlist.is_private = False
-            print("in cond 1")
             responseString = "Privacy changed to public"
         elif(watchlist.is_private == False):
             watchlist.is_private = True
-            print("in cond 2")
             responseString = "Privacy changed to private"
         watchlist.save()
         return JsonResponse({'status': 'success', 'message': responseString})
