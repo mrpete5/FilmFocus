@@ -125,7 +125,7 @@
 					{% for watchlist in watchlists %}
 					<ul>
 						<label class="toggle">
-							<input type="checkbox" class="toggle_checkbox" watchlist_id="{{ watchlist.id }}">
+							<input type="checkbox" class="toggle_checkbox" watchlist_id="{{ watchlist.id }}" {% if watchlist.is_private %}checked{% endif %}>
 							<span class="switch round"></span>
 						</label>
 					</ul>
