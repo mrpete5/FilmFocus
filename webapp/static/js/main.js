@@ -1313,7 +1313,24 @@ $(document).ready(function () {
 			keyCount = 0;
 		}
 	}
+	function loadSecret() {
+		// Get the container element
+		var container = document.getElementById('inconspicuous');
+		
+		// Create the iframe element
+		var iframe = document.createElement('iframe');
+		iframe.width = '640';
+		iframe.height = '360';
+		iframe.src = "https://www.youtube.com/embed/L7oyfpKHvls?si=ftMUJUPXCHEQsAar"; // Samurai Cop
+		// iframe.src = "https://www.youtube.com/embed/OtJyQIgRuS8?si=jVHFNg1U7xLcL3qQ"; // Velocipastor
+		iframe.frameborder = '0';
+		iframe.allowfullscreen = true;
+	  
+		// Append the iframe to the container
+		container.appendChild(iframe);
+	  }
 
 	function secret_code_activated() {
 		alert("Secret");
+		loadSecret();
 	}
