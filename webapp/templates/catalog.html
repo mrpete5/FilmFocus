@@ -302,19 +302,21 @@
 					</li>
 				{% endif %} -->
 				<!-- end Mega Jump 10 Pages Previous -->
-						
-				{% if page_obj.has_previous %}
-					<li class="paginator__item paginator__item--prev">
-						<a href="?page={{ page_obj.previous_page_number }}&genre={{ filter_genre.name }}&streaming_provider={{ filter_streamer.name }}&year_begin={{ filter_year_begin|default:'1900' }}&year_end={{ filter_year_end|default:'2024' }}&imdb_begin={{ filter_imdb_begin|default:'0.0' }}&imdb_end={{ filter_imdb_end|default:'10.0' }}"><i class="icon ion-ios-arrow-back"></i></a>
-					</li>
-				{% endif %}
+				
+				{% if page_obj.number != page_obj.paginator.num_pages %}
+					{% if page_obj.has_previous %}
+						<li class="paginator__item paginator__item--prev">
+							<a href="?page={{ page_obj.previous_page_number }}&genre={{ filter_genre.name }}&streaming_provider={{ filter_streamer.name }}&year_begin={{ filter_year_begin|default:'1900' }}&year_end={{ filter_year_end|default:'2024' }}&imdb_begin={{ filter_imdb_begin|default:'0.0' }}&imdb_end={{ filter_imdb_end|default:'10.0' }}"><i class="icon ion-ios-arrow-back"></i></a>
+						</li>
+					{% endif %}
+					
+					<li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
 
-				<li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
-
-				{% if page_obj.has_next %}
-					<li class="paginator__item paginator__item--next">
-						<a href="?page={{ page_obj.next_page_number }}&genre={{ filter_genre.name }}&streaming_provider={{ filter_streamer.name }}&year_begin={{ filter_year_begin|default:'1900' }}&year_end={{ filter_year_end|default:'2024' }}&imdb_begin={{ filter_imdb_begin|default:'0.0' }}&imdb_end={{ filter_imdb_end|default:'10.0' }}"><i class="icon ion-ios-arrow-forward"></i></a>
-					</li>
+					{% if page_obj.has_next %}
+						<li class="paginator__item paginator__item--next">
+							<a href="?page={{ page_obj.next_page_number }}&genre={{ filter_genre.name }}&streaming_provider={{ filter_streamer.name }}&year_begin={{ filter_year_begin|default:'1900' }}&year_end={{ filter_year_end|default:'2024' }}&imdb_begin={{ filter_imdb_begin|default:'0.0' }}&imdb_end={{ filter_imdb_end|default:'10.0' }}"><i class="icon ion-ios-arrow-forward"></i></a>
+						</li>
+					{% endif %}
 				{% endif %}
 
 				<!-- Mega Jump 10 Pages Next -->
