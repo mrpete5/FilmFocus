@@ -152,6 +152,7 @@ def timer(function_name, fetch_func, args):
 
     print(f'Finished {function_name}: {end_time_readable}')
     print(f'Total time for {function_name}: {total_time_readable}.')
+    print()
 
 
 # Process the search results for a movie and fetch its details
@@ -353,29 +354,29 @@ def fetch_popular_movies(start_page=1, end_page=5):
 
     movies = Movie.objects.all()
     num_movies_in_db = movies.count()
-    slow_down_factor = 6                            # adjust as needed for estimated time
-    existing_movies = num_movies_in_db * 0.5        # adjust as needed for estimated time
-    estimate_time_secs = slow_down_factor * (total_num_movies - existing_movies) / fetches_per_second
-    
-    start_time = time.time()
-    readable_time = seconds_to_readable_time(estimate_time_secs)
     print(f"Movies in database: {num_movies_in_db}")
-    print(f"Estimated time to fetch {total_num_movies} movies: {readable_time}")
     
     # Semaphore to limit the number of concurrent API fetches
     semaphore = Semaphore(fetches_per_second)
 
-    def fetch_movie(movie_data):
+    def fetch_movie(movie_data, page_num):
         movie_id = movie_data["id"]
         tmdb_popularity = movie_data["popularity"]
 
         # Check if the movie already exists in the database
         movie = Movie.objects.filter(tmdb_id=movie_id).first()
         
-        # If the movie exists, update its tmdb_popularity attribute
+        # If the movie already exists in db, update its tmdb_popularity attribute
         if movie:
             movie.tmdb_popularity = tmdb_popularity
             movie.save()
+
+        # Avoid obscure foreign films
+        original_language = movie_data["original_language"]
+        movie_title = movie_data["title"]
+        if page_num > 200 and original_language != "en":
+            print(f"Skipped {original_language} film: {movie_title} ")
+            return
 
         with semaphore:
             # Ensure we don't make more than 10 requests per second
@@ -384,7 +385,7 @@ def fetch_popular_movies(start_page=1, end_page=5):
     
     title = 'Fetching popular movies'
     for page_num in range(start_page, end_page + 1):
-        index = (page_num + 1) * 20
+        index = (page_num - start_page + 1) * 20
         # Create a loading progress bar
         progress_bar_iteration(title, index, total_num_movies)
         
@@ -399,7 +400,7 @@ def fetch_popular_movies(start_page=1, end_page=5):
 
         # Use a thread pool to process movies in parallel
         with ThreadPoolExecutor() as executor:
-            futures = [executor.submit(fetch_movie, movie) for movie in results]
+            futures = [executor.submit(fetch_movie, movie, page_num) for movie in results]
             for future in as_completed(futures):
                 try:
                     # If the function returns a result, it will be available as future.result()
@@ -407,13 +408,6 @@ def fetch_popular_movies(start_page=1, end_page=5):
                 except Exception as e:
                     # Handle exception
                     print(f"An error occurred: {str(e)}")
-
-    end_time = time.time()
-    total_time_secs = end_time - start_time
-    total_readable_time = seconds_to_readable_time(total_time_secs)
-    difference_time_secs = total_time_secs - estimate_time_secs
-    print(f'Estimate time: {readable_time}')
-    print(f"Time to run: {total_readable_time}, Longer than estimated time: {difference_time_secs} secs")
 
     return json_response
 
@@ -439,7 +433,7 @@ def fetch_now_playing_movies(start_page=1, end_page=5):
     
     title = 'Fetching now playing movies'
     for page_num in range(start_page, end_page + 1):
-        index = (page_num + 1) * 20
+        index = (page_num - start_page + 1) * 20
         # Create a loading progress bar
         progress_bar_iteration(title, index, total_num_movies)
         
@@ -761,13 +755,7 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=10):
 
     movies = Movie.objects.all()
     num_movies_in_db = movies.count()
-    slow_down_factor = 6                            # adjust as needed for estimated time
-    existing_movies = num_movies_in_db * 0.5        # adjust as needed for estimated time
-    estimate_time_secs = slow_down_factor * (total_num_movies - existing_movies) / fetches_per_second
-
-    readable_time = seconds_to_readable_time(estimate_time_secs)
     print(f"Movies in database: {num_movies_in_db}")
-    print(f"Estimated time to fetch {total_num_movies} movies: {readable_time}")
     
     # Semaphore to limit the number of concurrent API fetches
     semaphore = Semaphore(fetches_per_second)
