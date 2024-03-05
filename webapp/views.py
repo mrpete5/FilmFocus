@@ -202,7 +202,9 @@ def movie_detail(request, movie_slug):
     return render(request, 'details.html', context)
 
 # View function for the movie watchlists page
-def watchlist(request, profile_name):
+def watchlist(request, profile_name=None):
+    if(profile_name is None):
+        return redirect('login')
     user = request.user
     context = {}
     profile = UserProfile.objects.get(user__username=profile_name)
