@@ -1102,6 +1102,7 @@ def handle_test_display_page(settings):
             timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
             timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
             timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
+            timer(function_name='update_omdb_movie_ratings', fetch_func=update_omdb_movie_ratings, args={})
 
     # Prints which settings are set
     print(f"==========================")
