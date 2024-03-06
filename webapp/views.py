@@ -371,7 +371,7 @@ def popup_rating(request, movie_id):
         return render(request, "popup_rating.html", context)
 
 
-# View function for the random movie selection popup
+# View function for the Watchlist random movie selection popup
 def popup_select_movie(request, watchlist_id):
     context = {}
     if request.method == 'GET':
@@ -390,6 +390,25 @@ def popup_select_movie(request, watchlist_id):
         context['movies'] = movies
 
     return render(request, "popup_select_movie.html", context)
+
+# View function for the Catalog random movie selection popup
+def popup_catalog_select(request):
+    context = {}
+    if request.method == 'GET':
+        movies = Movie.objects.all()
+
+        genre = Genre.objects.filter(name=request.GET.get('genre')).first()
+        streamer = StreamingProvider.objects.filter(name=request.GET.get("streaming_provider")).first()
+        year_begin = request.GET.get('year_begin')
+        year_end = request.GET.get('year_end')
+        imdb_begin = request.GET.get('imdb_begin')
+        imdb_end = request.GET.get('imdb_end')
+
+        movies = filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end).order_by('?')[:3]
+
+        context['movies'] = movies
+
+    return render(request, "popup_catalog_select.html", context)
 
 
 # View function for the about page
@@ -813,6 +832,7 @@ def toggle_watchlist_privacy(request, watchlist_id):
         return JsonResponse({'status': 'success', 'message': responseString})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
+    
 # View function for user movie ratings
 def rating(request, profile_name):
     context = {}

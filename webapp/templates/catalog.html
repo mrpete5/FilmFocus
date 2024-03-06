@@ -81,7 +81,7 @@
 								<span class="filter__item-label">GENRE:</span>
 
 								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-genre" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<input type="button" value="{{ filter_genre.name|default:'All' }}">
+									<input id="filter_genre_input" type="button" value="{{ filter_genre.name|default:'All' }}">
 									<input type="hidden" name="genre" value="{{ filter_genre.name|default:'All' }}">
 									<span></span>
 								</div>
@@ -100,7 +100,7 @@
 								<span class="filter__item-label">WHERE TO WATCH:</span>
 
 								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-streamer" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<input type="button" value="{{ filter_streamer.name|default:'All' }}">
+									<input id="filter_streamer_input" type="button" value="{{ filter_streamer.name|default:'All' }}">
 									<input type="hidden" name="streaming_provider" value="{{ filter_streamer.name|default:'All' }}">
 									<span></span>
 								</div>

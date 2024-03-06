@@ -1178,7 +1178,7 @@ $(document).ready(function () {
 
 
 	/*==============================
-	Select a Movie Popup
+	Select a Movie Watchlist Popup
 	==============================*/
     var selectMovieBtn = document.getElementById("watchlistSelectMovieBtn");
     
@@ -1245,6 +1245,76 @@ $(document).ready(function () {
 		})
 	}
 
+	/*==============================
+	Select a Movie Catalog Popup
+	==============================*/
+    var catalogSelectBtn = document.getElementById("catalogSelectMovieBtn");
+    
+    if (catalogSelectBtn) {
+        catalogSelectBtn.addEventListener("click", function() {
+			console.log("catalogSelectMovieBtn");
+            request_catalog_select_movie_popup();
+            open_popup();
+        });
+    }
+
+	async function request_catalog_select_movie_popup() {
+		var genre = document.getElementById("filter_genre_input").value;
+		var provider = document.getElementById("filter_streamer_input").value;
+		var year_begin = document.getElementById("hidden-year-begin").value;
+		var year_end = document.getElementById("hidden-year-end").value;
+		var imdb_begin = document.getElementById("hidden-imdb-begin").value;
+		var imdb_end = document.getElementById("hidden-imdb-end").value;
+
+		const url = "/popup_catalog_select/?genre="+genre+"&streaming_provider="+provider+"&year_begin="+year_begin+"&year_end="+year_end+"&imdb_begin="+imdb_begin+"&imdb_end="+imdb_end;
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'X-CSRFToken': csrfToken
+			}
+		});
+
+		if (response.ok) {
+			const data = await response.text();
+			popup.innerHTML = data;
+			const closePopupAlt = popup.querySelector("#closePopupAlt");
+			const closePopup = popup.querySelector("#closePopup");
+			const closePopupAlt2 = popup;
+			const reselectPopup = popup.querySelector("#reselectPopup");
+			if (closePopupAlt2) close_event_handler2_select_catalog(closePopupAlt2);
+			if (closePopupAlt) close_event_handler(closePopupAlt);
+			if (closePopup) close_event_handler(closePopup);
+			if (reselectPopup) reselect_movie_catalog(reselectPopup);
+		}
+	}
+
+	function reselect_movie_catalog(x) {
+		x.addEventListener("click", (event)=> {
+			const popupInner = document.querySelector(".select-movie-popupInner"); // uses different popupInner class
+			// if conditional is different than others, we do want popupInner.contains(event.target)
+			if (popup.classList.contains("open") && popupInner.contains(event.target)) {
+				close_popup();
+				request_catalog_select_movie_popup();
+				open_popup();
+			}
+		})
+	}
+	
+	function close_event_handler2_select_catalog(x) {
+		x.addEventListener("click", (event)=> {
+			const popupInner = document.querySelector(".select-movie-popupInner"); // uses different popupInner class
+			if (popup.classList.contains("open") && !popupInner.contains(event.target)) {
+				close_popup();
+			}
+		})
+	}
+	
+	
+	/*==============================
+	Watchlist Privacy Toggles
+	==============================*/
 	const toggleCheckboxes = document.querySelectorAll('.toggle_checkbox');
 
 	// Add event listener to each toggle checkbox
