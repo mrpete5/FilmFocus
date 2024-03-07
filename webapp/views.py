@@ -841,7 +841,7 @@ def rating(request, profile_name):
         context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
 
     user = get_object_or_404(User, username=profile_name)
-    movie_ratings = MovieRating.objects.filter(user=user).select_related('movie')
+    movie_ratings = MovieRating.objects.filter(user=user).select_related('movie').order_by(F('id').desc())
     movie_rating_dict = {rating.movie: rating.user_rating for rating in movie_ratings}
     context['user_name'] = profile_name
     context['movie_ratings'] = movie_rating_dict
