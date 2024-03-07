@@ -970,12 +970,12 @@ def get_person_names(person_name):
 
 def get_movies_by_director(director_name):
     # Query for movies containing the director's name
-    movies = Movie.objects.filter(director__icontains=director_name).order_by('release_year')
+    movies = Movie.objects.filter(director__icontains=director_name).order_by('release_date')
     return movies
 
 def get_movies_by_actor(actor_name):
     # Query for movies containing the director's name
-    movies = Movie.objects.filter(actors__icontains=actor_name).order_by('release_year')
+    movies = Movie.objects.filter(actors__icontains=actor_name).order_by('release_date')
     return movies
 
 # Performs filtering to the movies list
