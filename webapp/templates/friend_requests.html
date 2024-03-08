@@ -39,12 +39,26 @@
 
 </head>
 <body class="body">
-    <h2>{{ user }}'s Friend Requests</h2>
+    <!-- page title -->
+	<section class="section section--first section--bg" data-bg={% static "img/section/section.jpg" %}>
+		<div class="container" style="margin-top: -15px; margin-bottom: -15px;">
+			<div class="row">
+				<div class="col-12">
+					<div class="section__wrap">
+						<!-- section title -->
+						<h2 class="section__title">{{ user }}'s Friend Requests</h2>
+						<!-- end section title -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end page title -->
 
-    <div class="container">
+    <div class="container" style="margin-top: -20px;">
         <div class="row">
             <div class="col-12">
-                <h2 class="search_title_container content__title"><b>{{ user }}'s Incoming Friend Requests</b></h2>
+                <h2 class="search_title_container content__title"><b>Incoming Requests</b></h2>
             </div>
         </div>
         {% for request in in_requests %}
@@ -70,8 +84,8 @@
         </div>
         {% endfor %}
         <div class="row">
-            <div class="col-12">
-                <h2 class="search_title_container content__title"><b>{{ user }}'s Outgoing Friend Requests</b></h2>
+            <div class="col-12" style="margin-top: -20px;">
+                <h2 class="search_title_container content__title"><b>Outgoing Requests</b></h2>
             </div>
         </div>
         {% for request in out_requests %}
