@@ -321,7 +321,7 @@ def searchBar(request):
             if query[0] == '@':
                 username = query[1:]  # Remove the '@' symbol
                 users = User.objects.filter(username__icontains=username)
-                userProfiles = UserProfile.objects.filter(user__in=users)
+                userProfiles = UserProfile.objects.filter(user__in=users).exclude(user=request.user)
                 context['searchedUsers'] = userProfiles
                 if user.is_authenticated: 
                     context['self_profile'] = UserProfile.objects.get(user=request.user)
@@ -330,7 +330,6 @@ def searchBar(request):
                 movies = Movie.objects.filter(title__icontains=query)
                 context['searchedMovies'] = movies
                 return render(request, 'results.html', context)
-                # return render(request, 'results.html', 'searchedMovies': movies)
         else:
             print("No Info to show")
             return render(request, 'results.html', context)
