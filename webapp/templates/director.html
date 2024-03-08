@@ -38,81 +38,89 @@
 	<title>FilmFocus – Your Watchlist, Your Way</title>
 </head>
 <body class="body">
-    <h2>Director</h2>
+    <!-- page title -->
+	<section class="section section--first section--bg" data-bg={% static "img/section/section.jpg" %}>
+		<div class="container" style="margin-top: -15px; margin-bottom: -15px;">
+			<div class="row">
+				<div class="col-12">
+					<div class="section__wrap">
+						<!-- section title -->
+						<h2 class="section__title">Movies Directed by {{ director_name }}</h2>
+						<!-- end section title -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end page title -->
 
-        <div class = "container">
+    <div class="container" style="margin-top: 30px;">
+        <div class="row">
+            <div class="col-12">
+                <div class="results__container">
+                    <div class="row">
+                        {% if movies %}
 
-            <div class="row">
-                <div class="col-12">
-                    <!-- content title -->
-                    <div class="search_title_container">
-                        <h2 class="content__title"><b>Movies by {{ director_name }}</b></h2>
-                    </div>
-                    <!-- end content title -->
-                    <div class="results__container">
-                        <div class="row">
-                            {% if movies %}
-
-                            {% for movie in movies %}
-                            <!-- card -->
-                            <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                                <div class="card">
-                                    <a href="{% url 'movie_detail' movie_slug=movie.slug %}">
-                                        <div class="card__cover">
-                                            <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
-                                        </div>
-                                        <span title="Add Movie to Your Watchlist">
-                                            <a href="#0" class="card__add" movie_id="{{ movie.id }}">
-                                                <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
-                                            </a>
-                                        </span>		
-                                        <span title="Add Rating">
-                                            <a href="#0" class="card__rating" movie_id="{{ movie.id }}">
-                                                <img src="{% static 'img/logos/StarButton.png' %}" alt="Rating">
-                                            </a>
-                                        </span>
-                                    </a>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
-                                        <span class="card__category">
-                                            {% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
-                                                <a>{{ genre.name }}</a>
-                                            {% endfor %}
-                                        </span>
-                                        <span class="card__rate">
-                                            <img src="{% static 'img/logos/imdb-logo.svg' %}" alt="IMDb" style="width: 30px; vertical-align: middle; margin-right: 5px;">
-                                            {{ movie.imdb_rating }}
-                                            
-                                            <!-- Streaming Provider Images -->
-                                            <span class="card__streamer">
-                                                {% if movie.top_streaming_providers.all %}
-                                                <div class="provider-list">
-                                                    <ul style="list-style-type: none; padding: 0; margin: 0;">
-                                                        {% for provider in movie.top_streaming_providers.all %}
-                                                            <li style="margin-bottom: 10px;">
-                                                                <img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" class="provider-logo">
-                                                            </li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                </div>
-                                                {% endif %}
-                                            </span>
-                                            <!-- end Streaming Provider Images -->
-                                        </span>
+                        {% for movie in movies %}
+                        <!-- card -->
+                        <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                            <div class="card">
+                                <a href="{% url 'movie_detail' movie_slug=movie.slug %}">
+                                    <div class="card__cover">
+                                        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
                                     </div>
+                                    <span title="Add Movie to Your Watchlist">
+                                        <a href="#0" class="card__add" movie_id="{{ movie.id }}">
+                                            <img src="{% static 'img/logos/AddButton.png' %}" alt="Bookmark">
+                                        </a>
+                                    </span>		
+                                    <span title="Add Rating">
+                                        <a href="#0" class="card__rating" movie_id="{{ movie.id }}">
+                                            <img src="{% static 'img/logos/StarButton.png' %}" alt="Rating">
+                                        </a>
+                                    </span>
+                                </a>
+                                <div class="card__content">
+                                    <h3 class="card__title"><a href="{% url 'movie_detail' movie_slug=movie.slug %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
+                                    <span class="card__category">
+                                        {% for genre in movie.genres.all|slice:":4" %}	<!-- Limit of 4 genres posted -->
+                                            <a>{{ genre.name }}</a>
+                                        {% endfor %}
+                                    </span>
+                                    <span class="card__rate">
+                                        <img src="{% static 'img/logos/imdb-logo.svg' %}" alt="IMDb" style="width: 30px; vertical-align: middle; margin-right: 5px;">
+                                        {{ movie.imdb_rating }}
+                                        
+                                        <!-- Streaming Provider Images -->
+                                        <span class="card__streamer">
+                                            {% if movie.top_streaming_providers.all %}
+                                            <div class="provider-list">
+                                                <ul style="list-style-type: none; padding: 0; margin: 0;">
+                                                    {% for provider in movie.top_streaming_providers.all %}
+                                                        <li style="margin-bottom: 10px;">
+                                                            <img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" class="provider-logo">
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                            {% endif %}
+                                        </span>
+                                        <!-- end Streaming Provider Images -->
+                                    </span>
                                 </div>
                             </div>
-                            <!-- end card -->
-                            {% endfor %}
-
-                            {% else %}
-                            <div class="search__fail"><h2><b>No Movies by {{ director_name }} Found</b></h2></div>
-                            {% endif %}
                         </div>
+                        <!-- end card -->
+                        {% endfor %}
+
+                        {% else %}
+                        <div class="search__fail"><h2><b>No Movies by {{ director_name }} Found</b></h2></div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
 <!-- JS -->
 <script src={% static "js/jquery-3.3.1.min.js" %}></script>
