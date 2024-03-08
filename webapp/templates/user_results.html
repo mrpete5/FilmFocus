@@ -38,136 +38,91 @@
 	<title>FilmFocus – Your Watchlist, Your Way</title>
 </head>
 <body class="body">
-    <h2>Search Results</h2>
+    <!-- page title -->
+	<section class="section section--first section--bg" data-bg={% static "img/section/section.jpg" %}>
+		<div class="container" style="margin-top: -15px; margin-bottom: -15px;">
+			<div class="row">
+				<div class="col-12">
+					<div class="section__wrap">
+						<!-- section title -->
+						<h2 class="section__title">Search Results For: '{{ query }}'</h2>
+						<!-- end section title -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end page title -->
 
-        <div class = "container">
+    <div class="container" style="margin-top: 30px;">
+        <div class="row">
+            <div class="col-12">
 
-            <div class="row">
-                <div class="col-12">
-                    <!-- content title -->
-                    <div class="search_title_container">
-                        <h2 class="content__title"><b>Search Results For: '{{ query }}'</b></h2>
+                {% if user.is_authenticated %}
+                    <div class="container">
+                        <div class="row">
+                            {% if searchedUsers %}
+        
+                                {% for user_profile in searchedUsers %}
+                                    <!-- card -->
+                                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                                        <div class="user_card">
+                                            <a href="{% url 'user_profile' profile_name=user_profile.user %}">
+                                                <div>
+                                                    <center><img src="{% static 'img/profile_pics/' %}{{ user_profile.profile_pic }}" class ="profile_photo" alt="profile_photo" style="width: 90px;"></center>
+                                                </div>
+                                            </a>
+                                            <div class="user_card__content">
+                                                <h3 class="user_card__title" style="text-align: center;"><a href="{% url 'user_profile' profile_name=user_profile.user %}">@{{ user_profile.user }}</a></h3>
+                                                {% if self_profile in user_profile.friends.all %}
+                                                    <center><button class="remove_friend__btn" type="button" user_id="{{user_profile.id}}">Remove Friend</button></center>
+                                                {% else %}
+                                                    <center><button class="add_friend__btn" type="button" user_id="{{user_profile.id}}">Add Friend</button></center>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                {% endfor %}
+                    
+                            {% else %}
+                                <div class="search__fail"><h2><b>No Users Found</b></h2></div>
+                            {% endif %}
+                        </div>
                     </div>
-                    <!-- end content title -->
-
-                    {% if user.is_authenticated %}
+                {% else %}
                     <div class="container">
                         <div class="row">
                             {% if searchedUsers %}
                             
-                            {% for user_profile in searchedUsers %}
-                            <!-- card -->
-                            <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                                <div class="user_card">
-                                    <a href="{% url 'user_profile' profile_name=user_profile.user %}">
-                                        <div>
-                                            <center><img src="{% static 'img/profile_pics/' %}{{ user_profile.profile_pic }}" class ="profile_photo" alt="profile_photo" style="width: 90px;"></center>
+                                {% for user in searchedUsers %}
+                                    <!-- card -->
+                                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                                        <div class="user_card">
+                                            <a href="{% url 'user_profile' profile_name=user.user %}">
+                                                <div>
+                                                    <center><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 90px;"></center>
+                                                </div>
+                                            </a>
+                                            <div class="user_card__content">
+                                                <h3 class="user_card__title" style="text-align: center;"><a href="{% url 'user_profile' profile_name=user.user %}">@{{ user.user }}</a></h3>
+                                            </div>
                                         </div>
-                                    </a>
-                                    <div class="user_card__content">
-                                        <h3 class="user_card__title" style="text-align: center;"><a href="{% url 'user_profile' profile_name=user_profile.user %}">@{{ user_profile.user }}</a></h3>
-                                        {% if self_profile in user_profile.friends.all %}
-                                            <center><button class="remove_friend__btn" type="button" user_id="{{user_profile.id}}">Remove Friend</button></center>
-                                        {% else %}
-                                            <center><button class="add_friend__btn" type="button" user_id="{{user_profile.id}}">Add Friend</button></center>
-                                        {% endif %}
                                     </div>
-                                </div>
-                            </div>
-                            <!-- end card -->
-
-                    {% endfor %}
-                    
-                    {% else %}
-                    <div class="search__fail"><h2><b>No Users Found</b></h2></div>
-                    {% endif %}
-                    
-                    {% else %}
-                    <div class="container">
-                        <div class="row">
-                            {% if searchedUsers %}
-                            
-                            {% for user in searchedUsers %}
-                            <!-- card -->
-                            <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                                <div class="user_card">
-                                    <a href="{% url 'user_profile' profile_name=user.user %}">
-                                        <div>
-                                            <center><img src="{% static 'img/user.png' %}" class ="profile_photo" alt="profile_photo" style="width: 90px;"></center>
-                                        </div>
-                                    </a>
-                                    <div class="user_card__content">
-                                        <h3 class="user_card__title" style="text-align: center;"><a href="{% url 'user_profile' profile_name=user.user %}">@{{ user.user }}</a></h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card -->
-
-                    {% endfor %}
-                    
-                    {% else %}
-                    <div class="search__fail"><h2><b>No Users Found</b></h2></div>
-                    {% endif %}
-                    
-                    {% endif %}
+                                    <!-- end card -->
+                                {% endfor %}    
+                
+                            {% else %}
+                                <div class="search__fail"><h2><b>No Users Found</b></h2></div>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
+                {% endif %}
+                
             </div>
         </div>
-    <!-- popup -->
-	{% if user.is_authenticated %}
-
-    <div class="popup" id="popup">
-        <div class="popupInner">
-            <button id="closePopupAlt" class="x__popup">&#x2715</button>
-            <h2>Add to Watchlist</h2><br>
-            {% if watchlists %}
-            
-            <div class="watchlist__container">
-            {% for watchlist in watchlists %}
-                <div class="watchlist__item">
-                    <p class="watchlist__title">{{ watchlist.watchlist_name }}</p>
-                    {% if movie in watchlist.entries|get_movies %}
-                        <button class="wlistremove__btn" watchlist_id="{{ watchlist.id }}">Remove</button>
-                    {% else %}
-                        <button class="wlistadd__btn" watchlist_id="{{ watchlist.id }}">Add</button>
-                    {% endif %}
-                </div>
-            {% endfor %}
-            </div>
-
-            {% else %}
-
-                <p>You have no watchlists yet.</p>
-
-            {% endif %}
-            <br>
-            <!-- Create New Watchlist form -->
-            <form method="POST" class="wlist__form">
-                {% csrf_token %}
-                <div class="wlist__group">
-                    {{ watchlist_form.watchlist_name }}
-                    <button class="wlist__btn" type="submit">New Watchlist</button>
-                </div>
-            </form>
-            <!-- end Create New Watchlist form -->
-            <br>
-            <button id="closePopup" class="close__popup">CLOSE</button>
-        </div>
     </div>
-    {% else %}
 
-    <div class="popup" id="popup">
-        <div class="popupInner">
-            <button id="closePopupAlt" class="x__popup">&#x2715</button>
-            <h2>Log In to Add to Your Watchlist</h2><br>
-            <button id="loginPopup" class="login__popup">LOG IN</button><br>
-            <button id="closePopup" class="close__popup">CLOSE</button>
-        </div>
-    </div>
-    
-    {% endif %}
-    <!-- end popup -->
 <!-- JS -->
 <script src={% static "js/jquery-3.3.1.min.js" %}></script>
 <script src={% static "js/bootstrap.bundle.min.js" %}></script>
