@@ -841,9 +841,19 @@ def rating(request, profile_name):
 
     user = get_object_or_404(User, username=profile_name)
     movie_ratings = MovieRating.objects.filter(user=user).select_related('movie').order_by(F('id').desc())
-    movie_rating_dict = {rating.movie: rating.user_rating for rating in movie_ratings}
     context['user_name'] = profile_name
-    context['movie_ratings'] = movie_rating_dict
+    context['movie_ratings'] = movie_ratings
+
+    paginator = Paginator(movie_ratings, 120)  # 120 movies per page
+
+    page_number = request.GET.get('page', 1)  # Get the page number from the request
+    try:
+        page_obj = paginator.page(page_number)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)  # If page is out of range, deliver last page
+
+    context["page_obj"] = page_obj
+
     return render(request, 'rating.html', context)
 
 # View function for the directors pages
