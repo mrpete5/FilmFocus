@@ -119,22 +119,3 @@ class WatchlistFilterForm(FilterForm):
 
 class CatalogFilterForm(FilterForm):
     pass
-
-# from .models import Watchlist
-
-# class NewWatchlistForm(forms.Form):
-
-#     watchlist_name = forms.CharField()
-
-#     def save(self, user, commit=True):
-#         watchlist = Watchlist(user=user, name=self.cleaned_data['name'])
-#         if commit:
-#             watchlist.save()
-#             return watchlist
-    
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-        
-#         # Use widgets on built in authentication fields
-#         watchlist_name_attrs = {'class':'sign__input', 'placeholder': 'Watchlist Name'} 
-#         self.fields['watchlist_name'].widget.attrs=watchlist_name_attrs

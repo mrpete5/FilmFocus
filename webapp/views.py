@@ -906,42 +906,7 @@ def testforban(request):
     movies_to_display = handle_test_for_ban(start_date, end_date)
     return render(request, "testforban.html", {"movies": movies_to_display})
 
-
-# Test page that handles data fetch calls and displays movies
+# Test page that displays selected movie attribute data
 def testdisplay(request):
-    # Always set these flags as False before committing changes
-    erase_movie_db = False                  # USE WITH CAUTION, erases all movie database contents
-    init_movie_db = False                   # Performs Popular fetch from TMDB 
-    get_now_playing = False                 # Performs Now Playing fetch from TMDB
-    update_streaming = False                # Updates all movie streaming providers from TMDB, takes a while
-    update_recs = False                     # Updates all movie recommendations from TMDB, takes a while
-    get_discover_movies = False             # Fetches all discover movies from TMDB, takes a while
-    update_letterboxd = False               # Updates all movie letterboxd info from webscraper, takes a while
-    get_specific_movie_by_search = False    # Fetches a specific movie 
-    search_term = "Fight Club"              # If (get_specific_movie_by_search): Name of specific movie search
-    update_omdb_movie_ratings = False       # Updates all movie IMDb, RT, and Metacritic ratings, takes a while
-    update_all_db_movie_entries = False     # Updates all movie entries (letterboxd, streaming, recommendations)
-       
-
-    # Search for a specific movie from tmdb database with tmdb_id and data 
-    #   from the master list found at FilmFocus\webapp\data\tmdb_master_movie_list.json
-    # Attempt to search for a specific movie based on the movie tmdb_id or movie title.
-    # search_and_fetch_movie_by_id(settings[tmdb_id_to_search_and_fetch]) # Alternative method, Attempt to search for a specific movie based on the movie tmdb_id.
-
-
-    # Add all tests into settings list
-    settings = [erase_movie_db,                     #  USE WITH CAUTION, settings[0],
-                init_movie_db,                      # settings[1], Can take a while based on settings/quantities
-                get_now_playing,                    # settings[2], Can take a while based on settings/quantities
-                update_streaming,                   # settings[3], Takes a while, performed on entire movie database
-                update_recs,                        # settings[4], Takes a while, performed on entire movie database
-                get_discover_movies,                # settings[5], Takes a while, performed on entire movie database
-                update_letterboxd,                  # settings[6], performed on entire movie database
-                get_specific_movie_by_search,       # settings[7], Should be very fast but may be unsuccessful
-                search_term,                        # settings[8], Passing a string for initialization purposes
-                update_omdb_movie_ratings,          # settings[9], Takes a while, performed on entire movie database
-                update_all_db_movie_entries,        # settings[10], Takes a while, performs updates on all movies in db (ratings, streaming, recs)
-                ]
-
-    movies_to_display = handle_test_display_page(settings)
+    movies_to_display = handle_test_display_page(fetch_movies_count=10)
     return render(request, "testdisplay.html", {"movies": movies_to_display})

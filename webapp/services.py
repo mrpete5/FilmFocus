@@ -1,10 +1,10 @@
 """
 Name of code artifact: services.py
 Brief description: Contains business logic for the FilmFocus web application, including functions to fetch movie details from TMDB and OMDB, and to manage the movie database.
-Programmer’s name: Mark
+Programmer’s name: Mark, Aaron, Bill, John, Traizen
 Date the code was created: 09/18/2023
-Dates the code was revised: 10/10/2023
-Brief description of each revision & author: Added threading to multiple API calling functions (Mark)
+Date the code was revised: 03/15/2024
+Brief description of each revision & author: Added threading to multiple API calling functions
 Preconditions: Django environment must be set up correctly, and necessary environment variables (API keys) must be available.
 Acceptable and unacceptable input values or types: Functions expect specific types as documented in their respective comments.
 Postconditions: Functions return values or modify the database as per their documentation.
@@ -60,6 +60,8 @@ with open(ALLOWED_PROVIDERS_LIST, 'r') as input_file:
         provider_name = line.strip()
         filtered_providers.append(provider_name)
 
+# Create a lock for database access
+database_lock = threading.Lock()
 
 # Search for a movie by its title
 def search_movie_by_title(title):
@@ -78,14 +80,6 @@ def search_and_fetch_movie_by_title(title):
 def search_and_fetch_movie_by_id(tmdb_id):
     title = search_movie_by_id(tmdb_id)
     process_movie_search(tmdb_id, title)
-
-# Get a random movie from the database and return it
-def get_random_obj_from_queryset(queryset):
-    max_pk = queryset.aggregate(max_pk=Max("pk"))['max_pk']
-    while True:
-        obj = queryset.filter(pk=random.randint(1, max_pk)).first()
-        if obj:
-            return obj
 
 # Convert a number of seconds to a readable time string
 def seconds_to_readable_time(estimate_time_secs):
@@ -127,7 +121,7 @@ def progress_bar_iteration(title, current, num_iterations):
 # Progress bar handler, if wait is time-based    
 def progress_bar_time(title, wait_seconds):
     for count in range(wait_seconds + 1):
-        progress_bar(title, count, wait_seconds, bar_length=100)
+        progress_bar(title, count, wait_seconds, bar_length=80)
         time.sleep(1)
 
 # Timer for testing funtions
@@ -138,7 +132,7 @@ def timer(function_name, fetch_func, args):
     start_time_readable = datetime.datetime.fromtimestamp(start_time).strftime('%H:%M:%S')
     print(f'Start {function_name}: {start_time_readable}')
 
-    movies = fetch_func(**args) # Call the function here, currently don't do anythin with the output
+    movies = fetch_func(**args) # Call the function here, don't do anything with the output
 
     end_time = time.time()
     end_time_readable = datetime.datetime.fromtimestamp(end_time).strftime('%H:%M:%S')  
@@ -151,8 +145,7 @@ def timer(function_name, fetch_func, args):
     total_time_readable = '{:02}:{:02}:{:02}'.format(int(hours), int(minutes), int(seconds))
 
     print(f'Finished {function_name}: {end_time_readable}')
-    print(f'Total time for {function_name}: {total_time_readable}.')
-    print()
+    print(f'Total time for {function_name}: {total_time_readable}.\n')
 
 
 # Process the search results for a movie and fetch its details
@@ -166,7 +159,6 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
     
     # Check if the movie is in the ban list
     if str(tmdb_id) in BAN_LIST:
-        # print(f"Movie '{title}' (ID: {tmdb_id}) is in the ban list and was not added.") # TODO: leave here, switch depending on what you want to display
         return
 
     # Check if the movie exists in the database
@@ -180,7 +172,6 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
 
         # Update its now_playing status
         Movie.objects.filter(tmdb_id=tmdb_id).update(now_playing=now_playing)
-        # print(f"Movie '{title}' (ID: {tmdb_id}) already exists in the database.") # TODO: leave here, switch depending on what you want to display
         return
 
     # Make an API call to fetch more details about the movie from TMDB
@@ -188,7 +179,6 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
     
     # Check if the movie is adult content
     if movie_details.get('adult'):
-        # print(f"Movie '{title}' (ID: {tmdb_id}) is for adults and was not added.") # TODO: leave here, switch depending on what you want to display
         return
     
     overview = movie_details.get('overview')
@@ -297,7 +287,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
         print(f"Failure: {e}")
 
     movie.save()
-    print(f"Movie '{title}' (ID: {tmdb_id}) fetched and saved to the database.")  # TODO: leave here, switch depending on what you want to display
+    print(f"Movie '{title}' (ID: {tmdb_id}) fetched and saved to the database.")
 
 
 # Fetch detailed information about a movie from TMDB
@@ -379,8 +369,8 @@ def fetch_popular_movies(start_page=1, end_page=5):
             return
 
         with semaphore:
-            # Ensure we don't make more than 10 requests per second
-            time.sleep(1/fetches_per_second)  # sleep 100ms
+            # Ensure we don't make more than 20 requests per second
+            time.sleep(1/fetches_per_second)  # sleep 50ms
             search_and_fetch_movie_by_id(movie_id)
     
     title = 'Fetching popular movies'
@@ -555,8 +545,8 @@ def fetch_and_update_omdb_movie_ratings(movie):
         movie.rotten_tomatoes_rating = omdb_data['rotten_tomatoes_rating']
     if omdb_data.get('metacritic_rating'):
         movie.metacritic_rating = omdb_data['metacritic_rating']
-    
-    movie.save()
+    with database_lock:
+        movie.save()
 
 # Update the IMDB, RT, and Metacritic ratings for all movies in the Movie database
 def update_omdb_movie_ratings(test_limit=None):
@@ -705,9 +695,9 @@ def update_letterboxd_ratings():
             else:
                 raise Exception
 
-            # print("Successful scrape of letterboxd for", movie.title, "("+str(movie.release_year)+")")    # TODO: uncomment this line
+            # print("Successful scrape of letterboxd for", movie.title, "("+str(movie.release_year)+")")
         except Exception as e:
-            print("Failed Letterboxd scrape for", movie.title, "("+str(movie.release_year)+")")          # TODO: uncomment this line
+            print("Failed Letterboxd scrape for", movie.title, "("+str(movie.release_year)+")")
             
 
         # Save the updated recommended_movie_data field to the database
@@ -763,14 +753,14 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=10):
     def process_movie(movie):
         with semaphore:
             # Ensure we don't make more than 20 requests per second
-            time.sleep(1/20)  # sleep 50ms
+            time.sleep(1/fetches_per_second)  # sleep 50ms
             tmdb_id = movie.get('id')
             title = movie.get('title')
             # Process each movie using the process_movie_search function
             process_movie_search(tmdb_id, title)
 
     for page in range(start_page, end_page + 1):
-        index = (page + 1) * 20
+        index = (page - start_page + 1) * 20
         # Create a loading progress bar
         title = 'Fetching TMDb discover movies'
         progress_bar_iteration(title, index, total_num_movies)
@@ -841,13 +831,8 @@ def get_refreshed_movie_data(movie_tmdb_id):
     # Verify now_playing is either 2023 or 2024
     movie.now_playing = True
     if movie.release_year not in [2023, 2024]:
-        movie.now_playing = False
+        movie.now_playing = False 
 
-    # Extract the video results and fetch the trailer key
-    videos = movie_details.get('videos', {}).get('results', [])
-    movie.trailer_key = fetch_movie_trailer_key(videos)    
-
-    # Save the updated movie
     movie.save()
 
     # Extract recommendations
@@ -883,7 +868,6 @@ def get_refreshed_movie_data(movie_tmdb_id):
     
     # Extract the streaming data
     streaming_data = movie_details.get('watch/providers', {}).get('results', {}).get('US', {}).get('flatrate', [])
-    # print(f"{movie.title}: {streaming_data}")  # TODO: remove, for testing
     movie.streaming_providers.clear()
     movie.top_streaming_providers.clear()
     allowed_providers = filtered_providers
@@ -895,7 +879,6 @@ def get_refreshed_movie_data(movie_tmdb_id):
     for provider_data in streaming_data:
         # Check if the provider is in the allowed list
         if provider_data['provider_name'] in allowed_providers:
-            # print(f"{movie.title}: {provider_data['provider_name']}") # TODO: remove, for testing
             provider, created = StreamingProvider.objects.get_or_create(
                 provider_id=provider_data['provider_id'],
                 defaults={
@@ -1037,95 +1020,7 @@ def handle_test_for_ban(start_date, end_date):
     movies_to_display = Movie.objects.filter(created_at__gte=start_date, created_at__lte=end_date)
     return movies_to_display
 
-
-# Handle the test display page and manage the movie database
-def handle_test_display_page(settings):
-    # 20 movies per page
-    # update_streaming_providers(test_limit=10) # Uncomment to update the top streaming providers
-
-    # search_and_fetch_movie_by_title("The Greasy Strangler")
-    # search_and_fetch_movie_by_id(775517)
-
-    # popular_pages is the main method for getting a mass amount of new movies
-    popular_pages = 10          # Number of popular pages from 1 to x with 20 results each, TMDb
-    now_playing_pages = 10      # Number of now playing pages from 1 to x with 20 results each, TMDb
-    fetch_movies_count = 10     # Number of individual movies returned to testdisplay, testdisplay/
-    fetch_discover_count = 5    # Number of discover pages from 1 to x with 20 results each, TMDb
-    tmdb_id_value = 11          # Initialized value
-    
-    # Diplay the starting time of the test display page
-    now_time = time.time()
-    now_time_readable = datetime.datetime.fromtimestamp(now_time).strftime('%H:%M:%S')
-    print(f'Starting test display page at {now_time_readable}\n')
-        
-    if settings[0]:
-        timer(function_name='clear_movie_database', fetch_func=clear_movie_database, args={})
-
-    if settings[1]:
-        timer(function_name='fetch_popular_movies', fetch_func=fetch_popular_movies, args={'start_page': 1, 'end_page': popular_pages})
-        timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages })
-    elif settings[2]:  # Use 'elif' to ensure it doesn't run again if initialize_database is True
-        timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages})
-    
-    if settings[3]:
-        timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
-    
-    if settings[4]:
-        timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
-    
-    if settings[5]:
-        timer(function_name='fetch_tmdb_discover_movies', fetch_func=fetch_tmdb_discover_movies, args={'start_page': 1, 'end_page': fetch_discover_count})
-
-    if settings[6]:
-        timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
-    
-    if settings[7]:
-        search_term = settings[8]
-        search_and_fetch_movie_by_title(search_term)        # Search for a movie by its title and fetch its details
-        search_and_fetch_movie_by_id(tmdb_id_value)         # Search for a movie by its tmdb_id and fetch its details
-    
-    if settings[9]:
-        timer(function_name='update_omdb_movie_ratings', fetch_func=update_omdb_movie_ratings, args={})
-    
-    if settings[10]:
-        """ Performs all operations to update movie data in our database, without deleting anything. """
-        """ Updates all movie ratings, streaming providers, and recommendations. """
-        get_movies = True
-        get_updates = True
-
-        if get_movies:
-            timer(function_name='fetch_popular_movies', fetch_func=fetch_popular_movies, args={'start_page': 1, 'end_page': popular_pages})
-            timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages })
-            timer(function_name='fetch_tmdb_discover_movies', fetch_func=fetch_tmdb_discover_movies, args={'start_page': 1, 'end_page': fetch_discover_count})
-
-        if get_updates:
-            timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
-            timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
-            timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
-            timer(function_name='update_omdb_movie_ratings', fetch_func=update_omdb_movie_ratings, args={})
-
-    # Prints which settings are set
-    print(f"==========================")
-    flags = [   'erase_movie_db',                               # flags[0]
-                'init_movie_db',                                # flags[1]  
-                'get_now_playing',                              # flags[2]
-                'update_streaming',                             # flags[3]
-                'update_recs',                                  # flags[4]
-                'get_discover_movies',                          # flags[5]      
-                'update_letterboxd_ratings',                    # flags[6]
-                'update_omdb_movie_ratings',                    # flags[7]
-                'get_specific_movie_by_search',                 # flags[8]
-                'search_term',                                  # flags[9]
-    ]
-
-    flags.append(f'{tmdb_id_value}')                            # flags[10], This will add the item at the end of the list
-    settings.append('tmdb_id_value')
-
-    for index, flag in enumerate(flags):
-        print(f"{flag} = {settings[index]}")
-
-    print(f"==========================\n")  
-
-    items = Movie.objects.all().order_by('?')[:fetch_movies_count]  # Fetch movies to display on /testdisplay/
-    return items
-
+# Handle the test display page
+def handle_test_display_page(fetch_movies_count=10):
+    movies_to_display = Movie.objects.all().order_by('?')[:fetch_movies_count]
+    return movies_to_display
