@@ -23,6 +23,7 @@ import random
 import requests
 import json
 import webapp.letterboxd_scraper as lbd_scrape
+import webapp.just_watch_scraper as jw_scrape
 import concurrent.futures
 from webapp.models import *
 from dotenv import load_dotenv
@@ -273,6 +274,9 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
             )
             movie.streaming_providers.add(provider)
 
+    # Update the streaming providers using the JustWatch scraper for Tubi TV, Pluto TV, and Freevee
+    process_justwatch_streamers(movie)
+
     providers = movie.streaming_providers.all()
     sorted_providers = sorted(providers, key=lambda x: x.ranking)
 
@@ -511,6 +515,9 @@ def update_streaming_providers(test_limit=None):
                     )
                     movie.streaming_providers.add(provider)
 
+            # Update the streaming providers using the JustWatch scraper for Tubi TV, Pluto TV, and Freevee
+            process_justwatch_streamers(movie)
+
             providers = movie.streaming_providers.all()
             sorted_providers = sorted(providers, key=lambda x: x.ranking)
 
@@ -635,6 +642,22 @@ def update_movie_recommendations():
             # Save updated recommendations 
             movie.save()
 
+# Update the streaming providers using the JustWatch scraper for Tubi TV, Pluto TV, and Freevee
+def process_justwatch_streamers(movie):
+    movie_instance = Movie.objects.filter(title=movie.title, release_year=movie.release_year).first()
+
+    if movie_instance:
+        providers = jw_scrape.fetch_justwatch(movie)
+
+        for provider_name in providers:
+            if provider_name in ["Tubi TV", "Pluto TV", "Freevee"]:
+                streaming_provider, _ = StreamingProvider.objects.get_or_create(name=provider_name)
+                movie_instance.streaming_providers.add(streaming_provider)
+        
+        movie_instance.save()
+
+    else:
+        print(f"Movie not found in the database: {movie.title}, {movie.release_year}")
 
 # Update the Letterboxd ratings for all movies in the Movie database
 def update_letterboxd_ratings():
@@ -869,6 +892,9 @@ def get_refreshed_movie_data(movie_tmdb_id):
                 }
             )
             movie.streaming_providers.add(provider)
+
+    # Update the streaming providers using the JustWatch scraper for Tubi TV, Pluto TV, and Freevee
+    process_justwatch_streamers(movie)
 
     providers = movie.streaming_providers.all()
     sorted_providers = sorted(providers, key=lambda x: x.ranking)

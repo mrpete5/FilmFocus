@@ -79,18 +79,25 @@
 								
 								<!-- streaming providers -->
 								<div class="details__wrap">
-
 									{% if movie.streaming_providers.all %}
-									<div class="details__devices">
-										<span class="details__devices-title">Available to stream at:</span>
-										<ul class="details__devices-list">
-											{% for provider in movie.streaming_providers.all %}
-											<li>
-												<img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo">
-											</li>
-											{% endfor %}
-										</ul>
-									</div>
+										<div class="details__devices">
+											<span class="details__devices-title">Available to stream at:</span>
+											<ul class="details__devices-list">
+												{% for provider in movie.streaming_providers.all %}
+													{% if provider.logo_path %}
+														<li>
+															<img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo">
+														</li>
+													{% else %}
+														{% with "img/logos/"|add:provider.name|lower|cut:" "|add:".png" as logo_path %}
+															<li>
+																<img src="{% static logo_path %}" alt="{{ provider.name }} logo">
+															</li>
+														{% endwith %}
+													{% endif %}
+												{% endfor %}
+											</ul>
+										</div>
 									{% endif %}
 								</div>
 								<br>
@@ -269,15 +276,23 @@
 									<!-- Streaming Provider Images -->
 									<span class="card__streamer">
 										{% if movie.top_streaming_providers.all %}
-										<div class="provider-list">
-											<ul style="list-style-type: none; padding: 0; margin: 0;">
-												{% for provider in movie.top_streaming_providers.all %}
-													<li style="margin-bottom: 10px;">
-														<img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" class="provider-logo">
-													</li>
-												{% endfor %}
-											</ul>
-										</div>
+											<div class="provider-list">
+												<ul style="list-style-type: none; padding: 0; margin: 0;">
+													{% for provider in movie.top_streaming_providers.all %}
+														{% if provider.logo_path %}
+															<li style="margin-bottom: 10px;">
+																<img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo" class="provider-logo">
+															</li>
+														{% else %}
+															{% with "img/logos/"|add:provider.name|lower|cut:" "|add:".png" as default_logo %}
+																<li style="margin-bottom: 10px;">
+																	<img src="{% static default_logo %}" alt="{{ provider.name }} logo" class="provider-logo">
+																</li>
+															{% endwith %}
+														{% endif %}
+													{% endfor %}
+												</ul>
+											</div>
 										{% endif %}
 									</span>
 									<!-- end Streaming Provider Images -->

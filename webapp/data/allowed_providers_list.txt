@@ -12,3 +12,6 @@ Shudder
 Apple TV Plus
 Freeform
 Criterion Channel
+Tubi TV
+Pluto TV
+Freevee
