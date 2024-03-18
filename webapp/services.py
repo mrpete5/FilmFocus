@@ -505,7 +505,6 @@ def update_streaming_providers(test_limit=None):
             # Update streaming providers based on the fetched data
             for provider_data in streaming_data:
                 if provider_data['provider_name'] in filtered_providers:
-                    # print(f"{movie.title}: {provider_data['provider_name']}") # TODO: remove, for testing
                     provider, created = StreamingProvider.objects.get_or_create(
                         provider_id=provider_data['provider_id'],
                         defaults={

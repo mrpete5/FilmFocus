@@ -59,7 +59,6 @@ def fetch_justwatch(movie, call_number=0):
                             offer_providers = offer.find_all("a", class_="offer")
                             for provider in offer_providers:
                                 provider_name = provider.find("img")["alt"]
-                                # found_providers.append(provider_name) # TODO, remove
                                 if provider_name in PROVIDER_LIST:
                                     # Add the provider to the list of found providers
                                     found_providers.append(provider_name) 
