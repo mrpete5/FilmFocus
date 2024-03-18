@@ -3,7 +3,7 @@ Name of code artifact: services.py
 Brief description: Contains business logic for the FilmFocus web application, including functions to fetch movie details from TMDB and OMDB, and to manage the movie database.
 Programmer’s name: Mark, Aaron, Bill, John, Traizen
 Date the code was created: 09/18/2023
-Date the code was revised: 03/15/2024
+Date the code was revised: 03/17/2024
 Brief description of each revision & author: Added threading to multiple API calling functions
 Preconditions: Django environment must be set up correctly, and necessary environment variables (API keys) must be available.
 Acceptable and unacceptable input values or types: Functions expect specific types as documented in their respective comments.
@@ -37,6 +37,11 @@ OMDB_API_KEY = os.environ["OMDB_API_KEY"]               # limited to 100,000 cal
 TMDB_API_KEY_STRING = os.environ["TMDB_API_KEY_STRING"] # limited to around 50 calls/second
 MASTER_LIST = "webapp/data/tmdb_master_movie_list.json"
 ALLOWED_PROVIDERS_LIST = "webapp/data/allowed_providers_list.txt"
+TMDB_BASE_URL = "https://api.themoviedb.org/3"
+HEADERS = {
+    "accept": "application/json",
+    'Authorization': TMDB_API_KEY_STRING,
+}
 
 # Load the ban list from the file
 def load_ban_list():
@@ -293,13 +298,9 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
 # Fetch detailed information about a movie from TMDB
 def fetch_movie_details_from_tmdb(tmdb_id):
     # Define the TMDB API endpoint and parameters
-    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?language=en-US&append_to_response=videos,watch/providers,recommendations"
-    headers = {
-        "accept": "application/json",
-        'Authorization': TMDB_API_KEY_STRING,
-    }
+    url = f"{TMDB_BASE_URL}/movie/{tmdb_id}?language=en-US&append_to_response=videos,watch/providers,recommendations"
     # Fetch movie details, videos, and recommendations from TMDB
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=HEADERS)
     return response.json()
 
 
@@ -379,12 +380,8 @@ def fetch_popular_movies(start_page=1, end_page=5):
         # Create a loading progress bar
         progress_bar_iteration(title, index, total_num_movies)
         
-        url = f"https://api.themoviedb.org/3/movie/popular?language=en-US&page={page_num}"
-        headers = {
-            "accept": "application/json",
-            "Authorization": TMDB_API_KEY_STRING,
-        }
-        response = requests.get(url, headers=headers)
+        url = f"{TMDB_BASE_URL}/movie/popular?language=en-US&page={page_num}"
+        response = requests.get(url, headers=HEADERS)
         json_response = response.json()
         results = json_response['results']
 
@@ -427,12 +424,8 @@ def fetch_now_playing_movies(start_page=1, end_page=5):
         # Create a loading progress bar
         progress_bar_iteration(title, index, total_num_movies)
         
-        url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page_num}"
-        headers = {
-            "accept": "application/json",
-            "Authorization": TMDB_API_KEY_STRING,
-        }
-        response = requests.get(url, headers=headers)
+        url = f"{TMDB_BASE_URL}/movie/now_playing?language=en-US&page={page_num}"
+        response = requests.get(url, headers=HEADERS)
         movies = response.json().get('results', [])
 
         # Use a thread pool to process movies in parallel
@@ -479,12 +472,8 @@ def get_movies_for_index():
 
 # Helper function for update_streaming_providers()
 def fetch_movie_streaming_data(movie, index):
-    url = f"https://api.themoviedb.org/3/movie/{movie.tmdb_id}?language=en-US&append_to_response=watch/providers"
-    headers = {
-        "accept": "application/json",
-        'Authorization': TMDB_API_KEY_STRING,
-    }
-    response = requests.get(url, headers=headers)
+    url = f"{TMDB_BASE_URL}/movie/{movie.tmdb_id}?language=en-US&append_to_response=watch/providers"
+    response = requests.get(url, headers=HEADERS)
     response_data = response.json()
     return movie, response_data, index
 
@@ -535,18 +524,19 @@ def update_streaming_providers(test_limit=None):
 
 # Helper function for update_omdb_movie_ratings()
 def fetch_and_update_omdb_movie_ratings(movie):
-    # Fetch additional data about the movie from OMDB
-    omdb_data = fetch_movie_data_from_omdb(movie.imdb_id)
+    try:
+        omdb_data = fetch_movie_data_from_omdb(movie.imdb_id)
 
-    # Update the movie ratings if available
-    if omdb_data.get('imdb_rating'):
-        movie.imdb_rating = omdb_data['imdb_rating']
-    if omdb_data.get('rotten_tomatoes_rating'):
-        movie.rotten_tomatoes_rating = omdb_data['rotten_tomatoes_rating']
-    if omdb_data.get('metacritic_rating'):
-        movie.metacritic_rating = omdb_data['metacritic_rating']
-    with database_lock:
-        movie.save()
+        if omdb_data.get('imdb_rating'):
+            movie.imdb_rating = omdb_data['imdb_rating']
+        if omdb_data.get('rotten_tomatoes_rating'):
+            movie.rotten_tomatoes_rating = omdb_data['rotten_tomatoes_rating']
+        if omdb_data.get('metacritic_rating'):
+            movie.metacritic_rating = omdb_data['metacritic_rating']
+        with database_lock:
+            movie.save()
+    except Exception as e:
+        print(f"Error updating omdb ratings for movie '{movie.title}': {e}")
 
 # Update the IMDB, RT, and Metacritic ratings for all movies in the Movie database
 def update_omdb_movie_ratings(test_limit=None):
@@ -588,15 +578,11 @@ def update_movie_recommendations():
         title = 'Updating Movie Recs'
         progress_bar_iteration(title, index, total_num_movies)
         
-        url = f"https://api.themoviedb.org/3/movie/{movie.tmdb_id}/recommendations?language=en-US"
-        headers = {
-            "accept": "application/json",
-            'Authorization': TMDB_API_KEY_STRING,
-        }
+        url = f"{TMDB_BASE_URL}/movie/{movie.tmdb_id}/recommendations?language=en-US"
 
         # Fetch movie recommendations from TMDB
         try:
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=HEADERS)
             response.raise_for_status()  # This will raise an HTTPError for bad responses (4xx and 5xx)
         except requests.RequestException as e:
             print(f"Failed to fetch recommendations for movie '{movie.title}' (ID: {movie.tmdb_id}): {e}")
@@ -765,12 +751,8 @@ def fetch_tmdb_discover_movies(start_page=1, end_page=10):
         title = 'Fetching TMDb discover movies'
         progress_bar_iteration(title, index, total_num_movies)
 
-        url = f"https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&language=en-US&page={page}"
-        headers = {
-            "accept": "application/json",
-            'Authorization': TMDB_API_KEY_STRING,
-        }
-        response = requests.get(url, headers=headers)
+        url = f"{TMDB_BASE_URL}/discover/movie?sort_by=popularity.desc&language=en-US&page={page}"
+        response = requests.get(url, headers=HEADERS)
         response.raise_for_status()  # This will raise an HTTPError for bad responses (4xx and 5xx)
         movies = response.json().get('results', [])
         
@@ -962,12 +944,8 @@ def get_movies_by_actor(actor_name):
     return movies
 
 def get_person_id(actor_name):
-    search_url = f"https://api.themoviedb.org/3/search/person?query={actor_name}&include_adult=false&language=en-US&page=1"
-    headers = {
-        "accept": "application/json",
-        'Authorization': TMDB_API_KEY_STRING,
-    }
-    response = requests.get(search_url, headers=headers)
+    search_url = f"{TMDB_BASE_URL}/search/person?query={actor_name}&include_adult=false&language=en-US&page=1"
+    response = requests.get(search_url, headers=HEADERS)
     data = response.json()
     if data.get('results'):
         actor = data['results'][0]
@@ -976,12 +954,8 @@ def get_person_id(actor_name):
         return None
 
 def get_movies_from_tmdb_by_actor(person_id):
-    credits_url = f"https://api.themoviedb.org/3/person/{person_id}/movie_credits"
-    headers = {
-        "accept": "application/json",
-        'Authorization': TMDB_API_KEY_STRING,
-    }
-    response = requests.get(credits_url, headers=headers)
+    credits_url = f"{TMDB_BASE_URL}/person/{person_id}/movie_credits"
+    response = requests.get(credits_url, headers=HEADERS)
     data = response.json()
     movie_ids = [credit['id'] for credit in data.get('cast', [])]
     # Filter movies by IDs found in the database
