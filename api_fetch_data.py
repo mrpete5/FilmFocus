@@ -30,11 +30,11 @@ def api_fetch_data():
     flags = [
         'erase_movie_db',                       # settings[0], USE WITH CAUTION
         'get_tmdb_movies',                      # settings[1], Can take a while based on settings/quantities
-        'update_streaming',                     # settings[2], Takes a while, performed on entire movie database
-        'update_recs',                          # settings[3], Takes a while, performed on entire movie database
-        'get_discover_movies',                  # settings[4], Takes a while, performed on entire movie database
-        'update_letterboxd',                    # settings[5], performed on entire movie database
-        'get_specific_movie_by_search',         # settings[6], Should be very fast but may be unsuccessful
+        'get_discover_movies',                  # settings[2], Takes a while, performed on entire movie database
+        'get_specific_movie_by_search',         # settings[3], Should be very fast but may be unsuccessful
+        'update_streaming',                     # settings[4], Takes a while, performed on entire movie database
+        'update_recs',                          # settings[5], Takes a while, performed on entire movie database
+        'update_letterboxd',                    # settings[6], performed on entire movie database
         'update_omdb_movie_ratings',            # settings[7], performed on entire movie database
         'update_all_db_movie_entries',          # settings[8], Takes a while, performs updates on all movies in db (ratings, streaming, recs)
     ]
@@ -42,13 +42,13 @@ def api_fetch_data():
     descriptions = [
         'Erases all movie database contents',
         'Performs Popular and Now Playing fetch from TMDB',
+        'Fetches discover movies from TMDB',
+        'Fetches a specific movie by title from TMDB', 
         'Updates all movie streaming providers from TMDB',
         'Updates all movie recommendations from TMDB',
-        'Fetches all discover movies from TMDB',
         'Updates all movie Letterboxd info from webscraper',
-        'Fetches a specific movie by title', 
         'Updates all movie IMDb, RT, and Metacritic ratings from OMDB',
-        'Updates all movie entries (letterboxd, streaming, recommendations)',
+        'Updates all movie entries (letterboxd, streaming, ratings, recs)',
     ]
 
     # Print the menu
@@ -81,25 +81,25 @@ def api_fetch_data():
     if settings[1]:
         timer(function_name='fetch_popular_movies', fetch_func=fetch_popular_movies, args={'start_page': 1, 'end_page': popular_pages})
         timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages })
-    
+
     if settings[2]:
-        timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
+        timer(function_name='fetch_tmdb_discover_movies', fetch_func=fetch_tmdb_discover_movies, args={'start_page': 1, 'end_page': fetch_discover_count})
     
     if settings[3]:
-        timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
-    
-    if settings[4]:
-        timer(function_name='fetch_tmdb_discover_movies', fetch_func=fetch_tmdb_discover_movies, args={'start_page': 1, 'end_page': fetch_discover_count})
-
-    if settings[5]:
-        timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
-    
-    if settings[6]:
         movie_title = input("Enter movie title: ")
         search_and_fetch_movie_by_title(movie_title)        # Search for a movie by its title and fetch its details
         
         # tmdb_id_value = input("Enter movie tmdb_id: ")
         # search_and_fetch_movie_by_id(tmdb_id_value)         # Search for a movie by its tmdb_id and fetch its details
+           
+    if settings[4]:
+        timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
+    
+    if settings[5]:
+        timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})
+    
+    if settings[6]:
+        timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
     
     if settings[7]:
         timer(function_name='update_omdb_movie_ratings', fetch_func=update_omdb_movie_ratings, args={})
