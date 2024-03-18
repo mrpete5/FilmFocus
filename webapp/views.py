@@ -884,7 +884,12 @@ def actor(request, actor_name):
         actor_name = actor_name.replace("--", "-")          # Handles double hypen into single hyphen
     
     context['actor_name'] = actor_name
-    context['movies'] = get_movies_by_actor(actor_name)
+
+    person_id = get_person_id(actor_name)
+    if person_id:
+        context['movies'] = get_movies_from_tmdb_by_actor(person_id)
+    else:
+        context['movies'] = get_movies_by_actor(actor_name)
 
     return render(request, "actor.html", context)
 

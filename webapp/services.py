@@ -961,6 +961,33 @@ def get_movies_by_actor(actor_name):
     movies = Movie.objects.filter(actors__icontains=actor_name).order_by('release_date')
     return movies
 
+def get_person_id(actor_name):
+    search_url = f"https://api.themoviedb.org/3/search/person?query={actor_name}&include_adult=false&language=en-US&page=1"
+    headers = {
+        "accept": "application/json",
+        'Authorization': TMDB_API_KEY_STRING,
+    }
+    response = requests.get(search_url, headers=headers)
+    data = response.json()
+    if data.get('results'):
+        actor = data['results'][0]
+        return actor['id']
+    else:
+        return None
+
+def get_movies_from_tmdb_by_actor(person_id):
+    credits_url = f"https://api.themoviedb.org/3/person/{person_id}/movie_credits"
+    headers = {
+        "accept": "application/json",
+        'Authorization': TMDB_API_KEY_STRING,
+    }
+    response = requests.get(credits_url, headers=headers)
+    data = response.json()
+    movie_ids = [credit['id'] for credit in data.get('cast', [])]
+    # Filter movies by IDs found in the database
+    movies = Movie.objects.filter(tmdb_id__in=movie_ids).order_by('release_date')
+    return movies
+
 # Performs filtering to the movies list
 def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end):
     # Fitler for Genre

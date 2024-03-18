@@ -26,7 +26,6 @@ def api_fetch_data():
     popular_pages = 20              # Number of popular pages from 1 to x with 20 results each, TMDb
     now_playing_pages = 20          # Number of now playing pages from 1 to x with 20 results each, TMDb
     fetch_discover_count = 20       # Number of discover pages from 1 to x with 20 results each, TMDb
-    # tmdb_id_value = 11            # Initialized value, not currently using this value
     
     flags = [
         'erase_movie_db',                       # settings[0], USE WITH CAUTION
@@ -96,8 +95,10 @@ def api_fetch_data():
         timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
     
     if settings[6]:
-        search_term = input("Enter search term: ")
-        search_and_fetch_movie_by_title(search_term)        # Search for a movie by its title and fetch its details
+        movie_title = input("Enter movie title: ")
+        search_and_fetch_movie_by_title(movie_title)        # Search for a movie by its title and fetch its details
+        
+        # tmdb_id_value = input("Enter movie tmdb_id: ")
         # search_and_fetch_movie_by_id(tmdb_id_value)         # Search for a movie by its tmdb_id and fetch its details
     
     if settings[7]:
