@@ -66,6 +66,11 @@ with open(ALLOWED_PROVIDERS_LIST, 'r') as input_file:
         provider_name = line.strip()
         filtered_providers.append(provider_name)
 
+# Read JustWatch URL data from the JSON file
+JW_WEB_SCRAPER_URLS_PATH = 'webapp/data/jw_web_scraper_urls.json'
+with open(JW_WEB_SCRAPER_URLS_PATH, 'r') as json_file:
+    jw_urls_data = json.load(json_file)
+
 # Create a lock for database access
 database_lock = threading.Lock()
 
@@ -483,9 +488,12 @@ def fetch_movie_streaming_data(movie, index):
 
 # Update the streaming providers for all movies in the Movie database
 def update_streaming_providers(test_limit=None):
-    # test_limit = 40   # Test mode, quantity of test cases
+    # test_limit = 10   # Test mode, quantity of test cases
     if test_limit:
-        movies = list(Movie.objects.all()[:test_limit])
+        # movies = list(Movie.objects.all()[:test_limit])
+        previous = 900
+        new_limit = test_limit + previous
+        movies = list(Movie.objects.all()[previous:new_limit])
     else:
         movies = list(Movie.objects.all())
 
@@ -493,6 +501,7 @@ def update_streaming_providers(test_limit=None):
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:  # Limit to 20 threads
         futures = [executor.submit(fetch_movie_streaming_data, movie, index) for index, movie in enumerate(movies)]
+        completed_threads = 0
 
         for future in concurrent.futures.as_completed(futures):
             movie, response_data, index = future.result()  # Unpack the results
@@ -524,8 +533,12 @@ def update_streaming_providers(test_limit=None):
                 top_provider = sorted_providers[0]
                 movie.top_streaming_providers.add(top_provider)
 
-            if index % 100 == 0:
+            if index % 10 == 0:
                 print(f'Updated streaming providers for {index}/{len(movies)} movies')
+
+            completed_threads += 1
+            if completed_threads % 20 == 0:  # Check if 20 threads have finished
+                time.sleep(5)  # Pause for 5 seconds
 
 
 # Helper function for update_omdb_movie_ratings()
@@ -646,7 +659,7 @@ def process_justwatch_streamers(movie):
     movie_instance = Movie.objects.filter(title=movie.title, release_year=movie.release_year).first()
 
     if movie_instance:
-        providers = jw_scrape.fetch_justwatch(movie)
+        providers = jw_scrape.fetch_justwatch(movie, jw_urls_data)
 
         for provider_name in providers:
             if provider_name in ["Tubi TV", "Pluto TV", "Freevee"]:

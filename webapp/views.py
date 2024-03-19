@@ -915,3 +915,73 @@ def testforban(request):
 def testdisplay(request):
     movies_to_display = handle_test_display_page(fetch_movies_count=10)
     return render(request, "testdisplay.html", {"movies": movies_to_display})
+
+# Helper function to update JustWatch URLs
+def update_jw_url(request, movie_id):
+    if request.method == 'POST':
+        true_jw_url = request.POST.get('true_jw_url')
+        
+        # Load JW URL data from the JSON file
+        json_file_path = 'webapp/data/jw_web_scraper_urls.json'
+        with open(json_file_path, 'r') as json_file:
+            jw_urls_data = json.load(json_file)
+
+        # Find the movie entry in the JSON data and update its JW URL
+        for jw_data in jw_urls_data:
+            if jw_data.get('tmdb_id') == Movie.objects.get(id=movie_id).tmdb_id:
+                jw_data['jw_url'] = true_jw_url
+                break
+
+        # Update the JSON file with the modified data
+        with open(json_file_path, 'w') as json_file:
+            json.dump(jw_urls_data, json_file, indent=4)
+
+    return redirect('testwebscraper')
+
+# Test page for getting JustWatch URL for web scraping
+def testwebscraper(request):
+    include_known_jw_urls = False
+    fetch_movies_count = 950
+    start_object = 0
+    end_object = start_object + fetch_movies_count
+    movies_to_display = list(Movie.objects.all()[start_object:end_object])
+
+    # Read JW URL data from the JSON file
+    json_file_path = 'webapp/data/jw_web_scraper_urls.json'
+    with open(json_file_path, 'r') as json_file:
+        jw_urls_data = json.load(json_file)
+
+    # Function to generate JW URL from movie title
+    def generate_jw_url(title):
+        formatted_title = '+'.join(title.split())
+        return f"https://www.justwatch.com/us/search?q={formatted_title}"
+
+    # Iterate over movies and update JW URL if available in the JSON data
+    for movie in movies_to_display:
+        found_in_json = False
+        for jw_data in jw_urls_data:
+            if movie.tmdb_id == jw_data.get('tmdb_id'):
+                movie.jw_url = jw_data.get('jw_url')
+                found_in_json = True
+                break
+        else:
+            movie.jw_url = None
+
+        # If JW URL is null, generate search URL from movie title
+        if not movie.jw_url:
+            movie.jw_url = generate_jw_url(movie.title)
+
+        # If movie's tmdb_id not found in JSON, add the entry to the JSON file
+        if not found_in_json:
+            new_entry = {'tmdb_id': movie.tmdb_id, 'title': movie.title, 'jw_url': None}
+            jw_urls_data.append(new_entry)
+
+    # Update the JSON file with new entries
+    with open(json_file_path, 'w') as json_file:
+        json.dump(jw_urls_data, json_file, indent=4)
+
+    # Filter movies based on include_known_jw_urls
+    if not include_known_jw_urls:
+        movies_to_display = [movie for movie in movies_to_display if not movie.jw_url.startswith("https://www.justwatch.com/us/movie/")]
+
+    return render(request, "testwebscraper.html", {"movies": movies_to_display})

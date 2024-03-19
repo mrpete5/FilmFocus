@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies List</title>
+    <!-- Add any additional head elements here -->
+</head>
+<body>
+    <h1>Movies List</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th width="100px">Poster</th>
+                <th width="200px">Title</th>
+                <th width="400px">JW URL</th>
+                <th width="400px">Update JW URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movie in movies %}
+            <tr>
+                <td>
+                    {% if movie.poster_path %}
+                    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster" width="100">
+                    {% else %}
+                    No poster available
+                    {% endif %}
+                </td>
+                <td>{{ movie.title }}</td>
+                <td>
+                    {% if movie.jw_url %}
+                        {% if "search?q=" in movie.jw_url %}
+                            <a href="{{ movie.jw_url }}" target="_blank">Search on JustWatch</a>
+                        {% else %}
+                            <a href="{{ movie.jw_url }}" target="_blank">{{ movie.jw_url }}</a>
+                        {% endif %}
+                    {% else %}
+                        JW URL not available
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'update_jw_url' movie.id %}">
+                        {% csrf_token %}
+                        <label for="true_jw_url">JW URL:</label>
+                        <input type="text" id="true_jw_url" name="true_jw_url">
+                        <!-- Add a hidden input field to pass the movie ID -->
+                        <input type="hidden" name="movie_id" value="{{ movie.id }}">
+                        <button type="submit">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
