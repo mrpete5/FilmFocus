@@ -115,7 +115,7 @@ class FilterForm(forms.Form):
 
 
 class WatchlistFilterForm(FilterForm):
-    watchlist_id = forms.IntegerField(label="Wishlist ID")
+    watchlist_id = forms.CharField(label="Wishlist ID")
 
 class CatalogFilterForm(FilterForm):
     pass
