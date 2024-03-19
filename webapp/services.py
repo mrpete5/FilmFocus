@@ -377,7 +377,7 @@ def fetch_popular_movies(start_page=1, end_page=5):
         # Avoid obscure foreign films
         original_language = movie_data["original_language"]
         movie_title = movie_data["title"]
-        if page_num > 200 and original_language != "en":
+        if page_num > 40 and original_language != "en":
             print(f"Skipped {original_language} film: {movie_title} ")
             return
 

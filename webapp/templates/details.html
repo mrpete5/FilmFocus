@@ -83,7 +83,7 @@
 										<div class="details__devices">
 											<span class="details__devices-title">Available to stream at:</span>
 											<ul class="details__devices-list">
-												{% for provider in movie.streaming_providers.all %}
+												{% for provider in movie.streaming_providers.all|slice:":4" %} 	<!-- Limit of 4 genres posted -->
 													{% if provider.logo_path %}
 														<li>
 															<img src="https://image.tmdb.org/t/p/w500{{ provider.logo_path }}" alt="{{ provider.name }} logo">
