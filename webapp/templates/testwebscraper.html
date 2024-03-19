@@ -27,7 +27,7 @@
                     No poster available
                     {% endif %}
                 </td>
-                <td>{{ movie.title }}</td>
+                <td>{{ movie.title }} ({{movie.release_year}})</td>
                 <td>
                     {% if movie.jw_url %}
                         {% if "search?q=" in movie.jw_url %}

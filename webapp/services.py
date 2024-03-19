@@ -86,9 +86,11 @@ def search_movie_by_id(tmdb_id):
 # Search for movies by their title and fetch their details
 def search_and_fetch_movie_by_title(title):
     tmdb_ids = search_movie_by_title(title)
-    for tmdb_id in tmdb_ids:
-        title = search_movie_by_id(tmdb_id)
-        process_movie_search(tmdb_id, title)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:  # Adjust max_workers as needed
+        futures = [executor.submit(process_movie_search, tmdb_id, search_movie_by_id(tmdb_id)) for tmdb_id in tmdb_ids]
+        for future in concurrent.futures.as_completed(futures):
+            # Handle any results or exceptions here if needed
+            pass
 
 # Search for a movie by its TMDB ID and fetch its details
 def search_and_fetch_movie_by_id(tmdb_id):
