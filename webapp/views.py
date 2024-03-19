@@ -318,7 +318,7 @@ def searchBar(request):
         query = request.GET.get('query')
         context['query'] = query
         if query:
-            if query[0] == '@':
+            if query[0] == '@':     # Search for a FilmFocus user
                 username = query[1:]  # Remove the '@' symbol
                 users = User.objects.filter(username__icontains=username)
                 userProfiles = UserProfile.objects.filter(user__in=users).exclude(user=request.user)
@@ -326,6 +326,18 @@ def searchBar(request):
                 if user.is_authenticated: 
                     context['self_profile'] = UserProfile.objects.get(user=request.user)
                 return render(request, 'user_results.html', context)
+            elif query[0] == '#':   # Fetch a movie from TMDb
+                context['query'] = query[1:]  # Remove the '@' symbol
+                movie_title = query[1:]
+                movies = Movie.objects.filter(title__iexact=movie_title)
+                if movies:
+                    context['searchedMovies'] = movies
+                    return render(request, 'results.html', context)
+
+                search_and_fetch_movie_by_title(movie_title)
+                movies = Movie.objects.filter(title__icontains=movie_title)
+                context['searchedMovies'] = movies
+                return render(request, 'results.html', context)
             else:
                 movies = Movie.objects.filter(title__icontains=query)
                 context['searchedMovies'] = movies
