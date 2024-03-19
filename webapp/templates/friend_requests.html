@@ -102,7 +102,7 @@
                             <h3 class="profile__username">@{{ request.to_user }}</h3><br>
                         </a>
                     </div>
-                    <form method="post" action="{% url 'reject_friend_request' request.from_user.id %}">
+                    <form method="post" action="{% url 'reject_friend_request' request.to_user.id %}">
                         {% csrf_token %}
                         <button type="submit" class="remove_friend_button">Remove</button>
                     </form>

@@ -539,8 +539,12 @@ def reject_friend_request(request, from_id):
 
         user.friends.remove(friend)
         friend.friends.remove(user)
-        
-        FriendRequest.objects.get(from_user=friend, to_user=user).delete()
+
+        # Handle bi-directional friend requests
+        try:
+            FriendRequest.objects.get(from_user=user, to_user=friend).delete()
+        except:
+            FriendRequest.objects.get(from_user=friend, to_user=user).delete()
     return redirect("friend_requests")
 
 # View function for removing a friend
