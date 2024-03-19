@@ -22,7 +22,9 @@
             <tr>
                 <td>
                     {% if movie.poster_path %}
-                    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster" width="100">
+                    <a href="{% url 'movie_detail' movie.slug %}">
+                        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster" width="100">
+                    </a>
                     {% else %}
                     No poster available
                     {% endif %}

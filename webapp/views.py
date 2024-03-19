@@ -964,10 +964,14 @@ def update_jw_url(request, movie_id):
 # Test page for getting JustWatch URL for web scraping
 def testwebscraper(request):
     include_known_jw_urls = False
-    fetch_movies_count = 950
-    start_object = 0
+    limit_quantity = True
+    fetch_movies_count = 300
+    start_object = 900
     end_object = start_object + fetch_movies_count
-    movies_to_display = list(Movie.objects.all()[start_object:end_object])
+    if limit_quantity:
+        movies_to_display = list(Movie.objects.all().order_by('-tmdb_popularity')[start_object:end_object])
+    else:
+        movies_to_display = list(Movie.objects.all().order_by('-tmdb_popularity'))
 
     # Read JW URL data from the JSON file
     json_file_path = 'webapp/data/jw_web_scraper_urls.json'
