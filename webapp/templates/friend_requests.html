@@ -66,10 +66,12 @@
             <div class="col-12">
                 <div class="profile__wrap">
                     <div class="profile__photo">
-                        <img src="{% static 'img/profile_pics/default.png' %}" alt="profile_photo" style="width: 80px;">
+                        <a href="/profile/{{ request.from_user }}">
+                            <img src="{% static 'img/profile_pics/' %}{{ request.from_user.profile_pic }}" alt="profile_photo" style="width: 80px;">
                     </div>
                     <div class="profile__info">
-                        <h3 class="profile__username">@{{ request.from_user }}</h3><br>
+                            <h3 class="profile__username">@{{ request.from_user }}</h3><br>
+                        </a>
                     </div>
                     <form method="post" action="{% url 'accept_friend_request' request.from_user.id %}">
                         {% csrf_token %}
@@ -93,10 +95,12 @@
             <div class="col-12">
                 <div class="profile__wrap">
                     <div class="profile__photo">
-                        <img src="{% static 'img/profile_pics/default.png' %}" alt="profile_photo" style="width: 80px;">
+                        <a href="/profile/{{ request.to_user }}">
+                            <img src="{% static 'img/profile_pics/' %}{{ request.to_user.profile_pic }}" alt="profile_photo" style="width: 80px;">
                     </div>
                     <div class="profile__info">
-                        <h3 class="profile__username">@{{ request.to_user }}</h3><br>
+                            <h3 class="profile__username">@{{ request.to_user }}</h3><br>
+                        </a>
                     </div>
                     <form method="post" action="{% url 'reject_friend_request' request.from_user.id %}">
                         {% csrf_token %}
