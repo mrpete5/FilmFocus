@@ -1,5 +1,5 @@
 """
-Name of code artifact: banMovie.py
+Name of code artifact: ban_movie.py
 Brief description: Script to ban a movie by its title, preventing it from being displayed in the FilmFocus web application.
 Programmer’s name: Mark
 Date the code was created: 09/20/2023
