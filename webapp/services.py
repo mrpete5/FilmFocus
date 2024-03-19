@@ -74,18 +74,21 @@ with open(JW_WEB_SCRAPER_URLS_PATH, 'r') as json_file:
 # Create a lock for database access
 database_lock = threading.Lock()
 
-# Search for a movie by its title
+# Search for movies by their title
 def search_movie_by_title(title):
-    return title_to_id_dict.get(title.lower())
+    lower_title = title.lower()
+    return [movie['id'] for movie in master_list if movie['original_title'].lower() == lower_title]
 
 # Search for a movie by its TMDB ID
 def search_movie_by_id(tmdb_id):
     return id_to_title_dict.get(tmdb_id)
 
-# Search for a movie by its title and fetch its details
+# Search for movies by their title and fetch their details
 def search_and_fetch_movie_by_title(title):
-    tmdb_id = search_movie_by_title(title)
-    process_movie_search(tmdb_id, title)
+    tmdb_ids = search_movie_by_title(title)
+    for tmdb_id in tmdb_ids:
+        title = search_movie_by_id(tmdb_id)
+        process_movie_search(tmdb_id, title)
 
 # Search for a movie by its TMDB ID and fetch its details
 def search_and_fetch_movie_by_id(tmdb_id):
@@ -301,7 +304,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
         print(f"Failure: {e}")
 
     movie.save()
-    print(f"Movie '{title}' (ID: {tmdb_id}) fetched and saved to the database.")
+    print(f"Movie '{movie.title}' (ID: {tmdb_id}) fetched and saved to the database.")
 
 
 # Fetch detailed information about a movie from TMDB
@@ -488,10 +491,10 @@ def fetch_movie_streaming_data(movie, index):
 
 # Update the streaming providers for all movies in the Movie database
 def update_streaming_providers(test_limit=None):
-    # test_limit = 10   # Test mode, quantity of test cases
+    # test_limit = 50   # Test mode, quantity of test cases
     if test_limit:
         # movies = list(Movie.objects.all()[:test_limit])
-        previous = 900
+        previous = 0
         new_limit = test_limit + previous
         movies = list(Movie.objects.all()[previous:new_limit])
     else:
@@ -537,7 +540,7 @@ def update_streaming_providers(test_limit=None):
                 print(f'Updated streaming providers for {index}/{len(movies)} movies')
 
             completed_threads += 1
-            if completed_threads % 20 == 0:  # Check if 20 threads have finished
+            if completed_threads % 20 == 0:  # Check if 10 threads have finished
                 time.sleep(5)  # Pause for 5 seconds
 
 

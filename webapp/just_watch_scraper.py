@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import time
+import random
 
 PROVIDER_LIST = ["Tubi TV", "Pluto TV", "Freevee"]
 
@@ -50,7 +51,8 @@ def fetch_justwatch(movie, jw_urls_data, call_number=0, sleep_add=0):
                 with open(JW_WEB_SCRAPER_URLS_PATH, 'w') as json_file:
                     json.dump(jw_urls_data, json_file, indent=4)
 
-        time.sleep(2) # Need to slow down execution to avoid 429 status codes
+        time.sleep(random.uniform(0, 7))  # Random sleep between 0 and 7 seconds to avoid overloading server
+        # time.sleep(2)
         # Send a GET request to the URL
         response = requests.get(jw_url)
 
