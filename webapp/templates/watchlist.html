@@ -70,14 +70,18 @@
 								<span class="filter__item-label">WATCHLIST:</span>
 								
 								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-watchlist" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<input type="button" value="{{ filter_watchlist.watchlist_name }}">
+									{% if all_watchlists %}
+										<input type="button" value="All">
+									{% else %}
+										<input type="button" value="{{ filter_watchlist.watchlist_name }}">
+									{% endif %}
 									<span></span>
 								</div>
 									<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-quality">
-											{% for watchlist in watchlists %}
-												<li class="watchlist-dropdown-option" watchlist_id="{{watchlist.id}}">{{ watchlist.watchlist_name }}</li>
-											{% endfor %}
-											<li class="watchlist-dropdown-option" watchlist_id="watchlist_all">All</li>
+										<li class="watchlist-dropdown-option" watchlist_id="watchlist_all">All</li>
+										{% for watchlist in watchlists %}
+											<li class="watchlist-dropdown-option" watchlist_id="{{watchlist.id}}">{{ watchlist.watchlist_name }}</li>
+										{% endfor %}
 									</ul>
 							</div>
 							<!-- end watchlist filter item -->
