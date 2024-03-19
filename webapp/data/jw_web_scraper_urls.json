@@ -8663,5 +8663,35 @@
         "tmdb_id": 58595,
         "title": "Snow White and the Huntsman",
         "jw_url": "https://www.justwatch.com/us/movie/snow-white-and-the-huntsman"
+    },
+    {
+        "tmdb_id": 4244,
+        "title": "The Kid",
+        "jw_url": "https://www.justwatch.com/us/movie/the-kid-2000"
+    },
+    {
+        "tmdb_id": 28987,
+        "title": "The Kid",
+        "jw_url": "https://www.justwatch.com/us/movie/the-kid"
+    },
+    {
+        "tmdb_id": 191884,
+        "title": "The Kid",
+        "jw_url": "https://www.justwatch.com/us/movie/the-kid-1997"
+    },
+    {
+        "tmdb_id": 492565,
+        "title": "The Kid",
+        "jw_url": "https://www.justwatch.com/us/movie/the-kid-2019"
+    },
+    {
+        "tmdb_id": 649319,
+        "title": "The Kid",
+        "jw_url": null
+    },
+    {
+        "tmdb_id": 946000,
+        "title": "The Kid",
+        "jw_url": null
     }
 ]

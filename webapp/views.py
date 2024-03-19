@@ -329,11 +329,6 @@ def searchBar(request):
             elif query[0] == '#':   # Fetch a movie from TMDb
                 context['query'] = query[1:]  # Remove the '@' symbol
                 movie_title = query[1:]
-                movies = Movie.objects.filter(title__iexact=movie_title)
-                if movies:
-                    context['searchedMovies'] = movies
-                    return render(request, 'results.html', context)
-
                 search_and_fetch_movie_by_title(movie_title)
                 movies = Movie.objects.filter(title__icontains=movie_title)
                 context['searchedMovies'] = movies
