@@ -40,6 +40,7 @@ from django.utils.http import urlsafe_base64_decode
 from .services import *
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage
+import concurrent.futures
 
 
 
@@ -338,16 +339,48 @@ def searchBar(request):
                 if user.is_authenticated: 
                     context['self_profile'] = UserProfile.objects.get(user=request.user)
                 return render(request, 'user_results.html', context)
+            
             elif query[0:6] == 'movie:':    # Fetch a movie from TMDb
                 shift = 6
                 if query[6] == ' ':         # If there is a space after the 'movie:' prefix
-                    shift = 7
+                    shift += 1
                 movie_title = query[shift:]     # Remove the 'movie:' prefix
                 context['query'] = movie_title  
                 search_and_fetch_movie_by_title(movie_title)
                 movies = Movie.objects.filter(title__icontains=movie_title)
                 context['searchedMovies'] = movies
                 return render(request, 'results.html', context)
+            
+            elif query[0:6] == 'actor:':
+                shift = 6
+                if query[6] == ' ':
+                    shift += 1
+                actor_name = query[shift:]
+                actor_slug_list = get_person_slugs(actor_name)
+                actor_slug = actor_slug_list[0]
+
+                person_id = get_person_id(actor_name)
+                if person_id:
+                    tmdb_ids = get_actor_movies_from_tmdb_to_fetch(person_id)
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+                        executor.map(search_and_fetch_movie_by_id, tmdb_ids)
+                return redirect('actor', actor_slug)
+
+            elif query[0:9] == 'director:':
+                shift = 9
+                if query[9] == ' ':
+                    shift += 1
+                director_name = query[shift:]
+                director_slug_list = get_person_slugs(director_name)
+                director_slug = director_slug_list[0]
+                
+                person_id = get_person_id(director_name)
+                if person_id:
+                    tmdb_ids = get_director_movies_from_tmdb_to_fetch(person_id)
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+                        executor.map(search_and_fetch_movie_by_id, tmdb_ids)
+                return redirect('director', director_slug)
+            
             else:
                 movies = Movie.objects.filter(title__icontains=query)
                 context['searchedMovies'] = movies

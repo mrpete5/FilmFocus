@@ -1000,6 +1000,32 @@ def get_movies_from_tmdb_by_actor(person_id):
     movies = Movie.objects.filter(tmdb_id__in=movie_ids).order_by('release_date')
     return movies
 
+def get_director_movies_from_tmdb_to_fetch(person_id):
+    credits_url = f"{TMDB_BASE_URL}/person/{person_id}/movie_credits"
+    response = requests.get(credits_url, headers=HEADERS)
+    data = response.json()
+    
+    # Filter movies by crew where the person is a director and the movie has a release date
+    director_movie_ids = []
+    for crew_member in data.get('crew', []):
+        if crew_member.get('job') == 'Director' and crew_member.get('release_date'):
+            director_movie_ids.append(crew_member['id'])
+    
+    return director_movie_ids
+
+def get_actor_movies_from_tmdb_to_fetch(person_id):
+    credits_url = f"{TMDB_BASE_URL}/person/{person_id}/movie_credits"
+    response = requests.get(credits_url, headers=HEADERS)
+    data = response.json()
+    
+    # Filter movies by cast where the person is an actor and the movie has a release date and popularity above 5
+    actor_movie_ids = []
+    for cast_member in data.get('cast', []):
+        if cast_member['order'] < 2 and cast_member.get('release_date') and cast_member.get('popularity', 0) > 5:
+            actor_movie_ids.append(cast_member['id'])
+    
+    return actor_movie_ids
+
 # Performs filtering to the movies list
 def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end):
     # Fitler for Genre
