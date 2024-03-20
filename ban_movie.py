@@ -18,6 +18,7 @@ Any known faults: None.
 import os
 import django
 import sys
+import json
 
 # Set up the Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FilmFocus.settings')
@@ -27,6 +28,8 @@ django.setup()
 from webapp.services import BAN_LIST, load_ban_list
 from webapp.models import Movie
 
+JW_WEB_SCRAPER_URLS_PATH = 'webapp/data/jw_web_scraper_urls.json'
+
 def ban_movie(title):
     # Search for the movie title in the actual movie database
     matching_movies = Movie.objects.filter(title__iexact=title)
@@ -34,7 +37,7 @@ def ban_movie(title):
     if matching_movies.count() > 1:
         print(f"Found {matching_movies.count()} movies with the title '{title}':")
         for i, movie in enumerate(matching_movies, 1):
-            print(f"{i}. {movie.title} - {movie.overview[:200]}")
+            print(f"{i}. {movie.title} - {movie.tmdb_popularity}: {movie.overview[:200]}")
         print(f"{matching_movies.count() + 1}. None")
 
         while True:
@@ -73,6 +76,9 @@ def ban_movie_by_id(movie):
         movie.delete()
 
         print(f"Movie '{movie.title}' (ID: {tmdb_id}) has been banned and removed from the database.")
+        
+        # Remove the movie from the JW web scraper URLs if it exists
+        remove_banned_movie_from_jw_urls(tmdb_id)
     else:
         print(f"Movie '{movie.title}' (ID: {tmdb_id}) is already in the ban list.")
 
@@ -82,6 +88,18 @@ def ban_movies_from_file(file_path):
             title = line.strip()
             if title:
                 ban_movie(title)
+
+def remove_banned_movie_from_jw_urls(tmdb_id):
+    # Load JW web scraper URLs data
+    with open(JW_WEB_SCRAPER_URLS_PATH, 'r') as jw_urls_file:
+        jw_urls_data = json.load(jw_urls_file)
+
+    # Remove the movie with the banned TMDB ID
+    filtered_jw_urls_data = [movie for movie in jw_urls_data if movie['tmdb_id'] != tmdb_id]
+
+    # Write filtered data back to the JW web scraper URLs file
+    with open(JW_WEB_SCRAPER_URLS_PATH, 'w') as jw_urls_file:
+        json.dump(filtered_jw_urls_data, jw_urls_file, indent=4)
 
 if __name__ == "__main__":
     # Check if a file is provided as an argument
