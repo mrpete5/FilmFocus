@@ -338,9 +338,12 @@ def searchBar(request):
                 if user.is_authenticated: 
                     context['self_profile'] = UserProfile.objects.get(user=request.user)
                 return render(request, 'user_results.html', context)
-            elif query[0] == '#':   # Fetch a movie from TMDb
-                context['query'] = query[1:]  # Remove the '#' symbol
-                movie_title = query[1:]
+            elif query[0:6] == 'movie:':    # Fetch a movie from TMDb
+                shift = 6
+                if query[6] == ' ':         # If there is a space after the 'movie:' prefix
+                    shift = 7
+                movie_title = query[shift:]     # Remove the 'movie:' prefix
+                context['query'] = movie_title  
                 search_and_fetch_movie_by_title(movie_title)
                 movies = Movie.objects.filter(title__icontains=movie_title)
                 context['searchedMovies'] = movies
