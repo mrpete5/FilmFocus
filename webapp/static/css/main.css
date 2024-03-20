@@ -11,7 +11,7 @@ Primary use:	FlixGo Template
 FilmFocus Pink: #ff55a5
 FilmFocus Grey: #2b2b31
 FilmFocus Green: #29A329
-FimFocus Red: #C11C1C
+FilmFocus Red: #C11C1C
 ----------------------------------------*/
 /*----------------------------------------
 [Table of contents]
@@ -4405,12 +4405,16 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
   /* margin-top: 22.5%; */
   /* 
   margin-top: 50px; */
+}
+.close__popup:hover {
+  opacity: 1;
+  color: #fff;
 }
 .x__popup {
   color: #fff;
@@ -4459,6 +4463,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
   /* margin-top: 22.5%; */
+}
+.login__popup:hover {
+  opacity: 1;
+  color: #fff;
 }
 
 /*==============================
@@ -4569,6 +4577,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   /* height: 40px; */
   /* width: 80px; */
   opacity: 0.85;
+}
+.wlist_page_btn:hover {
+  opacity: 1;
+  color: #fff;
 }
 .wlist__group {
   /* position: relative; */
@@ -4954,6 +4966,10 @@ User Profile Page
   letter-spacing: 1px;
   margin: 5px auto 0
 }
+.add_friend__btn:hover {
+  opacity: 1;
+  color: #fff;
+}
 .remove_friend__btn {
   display: flex;
   justify-content: center;
@@ -4973,6 +4989,10 @@ User Profile Page
   font-weight: 500;
   letter-spacing: 1px;
   margin: 5px auto 0
+}
+.remove_friend__btn:hover {
+  opacity: 1;
+  color: #fff;
 }
 .user_card {
   margin-bottom: 35px;
@@ -5013,9 +5033,13 @@ User Profile Page
   background-image: -webkit-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
   background-image: -ms-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
   background-image: linear-gradient(90deg, #32CD32 0%, #29A329 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
+}
+.save__profile-popup:hover {
+  opacity: 1;
+  color: #fff;
 }
 .close__profile-popup {
   color: #fff;
@@ -5033,9 +5057,13 @@ User Profile Page
   background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
+}
+.close__profile-popup:hover {
+  opacity: 1;
+  color: #fff;
 }
 .x__profile-popup {
   color: #fff;
@@ -5147,6 +5175,10 @@ User Profile Page
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
 }
+.confirm__del-wlist-popup:hover {
+  opacity: 1;
+  color: #fff;
+}
 .cancel__del-wlist-popup {
   color: #fff;
   position: absolute;
@@ -5166,6 +5198,10 @@ User Profile Page
   /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); These 2 lines remove the glow around the button
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
+}
+.cancel__del-wlist-popup:hover {
+  opacity: 1;
+  color: #fff;
 }
 .watchlist-select-movie__btn {
   display: flex;
@@ -5393,10 +5429,13 @@ FilmFocus Grey: #2B2B31 */
   background-image: -webkit-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
   background-image: -ms-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
   background-image: linear-gradient(90deg, #32CD32 0%, #29A329 100%);
-  /* GREEN BUTTON GLOW BELOW */
-  -webkit-box-shadow: 0 0 20px 0 rgba(50, 205, 50, 0.5);
-  box-shadow: 0 0 20px 0 rgba(50, 205, 50, 0.5);
   opacity: 0.85;
+  /* GREEN BUTTON GLOW BELOW */
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(50, 205, 50, 0.5);
+  box-shadow: 0 0 20px 0 rgba(50, 205, 50, 0.5); */
+}
+.save__rating-popup:hover {
+  opacity: 1;
 }
 .close__rating-popup {
   color: #fff;
@@ -5414,9 +5453,13 @@ FilmFocus Grey: #2B2B31 */
   background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
+  /* PINK BUTTON GLOW BELOW */
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
+}
+.close__rating-popup:hover {
+  opacity: 1;
 }
 .reset__rating-popup {
   color: #fff;
@@ -5434,10 +5477,13 @@ FilmFocus Grey: #2B2B31 */
   background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
- /* RED BUTTON GLOW BELOW */
-  -webkit-box-shadow: 0 0 20px 0 rgba(193, 28, 28, 0.5);
-  box-shadow: 0 0 20px 0 rgba(193, 28, 28, 0.5); 
   opacity: 0.85;
+  /* RED BUTTON GLOW BELOW */
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(193, 28, 28, 0.5);
+  box-shadow: 0 0 20px 0 rgba(193, 28, 28, 0.5);  */
+}
+.reset__rating-popup:hover {
+  opacity: 1;
 }
 .save2__rating-popup {
   color: #fff;
@@ -5455,9 +5501,13 @@ FilmFocus Grey: #2B2B31 */
   background-image: -webkit-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
   background-image: -ms-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
   background-image: linear-gradient(90deg, #32CD32 0%, #29A329 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
+  /* GREEN BUTTON GLOW BELOW */
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
+}
+.save2__rating-popup:hover {
+  opacity: 1;
 }
 .close2__rating-popup {
   color: #fff;
@@ -5475,10 +5525,16 @@ FilmFocus Grey: #2B2B31 */
   background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
+  /* PINK BUTTON GLOW BELOW */
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
 }
+.close2__rating-popup:hover {
+  opacity: 1;
+}
+
+
 /*==============================
 	Friend Request Buttons
 ==============================*/
@@ -5498,9 +5554,12 @@ FilmFocus Grey: #2B2B31 */
   background-image: -webkit-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
   background-image: -ms-linear-gradient(90deg, #32CD32 0%, #29A329 100%);
   background-image: linear-gradient(90deg, #32CD32 0%, #29A329 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
+}
+.accept_friend_button:hover {
+  opacity: 1;
 }
 .reject_friend_button {
   color: #fff;
@@ -5518,9 +5577,12 @@ FilmFocus Grey: #2B2B31 */
   background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
+}
+.reject_friend_button:hover {
+  opacity: 1;
 }
 .remove_friend_button {
   color: #fff;
@@ -5538,10 +5600,14 @@ FilmFocus Grey: #2B2B31 */
   background-image: -webkit-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: -ms-linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
   background-image: linear-gradient(90deg, #C11C1C 0%, #C11C1C 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
 }
+.remove_friend_button:hover {
+  opacity: 1;
+}
+
 
 /*==============================
 	Toggle Switch
@@ -5657,6 +5723,9 @@ FilmFocus Grey: #2B2B31 */
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
 }
+.reselect__select-movie-popup:hover {
+  opacity: 1;
+}
 .close__select-movie-popup {
   color: #fff;
   position: absolute;
@@ -5676,6 +5745,9 @@ FilmFocus Grey: #2B2B31 */
   /* -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5); */
   opacity: 0.85;
+}
+.close__select-movie-popup:hover {
+  opacity: 1;
 }
 .provider-logo__select-movie-popup {
   width: 30px;
@@ -5710,5 +5782,4 @@ FilmFocus Grey: #2B2B31 */
 }
 .catalog-select-movie__btn:hover {
   opacity: 1;
-  color: #fff;
 }
