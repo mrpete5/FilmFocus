@@ -78,7 +78,10 @@
 									<span></span>
 								</div>
 									<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-quality">
-										<li class="watchlist-dropdown-option" watchlist_id="watchlist_all">All</li>
+										{% if multiple_watchlists %}
+											<li class="watchlist-dropdown-option" watchlist_id="watchlist_all">All</li>
+										{% endif %}
+
 										{% for watchlist in watchlists %}
 											<li class="watchlist-dropdown-option" watchlist_id="{{watchlist.id}}">{{ watchlist.watchlist_name }}</li>
 										{% endfor %}

@@ -261,21 +261,28 @@ def watchlist(request, profile_name=None):
                     imdb_begin = form.cleaned_data["imdb_begin"]
                     imdb_end = form.cleaned_data["imdb_end"]
 
+                    if context["is_self"]:
+                        all_watchlists = Watchlist.objects.filter(user=user)
+                    else:
+                        all_watchlists = Watchlist.objects.filter(user=profile.user, is_private=False)
+
                     # Get the movie_list and handle watchlist_all
                     movie_list = Movie.objects.none()  # Initialize an empty queryset
                     if watchlist_id == "watchlist_all":
                         context['all_watchlists'] = True
-                        if context["is_self"]:
-                            all_watchlists = Watchlist.objects.filter(user=user)
-                        else:
-                            all_watchlists = Watchlist.objects.filter(user=profile.user, is_private=False)
-                        
                         for watchlist in all_watchlists:
                             movie_list |= Movie.objects.filter(watchlistentry__watchlist=watchlist).distinct()
                     else:
                         watchlist_id_int = int(watchlist_id)
                         watchlist = Watchlist.objects.get(pk=watchlist_id_int)
                         movie_list = Movie.objects.filter(watchlistentry__watchlist=watchlist)
+
+                    # Only show the 'All' watchlist option if there are multiple watchlists
+                    watchlist_count = all_watchlists.count()
+                    if watchlist_count > 1:
+                        context["multiple_watchlists"] = True
+                    else:
+                        context["multiple_watchlists"] = False
 
                     # Excludes genre or streaming provider options that don't exist in the movie_list
                     context["genres"] = Genre.objects.all().filter(movies__in=movie_list).distinct()
@@ -296,6 +303,7 @@ def watchlist(request, profile_name=None):
                     return render(request, "watchlist.html", context)
                 # print("Form Errors:", form.errors) # Prints any error with a form submission
         # Setup Context for the frontend
+        context["multiple_watchlists"] = False
         context['filter_watchlist'] = watchlists[0]
         context['movie_list'] = Movie.objects.filter(watchlistentry__watchlist=watchlists[0])
         context["genres"] = Genre.objects.all().filter(movies__in=context['movie_list']).distinct()
@@ -1000,9 +1008,9 @@ def update_jw_url(request, movie_id):
 # Test page for getting JustWatch URL for web scraping
 def testwebscraper(request):
     include_known_jw_urls = False
-    limit_quantity = True
-    fetch_movies_count = 2000
-    start_object = 900
+    limit_quantity = False
+    fetch_movies_count = 100
+    start_object = 1050
     end_object = start_object + fetch_movies_count
     if limit_quantity:
         movies_to_display = list(Movie.objects.all()[start_object:end_object])
