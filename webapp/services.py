@@ -506,7 +506,6 @@ def update_streaming_providers(test_limit=None):
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:  # Limit to 20 threads
         futures = [executor.submit(fetch_movie_streaming_data, movie, index) for index, movie in enumerate(movies)]
-        completed_threads = 0
 
         for future in concurrent.futures.as_completed(futures):
             movie, response_data, index = future.result()  # Unpack the results
@@ -540,10 +539,6 @@ def update_streaming_providers(test_limit=None):
 
             if index % 10 == 0:
                 print(f'Updated streaming providers for {index}/{len(movies)} movies')
-
-            completed_threads += 1
-            if completed_threads % 20 == 0:  # Check if 10 threads have finished
-                time.sleep(5)  # Pause for 5 seconds
 
 
 # Helper function for update_omdb_movie_ratings()

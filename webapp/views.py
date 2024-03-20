@@ -965,13 +965,13 @@ def update_jw_url(request, movie_id):
 def testwebscraper(request):
     include_known_jw_urls = False
     limit_quantity = True
-    fetch_movies_count = 300
+    fetch_movies_count = 2000
     start_object = 900
     end_object = start_object + fetch_movies_count
     if limit_quantity:
-        movies_to_display = list(Movie.objects.all().order_by('-tmdb_popularity')[start_object:end_object])
+        movies_to_display = list(Movie.objects.all()[start_object:end_object])
     else:
-        movies_to_display = list(Movie.objects.all().order_by('-tmdb_popularity'))
+        movies_to_display = list(Movie.objects.all())
 
     # Read JW URL data from the JSON file
     json_file_path = 'webapp/data/jw_web_scraper_urls.json'
@@ -1010,5 +1010,5 @@ def testwebscraper(request):
     # Filter movies based on include_known_jw_urls
     if not include_known_jw_urls:
         movies_to_display = [movie for movie in movies_to_display if not movie.jw_url.startswith("https://www.justwatch.com/us/movie/")]
-
+    print(len(movies_to_display))
     return render(request, "testwebscraper.html", {"movies": movies_to_display})
