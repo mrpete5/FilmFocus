@@ -221,6 +221,12 @@ def watchlist(request, profile_name=None):
         else:
             watchlists = Watchlist.objects.filter(user=profile.user, is_private=False)
             context['username'] = profile_name
+        
+        # Only show the 'All' watchlist menu option if there are multiple watchlists
+        context["multiple_watchlists"] = False  # Initialize 'multiple_watchlists'
+        watchlist_count = watchlists.count()
+        if watchlist_count > 1:
+            context["multiple_watchlists"] = True
 
         # Process new watchlist form that occurs when user doesnt have any watchlists
         if request.method == 'POST':
@@ -277,12 +283,6 @@ def watchlist(request, profile_name=None):
                         watchlist = Watchlist.objects.get(pk=watchlist_id_int)
                         movie_list = Movie.objects.filter(watchlistentry__watchlist=watchlist)
 
-                    # Only show the 'All' watchlist option if there are multiple watchlists
-                    watchlist_count = all_watchlists.count()
-                    if watchlist_count > 1:
-                        context["multiple_watchlists"] = True
-                    else:
-                        context["multiple_watchlists"] = False
 
                     # Excludes genre or streaming provider options that don't exist in the movie_list
                     context["genres"] = Genre.objects.all().filter(movies__in=movie_list).distinct()
@@ -303,7 +303,6 @@ def watchlist(request, profile_name=None):
                     return render(request, "watchlist.html", context)
                 # print("Form Errors:", form.errors) # Prints any error with a form submission
         # Setup Context for the frontend
-        context["multiple_watchlists"] = False
         context['filter_watchlist'] = watchlists[0]
         context['movie_list'] = Movie.objects.filter(watchlistentry__watchlist=watchlists[0])
         context["genres"] = Genre.objects.all().filter(movies__in=context['movie_list']).distinct()
