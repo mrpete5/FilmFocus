@@ -7,7 +7,10 @@
     {% if instructions %}
         <p>{{ instructions }}</p>
     {% endif %}
-
+    <br><br><br>
+    {% if self_doubt %}
+        <p>{{ self_doubt }}</p>
+    {% endif %}
     <br>
     <button id="closePopup" class="help-close__popup">CLOSE</button>
 </div>

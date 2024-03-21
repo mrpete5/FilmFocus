@@ -421,6 +421,7 @@ def popup_help(request):
                                     how to use the website. Create tabs/buttons for each topic \
                                     around here near the top and dynamically display\
                                     information below."
+        context["self_doubt"] = "Or is this a dumb idea as a popup and should just be the FAQ page?"
         return render(request, "popup_help.html", context)
 
 # View function for getting user movie rating popup
@@ -836,7 +837,11 @@ def signup(request):
 
 # View function for the FAQ page
 def faq(request):
-    return render(request, "faq.html")
+    context = {}
+    user = request.user
+    if user.is_authenticated:
+        context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
+    return render(request, "faq.html", context)
 
 
 @login_required
