@@ -983,9 +983,30 @@ def refresh_movie_data(request, tmdb_id):
 def testforban(request):
     start_date = "2023-01-01"  # Range of movies to display
     end_date = "2024-12-31"
-
-    movies_to_display = handle_test_for_ban(start_date, end_date)
+    view_jw_nulls = False
+    
+    if view_jw_nulls:
+        # Load JW URL data from the JSON file
+        json_file_path = 'webapp/data/jw_web_scraper_urls.json'
+        with open(json_file_path, 'r') as json_file:
+            jw_urls_data = json.load(json_file)
+        
+        # Get all Movie objects
+        movies = Movie.objects.all()
+        
+        # Filter movies where jw_url is None, tmdb_id matches, and runtime is not 0
+        movies_to_display = [
+            movie for movie in movies 
+            if any(data['tmdb_id'] == movie.tmdb_id and data['jw_url'] is None for data in jw_urls_data)
+            and movie.runtime != 0
+        ]
+    else:
+        # If not viewing movies with jw_url=None, use the original function
+        movies_to_display = handle_test_for_ban(start_date, end_date)
+    
     return render(request, "testforban.html", {"movies": movies_to_display})
+
+
 
 # Test page that displays selected movie attribute data
 def testdisplay(request):

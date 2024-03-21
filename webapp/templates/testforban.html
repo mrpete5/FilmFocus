@@ -86,9 +86,10 @@
                         <input type="checkbox" name="title" value="{{ movie.title }}" class="movie-checkbox">
                         <label class="checkbox-label">Ban</label>
                     </div>
-                    <div class="movie-card-title">{{ movie.title }}</div>
+                    <div class="movie-card-title">{{ movie.title }} ({{movie.release_year}})</div>
                     <div class="movie-card-rating">IMDb Rating: {{ movie.imdb_rating }}</div>
                     <div class="movie-card-rating">TMDb Popularity: {{ movie.tmdb_popularity }}</div>
+                    <div class="movie-card-rating">Runtime: {{ movie.runtime }}</div>
                 </div>
             
             </div>
