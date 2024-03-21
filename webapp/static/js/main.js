@@ -1185,7 +1185,10 @@ $(document).ready(function () {
     if (selectMovieBtn) {
         selectMovieBtn.addEventListener("click", function() {
             var watchlist_id = document.getElementById("hidden-watchlist-id").value;
-            console.log(watchlist_id);
+            // console.log(watchlist_id);
+			if (watchlist_id == "watchlist_all") {
+				watchlist_id = 9999;	// 9999 is the default watchlist id for All watchlist
+			}
             request_select_movie_popup(watchlist_id);
             open_popup();
         });

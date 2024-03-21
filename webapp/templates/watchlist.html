@@ -70,7 +70,7 @@
 								<span class="filter__item-label">WATCHLIST:</span>
 								
 								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-watchlist" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									{% if all_watchlists %}
+									{% if all_watchlist %}
 										<input type="button" value="All">
 									{% else %}
 										<input type="button" value="{{ filter_watchlist.watchlist_name }}">
@@ -182,7 +182,11 @@
 							<!-- end runtime filter item -->
 
 							<!-- hidden form information -->
-							<input type="hidden" name="watchlist_id" id="hidden-watchlist-id" value="{{ filter_watchlist.id }}">
+							{% if all_watchlist %}
+								<input type="hidden" name="watchlist_id" id="hidden-watchlist-id" value="watchlist_all">
+							{% else %}
+								<input type="hidden" name="watchlist_id" id="hidden-watchlist-id" value="{{ filter_watchlist.id }}">
+							{% endif %}
 							<input type="hidden" name="year_begin" id="hidden-year-begin" value="{{ filter_year_begin|default:'1900' }}">
 							<input type="hidden" name="year_end" id="hidden-year-end" value="{{ filter_year_end|default:'2024' }}">
 							<input type="hidden" name="imdb_begin" id="hidden-imdb-begin" value="{{ filter_imdb_begin|default:'0.0' }}">
@@ -198,8 +202,13 @@
 						{% if is_self %}
 							<!-- delete watchlist button -->
 							{% if watchlists %}
+
+								{% if not all_watchlist %}
+									<button class="delete-watchlist__btn"  id="deleteWatchlistBtn">delete watchlist</button>
+								{% endif %}
+								
 								<button class="watchlist-select-movie__btn"  id="watchlistSelectMovieBtn">select a movie</button>
-								<button class="delete-watchlist__btn"  id="deleteWatchlistBtn">delete watchlist</button>
+
 							{% endif %}
 							<!-- end delete watchlist button --> 	
 						{% endif %}	

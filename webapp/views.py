@@ -41,6 +41,7 @@ from .services import *
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage
 import concurrent.futures
+import random
 
 
 
@@ -275,7 +276,7 @@ def watchlist(request, profile_name=None):
                     # Get the movie_list and handle watchlist_all
                     movie_list = Movie.objects.none()  # Initialize an empty queryset
                     if watchlist_id == "watchlist_all":
-                        context['all_watchlists'] = True
+                        context['all_watchlist'] = True
                         for watchlist in all_watchlists:
                             movie_list |= Movie.objects.filter(watchlistentry__watchlist=watchlist).distinct()
                     else:
@@ -436,8 +437,18 @@ def popup_rating(request, movie_id):
 def popup_select_movie(request, watchlist_id):
     context = {}
     if request.method == 'GET':
-        watchlist = Watchlist.objects.get(user=request.user, pk=watchlist_id)
-        movies = Movie.objects.filter(watchlistentry__watchlist=watchlist)
+        user = request.user
+        all_watchlists = Watchlist.objects.filter(user=user)
+
+        watchlist_movies = Movie.objects.none()  # Initialize an empty queryset
+        if watchlist_id == 9999:    # 9999 is the default watchlist id for all watchlist
+            context['all_watchlist'] = True
+            for watchlist in all_watchlists:
+                watchlist_movies |= Movie.objects.filter(watchlistentry__watchlist=watchlist).distinct()
+        else:
+            watchlist_id_int = int(watchlist_id)
+            watchlist = Watchlist.objects.get(pk=watchlist_id_int)
+            watchlist_movies = Movie.objects.filter(watchlistentry__watchlist=watchlist)
 
         genre = Genre.objects.filter(name=request.GET.get('genre')).first()
         streamer = StreamingProvider.objects.filter(name=request.GET.get("streaming_provider")).first()
@@ -446,8 +457,8 @@ def popup_select_movie(request, watchlist_id):
         imdb_begin = request.GET.get('imdb_begin')
         imdb_end = request.GET.get('imdb_end')
 
-        movies = filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end).order_by('?')[:3]
-
+        filtered_movies = filter_movies(watchlist_movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end)
+        movies = random.sample(list(filtered_movies), min(len(filtered_movies), 3))
         context['movies'] = movies
 
     return render(request, "popup_select_movie.html", context)
@@ -470,7 +481,6 @@ def popup_catalog_select(request):
         context['movies'] = movies
 
     return render(request, "popup_catalog_select.html", context)
-
 
 # View function for the about page
 def about(request):

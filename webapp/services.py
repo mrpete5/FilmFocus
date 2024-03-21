@@ -238,7 +238,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
     recommended_movie_data = []
     for rec in recommendations:
         rec_popularity = rec.get('popularity', 0)  # Default to 0 if popularity is not present
-        if rec_popularity > 3:
+        if rec_popularity > 10:
             recommended_movie_data.append({
                 'tmdb_id': rec.get('id'),
                 'title': rec.get('title'),
@@ -493,10 +493,10 @@ def fetch_movie_streaming_data(movie, index):
 
 # Update the streaming providers for all movies in the Movie database
 def update_streaming_providers(test_limit=None):
-    # test_limit = 50   # Test mode, quantity of test cases
+    # test_limit = 100   # Test mode, quantity of test cases
     if test_limit:
         # movies = list(Movie.objects.all()[:test_limit])
-        previous = 0
+        previous = 1100
         new_limit = test_limit + previous
         movies = list(Movie.objects.all()[previous:new_limit])
     else:
@@ -617,8 +617,8 @@ def update_movie_recommendations():
             recommended_title = recommendation.get('title')
             recommended_popularity = recommendation.get('popularity', 0)  # Default to 0 if popularity is not present
 
-            # Only append the recommendation if its popularity is greater than 1
-            if recommended_popularity > 3:
+            # Only append the recommendation if its popularity is greater than 10
+            if recommended_popularity > 10:
                 movie.recommended_movie_data.append({
                     'tmdb_id': recommended_tmdb_id,
                     'title': recommended_title,
@@ -657,18 +657,18 @@ def update_movie_recommendations():
 # Update the streaming providers using the JustWatch scraper for Tubi TV, Pluto TV, and Freevee
 def process_justwatch_streamers(movie):
     movie_instance = Movie.objects.filter(title=movie.title, release_year=movie.release_year).first()
-
     if movie_instance:
         providers = jw_scrape.fetch_justwatch(movie, jw_urls_data)
-
-        for provider_name in providers:
-            if provider_name in ["Tubi TV", "Pluto TV", "Freevee"]:
-                streaming_provider, _ = StreamingProvider.objects.get_or_create(name=provider_name)
-                movie_instance.streaming_providers.add(streaming_provider)
-        
-        movie_instance.save()
-
+        if providers is not None:
+            for provider_name in providers:
+                if provider_name in ["Tubi TV", "Pluto TV", "Freevee"]:
+                    # Get or create a StreamingProvider instance for the current provider
+                    streaming_provider, _ = StreamingProvider.objects.get_or_create(name=provider_name)
+                    movie_instance.streaming_providers.add(streaming_provider)
+            
+            movie_instance.save()
     else:
+        # If the movie is not found in the database, print a message
         print(f"Movie not found in the database: {movie.title}, {movie.release_year}")
 
 # Update the Letterboxd ratings for all movies in the Movie database
