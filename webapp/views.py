@@ -413,6 +413,16 @@ def popup(request, movie_id):
         context["movie_in_watchlists"] = Watchlist.objects.filter(entries__movie=context["movie"]).distinct()
         return render(request, "popup.html", context)
 
+# View function for getting help menu popup
+def popup_help(request):
+    context = {}
+    if request.method == 'GET':
+        context["instructions"] = "This is the help menu. It will contain instructions on\
+                                    how to use the website. Create tabs/buttons for each topic \
+                                    around here near the top and dynamically display\
+                                    information below."
+        return render(request, "popup_help.html", context)
+
 # View function for getting user movie rating popup
 def popup_rating(request, movie_id):
     context = {}

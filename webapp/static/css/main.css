@@ -259,7 +259,7 @@ ul {
   display: block;
 }
 .header__logo:hover {
-  background-color: #2b2b31;
+  background-color: #222228;
 }
 .header__nav {
   display: flex;
@@ -565,7 +565,6 @@ ul {
 }
 /*---- Welcome User in header section ---------*/
 .header__user_welcome {
-  /* Displays the 'Welcome, username?' when logged in */
   position: relative;
   display: flex;
   align-items: center;
@@ -574,6 +573,9 @@ ul {
 .welcome-text, 
 .username {
   color: #fff;
+}
+.username:hover {
+  color: #ff55a5;
 }
 .welcome-text {
   margin-left: 10px;
@@ -5781,5 +5783,73 @@ FilmFocus Grey: #2B2B31 */
   letter-spacing: 1px;
 }
 .catalog-select-movie__btn:hover {
+  opacity: 1;
+}
+
+
+
+
+.help-menu-popupInner {
+  background-color:#2b2b31;
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  border: 3px solid #F12D92;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  padding: 10px 10px;
+  text-align: center;
+  color: #fff;
+  width: 650px;
+  height: 520px;
+  position: relative;
+  z-index: 110;
+  pointer-events: none;
+}
+/* .help-menu-popupInner {
+  background-color:#2b2b31;
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
+  border: 3px solid #F12D92;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  padding: 10px 10px;
+  text-align: center;
+  color: #fff;
+  width: 450px;
+  height: 380px;
+  position: relative;
+  z-index: 103;
+  pointer-events: none;
+} */
+.help-menu-popupInner h2 {
+  margin: 0;
+}
+.help-menu-popupInner p {
+  margin: 0;
+  /* border-bottom: .5px solid #F12D92; comment this out to remove pink underline below watchlist titles in popup */
+  position: relative;
+}
+.help-menu-popupInner button {
+  text-align: center;
+}
+.help-close__popup {
+  color: #fff;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 275px;
+  height: 40px;
+  width: 80px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  opacity: 0.85;
+}
+.help-close__popup:hover {
   opacity: 1;
 }

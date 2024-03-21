@@ -1357,6 +1357,68 @@ $(document).ready(function () {
 		//    console.log(`Watchlist toggled to public`);
 		}
 	  });
+
+
+	/*==============================
+	Help Menu Popup
+	==============================*/
+    var helpMenuBtn = document.getElementById("popup_help");
+    
+    if (helpMenuBtn) {
+        helpMenuBtn.addEventListener("click", function() {
+			console.log("helpMenuBtn");
+            help_menu_popup();
+            open_popup();
+        });
+    }
+
+	async function help_menu_popup() {
+		// var genre = document.getElementById("filter_genre_input").value;
+
+		const url = "/popup_help/";
+		const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'X-CSRFToken': csrfToken
+			}
+		});
+
+		if (response.ok) {
+			const data = await response.text();
+			popup.innerHTML = data;
+			const closePopupAlt = popup.querySelector("#closePopupAlt");
+			const closePopup = popup.querySelector("#closePopup");
+			const closePopupAlt2 = popup;
+			if (closePopupAlt2) close_event_handler2_select_catalog(closePopupAlt2);
+			if (closePopupAlt) close_event_handler(closePopupAlt);
+			if (closePopup) close_event_handler(closePopup);
+		}
+	}
+
+	// // This is here as a future reference for the help menu
+	// function reselect_movie_catalog(x) {
+	// 	x.addEventListener("click", (event)=> {
+	// 		const popupInner = document.querySelector(".select-movie-popupInner"); // uses different popupInner class
+	// 		// if conditional is different than others, we do want popupInner.contains(event.target)
+	// 		if (popup.classList.contains("open") && popupInner.contains(event.target)) {
+	// 			close_popup();
+	// 			request_catalog_select_movie_popup();
+	// 			open_popup();
+	// 		}
+	// 	})
+	// }
+	
+	function close_event_handler2_select_catalog(x) {
+		x.addEventListener("click", (event)=> {
+			const popupInner = document.querySelector(".help-menu-popupInner"); // uses different popupInner class
+			if (popup.classList.contains("open") && !popupInner.contains(event.target)) {
+				close_popup();
+			}
+		})
+	}
+
 });
 
 
