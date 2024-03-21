@@ -494,16 +494,21 @@ def fetch_movie_streaming_data(movie, index):
 # Update the streaming providers for all movies in the Movie database
 def update_streaming_providers(test_limit=None):
     # test_limit = 100   # Test mode, quantity of test cases
+    filter_null_jw_url = True
     if test_limit:
         # movies = list(Movie.objects.all()[:test_limit])
-        previous = 1100
+        previous = 2550
         new_limit = test_limit + previous
         movies = list(Movie.objects.all()[previous:new_limit])
     else:
         movies = list(Movie.objects.all())
 
-    print(f'Total movies in database: {len(movies)}')
+    if filter_null_jw_url:
+        filtered_movies = [movie for movie in movies if not any(data['tmdb_id'] == movie.tmdb_id for data in jw_urls_data if data['jw_url'] is not None)]
+        movies = filtered_movies
 
+    print(f'Total movies to update: {len(movies)}')
+    
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:  # Limit to 20 threads
         futures = [executor.submit(fetch_movie_streaming_data, movie, index) for index, movie in enumerate(movies)]
 
@@ -537,7 +542,7 @@ def update_streaming_providers(test_limit=None):
                 top_provider = sorted_providers[0]
                 movie.top_streaming_providers.add(top_provider)
 
-            if index % 10 == 0:
+            if index % 10 == 0 and index != 0:
                 print(f'Updated streaming providers for {index}/{len(movies)} movies')
 
 
