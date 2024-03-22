@@ -1410,9 +1410,9 @@ ul {
   align-items: center;
   width: 25px;
   height: 25px;
-  border: 1px solid #fff;
+  /* border: 1px solid #fff;
   -webkit-border-radius: 50%;
-  border-radius: 50%;
+  border-radius: 50%; */
   top: 32px;  /* Adjust as needed */
   left: 47px; /* Adjust as needed */
   right: auto;  /* Adjust as needed */
@@ -1433,7 +1433,7 @@ ul {
 .card__add img {
   width: 25px;  /* Adjust width as needed */
   height: 25px;  /* Adjust height as needed */
-  opacity: 0.5;  /* Initial opacity (50%) */
+  opacity: 0.3;  /* Initial opacity (30%) */
 }
 .card__add:hover img {
   opacity: 1;  /* Opacity during hover (100%) */
@@ -1451,9 +1451,9 @@ ul {
   align-items: center;
   width: 25px;
   height: 25px;
-  border: 1px solid #fff;
+  /* border: 1px solid #fff;
   -webkit-border-radius: 50%;
-  border-radius: 50%;
+  border-radius: 50%; */
   top: 32px;  /* Adjust as needed */
   left: 178px; /* Adjust as needed */
   right: auto;  /* Adjust as needed */
@@ -1473,7 +1473,7 @@ ul {
 .card__rating img {
   width: 25px;  /* Adjust width as needed */
   height: 25px;  /* Adjust height as needed */
-  opacity: 0.5;  /* Initial opacity (50%) */
+  opacity: 0.3;  /* Initial opacity (30%) */
 }
 .card__rating2 {
   position: absolute;
@@ -1482,9 +1482,9 @@ ul {
   align-items: center;
   width: 25px;
   height: 25px;
-  border: 1px solid #fff;
+  /* border: 1px solid #fff;
   -webkit-border-radius: 50%;
-  border-radius: 50%;
+  border-radius: 50%; */
   top: 32px;  /* Adjust as needed */
   left: 173px; /* Adjust as needed */
   right: auto;  /* Adjust as needed */
@@ -1504,7 +1504,7 @@ ul {
 .card__rating2 img {
   width: 25px;  /* Adjust width as needed */
   height: 25px;  /* Adjust height as needed */
-  opacity: 0.5;  /* Initial opacity (50%) */
+  opacity: 0.3;  /* Initial opacity (30%) */
 }
 .card__rating3 {
   position: absolute;
@@ -1513,9 +1513,9 @@ ul {
   align-items: center;
   width: 25px;
   height: 25px;
-  border: 1px solid #fff;
+  /* border: 1px solid #fff;
   -webkit-border-radius: 50%;
-  border-radius: 50%;
+  border-radius: 50%; */
   top: 32px;  /* Adjust as needed */
   left: 168px; /* Adjust as needed */
   right: auto;  /* Adjust as needed */
@@ -1535,7 +1535,7 @@ ul {
 .card__rating3 img {
   width: 25px;  /* Adjust width as needed */
   height: 25px;  /* Adjust height as needed */
-  opacity: 0.5;  /* Initial opacity (50%) */
+  opacity: 0.3;  /* Initial opacity (30%) */
 }
 .card__rating:hover img {
   opacity: 1;  /* Opacity during hover (100%) */
@@ -1571,9 +1571,9 @@ ul {
   align-items: center;
   width: 25px;
   height: 25px;
-  border: 1px solid #fff;
+  /* border: 1px solid #fff;
   -webkit-border-radius: 50%;
-  border-radius: 50%;
+  border-radius: 50%; */
   top: 32px;  /* Adjust as needed */
   left: 225px; /* Adjust as needed */
   right: auto;  /* Adjust as needed */
@@ -1593,7 +1593,7 @@ ul {
 .card__rating__large img {
   width: 25px;  /* Adjust width as needed */
   height: 25px;  /* Adjust height as needed */
-  opacity: 0.5;  /* Initial opacity (50%) */
+  opacity: 0.3;  /* Initial opacity (30%) */
 }
 .card__rating__large:hover img {
   opacity: 1;  /* Opacity during hover (100%) */
@@ -1892,9 +1892,9 @@ ul {
     height: 30px;
     margin: -40px 0 0 -40px;
     font-size: 44px;
-    border: 1px solid #fff;
+    /* border: 1px solid #fff;
     -webkit-border-radius: 50%;
-    border-radius: 50%;
+    border-radius: 50%; */
     top: 73px;  /* Adjust as needed */
     left: 43px; /* Adjust as needed */
     right: auto;  /* Adjust as needed */
@@ -1906,7 +1906,7 @@ ul {
   .card--big .card__add img {
     width: 30px;  /* Adjust width as needed */
     height: 30px;  /* Adjust height as needed */
-    opacity: 0.5;  /* Initial opacity (50%) */
+    opacity: 0.3;  /* Initial opacity (30%) */
   }
   .card--big .card__add:hover img {
     opacity: 1;  /* Opacity during hover (100%) */
@@ -1916,9 +1916,9 @@ ul {
     height: 30px;
     margin: -40px 0 0 -40px;
     font-size: 44px;
-    border: 1px solid #fff;
+    /* border: 1px solid #fff;
     -webkit-border-radius: 50%;
-    border-radius: 50%;
+    border-radius: 50%; */
     top: 73px;  /* Adjust as needed */
     left: 43px; /* Adjust as needed */
     right: auto;  /* Adjust as needed */
@@ -1930,7 +1930,7 @@ ul {
   .card--big .card__rating img {
     width: 30px;  /* Adjust width as needed */
     height: 30px;  /* Adjust height as needed */
-    opacity: 0.5;  /* Initial opacity (50%) */
+    opacity: 0.3;  /* Initial opacity (30%) */
   }
   .card--big .card__rating:hover img {
     opacity: 1;  /* Opacity during hover (100%) */
@@ -1940,9 +1940,9 @@ ul {
     height: 30px;
     margin: -40px 0 0 -40px;
     font-size: 44px;
-    border: 1px solid #fff;
+    /* border: 1px solid #fff;
     -webkit-border-radius: 50%;
-    border-radius: 50%;
+    border-radius: 50%; */
     top: 73px;  /* Adjust as needed */
     left: 43px; /* Adjust as needed */
     right: auto;  /* Adjust as needed */
@@ -1954,7 +1954,7 @@ ul {
   .card--big .card__rating2 img {
     width: 30px;  /* Adjust width as needed */
     height: 30px;  /* Adjust height as needed */
-    opacity: 0.5;  /* Initial opacity (50%) */
+    opacity: 0.3;  /* Initial opacity (30%) */
   }
   .card--big .card__rating2:hover img {
     opacity: 1;  /* Opacity during hover (100%) */
@@ -1964,9 +1964,9 @@ ul {
     height: 30px;
     margin: -40px 0 0 -40px;
     font-size: 44px;
-    border: 1px solid #fff;
+    /* border: 1px solid #fff;
     -webkit-border-radius: 50%;
-    border-radius: 50%;
+    border-radius: 50%; */
     top: 73px;  /* Adjust as needed */
     left: 43px; /* Adjust as needed */
     right: auto;  /* Adjust as needed */
@@ -1978,7 +1978,7 @@ ul {
   .card--big .card__rating3 img {
     width: 30px;  /* Adjust width as needed */
     height: 30px;  /* Adjust height as needed */
-    opacity: 0.5;  /* Initial opacity (50%) */
+    opacity: 0.3;  /* Initial opacity (30%) */
   }
   .card--big .card__rating3:hover img {
     opacity: 1;  /* Opacity during hover (100%) */
@@ -1988,9 +1988,9 @@ ul {
     height: 30px;
     margin: -40px 0 0 -40px;
     font-size: 44px;
-    border: 1px solid #fff;
+    /* border: 1px solid #fff;
     -webkit-border-radius: 50%;
-    border-radius: 50%;
+    border-radius: 50%; */
     top: 73px;  /* Adjust as needed */
     left: 263px; /* Adjust as needed */
     right: auto;  /* Adjust as needed */
@@ -2002,7 +2002,7 @@ ul {
   .card--big .card__rating__large img {
     width: 30px;  /* Adjust width as needed */
     height: 30px;  /* Adjust height as needed */
-    opacity: 0.5;  /* Initial opacity (50%) */
+    opacity: 0.3;  /* Initial opacity (30%) */
   }
   .card--big .card__rating__large:hover img {
     opacity: 1;  /* Opacity during hover (100%) */
@@ -5786,9 +5786,9 @@ FilmFocus Grey: #2B2B31 */
   opacity: 1;
 }
 
-
-
-
+/*==============================
+  Help Menu Popup
+==============================*/
 .help-menu-popupInner {
   background-color:#2b2b31;
   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
@@ -5805,22 +5805,6 @@ FilmFocus Grey: #2B2B31 */
   z-index: 110;
   pointer-events: none;
 }
-/* .help-menu-popupInner {
-  background-color:#2b2b31;
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  border: 3px solid #F12D92;
-  border-radius: 5px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-  padding: 10px 10px;
-  text-align: center;
-  color: #fff;
-  width: 450px;
-  height: 380px;
-  position: relative;
-  z-index: 103;
-  pointer-events: none;
-} */
 .help-menu-popupInner h2 {
   margin: 0;
 }
