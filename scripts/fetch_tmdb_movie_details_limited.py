@@ -29,13 +29,13 @@ OMDB_API_KEY = os.environ.get("OMDB_API_KEY")               # limited to 100,000
 # TMDB_API_KEY_STRING = os.environ.get("TMDB_API_KEY_STRING") # limited to around 50 calls/second
 TMDB_API_KEY_STRING = "f958ac9e78a958932e6def76077a2292"
 
-GET_RANDOM = True   # Set to True to fetch random movies
-LIMIT = 3  # Change the limit as needed
-
 # Initialize TMDb
 tmdb = TMDb()
 tmdb.api_key = TMDB_API_KEY_STRING
 tmdb_movie = TMDbMovie()
+
+get_random = True   # Set to True to fetch random movies
+limit_count = 3     # Change the limit_count as needed
 
 # Define the function to recursively convert object to dictionary
 def obj_to_dict(obj):
@@ -53,7 +53,7 @@ def fetch_and_save_movie_details(movie_id):
     try:
         movie = Movie.objects.get(id=movie_id)
         if movie.tmdb_id:
-            print(f"Fetching details for {movie_id}: {movie.title} ({movie.release_year})...")
+            # print(f"Fetching details for {movie_id}: {movie.title} ({movie.release_year})...")
             detail = tmdb_movie.details(movie.tmdb_id)
             if detail:
                 # Convert detail object to dictionary
@@ -69,13 +69,13 @@ def fetch_and_save_movie_details(movie_id):
         print(f"Error fetching details for movie {movie_id}: {e}")
         return False
 
-# Get a random selection of movie IDs if GET_RANDOM is True
-if GET_RANDOM:
+# Get a random selection of movie IDs if get_random is True
+if get_random:
     movie_ids = list(Movie.objects.values_list('id', flat=True))
     random.shuffle(movie_ids)
-    movie_ids = movie_ids[:LIMIT]
+    movie_ids = movie_ids[:limit_count]
 else:
-    movie_ids = list(Movie.objects.values_list('id', flat=True))[:LIMIT]
+    movie_ids = list(Movie.objects.values_list('id', flat=True))[:limit_count]
 
 total_movies = len(movie_ids)
 completed = 0
