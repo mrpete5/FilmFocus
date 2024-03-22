@@ -501,6 +501,7 @@ def update_streaming_providers(test_limit=None):
         new_limit = test_limit + previous
         movies = list(Movie.objects.all()[previous:new_limit])
     else:
+        # movies = list(Movie.objects.order_by('-created_at')[:10])
         movies = list(Movie.objects.all())
 
     if filter_null_jw_url:
@@ -673,7 +674,6 @@ def process_justwatch_streamers(movie):
             
             movie_instance.save()
     else:
-        # If the movie is not found in the database, print a message
         print(f"Movie not found in the database: {movie.title}, {movie.release_year}")
 
 # Update the Letterboxd ratings for all movies in the Movie database

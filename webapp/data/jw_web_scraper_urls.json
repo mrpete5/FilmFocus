@@ -2372,12 +2372,12 @@
     {
         "tmdb_id": 452522,
         "title": "Twin Peaks",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 284457,
         "title": "Twin Peaks: The Missing Pieces",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 363889,
@@ -2392,7 +2392,7 @@
     {
         "tmdb_id": 19324,
         "title": "Born in East L.A.",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 284521,
@@ -2597,7 +2597,7 @@
     {
         "tmdb_id": 1028725,
         "title": "Mutant: Ghost War Girl",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/mutant-ghost-wargirl"
     },
     {
         "tmdb_id": 1010581,
@@ -2883,11 +2883,6 @@
         "tmdb_id": 893723,
         "title": "PAW Patrol: The Mighty Movie",
         "jw_url": "https://www.justwatch.com/us/movie/paw-patrol-the-mighty-movie"
-    },
-    {
-        "tmdb_id": 528656,
-        "title": "Genghis Khan",
-        "jw_url": null
     },
     {
         "tmdb_id": 984249,
@@ -3247,12 +3242,7 @@
     {
         "tmdb_id": 601796,
         "title": "Alienoid",
-        "jw_url": null
-    },
-    {
-        "tmdb_id": 383634,
-        "title": "Carmen 1945",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/oegye-in-1bu"
     },
     {
         "tmdb_id": 459003,
@@ -3737,7 +3727,7 @@
     {
         "tmdb_id": 455476,
         "title": "Knights of the Zodiac",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/saint-seiya-knights-of-the-zodiac"
     },
     {
         "tmdb_id": 299537,
@@ -3808,11 +3798,6 @@
         "tmdb_id": 697843,
         "title": "Extraction 2",
         "jw_url": "https://www.justwatch.com/us/movie/extraction-2"
-    },
-    {
-        "tmdb_id": 1209770,
-        "title": "Bedspacer",
-        "jw_url": null
     },
     {
         "tmdb_id": 124905,
@@ -3932,7 +3917,7 @@
     {
         "tmdb_id": 1053544,
         "title": "The Abyss",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/avgrunden"
     },
     {
         "tmdb_id": 109418,
@@ -4110,11 +4095,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/incredibles-2"
     },
     {
-        "tmdb_id": 118249,
-        "title": "Thriller Night",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 321612,
         "title": "Beauty and the Beast",
         "jw_url": "https://www.justwatch.com/us/movie/beauty-and-the-beast-2017"
@@ -4142,7 +4122,7 @@
     {
         "tmdb_id": 845387,
         "title": "maboroshi",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/alice-to-therese-no-maboroshi-kojo"
     },
     {
         "tmdb_id": 1930,
@@ -4262,7 +4242,7 @@
     {
         "tmdb_id": 866038,
         "title": "Apache Junction",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/apache-junction"
     },
     {
         "tmdb_id": 724209,
@@ -4432,7 +4412,7 @@
     {
         "tmdb_id": 752623,
         "title": "The Lost City",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/lost-city-of-d"
     },
     {
         "tmdb_id": 39254,
@@ -4472,17 +4452,12 @@
     {
         "tmdb_id": 98566,
         "title": "Teenage Mutant Ninja Turtles",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/ninja-turtles"
     },
     {
         "tmdb_id": 460458,
         "title": "Resident Evil: Welcome to Raccoon City",
         "jw_url": "https://www.justwatch.com/us/movie/resident-evil"
-    },
-    {
-        "tmdb_id": 937895,
-        "title": "Obsessed",
-        "jw_url": null
     },
     {
         "tmdb_id": 763215,
@@ -4512,7 +4487,7 @@
     {
         "tmdb_id": 56292,
         "title": "Mission: Impossible - Ghost Protocol",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/mission-impossible-iv"
     },
     {
         "tmdb_id": 190859,
@@ -4533,11 +4508,6 @@
         "tmdb_id": 529203,
         "title": "The Croods: A New Age",
         "jw_url": "https://www.justwatch.com/us/movie/the-croods-2"
-    },
-    {
-        "tmdb_id": 832074,
-        "title": "Tourist",
-        "jw_url": null
     },
     {
         "tmdb_id": 9487,
@@ -4640,11 +4610,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/in-the-land-of-saints-and-sinners"
     },
     {
-        "tmdb_id": 797271,
-        "title": "Counterattack",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 303857,
         "title": "Dragon Ball Z: Resurrection 'F'",
         "jw_url": "https://www.justwatch.com/us/movie/dragon-ball-z-resurrection-f"
@@ -4682,7 +4647,7 @@
     {
         "tmdb_id": 91314,
         "title": "Transformers: Age of Extinction",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/transformers-4-age-of-extinction"
     },
     {
         "tmdb_id": 881460,
@@ -4757,7 +4722,7 @@
     {
         "tmdb_id": 1074049,
         "title": "A Moroccan Affair",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/ocho-apellidos-marroquis"
     },
     {
         "tmdb_id": 294254,
@@ -4782,7 +4747,7 @@
     {
         "tmdb_id": 9732,
         "title": "The Lion King II: Simba's Pride",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-lion-king-2-simbas-pride"
     },
     {
         "tmdb_id": 270946,
@@ -4792,7 +4757,7 @@
     {
         "tmdb_id": 876792,
         "title": "That Time I Got Reincarnated as a Slime the Movie: Scarlet Bond",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/gekijoban-tensei-shitara-slime-datta-ken"
     },
     {
         "tmdb_id": 724495,
@@ -4807,17 +4772,12 @@
     {
         "tmdb_id": 975043,
         "title": "Which Brings Me to You",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/which-brings-me-to-you"
     },
     {
         "tmdb_id": 9659,
         "title": "Mad Max",
         "jw_url": "https://www.justwatch.com/us/movie/mad-max-1"
-    },
-    {
-        "tmdb_id": 558144,
-        "title": "Deadpool: No Good Deed",
-        "jw_url": null
     },
     {
         "tmdb_id": 131634,
@@ -4827,7 +4787,7 @@
     {
         "tmdb_id": 168259,
         "title": "Furious 7",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/fast-7"
     },
     {
         "tmdb_id": 262500,
@@ -4842,7 +4802,7 @@
     {
         "tmdb_id": 315011,
         "title": "Shin Godzilla",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/shingozira"
     },
     {
         "tmdb_id": 20943,
@@ -4867,7 +4827,7 @@
     {
         "tmdb_id": 76617,
         "title": "Texas Chainsaw 3D",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-texas-chainsaw-massacre"
     },
     {
         "tmdb_id": 259316,
@@ -4910,11 +4870,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/american-wedding"
     },
     {
-        "tmdb_id": 1206029,
-        "title": "Muchachos, la pel\u00edcula de la gente",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 588,
         "title": "Silent Hill",
         "jw_url": "https://www.justwatch.com/us/movie/silent-hill"
@@ -4952,7 +4907,7 @@
     {
         "tmdb_id": 12242,
         "title": "Mulan II",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/mulan-2"
     },
     {
         "tmdb_id": 49046,
@@ -5010,11 +4965,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/transformers-the-last-knight"
     },
     {
-        "tmdb_id": 1189927,
-        "title": "The Duel",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 581726,
         "title": "Infinite",
         "jw_url": "https://www.justwatch.com/us/movie/infinite-2021"
@@ -5027,7 +4977,7 @@
     {
         "tmdb_id": 27578,
         "title": "The Expendables",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/expendables-the"
     },
     {
         "tmdb_id": 652,
@@ -5087,7 +5037,7 @@
     {
         "tmdb_id": 9739,
         "title": "Demolition Man",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/le-destructeur"
     },
     {
         "tmdb_id": 447332,
@@ -5097,7 +5047,7 @@
     {
         "tmdb_id": 863851,
         "title": "M\u00edrame",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/mirame"
     },
     {
         "tmdb_id": 181808,
@@ -5122,7 +5072,7 @@
     {
         "tmdb_id": 113082,
         "title": "Berserk: The Golden Age Arc I - The Egg of the King",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/berserk-the-golden-age-arc-the-egg-of-the-king-2012"
     },
     {
         "tmdb_id": 1220441,
@@ -5142,7 +5092,7 @@
     {
         "tmdb_id": 854006,
         "title": "Ox-Head Village",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/ushikubi-village"
     },
     {
         "tmdb_id": 9631,
@@ -5307,12 +5257,12 @@
     {
         "tmdb_id": 9820,
         "title": "The Parent Trap",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/lattrape-parents"
     },
     {
         "tmdb_id": 9737,
         "title": "Bad Boys",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/mauvais-garcons"
     },
     {
         "tmdb_id": 696806,
@@ -5472,7 +5422,7 @@
     {
         "tmdb_id": 753453,
         "title": "V/H/S/94",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/v-h-s-94"
     },
     {
         "tmdb_id": 9495,
@@ -5483,11 +5433,6 @@
         "tmdb_id": 324852,
         "title": "Despicable Me 3",
         "jw_url": "https://www.justwatch.com/us/movie/despicable-me-3"
-    },
-    {
-        "tmdb_id": 783658,
-        "title": "Duna",
-        "jw_url": null
     },
     {
         "tmdb_id": 717728,
@@ -5502,7 +5447,7 @@
     {
         "tmdb_id": 606870,
         "title": "The Survivor",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-survivor-2021"
     },
     {
         "tmdb_id": 8960,
@@ -5622,7 +5567,7 @@
     {
         "tmdb_id": 768744,
         "title": "My Hero Academia: World Heroes' Mission",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/my-hero-academia-movie-3"
     },
     {
         "tmdb_id": 920258,
@@ -5690,11 +5635,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/alice-in-wonderland-1951"
     },
     {
-        "tmdb_id": 253935,
-        "title": "Emmanuelle 7",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 664236,
         "title": "Extinct",
         "jw_url": "https://www.justwatch.com/us/movie/extinct"
@@ -5737,7 +5677,7 @@
     {
         "tmdb_id": 9836,
         "title": "Happy Feet",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/les-petits-pieds-du-bonheur"
     },
     {
         "tmdb_id": 791155,
@@ -5837,7 +5777,7 @@
     {
         "tmdb_id": 848685,
         "title": "The Beasts",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/as-bestas"
     },
     {
         "tmdb_id": 18491,
@@ -5937,7 +5877,7 @@
     {
         "tmdb_id": 568620,
         "title": "Snake Eyes: G.I. Joe Origins",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/snake-eyes-2020"
     },
     {
         "tmdb_id": 4922,
@@ -5952,7 +5892,7 @@
     {
         "tmdb_id": 378064,
         "title": "A Silent Voice: The Movie",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/a-silent-voice"
     },
     {
         "tmdb_id": 899082,
@@ -6000,11 +5940,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/out-of-darkness-2024"
     },
     {
-        "tmdb_id": 81774,
-        "title": "Exploits of a Young Don Juan",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 136799,
         "title": "Trolls",
         "jw_url": "https://www.justwatch.com/us/movie/trolls"
@@ -6017,7 +5952,7 @@
     {
         "tmdb_id": 20982,
         "title": "Naruto Shippuden the Movie",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/naruto-shippuden-the-movie-1"
     },
     {
         "tmdb_id": 411999,
@@ -6042,7 +5977,7 @@
     {
         "tmdb_id": 118412,
         "title": "Berserk: The Golden Age Arc II - The Battle for Doldrey",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/berserk-the-golden-age-arc-ii-the-battle-for-doldrey"
     },
     {
         "tmdb_id": 783675,
@@ -6107,7 +6042,7 @@
     {
         "tmdb_id": 605886,
         "title": "To Catch a Killer",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/misanthrope"
     },
     {
         "tmdb_id": 453,
@@ -6137,7 +6072,7 @@
     {
         "tmdb_id": 811634,
         "title": "The Monkey King: Reborn",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/monkey-king-reborn"
     },
     {
         "tmdb_id": 9769,
@@ -6182,7 +6117,7 @@
     {
         "tmdb_id": 786892,
         "title": "Furiosa: A Mad Max Saga",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/furiosa"
     },
     {
         "tmdb_id": 290271,
@@ -6340,11 +6275,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/the-mummy-returns"
     },
     {
-        "tmdb_id": 849236,
-        "title": "Ostap Bender. The Empire's Gold",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 12162,
         "title": "The Hurt Locker",
         "jw_url": "https://www.justwatch.com/us/movie/the-hurt-locker"
@@ -6352,12 +6282,7 @@
     {
         "tmdb_id": 295011,
         "title": "Patient Zero",
-        "jw_url": null
-    },
-    {
-        "tmdb_id": 619366,
-        "title": "Bruja",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/patient-zero-2017"
     },
     {
         "tmdb_id": 398818,
@@ -6388,11 +6313,6 @@
         "tmdb_id": 534,
         "title": "Terminator Salvation",
         "jw_url": "https://www.justwatch.com/us/movie/terminator-4"
-    },
-    {
-        "tmdb_id": 645488,
-        "title": "Aquaman: Heroines of Atlantis",
-        "jw_url": null
     },
     {
         "tmdb_id": 945729,
@@ -6427,7 +6347,7 @@
     {
         "tmdb_id": 615173,
         "title": "The Witch: Part 2. The Other One",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-witch-part-2"
     },
     {
         "tmdb_id": 296,
@@ -6487,12 +6407,12 @@
     {
         "tmdb_id": 45243,
         "title": "The Hangover Part II",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-hangover-2"
     },
     {
         "tmdb_id": 888001,
         "title": "River of Fear",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/upurga"
     },
     {
         "tmdb_id": 1621,
@@ -6502,7 +6422,7 @@
     {
         "tmdb_id": 269795,
         "title": "2:22",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/2-22-2017"
     },
     {
         "tmdb_id": 15999,
@@ -6537,7 +6457,7 @@
     {
         "tmdb_id": 852445,
         "title": "Acid",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/acide"
     },
     {
         "tmdb_id": 243352,
@@ -6712,7 +6632,7 @@
     {
         "tmdb_id": 36419,
         "title": "After.Life",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/after-life"
     },
     {
         "tmdb_id": 2614,
@@ -6742,12 +6662,12 @@
     {
         "tmdb_id": 385128,
         "title": "F9",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/fast-and-furious-9"
     },
     {
         "tmdb_id": 283566,
         "title": "Evangelion: 3.0+1.0 Thrice Upon a Time",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/evangelion-3-0-1-0-thrice-upon-a-time"
     },
     {
         "tmdb_id": 70981,
@@ -6782,12 +6702,12 @@
     {
         "tmdb_id": 764835,
         "title": "The Desperate Hour",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/lakewood"
     },
     {
         "tmdb_id": 11838,
         "title": "Ju-on: The Grudge",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-grudge"
     },
     {
         "tmdb_id": 10555,
@@ -6802,7 +6722,7 @@
     {
         "tmdb_id": 44912,
         "title": "Green Lantern",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/green-lantern-fr"
     },
     {
         "tmdb_id": 458576,
@@ -6827,7 +6747,7 @@
     {
         "tmdb_id": 7445,
         "title": "Brothers",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/freres"
     },
     {
         "tmdb_id": 395990,
@@ -6847,12 +6767,12 @@
     {
         "tmdb_id": 71552,
         "title": "American Reunion",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/american-pie-reunion"
     },
     {
         "tmdb_id": 278927,
         "title": "The Jungle Book",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-jungle-book-2015"
     },
     {
         "tmdb_id": 302946,
@@ -6867,7 +6787,7 @@
     {
         "tmdb_id": 893712,
         "title": "Sword Art Online the Movie \u2013 Progressive \u2013 Scherzo of Deep Night",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/gekijouban-sword-art-online-the-movie-progressive-kuraki-yuuyami-no-scherzo"
     },
     {
         "tmdb_id": 1374,
@@ -6910,11 +6830,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/the-incredible-hulk"
     },
     {
-        "tmdb_id": 697620,
-        "title": "Dune",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 10184,
         "title": "He's Just Not That Into You",
         "jw_url": "https://www.justwatch.com/us/movie/hes-just-not-that-into-you"
@@ -6937,7 +6852,7 @@
     {
         "tmdb_id": 639838,
         "title": "Cruel Fixation",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/sinister-seduction"
     },
     {
         "tmdb_id": 19833,
@@ -7297,7 +7212,7 @@
     {
         "tmdb_id": 972433,
         "title": "Race for Glory: Audi vs Lancia",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/2-win"
     },
     {
         "tmdb_id": 829,
@@ -7477,7 +7392,7 @@
     {
         "tmdb_id": 1232449,
         "title": "Young Hearts",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/young-hearts"
     },
     {
         "tmdb_id": 1239159,
@@ -8300,11 +8215,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/burning-days"
     },
     {
-        "tmdb_id": 586032,
-        "title": "1",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 18990,
         "title": "The Mummy",
         "jw_url": "https://www.justwatch.com/us/movie/the-mummy-1959"
@@ -8320,11 +8230,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/cassandro"
     },
     {
-        "tmdb_id": 295273,
-        "title": "The Crossing II",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 574284,
         "title": "Harpoon",
         "jw_url": "https://www.justwatch.com/us/movie/harpoon-2019"
@@ -8337,17 +8242,12 @@
     {
         "tmdb_id": 945675,
         "title": "One Week Friends",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/yi-zhou-de-peng-you"
     },
     {
         "tmdb_id": 17618,
         "title": "Laid to Rest",
         "jw_url": "https://www.justwatch.com/us/movie/laid-to-rest"
-    },
-    {
-        "tmdb_id": 790409,
-        "title": "The Last Heretic",
-        "jw_url": null
     },
     {
         "tmdb_id": 46655,
@@ -8920,11 +8820,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/the-return-of-the-living-dead"
     },
     {
-        "tmdb_id": 521494,
-        "title": "Transformers: Titans Return",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 1936,
         "title": "River of No Return",
         "jw_url": "https://www.justwatch.com/us/movie/river-of-no-return"
@@ -9342,7 +9237,7 @@
     {
         "tmdb_id": 8810,
         "title": "Mad Max 2",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/mad-max-2-the-road-warrior"
     },
     {
         "tmdb_id": 4964,
@@ -9625,11 +9520,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/the-enforcer-2022"
     },
     {
-        "tmdb_id": 946310,
-        "title": "Pirates Down the Street II: The Ninjas from Across",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 668482,
         "title": "Roald Dahl's Matilda the Musical",
         "jw_url": "https://www.justwatch.com/us/movie/matilda-2022"
@@ -9652,7 +9542,7 @@
     {
         "tmdb_id": 14564,
         "title": "Rings",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/rings"
     },
     {
         "tmdb_id": 334543,
@@ -9817,7 +9707,7 @@
     {
         "tmdb_id": 465086,
         "title": "The Grudge",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/grudge"
     },
     {
         "tmdb_id": 6537,
@@ -10222,7 +10112,7 @@
     {
         "tmdb_id": 777847,
         "title": "If You Were the Last",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/if-you-were-the-last"
     },
     {
         "tmdb_id": 1216869,
@@ -10522,7 +10412,7 @@
     {
         "tmdb_id": 850028,
         "title": "Alice, Darling",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/alice-darling"
     },
     {
         "tmdb_id": 1238115,
@@ -10722,7 +10612,7 @@
     {
         "tmdb_id": 947219,
         "title": "Ernest & Celestine: A Trip to Gibberitia",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/ernest-and-celestine-2-a-trip-to-gibberitia"
     },
     {
         "tmdb_id": 1114777,
@@ -10797,7 +10687,7 @@
     {
         "tmdb_id": 1105832,
         "title": "Sim\u00f3n",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/simon-2023"
     },
     {
         "tmdb_id": 917496,
@@ -10942,7 +10832,7 @@
     {
         "tmdb_id": 1048300,
         "title": "Adrenaline",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 642203,
@@ -11137,7 +11027,7 @@
     {
         "tmdb_id": 25403,
         "title": "Caro diario",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/dear-diary"
     },
     {
         "tmdb_id": 519185,
@@ -11292,7 +11182,7 @@
     {
         "tmdb_id": 667276,
         "title": "Las Leyendas: El Origen",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/legend-quest-the-origin"
     },
     {
         "tmdb_id": 602147,
@@ -11407,7 +11297,7 @@
     {
         "tmdb_id": 277,
         "title": "Underworld",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/monde-infernal"
     },
     {
         "tmdb_id": 70,
@@ -11517,12 +11407,7 @@
     {
         "tmdb_id": 353126,
         "title": "The Phantom Stockman",
-        "jw_url": null
-    },
-    {
-        "tmdb_id": 774658,
-        "title": "Scooby-Doo's Spookiest Tales",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 973468,
@@ -11882,7 +11767,7 @@
     {
         "tmdb_id": 731110,
         "title": "Finders of the Lost Yacht",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 1075822,
@@ -11952,11 +11837,6 @@
     {
         "tmdb_id": 990754,
         "title": "Silver Servers",
-        "jw_url": null
-    },
-    {
-        "tmdb_id": 1205850,
-        "title": "Cooking with Corey",
         "jw_url": null
     },
     {
@@ -12157,12 +12037,12 @@
     {
         "tmdb_id": 38275,
         "title": "The Informant",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 26217,
         "title": "The Informant",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 9574,
@@ -12247,7 +12127,7 @@
     {
         "tmdb_id": 472451,
         "title": "Boy Erased",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/boy-erased"
     },
     {
         "tmdb_id": 1691,
@@ -12582,17 +12462,12 @@
     {
         "tmdb_id": 85483,
         "title": "Something Evil",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 110747,
         "title": "Savage",
         "jw_url": "https://www.justwatch.com/us/movie/savage-1973"
-    },
-    {
-        "tmdb_id": 391069,
-        "title": "Night Gallery",
-        "jw_url": null
     },
     {
         "tmdb_id": 267935,
@@ -13037,7 +12912,7 @@
     {
         "tmdb_id": 83105,
         "title": "The Boy in Blue",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 74998,
@@ -13417,7 +13292,7 @@
     {
         "tmdb_id": 55059,
         "title": "Happy Together",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 643215,
@@ -13682,12 +13557,7 @@
     {
         "tmdb_id": 250195,
         "title": "True West",
-        "jw_url": null
-    },
-    {
-        "tmdb_id": 401563,
-        "title": "100 Years",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 32058,
@@ -13702,7 +13572,7 @@
     {
         "tmdb_id": 925301,
         "title": "Rocket to the Moon",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 792614,
@@ -14120,11 +13990,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/above-suspicion-2019"
     },
     {
-        "tmdb_id": 41998,
-        "title": "The Man Who Souled the World",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 10471,
         "title": "Next Friday",
         "jw_url": "https://www.justwatch.com/us/movie/next-friday"
@@ -14187,7 +14052,7 @@
     {
         "tmdb_id": 52855,
         "title": "Dangerous Ground",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 168530,
@@ -14202,7 +14067,7 @@
     {
         "tmdb_id": 438517,
         "title": "G-Funk",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 1070009,
@@ -14253,11 +14118,6 @@
         "tmdb_id": 75622,
         "title": "Rampart",
         "jw_url": "https://www.justwatch.com/us/movie/rampart"
-    },
-    {
-        "tmdb_id": 525695,
-        "title": "20 Most Shocking Unsolved Crimes",
-        "jw_url": null
     },
     {
         "tmdb_id": 570488,
@@ -14712,7 +14572,7 @@
     {
         "tmdb_id": 35650,
         "title": "Maelstr\u00f6m",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/maelstrom"
     },
     {
         "tmdb_id": 99343,
@@ -14992,7 +14852,7 @@
     {
         "tmdb_id": 621751,
         "title": "And We Go Green",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/and-we-go-green"
     },
     {
         "tmdb_id": 473888,
@@ -15027,7 +14887,7 @@
     {
         "tmdb_id": 1058617,
         "title": "Fancy Dance",
-        "jw_url": null
+        "jw_url": "Not Found"
     },
     {
         "tmdb_id": 54138,
@@ -15162,7 +15022,7 @@
     {
         "tmdb_id": 16131,
         "title": "Undertow",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/undertow-2004"
     },
     {
         "tmdb_id": 300668,
@@ -15222,7 +15082,7 @@
     {
         "tmdb_id": 8009,
         "title": "Highlander",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/highlander"
     },
     {
         "tmdb_id": 814,
@@ -15242,7 +15102,7 @@
     {
         "tmdb_id": 8867,
         "title": "The Punisher",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-punisher"
     },
     {
         "tmdb_id": 1410,
@@ -15560,11 +15420,6 @@
         "jw_url": "https://www.justwatch.com/us/movie/swatantra-veer-savarkar"
     },
     {
-        "tmdb_id": 1170657,
-        "title": "Barbie and Stacie to the Rescue",
-        "jw_url": "https://www.justwatch.com/us/movie/barbie-and-stacie-to-the-rescue"
-    },
-    {
         "tmdb_id": 1172343,
         "title": "God Is Still Brazilian",
         "jw_url": null
@@ -15590,11 +15445,6 @@
         "jw_url": null
     },
     {
-        "tmdb_id": 1245397,
-        "title": "Misi\u00f3n Kipi",
-        "jw_url": null
-    },
-    {
         "tmdb_id": 1180173,
         "title": "The Restoration",
         "jw_url": null
@@ -15612,7 +15462,7 @@
     {
         "tmdb_id": 745987,
         "title": "The Challenge",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/vyzov"
     },
     {
         "tmdb_id": 1117609,
@@ -15862,7 +15712,7 @@
     {
         "tmdb_id": 9962,
         "title": "The Good Girl",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-good-girl"
     },
     {
         "tmdb_id": 41210,
@@ -15912,7 +15762,7 @@
     {
         "tmdb_id": 8999,
         "title": "Derailed",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/derailed"
     },
     {
         "tmdb_id": 25643,
@@ -15937,201 +15787,276 @@
     {
         "tmdb_id": 25018,
         "title": "Leatherface: The Texas Chainsaw Massacre III",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-texas-chainsaw-massacre-3"
     },
     {
         "tmdb_id": 533642,
         "title": "Child's Play",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/childs-play-2019"
     },
     {
         "tmdb_id": 167032,
         "title": "Curse of Chucky",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/curse-of-chucky"
     },
     {
         "tmdb_id": 37136,
         "title": "The Naked Gun: From the Files of Police Squad!",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-naked-gun-from-the-files-of-police-squad"
     },
     {
         "tmdb_id": 11249,
         "title": "Seed of Chucky",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/seed-of-chucky"
     },
     {
         "tmdb_id": 11932,
         "title": "Bride of Chucky",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/childs-play-4"
     },
     {
         "tmdb_id": 10283,
         "title": "Friday the 13th Part VIII: Jason Takes Manhattan",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/friday-the-13th-part-viii-jason-takes-manhattan"
     },
     {
         "tmdb_id": 10676,
         "title": "Halloween III: Season of the Witch",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/halloween-iii-season-of-the-witch"
     },
     {
         "tmdb_id": 9728,
         "title": "Friday the 13th Part III",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/crystal-japan"
     },
     {
         "tmdb_id": 9725,
         "title": "Friday the 13th Part 2",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/friday-the-13th-part-2"
     },
     {
         "tmdb_id": 36599,
         "title": "Prom Night",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/prom-night-1980"
     },
     {
         "tmdb_id": 16235,
         "title": "Amityville II: The Possession",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/amityville-ii-the-possession"
     },
     {
         "tmdb_id": 9645,
         "title": "Ghost Ship",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/ghost-ship"
     },
     {
         "tmdb_id": 280092,
         "title": "Insidious: Chapter 3",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/insidious-chapter-3"
     },
     {
         "tmdb_id": 3021,
         "title": "1408",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/1408"
     },
     {
         "tmdb_id": 300671,
         "title": "13 Hours: The Secret Soldiers of Benghazi",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/13-hours-the-secret-soldiers-of-benghazi"
     },
     {
         "tmdb_id": 2207,
         "title": "16 Blocks",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/sixteen-blocks"
     },
     {
         "tmdb_id": 584,
         "title": "2 Fast 2 Furious",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/2-fast-2-furious"
     },
     {
         "tmdb_id": 185351,
         "title": "A Green Story",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/a-green-story"
     },
     {
         "tmdb_id": 411545,
         "title": "Gibby",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/gibby"
     },
     {
         "tmdb_id": 278670,
         "title": "You Belong to Me",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/you-belong-to-me"
     },
     {
         "tmdb_id": 62379,
         "title": "Confessions of an American Bride",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/confessions-of-an-american-bride"
     },
     {
         "tmdb_id": 238304,
         "title": "Catch a Christmas Star",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/catch-a-christmas-star"
     },
     {
         "tmdb_id": 10646,
         "title": "Tomcats",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/tomcats"
     },
     {
         "tmdb_id": 27318,
         "title": "Jack Frost",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/jack-frost-1997"
     },
     {
         "tmdb_id": 70207,
         "title": "The Crooked E: The Unshredded Truth About Enron",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-crooked-e-the-unshredded-truth-about-enron"
     },
     {
         "tmdb_id": 348898,
         "title": "Marshall's Miracle",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/marshalls-miracle"
     },
     {
         "tmdb_id": 722926,
         "title": "Skin: A History of Nudity in the Movies",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/skin-a-history-of-nudity-in-the-movies"
     },
     {
         "tmdb_id": 64688,
         "title": "21 Jump Street",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/21-jump-street"
     },
     {
         "tmdb_id": 8274,
         "title": "American Pie Presents: Band Camp",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/american-pie-presents-band-camp"
     },
     {
         "tmdb_id": 2770,
         "title": "American Pie 2",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/american-pie-2"
     },
     {
         "tmdb_id": 9342,
         "title": "The Mask of Zorro",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-mask-of-zorro"
     },
     {
         "tmdb_id": 4257,
         "title": "Scary Movie 4",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/scary-movie-4"
     },
     {
         "tmdb_id": 4256,
         "title": "Scary Movie 3",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/scary-movie-3"
     },
     {
         "tmdb_id": 398181,
         "title": "You Were Never Really Here",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/you-were-never-really-here"
     },
     {
         "tmdb_id": 8914,
         "title": "Deep Blue Sea",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/deep-blue-sea"
     },
     {
         "tmdb_id": 13515,
         "title": "Mirrors",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/mirrors-2008"
     },
     {
         "tmdb_id": 75174,
         "title": "The Grey",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-grey"
     },
     {
         "tmdb_id": 328387,
         "title": "Nerve",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/nerve-2016"
     },
     {
         "tmdb_id": 10065,
         "title": "The Amityville Horror",
+        "jw_url": "https://www.justwatch.com/us/movie/the-amityville-horror"
+    },
+    {
+        "tmdb_id": 1058619,
+        "title": "Divinity",
+        "jw_url": "https://www.justwatch.com/us/movie/divinity"
+    },
+    {
+        "tmdb_id": 971594,
+        "title": "Our Ties",
+        "jw_url": "https://www.justwatch.com/us/movie/our-ties"
+    },
+    {
+        "tmdb_id": 1157049,
+        "title": "Jigen Daisuke",
+        "jw_url": "https://www.justwatch.com/us/movie/jigen-daisuke"
+    },
+    {
+        "tmdb_id": 932308,
+        "title": "De perdidos a R\u00edo",
+        "jw_url": "https://www.justwatch.com/us/movie/de-perdidos-a-rio"
+    },
+    {
+        "tmdb_id": 11072,
+        "title": "Blazing Saddles",
+        "jw_url": "https://www.justwatch.com/us/movie/blazing-saddles"
+    },
+    {
+        "tmdb_id": 351211,
+        "title": "Blair Witch",
+        "jw_url": "https://www.justwatch.com/us/movie/blair-witch-2016"
+    },
+    {
+        "tmdb_id": 11531,
+        "title": "Book of Shadows: Blair Witch 2",
+        "jw_url": "https://www.justwatch.com/us/movie/blair-witch-2"
+    },
+    {
+        "tmdb_id": 222935,
+        "title": "The Fault in Our Stars",
+        "jw_url": null
+    },
+    {
+        "tmdb_id": 1700,
+        "title": "Misery",
+        "jw_url": null
+    },
+    {
+        "tmdb_id": 10330,
+        "title": "Freaky Friday",
+        "jw_url": null
+    },
+    {
+        "tmdb_id": 11631,
+        "title": "Mamma Mia!",
+        "jw_url": null
+    },
+    {
+        "tmdb_id": 9603,
+        "title": "Clueless",
+        "jw_url": null
+    },
+    {
+        "tmdb_id": 51481,
+        "title": "Mean Girls 2",
+        "jw_url": null
+    },
+    {
+        "tmdb_id": 10096,
+        "title": "13 Going on 30",
+        "jw_url": null
+    },
+    {
+        "tmdb_id": 114150,
+        "title": "Pitch Perfect",
         "jw_url": null
     }
 ]

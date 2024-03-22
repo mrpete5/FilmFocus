@@ -138,7 +138,7 @@ def fetch_search_loop(movie, jw_url_search):
 
         if response.status_code == 200:
             jw_url_movie = fetch_search_justwatch(response, movie)
-            break
+            return jw_url_movie
         elif response.status_code == 429:
             sleep_time = sleep_add + 10
             sleep_add += 5  # increase by 5 for next time
@@ -146,8 +146,8 @@ def fetch_search_loop(movie, jw_url_search):
             time.sleep(sleep_time)
         else:
             print(f"Failed JustWatch scrape for {movie.title} (search request): status code {response.status_code}")
-            break
-    return jw_url_movie
+            return jw_url_movie
+    
 
 
 def fetch_movie_loop(movie, jw_url_movie, count):
@@ -171,8 +171,8 @@ def fetch_movie_loop(movie, jw_url_movie, count):
             else:
                 attempt = "2nd attempt"
             print(f"Failed JW scrape {attempt } for {movie.title} (movie request): status code {response.status_code}")
-            break
-    return []
+            return
+
 
 
 def fetch_justwatch(movie, jw_urls_data, count=0):
@@ -201,6 +201,10 @@ def fetch_justwatch(movie, jw_urls_data, count=0):
                 jw_url_movie = f"{jw_url_movie}-{movie.release_year}"
 
         if jw_url_movie:
+            # Some movies cannot be found on JustWatch
+            if jw_url_movie == "Not Found":
+                return
+            
             count += 1
             found_providers = fetch_movie_loop(movie, jw_url_movie, count)
 
