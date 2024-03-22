@@ -6,10 +6,8 @@ import random
 
 PROVIDER_LIST = ["Tubi TV", "Pluto TV", "Freevee"]
 
-# Read JW URL data from the JSON file
 JW_WEB_SCRAPER_URLS_PATH = 'webapp/data/jw_web_scraper_urls.json'
-with open(JW_WEB_SCRAPER_URLS_PATH, 'r') as json_file:
-    jw_urls_data = json.load(json_file)
+
 
 def generate_movie_justwatch_url(movie):
     # Convert the movie title to lowercase
@@ -73,7 +71,7 @@ def fetch_search_justwatch(response, movie):
         return None
 
 
-def parse_movie_page(movie, soup, jw_url_movie):
+def parse_movie_page(movie, soup, jw_url_movie, jw_urls_data):
     # Find the "title-block" div
     title_block = soup.find("div", class_="title-block")
 
@@ -115,9 +113,9 @@ def parse_movie_page(movie, soup, jw_url_movie):
                             with open(JW_WEB_SCRAPER_URLS_PATH, 'w') as json_file:
                                 json.dump(jw_urls_data, json_file, indent=4)
                         break
-
                 # Return the list of found providers
-                return found_providers
+                successful = True
+                return found_providers, successful
 
             else:
                 print(f"Release year mismatch for {movie.title}: Database ({movie.release_year}), JustWatch ({release_year})")
@@ -149,8 +147,7 @@ def fetch_search_loop(movie, jw_url_search):
             return jw_url_movie
     
 
-
-def fetch_movie_loop(movie, jw_url_movie, count):
+def fetch_movie_loop(movie, jw_url_movie, count, jw_urls_data):
     sleep_add = 0
     while True:
         time.sleep(random.uniform(0, 4))
@@ -159,7 +156,7 @@ def fetch_movie_loop(movie, jw_url_movie, count):
         if response.status_code == 200:
             # Parse the HTML content of the page
             soup = BeautifulSoup(response.content, 'html.parser')
-            return parse_movie_page(movie, soup, jw_url_movie)
+            return parse_movie_page(movie, soup, jw_url_movie, jw_urls_data)
         elif response.status_code == 429:
             sleep_time = sleep_add + 10
             sleep_add += 5  # increase by 5 for next time
@@ -174,11 +171,14 @@ def fetch_movie_loop(movie, jw_url_movie, count):
             return
 
 
-
-def fetch_justwatch(movie, jw_urls_data, count=0):
+def fetch_justwatch(movie, count=0):
     try:     
         jw_url_movie = None
         found_in_json = False
+
+        # Load the JSON data
+        with open(JW_WEB_SCRAPER_URLS_PATH, 'r') as json_file:
+                jw_urls_data = json.load(json_file)
 
         # Check if the movie is already in the JSON data
         for jw_data in jw_urls_data:
@@ -190,6 +190,10 @@ def fetch_justwatch(movie, jw_urls_data, count=0):
         # If the movie is not found in the JSON data, add it initially
         if not found_in_json:
             add_entry_to_json(movie, jw_urls_data)
+
+            # Load the JSON data again to get the updated data
+            with open(JW_WEB_SCRAPER_URLS_PATH, 'r') as json_file:
+                jw_urls_data = json.load(json_file)
         
         if not jw_url_movie and count == 0:      
             jw_url_search = generate_search_justwatch_url(movie)
@@ -206,8 +210,10 @@ def fetch_justwatch(movie, jw_urls_data, count=0):
                 return
             
             count += 1
-            found_providers = fetch_movie_loop(movie, jw_url_movie, count)
+            found_providers, successful = fetch_movie_loop(movie, jw_url_movie, count, jw_urls_data)
 
+            if successful:
+                return found_providers
             # Perform the recursive call only if count is less than or equal to 1
             if count <= 1:
                 return found_providers or fetch_justwatch(movie, jw_urls_data, count=1)

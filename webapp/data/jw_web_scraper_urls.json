@@ -16022,41 +16022,176 @@
     {
         "tmdb_id": 222935,
         "title": "The Fault in Our Stars",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/the-fault-in-our-stars"
     },
     {
         "tmdb_id": 1700,
         "title": "Misery",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/misery-stephen-king"
     },
     {
         "tmdb_id": 10330,
         "title": "Freaky Friday",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/freaky-friday"
     },
     {
         "tmdb_id": 11631,
         "title": "Mamma Mia!",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/mamma-mia"
     },
     {
         "tmdb_id": 9603,
         "title": "Clueless",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/clueless-1995"
     },
     {
         "tmdb_id": 51481,
         "title": "Mean Girls 2",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/mean-girls-2"
     },
     {
         "tmdb_id": 10096,
         "title": "13 Going on 30",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/suddenly-30"
     },
     {
         "tmdb_id": 114150,
         "title": "Pitch Perfect",
-        "jw_url": null
+        "jw_url": "https://www.justwatch.com/us/movie/pitch-perfect"
+    },
+    {
+        "tmdb_id": 11660,
+        "title": "Following",
+        "jw_url": "https://www.justwatch.com/us/movie/following"
+    },
+    {
+        "tmdb_id": 320,
+        "title": "Insomnia",
+        "jw_url": "https://www.justwatch.com/us/movie/insomnia"
+    },
+    {
+        "tmdb_id": 9799,
+        "title": "The Fast and the Furious",
+        "jw_url": "https://www.justwatch.com/us/movie/fast-and-furious-1"
+    },
+    {
+        "tmdb_id": 109431,
+        "title": "Identity Thief",
+        "jw_url": "https://www.justwatch.com/us/movie/identity-thief"
+    },
+    {
+        "tmdb_id": 522931,
+        "title": "Hitman's Wife's Bodyguard",
+        "jw_url": "https://www.justwatch.com/us/movie/the-hitmans-wifes-bodyguard"
+    },
+    {
+        "tmdb_id": 34806,
+        "title": "The Back-Up Plan",
+        "jw_url": "https://www.justwatch.com/us/movie/the-back-up-plan"
+    },
+    {
+        "tmdb_id": 37056,
+        "title": "Letters to Juliet",
+        "jw_url": "https://www.justwatch.com/us/movie/letters-to-juliet"
+    },
+    {
+        "tmdb_id": 13477,
+        "title": "When in Rome",
+        "jw_url": "https://www.justwatch.com/us/movie/when-in-rome"
+    },
+    {
+        "tmdb_id": 51540,
+        "title": "Horrible Bosses",
+        "jw_url": "https://www.justwatch.com/us/movie/horrible-bosses-uncut"
+    },
+    {
+        "tmdb_id": 291870,
+        "title": "Dirty Grandpa",
+        "jw_url": "https://www.justwatch.com/us/movie/dirty-grandpa"
+    },
+    {
+        "tmdb_id": 1788,
+        "title": "Footloose",
+        "jw_url": "https://www.justwatch.com/us/movie/footloose-1984"
+    },
+    {
+        "tmdb_id": 9377,
+        "title": "Ferris Bueller's Day Off",
+        "jw_url": "https://www.justwatch.com/us/movie/ferris-buellers-day-off"
+    },
+    {
+        "tmdb_id": 251,
+        "title": "Ghost",
+        "jw_url": "https://www.justwatch.com/us/movie/ghost"
+    },
+    {
+        "tmdb_id": 157350,
+        "title": "Divergent",
+        "jw_url": "https://www.justwatch.com/us/movie/divergent"
+    },
+    {
+        "tmdb_id": 10677,
+        "title": "Dirty Dancing: Havana Nights",
+        "jw_url": "https://www.justwatch.com/us/movie/dirty-dancing-havana-nights"
+    },
+    {
+        "tmdb_id": 466282,
+        "title": "To All the Boys I've Loved Before",
+        "jw_url": "https://www.justwatch.com/us/movie/to-all-the-boys-ive-loved-before"
+    },
+    {
+        "tmdb_id": 8077,
+        "title": "Alien\u00b3",
+        "jw_url": "https://www.justwatch.com/us/movie/alien3"
+    },
+    {
+        "tmdb_id": 8078,
+        "title": "Alien Resurrection",
+        "jw_url": "https://www.justwatch.com/us/movie/alien-resurrection"
+    },
+    {
+        "tmdb_id": 664300,
+        "title": "Shiva Baby",
+        "jw_url": "https://www.justwatch.com/us/movie/shiva-baby"
+    },
+    {
+        "tmdb_id": 866463,
+        "title": "Reptile",
+        "jw_url": "https://www.justwatch.com/us/movie/reptile"
+    },
+    {
+        "tmdb_id": 395,
+        "title": "AVP: Alien vs. Predator",
+        "jw_url": "https://www.justwatch.com/us/movie/avp-alien-vs-predator"
+    },
+    {
+        "tmdb_id": 34851,
+        "title": "Predators",
+        "jw_url": "https://www.justwatch.com/us/movie/predator-3"
+    },
+    {
+        "tmdb_id": 6947,
+        "title": "The Village",
+        "jw_url": "https://www.justwatch.com/us/movie/the-village"
+    },
+    {
+        "tmdb_id": 87502,
+        "title": "Flight",
+        "jw_url": "https://www.justwatch.com/us/movie/flight"
+    },
+    {
+        "tmdb_id": 10304,
+        "title": "Starship Troopers 2: Hero of the Federation",
+        "jw_url": "https://www.justwatch.com/us/movie/starship-troopers-2-hero-of-the-federation"
+    },
+    {
+        "tmdb_id": 714,
+        "title": "Tomorrow Never Dies",
+        "jw_url": "https://www.justwatch.com/us/movie/007-tomorrow-never-dies"
+    },
+    {
+        "tmdb_id": 855,
+        "title": "Black Hawk Down",
+        "jw_url": "https://www.justwatch.com/us/movie/black-hawk-down"
     }
 ]

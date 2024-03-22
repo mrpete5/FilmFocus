@@ -497,15 +497,23 @@ def update_streaming_providers(test_limit=None):
     filter_null_jw_url = True
     if test_limit:
         # movies = list(Movie.objects.all()[:test_limit])
-        previous = 2550
+        previous = 0
         new_limit = test_limit + previous
         movies = list(Movie.objects.all()[previous:new_limit])
     else:
         # movies = list(Movie.objects.order_by('-created_at')[:10])
         movies = list(Movie.objects.all())
 
+    include_2024 = False  # Null JW Urls are commonly 2024 before the movie is available
     if filter_null_jw_url:
-        filtered_movies = [movie for movie in movies if not any(data['tmdb_id'] == movie.tmdb_id for data in jw_urls_data if data['jw_url'] is not None)]
+        filtered_movies = [
+            movie for movie in movies 
+            if (not any(
+                data['tmdb_id'] == movie.tmdb_id 
+                for data in jw_urls_data 
+                if data['jw_url'] is not None
+            )) and (include_2024 or movie.release_year != 2024)
+        ]
         movies = filtered_movies
 
     print(f'Total movies to update: {len(movies)}')
@@ -664,7 +672,7 @@ def update_movie_recommendations():
 def process_justwatch_streamers(movie):
     movie_instance = Movie.objects.filter(title=movie.title, release_year=movie.release_year).first()
     if movie_instance:
-        providers = jw_scrape.fetch_justwatch(movie, jw_urls_data)
+        providers = jw_scrape.fetch_justwatch(movie)
         if providers is not None:
             for provider_name in providers:
                 if provider_name in ["Tubi TV", "Pluto TV", "Freevee"]:

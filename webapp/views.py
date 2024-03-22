@@ -1103,7 +1103,7 @@ def testwebscraper(request):
     # Exclude movies "Not Found" on JustWatch
     movies_to_display = [movie for movie in movies_to_display if movie.jw_url != "Not Found"]
     # Exclude movies released this year
-    # movies_to_display = [movie for movie in movies_to_display if movie.release_year != 2024]
+    movies_to_display = [movie for movie in movies_to_display if movie.release_year != 2024]
     
     print(len(movies_to_display))
     return render(request, "testwebscraper.html", {"movies": movies_to_display})
