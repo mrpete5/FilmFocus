@@ -47,6 +47,7 @@ def fetch_search_justwatch(response, movie):
 
 
 def parse_movie_page(movie, soup, jw_url_movie):
+    successful = False
     title_block = soup.find("div", class_="title-block")
     
     if title_block:
@@ -68,12 +69,8 @@ def parse_movie_page(movie, soup, jw_url_movie):
                         if provider_name in PROVIDER_LIST:
                             # Add the provider to the list of found providers
                             found_providers.append(provider_name)
-                # Update the JustWatch URL of the movie in the database
-                movie.justwatch_url = jw_url_movie
-                movie.save()
-                # Return the list of found providers and indicate success
                 successful = True
-                return found_providers, successful
+                return found_providers, successful, jw_url_movie
             else:
                 print(f"Release year mismatch for {movie.title}: Database ({movie.release_year}), JustWatch ({release_year})")
         else:
@@ -81,7 +78,7 @@ def parse_movie_page(movie, soup, jw_url_movie):
     else:
         print(f"Title block not found for {movie.title} on JustWatch.")
     # Return None if parsing fails
-    return None
+    return None, successful, jw_url_movie
 
 
 def fetch_search_loop(movie, jw_url_search):
@@ -119,65 +116,52 @@ def fetch_movie_loop(movie, jw_url_movie):
         else:
             print(f"Failed JW scrape for {movie.title} (movie request): status code {response.status_code}")
             return
-
-
-def fetch_justwatch(movie, count=0):
-    try:     
-        jw_url_movie = movie.justwatch_url
-        if not jw_url_movie and count == 0:      
-            jw_url_search = generate_search_justwatch_url(movie)
-            jw_url_movie = fetch_search_loop(movie, jw_url_search)
-        if not jw_url_movie:
-            jw_url_movie = generate_movie_justwatch_url(movie)
-            if count == 1:
-                jw_url_movie = f"{jw_url_movie}-{movie.release_year}"
-        if jw_url_movie:
-            if jw_url_movie == "Not Found":
-                return
-            count += 1
-            found_providers, successful = fetch_movie_loop(movie, jw_url_movie)
-            if successful:
-                return found_providers
-            if count <= 1:
-                return found_providers or fetch_justwatch(movie, count=1)
-    except Exception as e:
-        print(f"An error occurred: {e}")
-    return []
-
+      
 
 def fetch_justwatch(movie, count=0):
     try:
         jw_url_movie = movie.justwatch_url
-        
-        # If JustWatch URL is not available and it's the first attempt
-        if not jw_url_movie and count == 0:      
-            # Generate JustWatch search URL for the movie
-            jw_url_search = generate_search_justwatch_url(movie)
-            # Fetch JustWatch URL through search
-            jw_url_movie = fetch_search_loop(movie, jw_url_search)
-        
-        # If JustWatch URL is still not available
-        if not jw_url_movie:
-            # Generate JustWatch movie URL for the movie
-            jw_url_movie = generate_movie_justwatch_url(movie)
-            # Append release year if it's the second attempt
-            if count == 1:
-                jw_url_movie = f"{jw_url_movie}-{movie.release_year}"
-        
+
         if jw_url_movie:
-            count += 1
-            # If the movie is not found on JustWatch
             if jw_url_movie == "Not Found":
-                return
-            
-            # Fetch streaming providers
-            found_providers, successful = fetch_movie_loop(movie, jw_url_movie)
+                return [], None
+        
+            found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie)
             # If fetching is successful, return the list of providers
             if successful:
-                return found_providers
-            # Perform recursive call only if count is less than or equal to 1
-            if count <= 1:
-                return found_providers or fetch_justwatch(movie, count=1)
+                return found_providers, jw_url_movie
+            
+            return fetch_justwatch(movie)
+        else:
+            # If JustWatch URL is not available and it's the first attempt
+            if count == 0:      # f"https://www.justwatch.com/us/search?q={formatted_title}"
+                # Generate JustWatch search URL for the movie
+                jw_url_search = generate_search_justwatch_url(movie)
+                # Fetch JustWatch URL through search
+                jw_url_movie = fetch_search_loop(movie, jw_url_search)
+                if jw_url_movie:
+                    found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie)
+                    # If fetching is successful, return the list of providers
+                    if successful:
+                        return found_providers, jw_url_movie
+                return fetch_justwatch(movie, count=1)
+            elif count == 1:    # f"https://www.justwatch.com/us/movie/{slug}"
+                jw_url_movie = generate_movie_justwatch_url(movie)
+                found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie)
+                # If fetching is successful, return the list of providers
+                if successful:
+                    return found_providers, jw_url_movie
+                return fetch_justwatch(movie, count=2)
+            elif count == 2:    # f"https://www.justwatch.com/us/movie/{slug}-{movie.release_year}"
+                jw_url_movie = generate_movie_justwatch_url(movie)
+                jw_url_movie = f"{jw_url_movie}-{movie.release_year}"
+                found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie)
+                # If fetching is successful, return the list of providers
+                if successful:
+                    return found_providers, jw_url_movie
+                return [], None
+            else:
+                return [], None
     except Exception as e:
         print(f"An error occurred: {e}")
-    return []
+    return [], None
