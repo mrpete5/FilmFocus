@@ -66,11 +66,6 @@ with open(ALLOWED_PROVIDERS_LIST, 'r') as input_file:
         provider_name = line.strip()
         filtered_providers.append(provider_name)
 
-# Read JustWatch URL data from the JSON file
-JW_WEB_SCRAPER_URLS_PATH = 'webapp/data/jw_web_scraper_urls.json'
-with open(JW_WEB_SCRAPER_URLS_PATH, 'r') as json_file:
-    jw_urls_data = json.load(json_file)
-
 # Create a lock for database access
 database_lock = threading.Lock()
 
@@ -508,11 +503,7 @@ def update_streaming_providers(test_limit=None):
     if filter_null_jw_url:
         filtered_movies = [
             movie for movie in movies 
-            if (not any(
-                data['tmdb_id'] == movie.tmdb_id 
-                for data in jw_urls_data 
-                if data['jw_url'] is not None
-            )) and (include_2024 or movie.release_year != 2024)
+            if (not movie.justwatch_url) and (include_2024 or movie.release_year != 2024)
         ]
         movies = filtered_movies
 

@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Movies List</title>
-    <!-- Add any additional head elements here -->
 </head>
 <body>
     <h1>Movies List</h1>
@@ -31,11 +30,11 @@
                 </td>
                 <td>{{ movie.title }} ({{movie.release_year}}) {{movie.runtime}}m</td>
                 <td>
-                    {% if movie.jw_url %}
-                        {% if "search?q=" in movie.jw_url %}
-                            <a href="{{ movie.jw_url }}" target="_blank">Search on JustWatch</a>
+                    {% if movie.justwatch_url is not None %}
+                        {% if "search?q=" in movie.justwatch_url %}
+                            <a href="{{ movie.justwatch_url }}" target="_blank">Search on JustWatch</a>
                         {% else %}
-                            <a href="{{ movie.jw_url }}" target="_blank">{{ movie.jw_url }}</a>
+                            <a href="{{ movie.justwatch_url }}" target="_blank">{{ movie.justwatch_url }}</a>
                         {% endif %}
                     {% else %}
                         JW URL not available
