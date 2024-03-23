@@ -10,7 +10,7 @@ download_url = f"http://files.tmdb.org/p/exports/movie_ids_{today}.json.gz"
 
 # Specify the file paths
 download_file_path = "tmdb_movie_master_list.json.gz"
-output_file_path = "tmdb_master_movie_list.json"
+output_file_path = "webapp/data/tmdb_master_movie_list.json"
 
 # Download the TMDB master movie list
 response = requests.get(download_url)

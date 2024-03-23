@@ -487,9 +487,10 @@ def fetch_movie_streaming_data(movie, index):
     return movie, response_data, index
 
 # Update the streaming providers for all movies in the Movie database
-def update_streaming_providers(test_limit=None):
-    # test_limit = 100   # Test mode, quantity of test cases
-    filter_null_jw_url = True
+def update_streaming_providers(test_limit=None, exclude_non_null_jw_url=False):
+    # test_limit = 20   # Test mode, quantity of test cases
+    exclude_non_null_jw_url = True     # Filter only movies with null JW Urls
+    include_2024 = True  # Null JW Urls are commonly 2024 before the movie is available
     if test_limit:
         # movies = list(Movie.objects.all()[:test_limit])
         previous = 0
@@ -499,8 +500,7 @@ def update_streaming_providers(test_limit=None):
         # movies = list(Movie.objects.order_by('-created_at')[:10])
         movies = list(Movie.objects.all())
 
-    include_2024 = False  # Null JW Urls are commonly 2024 before the movie is available
-    if filter_null_jw_url:
+    if exclude_non_null_jw_url:
         filtered_movies = [
             movie for movie in movies 
             if (not movie.justwatch_url) and (include_2024 or movie.release_year != 2024)

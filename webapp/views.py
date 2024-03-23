@@ -998,29 +998,22 @@ def refresh_movie_data(request, tmdb_id):
 def testforban(request):
     start_date = "2023-01-01"  # Range of movies to display
     end_date = "2024-12-31"
-    view_jw_nulls = False
+    view_jw_nulls = True
     
     if view_jw_nulls:
-        # Load JW URL data from the JSON file
-        json_file_path = 'webapp/data/jw_web_scraper_urls.json'
-        with open(json_file_path, 'r') as json_file:
-            jw_urls_data = json.load(json_file)
-        
         # Get all Movie objects
         movies = Movie.objects.all()
         
-        # Filter movies where jw_url is None, tmdb_id matches, and runtime is not 0
+        # Filter movies where justwatch_url is None, tmdb_id matches, and runtime is not 0
         movies_to_display = [
             movie for movie in movies 
-            if any(data['tmdb_id'] == movie.tmdb_id and data['jw_url'] is None for data in jw_urls_data)
-            and movie.runtime != 0
+            if movie.justwatch_url is None and movie.runtime != 0
         ]
     else:
-        # If not viewing movies with jw_url=None, use the original function
+        # If not viewing movies with justwatch_url=None, use the original function
         movies_to_display = handle_test_for_ban(start_date, end_date)
     
     return render(request, "testforban.html", {"movies": movies_to_display})
-
 
 
 # Test page that displays selected movie attribute data
@@ -1048,6 +1041,7 @@ def update_jw_url(request, movie_id):
 # Test page for getting JustWatch URL for web scraping
 def testwebscraper(request):
     include_known_jw_urls = False
+    include_2024 = False
     limit_quantity = False
     fetch_movies_count = 100
     start_object = 1050
@@ -1066,7 +1060,8 @@ def testwebscraper(request):
         # Exclude movies "Not Found" on JustWatch
         movies_to_display = [movie for movie in movies_to_display if movie.justwatch_url != "Not Found"]
         # Exclude movies released this year
-        movies_to_display = [movie for movie in movies_to_display if movie.release_year != 2024]
+        if not include_2024:
+            movies_to_display = [movie for movie in movies_to_display if movie.release_year != 2024]
         # Include movies with None or empty string for justwatch_url
         movies_to_display = [movie for movie in movies_to_display if movie.justwatch_url in [None, ""]]
 
