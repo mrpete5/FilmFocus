@@ -1039,14 +1039,14 @@ def filter_ratings(movie_ratings, rating_begin, rating_end):
     return movie_ratings
 
 # Performs filtering to the movies list
-def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end):
+def filter_movies(movies, genres, streamers, year_begin, year_end, imdb_begin, imdb_end):
     # Fitler for Genre
-    if genre is not None:
-        movies = movies.filter(genres=genre)
+    if genres is not None:
+        for genre in genres: movies = movies.filter(genres=genre)
 
     # Filter for Streaming Providers
-    if streamer is not None:
-        movies = movies.filter(streaming_providers=streamer)
+    if streamers is not None:
+        movies = movies.filter(streaming_providers__in=streamers)
 
     # Filter for release year
     if year_begin is not None and year_end is not None:
