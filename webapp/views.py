@@ -30,6 +30,7 @@ from .forms import (
     PasswordResetConfirmForm,
     WatchlistFilterForm,
     CatalogFilterForm,
+    RatingForm,
 )
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import login, logout, authenticate, get_user_model, password_validation
@@ -934,6 +935,27 @@ def rating(request, profile_name):
     movie_ratings = MovieRating.objects.filter(user=user).select_related('movie').order_by(F('id').desc())
     context['user_name'] = profile_name
     context['movie_ratings'] = movie_ratings
+
+    form = RatingForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            # Get filter items for context
+            context['filter_rating_begin'] = form.cleaned_data["rating_begin"]
+            context['filter_rating_end'] = form.cleaned_data["rating_end"]
+            
+            # Apply filter
+            context['movie_ratings'] = filter_ratings(context['movie_ratings'], 
+                                                      context['filter_rating_begin'], 
+                                                      context['filter_rating_end'])
+
+            paginator = Paginator(context['movie_ratings'], 120)  # 120 movies per page
+            try:
+                page_obj = paginator.page(1)
+            except EmptyPage:
+                page_obj = paginator.page(paginator.num_pages)  # If page is out of range, deliver last page
+            context["page_obj"] = page_obj
+
+            return render(request, 'rating.html', context)
 
     paginator = Paginator(movie_ratings, 120)  # 120 movies per page
 

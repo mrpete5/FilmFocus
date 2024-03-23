@@ -1030,6 +1030,12 @@ def get_actor_movies_from_tmdb_to_fetch(person_id):
     
     return actor_movie_ids
 
+# Performs filtering to the movie ratings list
+def filter_ratings(movie_ratings, rating_begin, rating_end):
+    if rating_begin is not None and rating_end is not None:
+        movie_ratings = movie_ratings.filter(user_rating__range=(rating_begin, rating_end))
+    return movie_ratings
+
 # Performs filtering to the movies list
 def filter_movies(movies, genre, streamer, year_begin, year_end, imdb_begin, imdb_end):
     # Fitler for Genre

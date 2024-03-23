@@ -113,6 +113,9 @@ class FilterForm(forms.Form):
     imdb_begin = forms.FloatField(label="IMDB Rating Begin")
     imdb_end = forms.FloatField(label="IMDB Rating End")
 
+class RatingForm(forms.Form):
+    rating_begin = forms.IntegerField(label="Rating Begin", min_value=1, max_value=10)
+    rating_end = forms.IntegerField(label="Rating End", min_value=1, max_value=10)
 
 class WatchlistFilterForm(FilterForm):
     watchlist_id = forms.CharField(label="Watchlist ID", max_length=255, required=False)

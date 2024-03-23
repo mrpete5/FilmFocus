@@ -55,38 +55,66 @@
 	<!-- end page title -->
 
 	<!-- filter / paginator bar-->
-    {% if page_obj.paginator.num_pages != 1 %}
-        <div class="filter">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="filter__content">
-                            <!-- paginator -->
-                            <ul class="paginator">
+    <div class="filter">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="filter__content">
 
-                                {% if page_obj.has_previous %}
-                                    <li class="paginator__item paginator__item--prev">
-                                        <a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
-                                    </li>
-                                {% endif %}
-                
-                                <li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
+                        <form class="filter__items" id="watchlist-form" method="POST">
+                            {% csrf_token %}
+                            <!-- rating filter item -->
+                            <div class="filter__item" id="filter__rate">
+                                <span class="filter__item-label">User Rating:</span>
 
-                                {% if page_obj.has_next %}
-                                    <li class="paginator__item paginator__item--next">
-                                        <a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
-                                    </li>
-                                {% endif %}
-                
-                            </ul>
-                            <!-- end paginator -->
+                                <div class="filter__item-btn dropdown-toggle" role="button" id="filter-rate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="filter__range">
+                                        <div id="filter__rating-start"></div>
+                                        <div id="filter__rating-end"></div>
+                                    </div>
+                                    <span></span>
+                                </div>
 
-                        </div>
+                                <div class="filter__item-menu filter__item-menu--range dropdown-menu" aria-labelledby="filter-rate">
+                                    <div id="filter__rating"></div>
+                                </div>
+                            </div>
+                            <!-- end rating filter item -->
+
+                            <!-- hidden form information -->
+                            <input type="hidden" name="rating_begin" id="hidden-rating-begin" value="{{ filter_rating_begin|default:'1' }}">
+                            <input type="hidden" name="rating_end" id="hidden-rating-end" value="{{ filter_rating_end|default:'10' }}">
+                            <!-- end hidden form infromation -->
+
+                            <!-- filter btn -->
+                            <button class="filter__btn" type="submit">apply filter</button>
+                            <!-- end filter btn -->
+                        </form>
+
+                        <!-- paginator -->
+                        <ul class="paginator">
+
+                            {% if page_obj.has_previous %}
+                                <li class="paginator__item paginator__item--prev">
+                                    <a href="?page={{ page_obj.previous_page_number }}"><i class="icon ion-ios-arrow-back"></i></a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="paginator__item paginator__page_count">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
+
+                            {% if page_obj.has_next %}
+                                <li class="paginator__item paginator__item--next">
+                                    <a href="?page={{ page_obj.next_page_number }}"><i class="icon ion-ios-arrow-forward"></i></a>
+                                </li>
+                            {% endif %}
+            
+                        </ul>
+                        <!-- end paginator -->
                     </div>
                 </div>
             </div>
         </div>
-    {% endif %}
+    </div>
 	<!-- end filter / paginator bar -->
 
     <div class="container" style="margin-top: 30px;">

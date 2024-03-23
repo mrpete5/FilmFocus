@@ -548,6 +548,48 @@ $(document).ready(function () {
 	}
 	$(window).on('load', initializeSecondSlider());
 
+	/*3*/
+	function initializeThirdSlider() {
+		if ($('#filter__rating').length) {
+			var thirdSlider = document.getElementById('filter__rating');
+			var thirdValues = [
+				document.getElementById('filter__rating-start'),
+				document.getElementById('filter__rating-end')
+			];
+			var ratingForm = [
+				document.getElementById('hidden-rating-begin'),
+				document.getElementById('hidden-rating-end')
+			]
+
+			noUiSlider.create(thirdSlider, {
+				range: {
+					'min': 1,
+					'max': 10
+				},
+				step: 1,
+				connect: true,
+				start: [ratingForm[0].value, ratingForm[1].value],
+				format: wNumb({
+					decimals: 0,
+				})
+			});
+
+			thirdSlider.noUiSlider.on('update', function( values, handle ) {
+				thirdValues[handle].innerHTML = values[handle];
+				ratingForm[handle].value = values[handle];
+			});
+
+			$('.filter__item-menu--range').on('click.bs.dropdown', function (e) {
+				e.stopPropagation();
+				e.preventDefault();
+			});
+		} else {
+			return false;
+		}
+		return false;
+	}
+	$(window).on('load', initializeThirdSlider());
+
 	/*==============================
 	Clear Button
 	==============================*/
