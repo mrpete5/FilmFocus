@@ -5837,3 +5837,31 @@ FilmFocus Grey: #2B2B31 */
 .help-close__popup:hover {
   opacity: 1;
 }
+
+/*==============================
+  Mutliple Attribute Filtering
+==============================*/
+
+/* Hide the default checkbox */
+input[type="checkbox"] {
+  -webkit-appearance: none; /* Remove default styling */
+  -moz-appearance: none;
+  display: inline-block;
+  appearance: none;
+  width: 15px; /* Set dimensions */
+  height: 15px;
+  border: 2px solid #aaa; /* Add border */
+  cursor: pointer; /* Add cursor pointer */
+  outline: none; /* Remove outline */
+}
+
+/* Change the background color when the checkbox is checked */
+input[type="checkbox"]:checked {
+  background-color: #ff55a5;
+}
+
+.dropdown_li{
+  height: 40px;
+  width: 160px;
+  display: inline-block;
+}

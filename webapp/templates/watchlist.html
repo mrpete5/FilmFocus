@@ -100,9 +100,12 @@
 								</div>
 
 								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-genre">
-									<li>All</li>
+									<li class="dropdown_li">All</li>
 									{% for genre in genres %}
-										<li>{{ genre }}</li>
+										<li class="dropdown_li" data-value="{{ genre }}">
+											<input type="checkbox" id="checkbox_{{ genre }}" class="genre_checkbox">
+											&nbsp; {{ genre }} 
+										</li>
 									{% endfor %}
 								</ul>
 							</div>
@@ -121,7 +124,10 @@
 								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-streamer">
 									<li>All</li>
 									{% for provider in streamers %}
-										<li>{{ provider }}</li>
+										<li class="dropdown_li" data-value="{{ provider }}">
+											<input type="checkbox" id="checkbox_{{ provider }}" class="genre_checkbox">
+											&nbsp; {{ provider }} 
+										</li>
 									{% endfor %}
 								</ul>
 							</div>
