@@ -41,7 +41,7 @@ def ban_movie(title):
     if matching_movies.count() > 1:
         print(f"Found {matching_movies.count()} movies with the title '{title}':")
         for i, movie in enumerate(matching_movies, 1):
-            print(f"{i}. {movie.title} - {movie.tmdb_popularity}: {movie.overview[:200]}")
+            print(f"{i}. {movie.title} ({movie.release_year})- {movie.tmdb_popularity}: {movie.overview[:200]}")
         print(f"{matching_movies.count() + 1}. None")
 
         while True:

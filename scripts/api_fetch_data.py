@@ -24,6 +24,7 @@ import datetime
 import time
 from webapp.models import *
 from webapp.services import *
+from update_tmdb_master_list import update_tmdb_master_list
 
 
 # Handle the test display page and manage the movie database
@@ -118,6 +119,7 @@ def api_fetch_data():
         """ Updates all movie ratings, streaming providers, and recommendations. """
         get_movies = True
         get_updates = True
+        update_tmdb_master_list()  # Update the TMDB master movie list
 
         if get_movies:
             timer(function_name='fetch_popular_movies', fetch_func=fetch_popular_movies, args={'start_page': 1, 'end_page': popular_pages})
