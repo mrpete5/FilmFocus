@@ -48,35 +48,6 @@ def fetch_search_justwatch(response, movie):
 
 def parse_movie_page(movie, soup, jw_url_movie):
     title_block = soup.find("div", class_="title-block")
-    if title_block:
-        release_year_element = title_block.find("span", class_="text-muted")
-        if release_year_element:
-            release_year_text = release_year_element.text.strip()
-            release_year = int(release_year_text.strip("()"))
-            if movie.release_year == release_year:
-                streaming_offers = soup.find_all("div", class_="buybox-row stream")
-                found_providers = []
-                for offer in streaming_offers:
-                    offer_providers = offer.find_all("a", class_="offer")
-                    for provider in offer_providers:
-                        provider_name = provider.find("img")["alt"]
-                        if provider_name in PROVIDER_LIST:
-                            found_providers.append(provider_name)
-                movie.justwatch_url = jw_url_movie
-                movie.save()
-                successful = True
-                return found_providers, successful
-            else:
-                print(f"Release year mismatch for {movie.title}: Database ({movie.release_year}), JustWatch ({release_year})")
-        else:
-            print(f"Release year not found for {movie.title} on JustWatch.")
-    else:
-        print(f"Title block not found for {movie.title} on JustWatch.")
-    return None
-
-
-def parse_movie_page(movie, soup, jw_url_movie):
-    title_block = soup.find("div", class_="title-block")
     
     if title_block:
         release_year_element = title_block.find("span", class_="text-muted")
