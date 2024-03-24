@@ -710,8 +710,8 @@ def update_letterboxd_ratings():
 
     # Calculate totals
     total_movies = len(movies)
-    ratings_per_sec = 10
-    total_secs = total_movies / ratings_per_sec
+    ratings_per_sec = 7.85
+    total_secs = int(total_movies / ratings_per_sec)
   
     print(f"Total movies: {total_movies}")
     print(f"Total estimated secs: {total_secs}")
@@ -732,7 +732,9 @@ def update_letterboxd_ratings():
             if rating_dict:
                 movie.letterboxd_rating = rating_dict["Weighted Average"]
                 # TODO: Add histogram weights or remove this line
-                # movie.letterboxd_histogram_weights = rating_dict["Histogram Weights"] 
+                # movie.letterboxd_histogram_weights = rating_dict["Histogram Weights"]
+                if "Letterboxd URL" in rating_dict:
+                    movie.letterboxd_url = rating_dict.get("Letterboxd URL")
             else:
                 raise Exception
 

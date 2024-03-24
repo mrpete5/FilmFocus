@@ -25,6 +25,7 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import csv
+from webapp.models import Movie
 
                                                 # CAUTION: Caching to reduce traffic on letterboxd during testing/development
 do_caching = False                              # option whether or not to perform caching
@@ -82,7 +83,7 @@ def convert_to_hyphenated_name(input_string):
     return hyphenated_string
 
 # Used by get_rating() to request from letterboxd using movie_name
-def get_rating_direct(movie_name):
+def get_rating_direct(movie_name, url=None):
     # Return Cached Version of Rating Info If Already Exist
     if do_caching and os.path.exists(cache_dir+movie_name+".csv"):
         print("Cached Version Found")
@@ -95,7 +96,8 @@ def get_rating_direct(movie_name):
     }
 
     # Make URL
-    url = "https://letterboxd.com/csi/film/" + movie_name + "/rating-histogram"
+    if not url:
+        url = "https://letterboxd.com/csi/film/" + movie_name + "/rating-histogram"
     
     # Form Request Header
     headers = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.5;) Gecko/20100101 Firefox/56.7"}
@@ -146,6 +148,9 @@ def get_rating_direct(movie_name):
             rating += current_rating * (rating_info["Histogram Weights"][i] * 0.01)
         rating_info["Weighted Average"] = rating
 
+    # Letterboxd URL saved in services.update_letterboxd_ratings() if Weighted Average is Found, 
+    if rating_info["Weighted Average"]:
+        rating_info["Letterboxd URL"] = url
 
     # Save to Cache
     if do_caching:
@@ -156,12 +161,21 @@ def get_rating_direct(movie_name):
     
 # Returns a dictionary of rating information from a movie name and year
 def get_rating(movie_name, year):
+    try:
+        movie = Movie.objects.get(title=movie_name, release_year=year)
+        if movie.letterboxd_url:
+            rating_dict = get_rating_direct(movie_name, url=movie.letterboxd_url)
+            if rating_dict:
+                return rating_dict
+    except Movie.DoesNotExist:
+        pass
+
     # Convert movie_name to something that makes sense for letterboxd
     title_name = convert_to_hyphenated_name(movie_name)
 
     # Try to get rating information from url with and without the year appended to movie title
-    rating_dict = get_rating_direct(title_name+"-"+str(year))
+    rating_dict = get_rating_direct(movie_name=title_name+"-"+str(year), url=None)
     if not rating_dict:
-        rating_dict = get_rating_direct(title_name)
+        rating_dict = get_rating_direct(movie_name=title_name, url=None)
 
     return rating_dict
