@@ -241,7 +241,7 @@ $(document).ready(function () {
 		});
 		streamers = streamers.slice(1);
 
-		var url = `/catalog/?page=1&genre=${genres}&streaming_provider=${streamers}&year_begin=${year_begin}year_end=${year_end}&imdb_begin=${imdb_begin}&imdb_end=${imdb_end}`
+		var url = `/catalog/?page=1&genre=${genres}&streaming_provider=${streamers}&year_begin=${year_begin}&year_end=${year_end}&imdb_begin=${imdb_begin}&imdb_end=${imdb_end}`
 		window.location.href = url;
 	});
 

@@ -87,7 +87,7 @@
 								<li>All</li>
 								{% for genre in genres %}
 									<li class="dropdown_li" data-value="{{ genre }}">
-										<input type="checkbox" id="checkbox_{{ genre }}" genre_id="{{ genre.id }}" class="genre_checkbox">
+										<input type="checkbox" id="checkbox_{{ genre }}" genre_id="{{ genre.id }}" class="genre_checkbox" {% if genre in filter_genre %} checked {% endif %}>
 										&nbsp; {{ genre }} 
 									</li>
 								{% endfor %}
@@ -109,7 +109,7 @@
 								<li>All</li>
 								{% for provider in streamers %}
 									<li class="dropdown_li" data-value="{{ provider }}">
-										<input type="checkbox" id="checkbox_{{ provider }}" streamer_id="{{ provider.id }}" class="streamer_checkbox">
+										<input type="checkbox" id="checkbox_{{ provider }}" streamer_id="{{ provider.id }}" class="streamer_checkbox" {% if provider in filter_streamer %} checked {% endif %}>
 										&nbsp; {{ provider }} 
 									</li>
 								{% endfor %}
