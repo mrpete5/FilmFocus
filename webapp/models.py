@@ -58,6 +58,7 @@ class Movie(models.Model):
     top_streaming_providers = models.ManyToManyField('StreamingProvider', blank=True, related_name='top_movies')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     recommended_movie_data = models.JSONField(default=list, blank=True)
+    letterboxd_url = models.CharField(max_length=255, null=True, blank=True)
     letterboxd_rating = models.FloatField(null=True, blank=True)
     # letterboxd_histogram_weights = JSONField(null=True, blank=True) # TODO: Add histogram weights or remove this line
     justwatch_url = models.CharField(max_length=255, null=True, blank=True)
