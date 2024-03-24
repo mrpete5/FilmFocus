@@ -1159,6 +1159,7 @@ $(document).ready(function () {
 			if (popupLogin) popup_login_event_handler(popupLogin);
 			if (savePopup) save_rating_event_handler(savePopup, rating_movie_id);
 			if (resetPopup) reset_rating_event_handler(resetPopup, rating_movie_id);
+			getRatingsSlider();
 
 		}
 	}
@@ -1481,6 +1482,25 @@ $(document).ready(function () {
 		})
 	}
 
+	// Function to initialize the slider
+	function getRatingsSlider() {
+		var ratingSlider = document.getElementById("rating");
+		
+		if (ratingSlider) {
+			ratingSlider.addEventListener("input", function() {
+				updateSliderValueLabel(this.value);
+			});
+			updateSliderValueLabel(ratingSlider.value);
+		}
+	}
+
+	// Function to update the slider value label
+	function updateSliderValueLabel(value) {
+		var sliderValueLabel = document.getElementById("sliderValue");
+		if (sliderValueLabel) {
+			sliderValueLabel.textContent = "Rating (1-10): " + value;
+		}
+	}
 });
 
 

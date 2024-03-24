@@ -5868,3 +5868,53 @@ input[type="checkbox"]:checked {
   width: 160px;
   display: inline-block;
 }
+
+/*==============================
+  Ratings Slider
+==============================*/
+
+#sliderValue {
+  
+  text-align: left; /* Left-align the text */
+  width: 120px; /* Fixed width to prevent shifting */
+  margin-bottom: 0px;
+}
+
+/* Style the track */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  /* background-color: #ff55a5; */
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgba(255,85,165,0.5);
+  box-shadow: 0 0 20px 0 rgba(255,85,165,0.5);
+  height: 5px;
+  border-radius: 5px;
+  outline: none;
+  margin: 10px 0;
+  transition: background-image 0.3s, box-shadow 0.3s;
+}
+
+/* Style the thumb (slider bead) */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #ff55a5;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #ff55a5;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
