@@ -90,25 +90,59 @@ def catalog(request):
     if user.is_authenticated:
         context['logged_in_user_profile_picture'] = get_logged_in_user_profile_picture(request)
 
-    # Get The filter items 
-    genre_ids = request.GET.get('genre')
-    context['filter_genre'] = Genre.objects.filter(pk__in=genre_ids.split()) if genre_ids else None
-    streamer_ids = request.GET.get('streaming_provider')
-    context['filter_streamer'] = StreamingProvider.objects.filter(pk__in=streamer_ids.split()) if streamer_ids else None
-    context['filter_year_begin'] = request.GET.get('year_begin')
-    context['filter_year_end'] = request.GET.get('year_end')
-    context['filter_imdb_begin'] = request.GET.get('imdb_begin')
-    context['filter_imdb_end'] = request.GET.get('imdb_end')
+    form = CatalogFilterForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            # Get filter items for context
+            genre_ids = [int(genre) for genre in form.cleaned_data.get("genre").split()]
+            context['filter_genre'] = Genre.objects.filter(pk__in=genre_ids) if genre_ids else None
+            streamer_ids = [int(streamer) for streamer in form.cleaned_data.get("streaming_provider").split()]
+            context['filter_streamer'] = StreamingProvider.objects.filter(pk__in=streamer_ids) if streamer_ids else None
+            context['filter_year_begin'] = form.cleaned_data.get("year_begin")
+            context['filter_year_end'] = form.cleaned_data.get("year_end")
+            context['filter_imdb_begin'] = form.cleaned_data.get("imdb_begin")
+            context['filter_imdb_end'] = form.cleaned_data.get("imdb_end")
+
+            # Apply filter
+            context['full_catalog'] = filter_movies(
+                context.get('full_catalog'),
+                context.get('filter_genre'),
+                context.get('filter_streamer'),
+                context.get('filter_year_begin'),
+                context.get('filter_year_end'),
+                context.get('filter_imdb_begin'),
+                context.get('filter_imdb_end'))
+
+            page_number = 1  # Get the page number from the request
+            paginator = Paginator(context['full_catalog'], 120)  # 120 movies per page
+
+            try:
+                page_obj = paginator.page(page_number)
+            except EmptyPage:
+                page_obj = paginator.page(paginator.num_pages)  # If page is out of range, deliver last page
+
+            context["page_obj"] = page_obj
+            return render(request, 'catalog.html', context)
+    
+    # Use url query if it exist
+    genre_ids = request.GET.get("genre")
+    context['filter_genre'] = Genre.objects.filter(pk__in=genre_ids.split()) if genre_ids else context.get('full_genre')
+    streamer_ids = request.GET.get("streaming_provider")
+    context['filter_streamer'] = StreamingProvider.objects.filter(pk__in=streamer_ids.split()) if streamer_ids else context.get('filter_streamer')
+    context['filter_year_begin'] = request.GET.get("year_begin")
+    context['filter_year_end'] = request.GET.get("year_end")
+    context['filter_imdb_begin'] = request.GET.get("imdb_begin")
+    context['filter_imdb_end'] = request.GET.get("imdb_end")
 
     # Apply filter
     context['full_catalog'] = filter_movies(
-        context['full_catalog'],
-        context['filter_genre'],
-        context['filter_streamer'],
-        context['filter_year_begin'],
-        context['filter_year_end'],
-        context['filter_imdb_begin'],
-        context['filter_imdb_end'])
+        context.get('full_catalog'),
+        context.get('filter_genre'),
+        context.get('filter_streamer'),
+        context.get('filter_year_begin'),
+        context.get('filter_year_end'),
+        context.get('filter_imdb_begin'),
+        context.get('filter_imdb_end'))
 
     page_number = request.GET.get('page', 1)  # Get the page number from the request
     paginator = Paginator(context['full_catalog'], 120)  # 120 movies per page
@@ -236,12 +270,15 @@ def watchlist(request, profile_name=None):
                 if form.is_valid():
                     # Get The filter items 
                     watchlist_id = form.cleaned_data.get("watchlist_id")
-                    genre = Genre.objects.filter(name=form.cleaned_data.get("genre")).first()
-                    streamer = StreamingProvider.objects.filter(name=form.cleaned_data.get("streaming_provider")).first()
+                    genre_ids = [int(genre) for genre in form.cleaned_data.get("genre").split()]
+                    genre = Genre.objects.filter(pk__in=genre_ids) if genre_ids else None
+                    streamer_ids = [int(streamer) for streamer in form.cleaned_data.get("streaming_provider").split()]
+                    streamer = StreamingProvider.objects.filter(pk__in=streamer_ids) if streamer_ids else None
                     year_begin = form.cleaned_data.get("year_begin")
                     year_end = form.cleaned_data.get("year_end")
                     imdb_begin = form.cleaned_data["imdb_begin"]
                     imdb_end = form.cleaned_data["imdb_end"]
+                    print(genre_ids)
 
                     if context["is_self"]:
                         all_watchlists = Watchlist.objects.filter(user=user)

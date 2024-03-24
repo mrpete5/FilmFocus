@@ -216,33 +216,31 @@ $(document).ready(function () {
 		$(this).attr('data-value', $(this).text().toLowerCase());
 	});
 
-	$('.filter__item-menu li').on('click', function() {
+	$('.watchlist-dropdown-option').on('click', function() {
 		var text = $(this).text();
 		var item = $(this);
 		var id = item.closest('.filter__item').attr('id');
 		$('#'+id).find('.filter__item-btn input').val(text);
 	});
 
-	$('.filter__btn').on('click', function() {
-		var year_begin = $('#hidden-year-begin').val();
-		var year_end = $('#hidden-year-end').val();
-		var imdb_begin = $('#hidden-imdb-begin').val();
-		var imdb_end = $('#hidden-imdb-end').val();
+	$('.filter__items').each(function() {
+		this.addEventListener('submit', function(event) {
+			event.preventDefault();
 
-		var genres = "";
-		$('.genre_checkbox:checked').each(function(index) {
-			genres += `+${$(this).attr('genre_id')}`;
+			var genres = "";
+			$('.genre_checkbox:checked').each(function(index) {
+				genres += ` ${$(this).attr('genre_id')}`;
+			});
+			$('#hidden-genre').val(genres.slice(1));
+
+			var streamers = "";
+			$('.streamer_checkbox:checked').each(function(index) {
+				streamers += ` ${$(this).attr('streamer_id')}`;
+			});
+			$('#hidden-provider').val(streamers.slice(1));
+			
+			this.submit();
 		});
-		genres = genres.slice(1);
-
-		var streamers = "";
-		$('.streamer_checkbox:checked').each(function(index) {
-			streamers += `+${$(this).attr('streamer_id')}`;
-		});
-		streamers = streamers.slice(1);
-
-		var url = `/catalog/?page=1&genre=${genres}&streaming_provider=${streamers}&year_begin=${year_begin}&year_end=${year_end}&imdb_begin=${imdb_begin}&imdb_end=${imdb_end}`
-		window.location.href = url;
 	});
 
 	/*==============================

@@ -106,8 +106,8 @@ class PasswordResetConfirmForm(forms.Form):
     new_password_2 = forms.CharField(label="Confirm Password", max_length=30) # changed to try and limit character length
 
 class FilterForm(forms.Form):
-    genre = forms.CharField(label="Genre", max_length=255)
-    streaming_provider = forms.CharField(label="Streaming Provider", max_length=255)
+    genre = forms.CharField(label="Genre", required=False, max_length=255)
+    streaming_provider = forms.CharField(label="Streaming Provider", required=False, max_length=255)
     year_begin = forms.IntegerField(label="Year Begin")
     year_end = forms.IntegerField(label="Year End")
     imdb_begin = forms.FloatField(label="IMDB Rating Begin")
