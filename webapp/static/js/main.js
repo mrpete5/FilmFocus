@@ -223,6 +223,28 @@ $(document).ready(function () {
 		$('#'+id).find('.filter__item-btn input').val(text);
 	});
 
+	$('.filter__btn').on('click', function() {
+		var year_begin = $('#hidden-year-begin').val();
+		var year_end = $('#hidden-year-end').val();
+		var imdb_begin = $('#hidden-imdb-begin').val();
+		var imdb_end = $('#hidden-imdb-end').val();
+
+		var genres = "";
+		$('.genre_checkbox:checked').each(function(index) {
+			genres += `+${$(this).attr('genre_id')}`;
+		});
+		genres = genres.slice(1);
+
+		var streamers = "";
+		$('.streamer_checkbox:checked').each(function(index) {
+			streamers += `+${$(this).attr('streamer_id')}`;
+		});
+		streamers = streamers.slice(1);
+
+		var url = `/catalog/?page=1&genre=${genres}&streaming_provider=${streamers}&year_begin=${year_begin}year_end=${year_end}&imdb_begin=${imdb_begin}&imdb_end=${imdb_end}`
+		window.location.href = url;
+	});
+
 	/*==============================
 	Scroll bar
 	==============================*/

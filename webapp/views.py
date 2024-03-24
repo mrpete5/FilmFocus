@@ -84,7 +84,7 @@ def catalog(request):
     context = {}
     context['full_catalog'] = Movie.objects.all()
     context["genres"] = Genre.objects.all()
-    context["streamers"] = filtered_providers
+    context["streamers"] = StreamingProvider.objects.filter(name__in=filtered_providers)
 
     user = request.user
     if user.is_authenticated:
