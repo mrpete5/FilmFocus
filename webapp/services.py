@@ -225,6 +225,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
         tagline=movie_details.get('tagline'),
         trailer_key=trailer_key,
         now_playing=now_playing,
+        original_language = movie_details.get('original_language'),
     )
     movie.save()
     

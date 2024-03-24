@@ -115,8 +115,8 @@ def fetch_movie_loop(movie, jw_url_movie):
             time.sleep(sleep_time)
         else:
             print(f"Failed JW scrape for {movie.title} (movie request): status code {response.status_code}")
-            return
-      
+            return None, False, jw_url_movie
+
 
 def fetch_justwatch(movie, count=0):
     try:

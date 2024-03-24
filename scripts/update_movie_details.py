@@ -1,12 +1,21 @@
-# Fetch all of the movie release dates using TMDb to update the database.
-# Just run "python scripts/fetch_release_date.py"
-# This is a script that will get all of the movie release dates for a movie entry in our model Movie.
-# Inputs: No inputs
-# Outputs: Script prints all of the movie details for the selected movie entry that we have saved in our database.
-# Author: Mark
+# Run with "python scripts/update_movie_details.py"
+# Update movie details script using TMDb API
+# This script fetches and updates movie details from the TMDb API for movies stored in the database.
+# 
+# Inputs: The script prompts the user to select movies via a console menu:
+#   1. Select all movies in the database
+#   2. Enter a movie title to fetch and update its details
+#
+# Outputs: The script prints the progress of fetching and updating movie details for the selected movie entries in the database.
+# 
+# Authors: Mark, John, Aaron, Traizen, Bill
 # Created: 12/18/23
-# Last Updated: 12/18/23
-# Recent Modifications: Initialized script.
+# Last Updated: 03/24/24
+#
+# Recent Modifications:
+# - Added original_language.
+# - Added a console menu for selecting movie entries by title or all movies in the database.
+
 
 import os
 import sys
@@ -41,17 +50,15 @@ tmdb = TMDb()
 tmdb.api_key = TMDB_API_KEY
 tmdb_movie = TMDbMovie()
 
-
-get_all_movies = False  # Set to True to fetch all movies
-movie_title = "Shutter Island"
-
-
 def update_movie(movie_id):
     try:
         movie = Movie.objects.get(id=movie_id)
         if movie.tmdb_id:
             detail = tmdb_movie.details(movie.tmdb_id)
             if detail:
+                # Original Language
+                if hasattr(detail, 'original_language'):
+                    movie.original_language = detail.original_language
                 # Release Date
                 if hasattr(detail, 'release_date') and detail.release_date:
                     movie.release_date = datetime.strptime(detail.release_date, '%Y-%m-%d').date()
@@ -77,11 +84,6 @@ def update_movie(movie_id):
                     for genre_name in genres:
                         genre, _ = Genre.objects.get_or_create(name=genre_name)
                         movie.genres.add(genre)
-                # # Trailer Key
-                # if hasattr(detail, 'videos') and 'results' in detail.videos:
-                #     trailers = [video for video in detail.videos['results'] if video['type'] == 'Trailer']
-                #     if trailers:
-                #         movie.trailer_key = trailers[0]['key']
                 # TMDb Popularity
                 if hasattr(detail, 'popularity'):
                     movie.tmdb_popularity = detail.popularity
@@ -90,17 +92,6 @@ def update_movie(movie_id):
                     directors = [member['name'] for member in detail.credits['crew'] if member['job'] == 'Director']
                     if directors:
                         movie.director = ', '.join(directors)
-                # # Actors
-                # if hasattr(detail, 'credits') and 'cast' in detail.credits:
-                #     actors = [member['name'] for member in detail.credits['cast'][:5]]  # Get top 5 actors
-                #     if actors:
-                #         movie.actors = ', '.join(actors)
-                # # Domestic Box Office
-                # if hasattr(detail, 'domestic_box_office'):
-                #     movie.domestic_box_office = detail.domestic_box_office
-                # # MPA Rating
-                # if hasattr(detail, 'mpa_rating'):
-                #     movie.mpa_rating = detail.mpa_rating
 
                 movie.save()
                 return True
@@ -109,24 +100,35 @@ def update_movie(movie_id):
         return False
 
 
-movie_ids = list(Movie.objects.values_list('id', flat=True))
-total_movies = len(movie_ids)
-completed = 0
-
 def print_progress_bar(completed, total):
     percentage = (completed / total) * 100
     bar_length = 50  # Modify this to change the progress bar length
     filled_length = int(round(bar_length * completed / float(total)))
     bar = '=' * filled_length + '>' + ' ' * (bar_length - filled_length)
     print(f"\rProgress: [{bar}] {percentage:.1f}%", end='')
-    
-if get_all_movies:
-    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-        futures = [executor.submit(update_movie, movie_id) for movie_id in movie_ids]
-        for future in concurrent.futures.as_completed(futures):
-            completed += 1
-            print_progress_bar(completed, total_movies)
-else:
-    movies = Movie.objects.filter(title=movie_title)
-    for movie in movies:
-        update_movie(movie.id)
+
+
+def select_movies():
+    selection = input("Select movies to update:\n1. All movies in database \n2. Enter a movie title\nYour choice: ")
+    if selection == "1":
+        return Movie.objects.all()
+    elif selection == "2":
+        movie_title = input("Enter the movie title: ")
+        return Movie.objects.filter(title__icontains=movie_title)
+    else:
+        print("Invalid choice. Please select either '1' or '2'.")
+        return None
+
+
+if __name__ == "__main__":
+    movies = select_movies()
+    if movies:
+        movie_ids = list(movies.values_list('id', flat=True))
+        total_movies = len(movie_ids)
+        completed = 0
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+            futures = [executor.submit(update_movie, movie_id) for movie_id in movie_ids]
+            for future in concurrent.futures.as_completed(futures):
+                completed += 1
+                print_progress_bar(completed, total_movies)
