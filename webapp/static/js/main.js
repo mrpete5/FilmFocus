@@ -1257,8 +1257,8 @@ $(document).ready(function () {
     }
 
 	async function request_select_movie_popup(watchlist_id) {
-		var genre = document.getElementById("filter_genre_input").value;
-		var provider = document.getElementById("filter_streamer_input").value;
+		var genre = $('#watchlistSelectMovieBtn').attr('genre');
+		var provider = $('#watchlistSelectMovieBtn').attr('streamer');
 		var year_begin = document.getElementById("hidden-year-begin").value;
 		var year_end = document.getElementById("hidden-year-end").value;
 		var imdb_begin = document.getElementById("hidden-imdb-begin").value;
@@ -1324,8 +1324,8 @@ $(document).ready(function () {
     }
 
 	async function request_catalog_select_movie_popup() {
-		var genre = document.getElementById("filter_genre_input").value;
-		var provider = document.getElementById("filter_streamer_input").value;
+		var genre = $('#catalogSelectMovieBtn').attr('genre');
+		var provider = $('#catalogSelectMovieBtn').attr('streamer');
 		var year_begin = document.getElementById("hidden-year-begin").value;
 		var year_end = document.getElementById("hidden-year-end").value;
 		var imdb_begin = document.getElementById("hidden-imdb-begin").value;

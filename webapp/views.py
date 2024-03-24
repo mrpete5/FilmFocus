@@ -278,7 +278,6 @@ def watchlist(request, profile_name=None):
                     year_end = form.cleaned_data.get("year_end")
                     imdb_begin = form.cleaned_data["imdb_begin"]
                     imdb_end = form.cleaned_data["imdb_end"]
-                    print(genre_ids)
 
                     if context["is_self"]:
                         all_watchlists = Watchlist.objects.filter(user=user)
@@ -473,8 +472,10 @@ def popup_select_movie(request, watchlist_id):
             watchlist = Watchlist.objects.get(pk=watchlist_id_int)
             watchlist_movies = Movie.objects.filter(watchlistentry__watchlist=watchlist)
 
-        genre = Genre.objects.filter(name=request.GET.get('genre')).first()
-        streamer = StreamingProvider.objects.filter(name=request.GET.get("streaming_provider")).first()
+        genre_ids = [int(genre) for genre in request.GET.get("genre").split()]
+        genre = Genre.objects.filter(pk__in=genre_ids) if genre_ids else None
+        streamer_ids = [int(streamer) for streamer in request.GET.get("streaming_provider").split()]
+        streamer = StreamingProvider.objects.filter(pk__in=streamer_ids) if streamer_ids else None
         year_begin = request.GET.get('year_begin')
         year_end = request.GET.get('year_end')
         imdb_begin = request.GET.get('imdb_begin')
@@ -492,8 +493,10 @@ def popup_catalog_select(request):
     if request.method == 'GET':
         movies = Movie.objects.all()
 
-        genre = Genre.objects.filter(name=request.GET.get('genre')).first()
-        streamer = StreamingProvider.objects.filter(name=request.GET.get("streaming_provider")).first()
+        genre_ids = [int(genre) for genre in request.GET.get("genre").split()]
+        genre = Genre.objects.filter(pk__in=genre_ids) if genre_ids else None
+        streamer_ids = [int(streamer) for streamer in request.GET.get("streaming_provider").split()]
+        streamer = StreamingProvider.objects.filter(pk__in=streamer_ids) if streamer_ids else None
         year_begin = request.GET.get('year_begin')
         year_end = request.GET.get('year_end')
         imdb_begin = request.GET.get('imdb_begin')
