@@ -278,9 +278,11 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
                 }
             )
             movie.streaming_providers.add(provider)
-
+    
     # Update the streaming providers using the JustWatch scraper for Tubi TV, Pluto TV, and Freevee
+    movie.save()    # save before
     process_justwatch_streamers(movie)
+    movie = Movie.objects.filter(title=movie.title, release_year=movie.release_year).first()    # open again after saving
 
     providers = movie.streaming_providers.all()
     sorted_providers = sorted(providers, key=lambda x: x.ranking)
@@ -912,7 +914,9 @@ def get_refreshed_movie_data(movie_tmdb_id):
             movie.streaming_providers.add(provider)
 
     # Update the streaming providers using the JustWatch scraper for Tubi TV, Pluto TV, and Freevee
+    movie.save()    # save before
     process_justwatch_streamers(movie)
+    movie = Movie.objects.filter(title=movie.title, release_year=movie.release_year).first()    # open again after saving
 
     providers = movie.streaming_providers.all()
     sorted_providers = sorted(providers, key=lambda x: x.ranking)

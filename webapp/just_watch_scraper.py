@@ -85,7 +85,7 @@ def fetch_search_loop(movie, jw_url_search):
     sleep_add = 0
     jw_url_movie = None    
     while True:
-        time.sleep(random.uniform(0, 4))
+        time.sleep(random.uniform(0, 5))
         response = requests.get(jw_url_search)
         if response.status_code == 200:
             jw_url_movie = fetch_search_justwatch(response, movie)
@@ -124,14 +124,11 @@ def fetch_justwatch(movie, count=0):
 
         if jw_url_movie:
             if jw_url_movie == "Not Found":
-                return [], None
+                return [], jw_url_movie
         
             found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie)
             # If fetching is successful, return the list of providers
-            if successful:
-                return found_providers, jw_url_movie
-            
-            return fetch_justwatch(movie)
+            return found_providers, jw_url_movie
         else:
             # If JustWatch URL is not available and it's the first attempt
             if count == 0:      # f"https://www.justwatch.com/us/search?q={formatted_title}"
@@ -164,4 +161,4 @@ def fetch_justwatch(movie, count=0):
                 return [], None
     except Exception as e:
         print(f"An error occurred: {e}")
-    return [], None
+    return [], jw_url_movie
