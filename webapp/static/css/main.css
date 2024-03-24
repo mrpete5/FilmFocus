@@ -4945,6 +4945,9 @@ User Profile Page
 .watchlist_el_link:hover{
   color: #fff;
 }
+.ratings__container{
+  min-height: 50vh;
+}
 /*==============================
 	User Results Page
 ==============================*/

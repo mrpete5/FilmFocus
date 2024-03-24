@@ -122,7 +122,7 @@
 								</div>
 
 								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-streamer">
-									<li>All</li>
+									<li class="dropdown_li">All</li>
 									{% for provider in streamers %}
 										<li class="dropdown_li" data-value="{{ provider }}">
 											<input type="checkbox" id="checkbox_{{ provider }}" streamer_id="{{ provider.id }}" class="streamer_checkbox" {% if provider in filter_streamer %} checked {% endif %}>
