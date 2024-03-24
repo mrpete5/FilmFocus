@@ -268,12 +268,17 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
 
     # Loop through the streaming data and update the movie's streaming providers
     for provider_data in streaming_data:
+        # Rename "Amazon Prime Video" to "Amazon Prime"
+        provider_name = provider_data['provider_name']
+        if provider_name == "Amazon Prime Video":
+            provider_name = "Amazon Prime"
+
         # Check if the provider is in the allowed list
-        if provider_data['provider_name'] in allowed_providers:
+        if provider_name in filtered_providers:
             provider, created = StreamingProvider.objects.get_or_create(
                 provider_id=provider_data['provider_id'],
                 defaults={
-                    'name': provider_data['provider_name'],
+                    'name': provider_name,
                     'logo_path': provider_data['logo_path'],
                 }
             )
@@ -524,11 +529,17 @@ def update_streaming_providers(test_limit=None, exclude_non_null_jw_url=False):
 
             # Update streaming providers based on the fetched data
             for provider_data in streaming_data:
-                if provider_data['provider_name'] in filtered_providers:
+                # Rename "Amazon Prime Video" to "Amazon Prime"
+                provider_name = provider_data['provider_name']
+                if provider_name == "Amazon Prime Video":
+                    provider_name = "Amazon Prime"
+
+                # Check if the provider is in the allowed list
+                if provider_name in filtered_providers:
                     provider, created = StreamingProvider.objects.get_or_create(
                         provider_id=provider_data['provider_id'],
                         defaults={
-                            'name': provider_data['provider_name'],
+                            'name': provider_name,
                             'logo_path': provider_data['logo_path'],
                         }
                     )
@@ -902,12 +913,17 @@ def get_refreshed_movie_data(movie_tmdb_id):
 
     # Loop through the streaming data and update the movie's streaming providers
     for provider_data in streaming_data:
+        # Rename "Amazon Prime Video" to "Amazon Prime"
+        provider_name = provider_data['provider_name']
+        if provider_name == "Amazon Prime Video":
+            provider_name = "Amazon Prime"
+
         # Check if the provider is in the allowed list
-        if provider_data['provider_name'] in allowed_providers:
+        if provider_name in allowed_providers:
             provider, created = StreamingProvider.objects.get_or_create(
                 provider_id=provider_data['provider_id'],
                 defaults={
-                    'name': provider_data['provider_name'],
+                    'name': provider_name,
                     'logo_path': provider_data['logo_path'],
                 }
             )
