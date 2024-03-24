@@ -1046,7 +1046,7 @@ def filter_ratings(movie_ratings, rating_begin, rating_end):
 def filter_movies(movies, genres, streamers, year_begin, year_end, imdb_begin, imdb_end):
     # Fitler for Genre
     if genres is not None:
-        for genre in genres: movies = movies.filter(genres=genre)
+        movies = movies.filter(genres__in=genres)
 
     # Filter for Streaming Providers
     if streamers is not None:
@@ -1063,7 +1063,7 @@ def filter_movies(movies, genres, streamers, year_begin, year_end, imdb_begin, i
         else:
             movies = movies.filter(Q(imdb_rating_num__range=(imdb_begin, imdb_end)) | Q(imdb_rating_num=None))
 
-    return movies        
+    return movies.distinct()
 
 
 def get_logged_in_user_profile_picture(request):
