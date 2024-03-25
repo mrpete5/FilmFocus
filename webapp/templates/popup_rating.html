@@ -11,10 +11,10 @@
         <br><br>
 
         <!-- Input field for rating -->
-        <label for="rating">Rating (1-10):</label>
-        <input type="number" id="rating" name="rating" min="1" max="10">
+        <label id="sliderValue" for="rating">Rating (1-10): {% if rating_exists %}{{ user_rating }}{% else %}1{% endif %}</label>
         <br>
-
+        <input type="range" id="rating" name="rating" min="1" max="10" value="{% if rating_exists %}{{ user_rating }}{% else %}1{% endif %}">
+        <br>
         <!-- Checkbox for indicating if the movie has been watched
         <input type="checkbox" id="watched" name="watched">
         <label for="watched">Watched</label>
