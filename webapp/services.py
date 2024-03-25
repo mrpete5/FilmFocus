@@ -692,8 +692,19 @@ def process_justwatch_streamers(movie):
         print(f"Movie not found in the database: {movie.title}, {movie.release_year}")
 
 # Update the Letterboxd ratings for all movies in the Movie database
-def update_letterboxd_ratings():
+def update_letterboxd_ratings(update_movie=None):
     ''' Update the letterboxd ratings for all movies in the Movie database ''' 
+    exclude_non_null_lbd_url = False
+    
+    # Get movies
+    movies = Movie.objects.all()  
+    if exclude_non_null_lbd_url:
+        movies = movies.filter(letterboxd_url__isnull=True)
+    if update_movie:
+        # Filter movies based on the update_movie argument, from the testforwebscaper and update_webscraper_url views
+        title = update_movie.title
+        release_year = update_movie.release_year
+        movies = movies.filter(title__icontains=title, release_year=release_year)
         
     # Limiter for calls; try to not overload Letterboxd
     request_frequency = 8
@@ -702,12 +713,8 @@ def update_letterboxd_ratings():
     # Start time
     start_ts = time.time()
     start_dt = datetime.datetime.fromtimestamp(start_ts)
-
     print("Start:", start_dt)
-    
-    # Get movies
-    movies = Movie.objects.all()  
-
+ 
     # Calculate totals
     total_movies = len(movies)
     ratings_per_sec = 7.85
@@ -742,7 +749,6 @@ def update_letterboxd_ratings():
         except Exception as e:
             print("Failed Letterboxd scrape for", movie.title, "("+str(movie.release_year)+")")
             
-
         # Save the updated recommended_movie_data field to the database
         movie.save()
 

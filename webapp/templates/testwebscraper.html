@@ -12,8 +12,20 @@
             <tr>
                 <th width="100px">Poster</th>
                 <th width="200px">Title</th>
-                <th width="200px">JW URL</th>
-                <th width="400px">Update JW URL</th>
+                <th width="200px">
+                    {% if letterboxd_scraper %}
+                        Letterboxd URL
+                    {% else %}
+                        JW URL
+                    {% endif %}
+                </th>
+                <th width="400px">Update
+                    {% if letterboxd_scraper %}
+                        Letterboxd URL
+                    {% else %}
+                        JW URL
+                    {% endif %}
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -30,21 +42,37 @@
                 </td>
                 <td>{{ movie.title }} ({{movie.release_year}}) {{movie.runtime}}m</td>
                 <td>
-                    {% if movie.justwatch_url is not None %}
-                        {% if "search?q=" in movie.justwatch_url %}
-                            <a href="{{ movie.justwatch_url }}" target="_blank">Search on JustWatch</a>
+                    {% if letterboxd_scraper %}
+                        {% if movie.letterboxd_url %}
+                            <a href="{{ movie.letterboxd_url }}" target="_blank">{{ movie.letterboxd_url }}</a><br>
+                            <a href="{{ movie.search_url }}" target="_blank">{{ movie.search_url }}</a>
                         {% else %}
-                            <a href="{{ movie.justwatch_url }}" target="_blank">{{ movie.justwatch_url }}</a>
+                            No Letterboxd URL available
                         {% endif %}
                     {% else %}
-                        JW URL not available
+                        {% if movie.justwatch_url is not None %}
+                            {% if "search?q=" in movie.justwatch_url %}
+                                <a href="{{ movie.justwatch_url }}" target="_blank">Search on JustWatch</a>
+                            {% else %}
+                                <a href="{{ movie.justwatch_url }}" target="_blank">{{ movie.justwatch_url }}</a>
+                            {% endif %}
+                        {% else %}
+                            JW URL not available
+                        {% endif %}
                     {% endif %}
+                
                 </td>
                 <td>
-                    <form method="post" action="{% url 'update_jw_url' movie.id %}">
+                    <form method="post" action="{% url 'update_webscaper_url' movie.id %}">
                         {% csrf_token %}
-                        <label for="true_jw_url">JW URL:</label>
-                        <input type="text" id="true_jw_url" name="true_jw_url">
+                        <label for="true_webscraper_url">
+                            {% if letterboxd_scraper %}
+                                Letterboxd URL:
+                            {% else %}
+                                JW URL:
+                            {% endif %}
+                        </label>
+                        <input type="text" id="true_webscraper_url" name="true_webscraper_url">
                         <!-- Add a hidden input field to pass the movie ID -->
                         <input type="hidden" name="movie_id" value="{{ movie.id }}">
                         <button type="submit">Update</button>

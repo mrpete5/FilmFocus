@@ -1057,26 +1057,37 @@ def testdisplay(request):
     movies_to_display = handle_test_display_page(fetch_movies_count=10)
     return render(request, "testdisplay.html", {"movies": movies_to_display})
 
-# Helper function to update JustWatch URLs
-def update_jw_url(request, movie_id):
+# Helper function to update JustWatch or Letterboxd URLs
+def update_webscraper_url(request, movie_id):
     if request.method == 'POST':
-        true_jw_url = request.POST.get('true_jw_url')
-        
-        # Find the movie object by ID
+        url_to_update = request.POST.get('true_webscraper_url')
+        is_letterboxd_url = "letterboxd.com" in url_to_update
+        is_justwatch_url = "justwatch.com" in url_to_update
         try:
             movie = Movie.objects.get(id=movie_id)
-            # Update the justwatch_url attribute
-            movie.justwatch_url = true_jw_url
-            movie.save()
-            print(f"JustWatch URL updated for movie '{movie.title}': {true_jw_url}")
+            if is_justwatch_url:
+                # Update JustWatch URL
+                movie.justwatch_url = url_to_update
+                movie.save()
+                print(f"JustWatch URL updated for movie '{movie.title}': {url_to_update}")
+            elif is_letterboxd_url:
+                # Update Letterboxd URL
+                movie.letterboxd_url = url_to_update
+                movie.save()
+                update_letterboxd_ratings(update_movie=movie)
+                print(f"Letterboxd URL updated for movie '{movie.title}': {url_to_update}")
+            
         except Movie.DoesNotExist:
             print(f"Movie with ID {movie_id} not found.")
 
     return redirect('testwebscraper')
 
-# Test page for getting JustWatch URL for web scraping
+
+# Test page for getting JustWatch or Letterboxd URL for web scraping
 def testwebscraper(request):
-    include_known_jw_urls = False
+    letterboxd_scraper = True       # Use Letterboxd scraper instead of JustWatch
+    include_known_lbd_urls = False  # Include movies with known Letterboxd URLs
+    include_known_jw_urls = False   # Include movies with known JustWatch URLs
     include_2024 = False
     limit_quantity = False
     fetch_movies_count = 100
@@ -1091,19 +1102,44 @@ def testwebscraper(request):
         formatted_title = '+'.join(title.split())
         return f"https://www.justwatch.com/us/search?q={formatted_title}"
     
-    # Filter movies based on include_known_jw_urls
-    if not include_known_jw_urls:
-        # Exclude movies "Not Found" on JustWatch
-        movies_to_display = [movie for movie in movies_to_display if movie.justwatch_url != "Not Found"]
-        # Exclude movies released this year
-        if not include_2024:
-            movies_to_display = [movie for movie in movies_to_display if movie.release_year != 2024]
-        # Include movies with None or empty string for justwatch_url
-        movies_to_display = [movie for movie in movies_to_display if movie.justwatch_url in [None, ""]]
+    def generate_lbd_url(title):
+        whitelist_char = [' ', '-']
+        hyphenated_title = ''.join(char if char.isalnum() or char in whitelist_char else '' for char in title)
+        hyphenated_title = hyphenated_title.replace(' ', '-').replace('\t', '-').replace('\n', '-').replace('\r', '-')
+        hyphenated_title = "-".join(filter(None, hyphenated_title.split("-")))
+        hyphenated_title = hyphenated_title.lower()
+        return f"https://letterboxd.com/csi/film/{hyphenated_title}/rating-histogram"
 
-        # Generate JustWatch search URL for movies with no JustWatch URL
-        for movie in movies_to_display:
-            if not movie.justwatch_url:
-                movie.justwatch_url = generate_jw_url(movie.title)
+    if letterboxd_scraper: # Letterboxd
+        # Filter movies based on include_known_lbd_urls
+        if not include_known_lbd_urls:
+            # Exclude movies with known Letterboxd URLs
+            movies_to_display = [movie for movie in movies_to_display if movie.letterboxd_url is None]
+            # Exclude movies released this year
+            if not include_2024:
+                movies_to_display = [movie for movie in movies_to_display if movie.release_year != 2024]
+            # Generate Letterboxd search URL for movies with no Letterboxd URL
+            for movie in movies_to_display:
+                if not movie.letterboxd_url:
+                    movie.letterboxd_url = generate_lbd_url(movie.title)
+                    movie.search_url = f"https://letterboxd.com/search/{movie.title}/"
 
-    return render(request, "testwebscraper.html", {"movies": movies_to_display})
+    else:  # JustWatch
+        # Filter movies based on include_known_jw_urls
+        if not include_known_jw_urls:
+            # Exclude movies "Not Found" on JustWatch
+            movies_to_display = [movie for movie in movies_to_display if movie.justwatch_url != "Not Found"]
+            # Exclude movies released this year
+            if not include_2024:
+                movies_to_display = [movie for movie in movies_to_display if movie.release_year != 2024]
+            # Include movies with None or empty string for justwatch_url
+            movies_to_display = [movie for movie in movies_to_display if movie.justwatch_url in [None, ""]]
+
+            # Generate JustWatch search URL for movies with no JustWatch URL
+            for movie in movies_to_display:
+                if not movie.justwatch_url:
+                    movie.justwatch_url = generate_jw_url(movie.title)
+
+    print(f"Movie count: %d" % len(movies_to_display))
+    context = {"movies": movies_to_display, "letterboxd_scraper": letterboxd_scraper}
+    return render(request, "testwebscraper.html", context)
