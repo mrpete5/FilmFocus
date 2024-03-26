@@ -34,8 +34,8 @@ def api_fetch_data():
 
     # popular_pages is the main method for getting a mass amount of new movies
     popular_pages = 20              # Number of popular pages from 1 to x with 20 results each, TMDb
-    now_playing_pages = 20          # Number of now playing pages from 1 to x with 20 results each, TMDb
-    fetch_discover_count = 20       # Number of discover pages from 1 to x with 20 results each, TMDb
+    now_playing_pages = 10          # Number of now playing pages from 1 to x with 20 results each, TMDb
+    fetch_discover_count = 10       # Number of discover pages from 1 to x with 20 results each, TMDb
     
     flags = [
         'erase_movie_db',                       # settings[0], USE WITH CAUTION
@@ -117,20 +117,25 @@ def api_fetch_data():
     if settings[8]:
         """ Performs all operations to update movie data in our database, without deleting anything. """
         """ Updates all movie ratings, streaming providers, and recommendations. """
-        get_movies = True
-        get_updates = True
+        get_ratings = True
+        get_recommendations = False
+        get_streaming = False
+        get_movies = False
+
         update_tmdb_master_list()  # Update the TMDB master movie list
 
+        if get_ratings:
+            timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
+            timer(function_name='update_omdb_movie_ratings', fetch_func=update_omdb_movie_ratings, args={})
+        if get_recommendations:
+            # timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})     # needs to be threaded
+            pass
+        if get_streaming:
+            timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
         if get_movies:
             timer(function_name='fetch_popular_movies', fetch_func=fetch_popular_movies, args={'start_page': 1, 'end_page': popular_pages})
             timer(function_name='fetch_now_playing_movies', fetch_func=fetch_now_playing_movies, args={'start_page': 1, 'end_page': now_playing_pages })
             timer(function_name='fetch_tmdb_discover_movies', fetch_func=fetch_tmdb_discover_movies, args={'start_page': 1, 'end_page': fetch_discover_count})
-
-        if get_updates:
-            timer(function_name='update_streaming_providers', fetch_func=update_streaming_providers, args={})
-            # timer(function_name='update_movie_recommendations', fetch_func=update_movie_recommendations, args={})     # needs to be threaded
-            timer(function_name="update_letterboxd_ratings", fetch_func=update_letterboxd_ratings, args={})
-            timer(function_name='update_omdb_movie_ratings', fetch_func=update_omdb_movie_ratings, args={})
 
     # Prints which settings are set
     print("==========================")

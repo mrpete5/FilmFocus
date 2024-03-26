@@ -170,6 +170,7 @@ def process_movie_search(tmdb_id, title, now_playing=False, allowed_providers=fi
     
     # Check if the movie is in the ban list
     if str(tmdb_id) in BAN_LIST:
+        print(f"Ban List: {title} (ID: {tmdb_id}) was not retrieved")
         return
 
     # Check if the movie exists in the database

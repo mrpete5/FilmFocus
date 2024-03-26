@@ -12,6 +12,8 @@
             <tr>
                 <th width="100px">Poster</th>
                 <th width="200px">Title</th>
+                <th width="50px">IMDb</th>
+                <th width="50px">Lbd</th>
                 <th width="200px">
                     {% if letterboxd_scraper %}
                         Letterboxd URL
@@ -41,11 +43,14 @@
                     {% endif %}
                 </td>
                 <td>{{ movie.title }} ({{movie.release_year}}) {{movie.runtime}}m</td>
+                <td>{{ movie.imdb_rating_num }}</td>
+                <td>{{ movie.letterboxd_rating }}</td>
                 <td>
                     {% if letterboxd_scraper %}
                         {% if movie.letterboxd_url %}
-                            <a href="{{ movie.letterboxd_url }}" target="_blank">{{ movie.letterboxd_url }}</a><br>
+                            <a href="{{ movie.letterboxd_url }}" target="_blank">{{ movie.letterboxd_url }}</a><br><br>
                             <a href="{{ movie.search_url }}" target="_blank">{{ movie.search_url }}</a>
+                            <a href="{{ movie.search_url2 }}" target="_blank">{{ movie.search_url2 }}</a>
                         {% else %}
                             No Letterboxd URL available
                         {% endif %}

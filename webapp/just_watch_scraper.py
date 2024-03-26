@@ -85,7 +85,7 @@ def fetch_search_loop(movie, jw_url_search):
     sleep_add = 0
     jw_url_movie = None    
     while True:
-        time.sleep(random.uniform(0, 5))
+        time.sleep(random.uniform(0, 3))
         response = requests.get(jw_url_search)
         if response.status_code == 200:
             jw_url_movie = fetch_search_justwatch(response, movie)
@@ -100,9 +100,11 @@ def fetch_search_loop(movie, jw_url_search):
             return jw_url_movie
 
 
-def fetch_movie_loop(movie, jw_url_movie):
+def fetch_movie_loop(movie, jw_url_movie, add_delay=False):
     sleep_add = 0
     while True:
+        if add_delay:   # Add a delay for update_streaming_providers()
+            time.sleep(1.5)
         time.sleep(random.uniform(0, 4))
         response = requests.get(jw_url_movie)
         if response.status_code == 200:
@@ -118,7 +120,7 @@ def fetch_movie_loop(movie, jw_url_movie):
             return None, False, jw_url_movie
 
 
-def fetch_justwatch(movie, count=0):
+def fetch_justwatch(movie, add_delay=False, count=0):
     try:
         jw_url_movie = movie.justwatch_url
 
@@ -126,7 +128,7 @@ def fetch_justwatch(movie, count=0):
             if jw_url_movie == "Not Found":
                 return [], jw_url_movie
         
-            found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie)
+            found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie, add_delay)
             # If fetching is successful, return the list of providers
             return found_providers, jw_url_movie
         else:
@@ -137,14 +139,14 @@ def fetch_justwatch(movie, count=0):
                 # Fetch JustWatch URL through search
                 jw_url_movie = fetch_search_loop(movie, jw_url_search)
                 if jw_url_movie:
-                    found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie)
+                    found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie, add_delay)
                     # If fetching is successful, return the list of providers
                     if successful:
                         return found_providers, jw_url_movie
                 return fetch_justwatch(movie, count=1)
             elif count == 1:    # f"https://www.justwatch.com/us/movie/{slug}"
                 jw_url_movie = generate_movie_justwatch_url(movie)
-                found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie)
+                found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie, add_delay)
                 # If fetching is successful, return the list of providers
                 if successful:
                     return found_providers, jw_url_movie
@@ -152,7 +154,7 @@ def fetch_justwatch(movie, count=0):
             elif count == 2:    # f"https://www.justwatch.com/us/movie/{slug}-{movie.release_year}"
                 jw_url_movie = generate_movie_justwatch_url(movie)
                 jw_url_movie = f"{jw_url_movie}-{movie.release_year}"
-                found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie)
+                found_providers, successful, jw_url_movie = fetch_movie_loop(movie, jw_url_movie, add_delay)
                 # If fetching is successful, return the list of providers
                 if successful:
                     return found_providers, jw_url_movie

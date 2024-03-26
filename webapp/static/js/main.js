@@ -99,7 +99,7 @@ $(document).ready(function () {
 		dots: false,
 		loop: true,
 		autoplay: false,
-		smartSpeed: 600,
+		smartSpeed: 200,
 		margin: 30,
 		responsive : {
 			0 : {
