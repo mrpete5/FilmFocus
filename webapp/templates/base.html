@@ -44,9 +44,9 @@
 
 							<!-- header nav -->
 							<ul class="header__nav">
-								<!-- <li class="header__nav-item">
+								<li class="header__nav-item">
 									<a href="/" class="header__nav-link">Home</a>
-								</li> -->
+								</li>
 								<li class="header__nav-item">
 									<a href="/catalog/" class="header__nav-link">Catalog</a>
 								</li>
@@ -54,9 +54,9 @@
 								<li class="header__nav-item">
 									<a href="/watchlist/{{ user.username }}" class="header__nav-link">Watchlists</a>
 								</li>
-								<li class="header__nav-item">
+								<!-- <li class="header__nav-item">
 									<a href="#0" class="header__nav-link" id="popup_help">Help</a>
-								</li>
+								</li> -->
 								<li class="header__nav-item header__nav-item--search">
 									<form action="{% url 'search' %}" method="get">
 										{% csrf_token %}
