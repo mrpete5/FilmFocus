@@ -234,7 +234,7 @@ def watchlist(request, profile_name=None):
             context['username'] = profile_name
         
         # Only show the 'All' watchlist menu option if there are multiple watchlists
-        context["multiple_watchlists"] = False  # Initialize 'multiple_watchlists'
+        context["multiple_watchlists"] = False
         watchlist_count = watchlists.count()
         if watchlist_count > 1:
             context["multiple_watchlists"] = True
@@ -270,15 +270,21 @@ def watchlist(request, profile_name=None):
             if request.method == 'POST':
                 if form.is_valid():
                     # Get The filter items 
-                    watchlist_id = form.cleaned_data.get("watchlist_id")
-                    genre_ids = [int(genre) for genre in form.cleaned_data.get("genre").split()]
+                    genre_data = form.cleaned_data.get("genre")
+                    if genre_data == 'None':
+                        genre_data = ''
+                    genre_ids = [int(genre) for genre in genre_data.split() if genre]
                     genre = Genre.objects.filter(pk__in=genre_ids) if genre_ids else None
-                    streamer_ids = [int(streamer) for streamer in form.cleaned_data.get("streaming_provider").split()]
+                    streamer_data = form.cleaned_data.get("streaming_provider")
+                    if streamer_data == 'None':
+                        streamer_data = ''
+                    streamer_ids = [int(streamer) for streamer in streamer_data.split() if streamer]
                     streamer = StreamingProvider.objects.filter(pk__in=streamer_ids) if streamer_ids else None
                     year_begin = form.cleaned_data.get("year_begin")
                     year_end = form.cleaned_data.get("year_end")
                     imdb_begin = form.cleaned_data["imdb_begin"]
                     imdb_end = form.cleaned_data["imdb_end"]
+                    watchlist_id = form.cleaned_data.get("watchlist_id")
 
                     if context["is_self"]:
                         all_watchlists = Watchlist.objects.filter(user=user)
@@ -286,7 +292,7 @@ def watchlist(request, profile_name=None):
                         all_watchlists = Watchlist.objects.filter(user=profile.user, is_private=False)
 
                     # Get the movie_list and handle watchlist_all
-                    movie_list = Movie.objects.none()  # Initialize an empty queryset
+                    movie_list = Movie.objects.none()
                     if watchlist_id == "watchlist_all":
                         context['all_watchlist'] = True
                         for watchlist in all_watchlists:
@@ -295,7 +301,6 @@ def watchlist(request, profile_name=None):
                         watchlist_id_int = int(watchlist_id)
                         watchlist = Watchlist.objects.get(pk=watchlist_id_int)
                         movie_list = Movie.objects.filter(watchlistentry__watchlist=watchlist)
-
 
                     # Excludes genre or streaming provider options that don't exist in the movie_list
                     context["genres"] = Genre.objects.all().filter(movies__in=movie_list).distinct()
