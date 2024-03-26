@@ -1107,10 +1107,10 @@ def get_filmfocus_rating(movie):
     ratings = MovieRating.objects.filter(movie=movie)
     if not ratings.exists():
         return None
-    
     average_rating = ratings.aggregate(Avg('user_rating'))['user_rating__avg']
     num_reviews = ratings.count()
-    return f"{average_rating:.1f}/10 ({num_reviews} {'review' if num_reviews == 1 else 'reviews'})"
+    formatted_num_reviews = "{:,}".format(num_reviews)  # Format with commas ex: 1,234
+    return f"{average_rating:.1f}/10 ({formatted_num_reviews} {'review' if num_reviews == 1 else 'reviews'})"
 
 def get_logged_in_user_profile_picture(request):
     """Retrieve the profile picture filename for the logged-in user."""
