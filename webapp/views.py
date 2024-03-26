@@ -3,7 +3,7 @@ Name of code artifact: views.py
 Brief description: Contains view functions for the FilmFocus web application, responsible for handling HTTP requests and rendering appropriate templates.
 Programmer’s name: Mark
 Date the code was created: 09/17/2023
-Dates the code was revised: 10/05/2023
+Dates the code was revised: 03/26/2024
 Brief description of each revision & author: Initialized view functions for various pages (Mark)
 Preconditions: Django environment must be set up correctly. The services module must be available and correctly set up.
 Acceptable and unacceptable input values or types: Functions expect HTTP requests as input.
@@ -43,6 +43,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage
 import concurrent.futures
 import random
+import webbrowser
 
 
 
@@ -209,7 +210,7 @@ def movie_detail(request, movie_slug):
     context['actor_slugs'] = get_person_slugs(movie.actors)
     context['actor_names'] = get_person_names(movie.actors)
     context['actors_pairs'] = zip(context['actor_slugs'], context['actor_names'])
-
+    context['filmfocus_rating'] = get_filmfocus_rating(movie)
     return render(request, 'details.html', context)
 
 # View function for the movie watchlists page
@@ -1034,7 +1035,14 @@ def refresh_movie_data(request, tmdb_id):
 def testforban(request):
     start_date = "2023-01-01"  # Range of movies to display
     end_date = "2024-12-31"
-    view_jw_nulls = True
+    view_jw_nulls = False
+
+    limit_quantity = True
+    fetch_movies_count = 25
+    start_object = 1175
+    end_object = start_object + fetch_movies_count
+    if limit_quantity:
+        movies_to_display = list(Movie.objects.all()[start_object:end_object])
     
     if view_jw_nulls:
         # Get all Movie objects
@@ -1086,12 +1094,12 @@ def update_webscraper_url(request, movie_id):
 # Test page for getting JustWatch or Letterboxd URL for web scraping
 def testwebscraper(request):
     letterboxd_scraper = True       # Use Letterboxd scraper instead of JustWatch
-    include_known_lbd_urls = False  # Include movies with known Letterboxd URLs
+    include_known_lbd_urls = True   # Include movies with known Letterboxd URLs
     include_known_jw_urls = False   # Include movies with known JustWatch URLs
-    include_2024 = False
-    limit_quantity = False
-    fetch_movies_count = 100
-    start_object = 1050
+    include_2024 = True
+    limit_quantity = True
+    fetch_movies_count = 25
+    start_object = 1400              # Letterboxd checked through 1400
     end_object = start_object + fetch_movies_count
     if limit_quantity:
         movies_to_display = list(Movie.objects.all()[start_object:end_object])
@@ -1109,6 +1117,15 @@ def testwebscraper(request):
         hyphenated_title = "-".join(filter(None, hyphenated_title.split("-")))
         hyphenated_title = hyphenated_title.lower()
         return f"https://letterboxd.com/csi/film/{hyphenated_title}/rating-histogram"
+    
+    def convert_to_rating_histogram_url(letterboxd_url):
+        if letterboxd_url:
+            start_index = letterboxd_url.find("film/") + len("film/")
+            end_index = letterboxd_url.find("/rating-histogram")
+            if start_index != -1 and end_index != -1:  # Check if both "film/" and "/rating-histogram" are found
+                movie_title = letterboxd_url[start_index:end_index]
+                return f"https://letterboxd.com/film/{movie_title}/members/rated/.5-5/"
+        return None
 
     if letterboxd_scraper: # Letterboxd
         # Filter movies based on include_known_lbd_urls
@@ -1123,6 +1140,11 @@ def testwebscraper(request):
                 if not movie.letterboxd_url:
                     movie.letterboxd_url = generate_lbd_url(movie.title)
                     movie.search_url = f"https://letterboxd.com/search/{movie.title}/"
+        else:
+            for movie in movies_to_display:
+                if movie.letterboxd_url:
+                    movie.search_url2 = convert_to_rating_histogram_url(movie.letterboxd_url)
+                    # webbrowser.open_new_tab(movie.search_url2)
 
     else:  # JustWatch
         # Filter movies based on include_known_jw_urls

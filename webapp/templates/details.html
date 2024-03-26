@@ -147,7 +147,14 @@
 										</li>
 										<li><span title="{{ movie.formatted_release_date }}">Release year: {{ movie.release_year }}</span></li>
 										<li><span title="{{ movie.readable_form_runtime }}">Running time: {{ movie.runtime }} mins</span></li>
-										
+										{% if filmfocus_rating %}
+											<li>
+											<span class="card__rate">
+												<img src="{% static 'img/logos/FilmFocusBook.png' %}" alt="FilmFocus" style="width: 30px; vertical-align: middle; margin-right: 5px;">
+												{{ filmfocus_rating}}
+											</span>
+											</li>
+										{% endif %}
 										{% if movie.imdb_rating %}
 											<li>
 											<span class="card__rate">

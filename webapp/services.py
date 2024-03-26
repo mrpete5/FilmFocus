@@ -3,7 +3,7 @@ Name of code artifact: services.py
 Brief description: Contains business logic for the FilmFocus web application, including functions to fetch movie details from TMDB and OMDB, and to manage the movie database.
 Programmer’s name: Mark, Aaron, Bill, John, Traizen
 Date the code was created: 09/18/2023
-Date the code was revised: 03/17/2024
+Date the code was revised: 03/25/2024
 Brief description of each revision & author: Added threading to multiple API calling functions
 Preconditions: Django environment must be set up correctly, and necessary environment variables (API keys) must be available.
 Acceptable and unacceptable input values or types: Functions expect specific types as documented in their respective comments.
@@ -27,7 +27,7 @@ import webapp.just_watch_scraper as jw_scrape
 import concurrent.futures
 from webapp.models import *
 from dotenv import load_dotenv
-from django.db.models import F, Max
+from django.db.models import F, Max, Avg
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Semaphore
 
@@ -97,7 +97,18 @@ def seconds_to_readable_time(estimate_time_secs):
     estimate_time_secs = int(estimate_time_secs)
     minutes, seconds = divmod(estimate_time_secs, 60)
     hours, minutes = divmod(minutes, 60)
-    return f'{hours:02d}:{minutes:02d}:{seconds:02d}'
+    hours_label = "hour" if hours == 1 else "hours"
+    minutes_label = "minute" if minutes == 1 else "minutes"
+    seconds_label = "second" if seconds == 1 else "seconds"
+    time_components = []
+    if hours > 0:
+        time_components.append(f"{hours} {hours_label}")
+    if minutes > 0:
+        time_components.append(f"{minutes} {minutes_label}")
+    if seconds > 0:
+        time_components.append(f"{seconds} {seconds_label}")
+    return ', '.join(time_components)
+
 
 # Determines the Rotten Tomatoes icon based on the Rotten Tomatoes rating
 def determine_rt_icon(rt_rating):
@@ -497,9 +508,9 @@ def fetch_movie_streaming_data(movie, index):
 
 # Update the streaming providers for all movies in the Movie database
 def update_streaming_providers(test_limit=None, exclude_non_null_jw_url=False):
-    # test_limit = 20   # Test mode, quantity of test cases
-    exclude_non_null_jw_url = True     # Filter only movies with null JW Urls
-    include_2024 = False    # Null JW Urls are commonly 2024 before the movie is available
+    # test_limit = 10   # Test mode, quantity of test cases
+    exclude_non_null_jw_url = False     # Filter only movies with null JW Urls
+    include_2024 = True    # Null JW Urls are commonly 2024 before the movie is available
     if test_limit:
         # movies = list(Movie.objects.all()[:test_limit])
         previous = 0
@@ -548,7 +559,7 @@ def update_streaming_providers(test_limit=None, exclude_non_null_jw_url=False):
                     movie.streaming_providers.add(provider)
 
             # Update the streaming providers using the JustWatch scraper for Tubi TV, Pluto TV, and Freevee
-            process_justwatch_streamers(movie)
+            process_justwatch_streamers(movie, add_delay=True)
 
             providers = movie.streaming_providers.all()
             sorted_providers = sorted(providers, key=lambda x: x.ranking)
@@ -675,10 +686,10 @@ def update_movie_recommendations():
             movie.save()
 
 # Update the streaming providers using the JustWatch scraper for Tubi TV, Pluto TV, and Freevee
-def process_justwatch_streamers(movie):
+def process_justwatch_streamers(movie, add_delay=False):
     movie_instance = Movie.objects.filter(title=movie.title, release_year=movie.release_year).first()
     if movie_instance:
-        providers, jw_url_movie = jw_scrape.fetch_justwatch(movie)
+        providers, jw_url_movie = jw_scrape.fetch_justwatch(movie, add_delay)
         movie_instance.justwatch_url = jw_url_movie
         movie_instance.save()
         if providers is not None:
@@ -722,7 +733,7 @@ def update_letterboxd_ratings(update_movie=None):
     total_secs = int(total_movies / ratings_per_sec)
   
     print(f"Total movies: {total_movies}")
-    print(f"Total estimated secs: {total_secs}")
+    print(f"Total estimated time: {seconds_to_readable_time(total_secs)}")
 
     # Calculate completion datetime
     delta = datetime.timedelta(seconds=total_secs)
@@ -1091,6 +1102,15 @@ def filter_movies(movies, genres, streamers, year_begin, year_end, imdb_begin, i
 
     return movies.distinct()
 
+# Get FilmFocus rating string for movie details page
+def get_filmfocus_rating(movie):
+    ratings = MovieRating.objects.filter(movie=movie)
+    if not ratings.exists():
+        return None
+    
+    average_rating = ratings.aggregate(Avg('user_rating'))['user_rating__avg']
+    num_reviews = ratings.count()
+    return f"{average_rating:.1f}/10 ({num_reviews} {'review' if num_reviews == 1 else 'reviews'})"
 
 def get_logged_in_user_profile_picture(request):
     """Retrieve the profile picture filename for the logged-in user."""
