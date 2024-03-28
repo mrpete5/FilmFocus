@@ -21,6 +21,7 @@ import os
 import sys
 import django
 from dotenv import load_dotenv
+import datetime
 
 # Load environment variables first
 load_dotenv()
@@ -122,6 +123,14 @@ def select_movies():
 
 if __name__ == "__main__":
     movies = select_movies()
+
+    movie_count = movies.count()
+    average_time = 0.079    # Average time taken to update a movie
+    estimate_time = movie_count * average_time
+    print(f"Estimated runtime: {estimate_time}")
+    start_time = datetime.now()
+    print(f"Started: {start_time}")
+
     if movies:
         movie_ids = list(movies.values_list('id', flat=True))
         total_movies = len(movie_ids)
@@ -132,3 +141,9 @@ if __name__ == "__main__":
             for future in concurrent.futures.as_completed(futures):
                 completed += 1
                 print_progress_bar(completed, total_movies)
+                
+    end_time = datetime.now()
+    total_time = end_time - start_time
+    print(f"\nTotal time taken: {total_time}")
+    average_time = total_time / movie_count
+    print(f"Average time taken: {average_time}")

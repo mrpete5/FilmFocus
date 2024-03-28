@@ -509,6 +509,7 @@ def fetch_movie_streaming_data(movie, index):
 # Update the streaming providers for all movies in the Movie database
 def update_streaming_providers(test_limit=None, exclude_non_null_jw_url=False):
     # test_limit = 10   # Test mode, quantity of test cases
+    process_justwatch = False           # Takes a while. Process JustWatch data for Tubi TV, Pluto TV, and Freevee
     exclude_non_null_jw_url = False     # Filter only movies with null JW Urls
     include_2024 = True    # Null JW Urls are commonly 2024 before the movie is available
     if test_limit:
@@ -535,11 +536,13 @@ def update_streaming_providers(test_limit=None, exclude_non_null_jw_url=False):
         for future in concurrent.futures.as_completed(futures):
             movie, response_data, index = future.result()  # Unpack the results
 
+            # Clear all streaming providers except Tubi TV, Pluto TV, and Freevee
+            current_providers = movie.streaming_providers.all()
+            for provider in current_providers:
+                if provider.name not in ['Tubi TV', 'Pluto TV', 'Freevee']:
+                    movie.streaming_providers.remove(provider)
+                    
             streaming_data = response_data.get('watch/providers', {}).get('results', {}).get('US', {}).get('flatrate', [])
-
-            movie.streaming_providers.clear()
-            movie.top_streaming_providers.clear()
-
             # Update streaming providers based on the fetched data
             for provider_data in streaming_data:
                 # Rename "Amazon Prime Video" to "Amazon Prime"
@@ -558,11 +561,19 @@ def update_streaming_providers(test_limit=None, exclude_non_null_jw_url=False):
                     )
                     movie.streaming_providers.add(provider)
 
-            # Update the streaming providers using the JustWatch scraper for Tubi TV, Pluto TV, and Freevee
-            process_justwatch_streamers(movie, add_delay=True)
+            if process_justwatch:
+                # Remove Tubi TV, Pluto TV, and Freevee before calling process_justwatch_streamers
+                current_providers = movie.streaming_providers.all()
+                for provider in current_providers:
+                    if provider.name in ['Tubi TV', 'Pluto TV', 'Freevee']:
+                        movie.streaming_providers.remove(provider)
+
+                # Update the streaming providers using the JustWatch scraper for Tubi TV, Pluto TV, and Freevee
+                process_justwatch_streamers(movie, add_delay=True)
 
             providers = movie.streaming_providers.all()
             sorted_providers = sorted(providers, key=lambda x: x.ranking)
+            movie.top_streaming_providers.clear()
 
             if sorted_providers:
                 top_provider = sorted_providers[0]
@@ -570,6 +581,7 @@ def update_streaming_providers(test_limit=None, exclude_non_null_jw_url=False):
 
             if index % 10 == 0 and index != 0:
                 print(f'Updated streaming providers for {index}/{len(movies)} movies')
+    executor.shutdown()  # Ensure that the executor is closed after completing all tasks
 
 
 # Helper function for update_omdb_movie_ratings()
